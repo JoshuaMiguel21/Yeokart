@@ -57,7 +57,7 @@ input {
 }
 
 .custom-button {
-    background-color: #e9d7f2;
+    background-color: #C6DFF7;
     color: black;
     padding: 10px 20px;
     border: none;
@@ -71,5 +71,6 @@ input {
 }
 
 .custom-button:hover {
-    background-color: #d9c5e3;
+    background-color: rgb(114, 122, 255);
+    color: white;
 }
