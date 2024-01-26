@@ -52,6 +52,11 @@ input {
     box-sizing: border-box;
 }
 
+.button-container {
+    display: flex;
+    justify-content: space-between;
+}
+
 .custom-button {
     background-color: #e9d7f2;
     color: black;
