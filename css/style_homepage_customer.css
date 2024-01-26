@@ -1,4 +1,4 @@
-/* Reset default styles */
+
 * {
     margin: 0;
     padding: 0;
@@ -6,8 +6,9 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Body styles */
+
 body {
+    background-color: #F5EEE6;
     width: 100%;
     height: 100vh;
     align-items: center;
@@ -16,14 +17,13 @@ body {
 
 .section {
     padding: 20px 0;
-    /* Adjust as needed */
+    
 }
 
-/* Container styles */
+
 .container {
     width: 90%;
     margin: 0 auto;
-    /* Center the container */
     padding-top: 50px;
     padding-bottom: 50px;
     display: flex;
@@ -32,7 +32,6 @@ body {
     position: relative;
 }
 
-/* Header styles */
 .header {
     position: absolute;
     top: 0;
@@ -47,13 +46,12 @@ body {
     font-size: 50px;
 }
 
-/* Card styles */
 .container .card {
     width: 270px;
+    background-color: white;
     overflow: hidden;
     margin-bottom: 15px;
     margin-top: 65px;
-    /* Adjusted margin to make space for the header */
     margin-right: 15px;
     text-align: center;
     border: 2px;
