@@ -1,109 +1,97 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    line-height: 1.5;
     font-family: Arial, Helvetica, sans-serif;
 }
 
-section {
-    position: relative;
-    width: 100%;
+body {
+    background-color: #F5EEE6;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: 100vh;
-    display: flex;
 }
 
-section .side-logo {
-    position: relative;
-    width: 50%;
-    height: 100%;
+#div1 {
+    background-color: #E6A4B4;
+    padding: 40px;
+    border-radius: 10px;
+    margin: 20px;
+    box-shadow: 10px 10px 5px #F3D7CA;
 }
 
-section .side-logo img {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 80%;
-    height: auto;
-    padding-top: 200px;
-    padding-right: 50px;
-    object-fit: cover;
+#div2 {
+    padding: 20px;
+    text-align: center;
 }
 
-section .side-form {
-    display: flex;
-    justify-content: left;
-    padding-top: 50px;
-    padding-left: 50px;
-    width: 50%;
-    height: 100%;
-}
-
-section .side-form .login-form {
-    width: 50%;
-    text-align: left;
-}
-
-section .side-form .login-form h1 {
-    color: black;
-    font-weight: 700;
-    font-size: 3em;
-    margin-bottom: 20px;
-    border-bottom: 4px;
-    display: inline-block;
-    letter-spacing: 1px;
-}
-
-section .side-form .login-form p {
-    width: 100%;
-    outline: none;
-    margin: 1em 0;
-    font-weight: 400;
+#div2 p {
+    margin-top: 20px;
     font-style: italic;
-    font-size: 14px;
-    color: black;
-    background: transparent;
 }
 
-form input[type="text"],
-form input[type="password"] {
-    display: block;
-    width: 130%;
-    box-sizing: border-box;
-    border-radius: 3px;
-    border: 1px solid #c4c4c4;
-    padding: 1em;
-    margin-bottom: 1.25rem;
-    font-size: 0.875rem;
+#div1 p {
+    margin-bottom: 30px;
+}
+
+img {
+    max-width: 80%;
+    height: auto;
+}
+
+form {
+    max-width: 400px;
+    margin: 0 auto;
 }
 
 label {
+    margin-top: 10px;
+    font-weight: 600;
+    display: block;
+}
+
+input {
     width: 100%;
-    outline: none;
-    margin: 1em 0;
-    font-weight: 400;
-    font-size: 16px;
-    color: black;
-    background: transparent;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
 }
 
 .button-container {
-    margin-top: 100px;
+    display: flex;
+    justify-content: space-between;
 }
 
-
-.button {
-    padding: 8px 25px;
-    margin-left: 70px;
-    font-size: 20px;
-    font-weight: bold;
+.custom-button {
     background-color: #e9d7f2;
     color: black;
+    padding: 10px 20px;
     border: none;
-    cursor: pointer;
     border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 15px;
+    transition: background-color 0.3s ease;
 }
 
-.button:hover {
+.custom-button:hover {
     background-color: #d9c5e3;
 }
+
+#back {
+    margin-right: 10px;
+}
+
+.forgot-pass{
+    font-style: italic;
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    text-align: center; 
+}
+
