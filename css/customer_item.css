@@ -32,21 +32,40 @@ nav {
     justify-content: space-between;
     align-items: center;
     padding: 15px;
-    margin-bottom: 50px;
 }
 
 nav a {
     text-decoration: none;
     color: white;
     margin: 0 10px;
+    margin-right: 20px;
     display: flex;
     align-items: center;
     font-size: large;
+    padding: 10px;
+    border-radius: 15px;
+    transition: color 0.3s, background-color 0.3s; /* Add transition for smooth color and background change */
+}
+
+nav a:hover {
+    color: #FF5E78; 
+    background-color: #FFF; 
+    border-radius: 15px;
 }
 
 nav a i {
     font-size: 30px;
-    margin-left: 20px;
+}
+
+nav .right-side{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav a.active {
+    color: #FF5E78;
+    background-color: #FFF;
 }
 
 #search[type=text] {
@@ -231,4 +250,73 @@ nav a i {
 .filter-section button:hover {
     background: #ffffffc4;
     color: black;
+}
+
+footer {
+    background-color: #E6A4B4;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.footer-links a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.footer-links a:hover {
+    color: #727aff;
+}
+
+footer p {
+    margin-top: 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.footer-info{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 10px;
+    margin-right: 20px;
+    
+}
+
+.social-links {
+    list-style: none;
+    padding: 0;
+    text-align: center;
+}
+
+.social-links i {
+    font-size: 24px;
+}
+
+.social-links li {
+    display: inline-block;
+    margin: 0 10px;
+    margin-right: 20px;
+}
+
+.social-links a {
+    color: #fff;
+}
+
+.social-links a:hover {
+    color: #727aff;
+}
+
+@media (max-width: 768px) {
+    .footer-links {
+        margin-top: 10px;
+    }
+
+    .footer-links a {
+        display: block;
+        margin: 5px 0;
+    }
 }
