@@ -1,18 +1,17 @@
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
+    box-sizing: border-box;  
 }
 
 .button{
-    font-family: Arial, Helvetica, sans-serif;
     transition-duration: 0.4s; width: 50%;
       color: white; /* Set the text color to make it readable */
       padding: 10px; /* Add some padding for better appearance */
       border: none; /* Remove default button border */
       cursor: pointer; /* Add a pointer cursor on hover */
     }
+    
 body {
     background-color: #F5EEE6;
     width: 100%;
