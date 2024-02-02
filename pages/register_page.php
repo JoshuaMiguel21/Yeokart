@@ -71,7 +71,7 @@
                                 array_push($errors, "Password does not match");
                             }
                             
-                            require_once "../database/db_register.php";
+                            require_once "../database/db_account.php";
                             $sql = "SELECT * FROM user_accounts WHERE email = '$email'";
                             $result = mysqli_query($conn, $sql);
                             $rowCount = mysqli_num_rows($result);
@@ -85,7 +85,7 @@
                                     echo "<div class='alert alert-warning'>$error</div>";
                                 }
                             } else {
-                                require_once "../database/db_register.php";
+                                require_once "../database/db_account.php";
                                 $sql = "INSERT INTO user_accounts (firstname, lastname, username, email, password) VALUES ( ?, ?, ?, ?, ? )";	
                                 $stmt = mysqli_stmt_init($conn);
                                 $prepareStmt = mysqli_stmt_prepare($stmt, $sql);
