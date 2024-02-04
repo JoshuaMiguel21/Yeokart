@@ -20,20 +20,34 @@
                 <hr>
                 <p style="font-style: italic;">Don't have an account yet? <a href="#"><strong style="font-style: italic;">Sign-up</strong></a></p>
                 <?php
+
+                session_start();
+
                     if (isset($_POST["login"])) {
                         $email = $_POST["email"];
                         $password = $_POST["password"];
+                        
                         require_once "../database/db_account.php";
                         $sql = "SELECT * FROM user_accounts WHERE email = '$email'";
-                        $result = mysqli_query($conn, $sql);
+                        $result = mysqli_query($con, $sql);
                         $user = mysqli_fetch_array($result, MYSQLI_ASSOC);
+                        
                         if ($user){
-                            if (password_verify($password, $user["password"])){
-                                header("Location: customer_homepage.html");
-                                die();
+                            if($user['is_verified'] == 1)
+                            {
+                                if (password_verify($password, $user["password"])){
+                                    header("Location: customer_homepage.html");
+                                    $_SESSION['logged_in'] = true;
+                                    $_SESSION['username'] = $result_fetch['username'];
+                                    die();
+                                }
+                                else{
+                                    echo "<div class='alert alert-danger'>Password does not match</div>";
+                                }
                             }
-                            else{
-                                echo "<div class='alert alert-danger'>Password does not match</div>";
+                            else
+                            {
+                                echo "<div class='alert alert-danger'>Email not verified</div>";
                             }
                         }
                         else{
