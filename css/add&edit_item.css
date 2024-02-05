@@ -74,7 +74,7 @@ footer p {
   }
   #item_desc{
     height: 140px; width: 500px;
-    padding: 12px 20px;
+    padding: 12px 20px; resize: none;
   }
 
   .submit-button-container{
@@ -87,10 +87,15 @@ footer p {
     margin-top: 20px;
 }
 
+.entire-form{
+    height: 225px;
+}
+
 #submit{
     background-color: #E6A4B4;
     padding: 10px 20px;
-    width: 250px;
+    width: 175px;
     text-align: center;
     border-radius: 10px;
+    font-weight: bold;
 }

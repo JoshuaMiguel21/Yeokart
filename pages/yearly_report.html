@@ -8,38 +8,62 @@
         integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
-    <link href="contact_us.css" rel="stylesheet" />
+    <link href="/css/monthlyreport.css" rel="stylesheet" />
     <title>Yeokart</title>
 </head>
+
 <body>
-    <nav>
-        <a href="customer_homepage.html"><i class="fas fa-home"></i></a>
-        <input type="text" id="search" placeholder="Search..">
-        <div class="right-side">
-            <a href="#" class="active">Shop</a>
-            <a href="#"><i class="fas fa-user"></i></a>
-            <a href="customer_cart.html"><i class="fas fa-shopping-cart"></i></a>
-        </div>
-    </nav>
-    <center><h1 style="color: #000000;"><b>Contact Us</b></h1></center>
-        <div class="contacts">
-            <div class="contact1">
-                <center><i class="fa-solid fa-building" style="color: black; font-size: 3em; margin-top: 45px;"></i></center>
-                <center><h3 style="color: black; margin-top: 12px;"><b>Address</b></h3></center>
-                <center><h3 id="contact_detail" style="color: black;"><b>2489 Nfnjfju St., Sguje, Manila</b></h3></center>
-            </div>
-            <div class="contact2">
-                <center><i class="fa-solid fa-phone" style="color: white; font-size: 3em; margin-top: 45px;"></i></center>
-                <center><h3 style="color: white; margin-top: 12px;"><b>Phone Number</b></h3></center>
-                <center><h3 id="contact_detail" style="color: white;"><b>9999 999 9999</b></h3></center>
-            </div>
-            <div class="contact3">
-                <center><i class="fa-solid fa-envelope" style="color: white; font-size: 3em; margin-top: 45px;"></i></center>
-                <center><h3 style="color: white; margin-top: 12px;"><b>Email</b></h3></center>
-                <center><h3 id="contact_detail" style="color: white;"><b>ghkjdrfmijfijn@email.com</b></h3></center>
-            </div>
-        </div>
-         
+    
+    <div class="nav_bar">
+        <h2 style="margin-top: 18px; margin-left: 40px; color: white;"><b>Add New Item</b></h2>
+        <a href="monthly_report.html" class="nav_item">Monthly</a>
+    </div>
+
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <table>
+        <tr>
+          <th>Item</th>  
+          <th>ItemID</th>
+          <th>Artist</th>
+          <th>Category</th>
+          <th>Quantity</th> 
+          <th>Price</th> 
+          <th>Subtotal</th> 
+        </tr>
+        <tr>
+          <td>Item Name 1</td>
+          <td>ItemID001</td>
+          <td>Artist1</td>
+          <td>Category1</td>
+          <td>5</td>
+          <td>500</td>
+          <td>2500</td>
+        </tr>
+        <tr>
+            <td>Item Name 2</td>
+            <td>ItemID002</td>
+            <td>Artist2</td>
+            <td>Category2</td>
+            <td>3</td>
+            <td>300</td>
+            <td>900</td>
+        </tr>
+        <tr>
+            <td>Item Name 3</td>
+            <td>ItemID003</td>
+            <td>Artist3</td>
+            <td>Category1</td>
+            <td>8</td>
+            <td>250</td>
+            <td>2000</td>
+        </tr>
+    </table>
+
+    <div>
+        <h3 style="margin-top: 50px;"><b><center>Total: 5,400</center></b></h3>
+    </div>
+
+
     <footer>
         <div class="footer-info">
             <div>
@@ -47,7 +71,7 @@
             </div>
     
             <div class="footer-links">
-                <a href="customer_homepage.html">Home</a>
+                <a href="owner_homepage.html">Home</a>
                 <a href="#">Shop</a>
                 <a href="#">Contact</a>
                 <a href="#">About Us</a>

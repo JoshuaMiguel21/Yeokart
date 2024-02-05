@@ -8,38 +8,46 @@
         integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
-    <link href="contact_us.css" rel="stylesheet" />
+    <link href="add_item.css" rel="stylesheet" />
     <title>Yeokart</title>
 </head>
 <body>
-    <nav>
-        <a href="customer_homepage.html"><i class="fas fa-home"></i></a>
-        <input type="text" id="search" placeholder="Search..">
-        <div class="right-side">
-            <a href="#" class="active">Shop</a>
-            <a href="#"><i class="fas fa-user"></i></a>
-            <a href="customer_cart.html"><i class="fas fa-shopping-cart"></i></a>
+    
+    <div class="title_and_button">
+        <h2 style="margin-top: 50px; margin-left: 70px;"><b>Edit Item</b></h2>
+    </div>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <div class="form-container">
+        <div class="row1_add_item">
+            <p>Name:</p><input type="text" rows="1" cols="60" id="name">
+            <p style="margin-top: 20px;">Price:</p><input type="number" rows="5" cols="60" id="price" step=".01">
+            <p style="margin-top: 20px;">Item:</p><input type="text" rows="1" cols="60" id="item">
+            <p style="margin-top: 20px;">Item Description:</p><textarea rows="5" cols="60" id="item_desc"></textarea>
         </div>
-    </nav>
-    <center><h1 style="color: #000000;"><b>Contact Us</b></h1></center>
-        <div class="contacts">
-            <div class="contact1">
-                <center><i class="fa-solid fa-building" style="color: black; font-size: 3em; margin-top: 45px;"></i></center>
-                <center><h3 style="color: black; margin-top: 12px;"><b>Address</b></h3></center>
-                <center><h3 id="contact_detail" style="color: black;"><b>2489 Nfnjfju St., Sguje, Manila</b></h3></center>
-            </div>
-            <div class="contact2">
-                <center><i class="fa-solid fa-phone" style="color: white; font-size: 3em; margin-top: 45px;"></i></center>
-                <center><h3 style="color: white; margin-top: 12px;"><b>Phone Number</b></h3></center>
-                <center><h3 id="contact_detail" style="color: white;"><b>9999 999 9999</b></h3></center>
-            </div>
-            <div class="contact3">
-                <center><i class="fa-solid fa-envelope" style="color: white; font-size: 3em; margin-top: 45px;"></i></center>
-                <center><h3 style="color: white; margin-top: 12px;"><b>Email</b></h3></center>
-                <center><h3 id="contact_detail" style="color: white;"><b>ghkjdrfmijfijn@email.com</b></h3></center>
-            </div>
+    
+        <div class="row2_add_item">
+            <p>Quantity:</p><input type="number" placeholder="" size="50" id="quantity" onkeypress="return event.charCode >= 100" min="1">
+            <p style="margin-top: 20px;">Artist:</p><input type="text" placeholder="" size="50" id="artist">
+            
+            <p for="deliveryStatus" style="margin-top: 18px;">Category:</p>
+                    <select id="deliveryStatus" name="deliveryStatus">
+                        <option value="packaging">PACKAGING</option>
+                        <option value="delivering">DELIVERING</option>
+                        <option value="delivered">DELIVERED</option>
+                    </select>
+            <form action="/action_page.php">
+                <p for="img" style="margin-top: 15px;">Select image:</p>
+                <input type="file" id="img" name="img" accept="image/*">
+                
+              </form>
         </div>
-         
+    </div>
+    <div>
+        <div class="submit-button-container">
+            <input type="submit" value="Save" id="submit">
+        </div>
+    </div>
+
     <footer>
         <div class="footer-info">
             <div>
@@ -47,7 +55,7 @@
             </div>
     
             <div class="footer-links">
-                <a href="customer_homepage.html">Home</a>
+                <a href="owner_homepage.html">Home</a>
                 <a href="#">Shop</a>
                 <a href="#">Contact</a>
                 <a href="#">About Us</a>
@@ -60,7 +68,6 @@
             </div>
         </div>
     </footer>
-
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

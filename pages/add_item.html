@@ -8,7 +8,7 @@
         integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
-    <link href="add_item.css" rel="stylesheet" />
+    <link href="add&edit_item.css" rel="stylesheet" />
     <title>Yeokart</title>
 </head>
 <body>
@@ -19,9 +19,9 @@
     &nbsp;&nbsp;&nbsp;&nbsp;
     <div class="form-container">
         <div class="row1_add_item">
-            <p>Name:</p><textarea rows="5" cols="60" id="name"></textarea>
+            <p>Name:</p><input type="text" rows="1" cols="60" id="name">
             <p style="margin-top: 20px;">Price:</p><input type="number" rows="5" cols="60" id="price" step=".01">
-            <p style="margin-top: 20px;">Item:</p><textarea rows="5" cols="60" id="item"></textarea>
+            <p style="margin-top: 20px;">Item:</p><input type="text" rows="1" cols="60" id="item">
             <p style="margin-top: 20px;">Item Description:</p><textarea rows="5" cols="60" id="item_desc"></textarea>
         </div>
     
@@ -44,7 +44,7 @@
     </div>
     <div>
         <div class="submit-button-container">
-            <input type="submit" value="Add to Cart" id="submit">
+            <input type="submit" value="Save" id="submit">
         </div>
     </div>
 
