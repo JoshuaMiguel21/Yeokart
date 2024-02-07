@@ -59,7 +59,7 @@
                         <script>
                             Swal.fire({
                                 title: 'Error!',
-                                text: 'The email you entered is already registered',
+                                text: 'Invalid or Expired Link',
                                 icon: 'error',
                                 confirmButtonText: 'OK'
                             }).then(() => {
