@@ -49,7 +49,7 @@
                             $mail->Host       = 'smtp.gmail.com';                       //Set the SMTP server to send through
                             $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
                             $mail->Username   = 'cipcastro123@gmail.com';               //SMTP username
-                            $mail->Password   = 'qxpodezchijgqpso';                     //SMTP password
+                            $mail->Password   = 'kycvxgkkrpixxtuv';                     //SMTP password
                             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         //Enable implicit TLS encryption
                             $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
                         
@@ -59,14 +59,12 @@
                          
                             //Content
                             $mail->isHTML(true);                                        //Set email format to HTML
-                            $mail->Subject = 'Yeokart Account Registration - Email Verification';
+                            $mail->Subject = 'Email Verification for the Creation of your Yeokart Account';
                             $mail->Body    = "  <p>Dear User,</p>
-                                                <br>
                                                 <p>Thank you for registering with <b>Yeokart</b>. To ensure the security of your account 
                                                 and to activate your membership, we need to verify your email address.</p>
-                                                <br>
-                                                <p>Please follow the link below to complete the email verification process: </p>
-                                                <p><a href='http://localhost:3000/pages/verify_email.php?email=$email&v_code=$v_code'>Verify Your Email</a></p>";
+                                                <p>Please click the link below to complete the email verification process: </p>
+                                                <p><a href='http://localhost/Yeokart/pages/verify_email.php?email=$email&v_code=$v_code'>Verify Your Email</a></p>";
                             
                         
                             $mail->send();
@@ -118,7 +116,6 @@
                                                 icon: 'info',
                                                 title: 'Great news!',
                                                 text: 'Your account is one step away from being fully secured. Please verify your email to proceed with the login.',
-                                                showCancelButton: true,
                                                 confirmButtonText: 'OK'
                                             });
                                             </script>";

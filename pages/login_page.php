@@ -9,7 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-    <title>Yeokart Login Page</title>
+    <title>Yeokart - Login Page</title>
 </head>
 
 <body>
@@ -22,7 +22,7 @@
                 <?php
 
                 session_start();
-
+                
                     if (isset($_POST["login"])) {
                         $email = $_POST["email"];
                         $password = $_POST["password"];
@@ -42,16 +42,13 @@
                                     die();
                                 }
                                 else{
-                                    echo "<div class='alert alert-danger'>Password does not match</div>";
+                                    echo "<div class='alert alert-danger'>Password or Email does not match</div>";
                                 }
                             }
                             else
                             {
                                 echo "<div class='alert alert-danger'>Email not verified</div>";
                             }
-                        }
-                        else{
-                            echo "<div class='alert alert-danger'>Email does not match</div>";
                         }
                     }
                 ?>
@@ -63,7 +60,7 @@
                     <label for="password">Password</label>
                     <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
                 </div>
-                <a href="#" class="forgot-pass"><strong>Forgot Password?</strong></a>
+                <a href="forgot_email.html" class="forgot-pass"><strong>Forgot Password?</strong></a>
 
                 <div class="button-container">
                     <a href="/pages/start_page.html"><button type="button" class="custom-button">Back</button></a>
