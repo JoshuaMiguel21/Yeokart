@@ -1,4 +1,3 @@
-
 body {
     background-color: #F5EEE6;
     margin: 0;
@@ -7,31 +6,34 @@ body {
 
 .container {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
     height: 100vh;
 }
 
-#div1 {
-    background-color: #E6A4B4;
-    padding: 40px;
-    border-radius: 10px;
-    margin: 20px;
-    box-shadow: 10px 10px 5px #F3D7CA;
+.left-column,
+.right-column {
+    flex: 1;
+    padding: 20px;
 }
 
-#div2 {
-    padding: 20px;
+.right-column {
     text-align: center;
 }
 
 img {
     max-width: 80%;
     height: auto;
+    text-align: center;
 }
 
 form {
-    max-width: 400px;
+    background-color: #E6A4B4;
+    padding: 50px; /* Reduce padding for smaller screens */
+    border-radius: 10px;
+    box-shadow: 10px 10px 5px #F3D7CA;
+    max-width: 800px;
     margin: 0 auto;
 }
 
@@ -50,10 +52,12 @@ input {
 
 .button-container {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
 }
 
-.custom-button {
+a .btn-custom,
+#register {
     background-color: #C6DFF7;
     color: black;
     padding: 10px 20px;
@@ -66,11 +70,39 @@ input {
     transition: background-color 0.3s ease;
 }
 
-.custom-button:hover {
+#register{
+    margin-bottom: 20px ;
+}
+
+a .btn-custom:hover,
+#register:hover {
     background-color: rgb(114, 122, 255);
     color: white;
 }
 
-#back {
-    margin-right: 10px;
+@media (min-width: 768px) {
+    /* Apply styles for screens larger than 767px wide */
+    .container {
+        justify-content: space-between;
+    }
+
+    #div1 {
+        width: 48%;
+    }
+
+    #div2 {
+        width: 48%;
+    }
+}
+
+/* Media query for smaller screens */
+@media (max-width: 767px) {
+    form {
+        padding: 15px; /* Adjust padding for smaller screens */
+    }
+
+    a .btn-custom,
+    #register {
+        margin-top: 20px; /* Adjust margin for smaller screens */
+    }
 }

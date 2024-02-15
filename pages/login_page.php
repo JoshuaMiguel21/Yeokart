@@ -33,7 +33,35 @@
                         $user = mysqli_fetch_array($result, MYSQLI_ASSOC);
                         
                         if ($user){
-                            if($user['is_verified'] == 1)
+                            
+                            if ($user['is_admin'] == 1) {
+                                if ($password == $user["password"]){
+                                    header("Location: owner_homepage.html");
+                                    $_SESSION['logged_in'] = true;
+
+                                    $_SESSION['username'] = $result_fetch['username'];
+                                    die();
+                                }
+                                else{
+                                    echo "<div class='alert alert-danger'>Password or Email does not match</div>";
+                                }
+                            } 
+
+                            elseif ($user['is_employee'] == 1) 
+                            {
+                                if (password_verify($password, $user["password"])){
+                                    header("Location: emp_homepage.html");
+                                    $_SESSION['logged_in'] = true;
+                                    $_SESSION['lastname'] = $result_fetch['lastname'];
+                                    $_SESSION['username'] = $result_fetch['username'];
+                                    die();
+                                }
+                                else{
+                                    echo "<div class='alert alert-danger'>Password or Email does not match</div>";
+                                }
+                            } 
+                            
+                            elseif ($user['is_verified'] == 1) 
                             {
                                 if (password_verify($password, $user["password"])){
                                     header("Location: customer_homepage.html");
@@ -44,8 +72,9 @@
                                 else{
                                     echo "<div class='alert alert-danger'>Password or Email does not match</div>";
                                 }
-                            }
-                            else
+                            } 
+                            
+                            else 
                             {
                                 echo "<div class='alert alert-danger'>Email not verified</div>";
                             }

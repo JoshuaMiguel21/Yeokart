@@ -1,0 +1,39 @@
+body {
+    padding: 20px;
+    background-color: #F5EEE6;
+}
+
+h2 {
+    text-align: center;
+}
+
+form{
+    background-color: #E6A4B4;
+    padding: 40px;
+    border-radius: 10px;
+    margin: 20px;
+    box-shadow: 10px 10px 5px #F3D7CA;
+}
+
+.button-container{
+    text-align: center;
+}
+
+#submit{
+    background-color: #C6DFF7;
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 15px;
+    width: 60%;
+    transition: background-color 0.3s ease;
+}
+
+#submit:hover{
+    background-color: rgb(114, 122, 255);
+    color: white;
+}
