@@ -31,7 +31,7 @@
                 <input type="number" name="item_quantity" id="item_quantity" class="form-control" placeholder="Enter item quantity" autocomplete="off" required>
             </div>
             <div class="form-outline mb-4 w-50 m-auto">
-                <select name="product_category" id="" class="form-select">
+                <select name="product_category" id="product_category" class="form-select">
                     <option value="">Select item Category</option>
                     <?php
                     include('../database/db_items.php');
@@ -89,6 +89,15 @@
             </div>
         </div>
     </div>
+    <script>
+        function updateDropdown(category_id, category_name) {
+            var select = document.getElementById("product_category");
+            var option = document.createElement("option");
+            option.value = category_id;
+            option.text = category_name;
+            select.add(option);
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
 
@@ -106,7 +115,9 @@ if (isset($_POST['add_category'])) {
         $insert_query = "INSERT INTO categories (category_name) VALUES ('$category_name')";
         $result = mysqli_query($con, $insert_query);
         if ($result) {
+            $category_id = mysqli_insert_id($con); // Get the ID of the newly inserted category
             echo "<script>alert('Category has been added successfully')</script>";
+            echo "<script>updateDropdown($category_id, '$category_name')</script>"; // Call JavaScript function to update dropdown
         }
     }
 }
@@ -118,7 +129,6 @@ if (isset($_POST['insert_item'])) {
     $item_quantity = $_POST['item_quantity'];
     $product_category = $_POST['product_category'];
 
-
     $item_image1 = $_FILES['item_image1']['name'];
     $item_image2 = $_FILES['item_image2']['name'];
     $item_image3 = $_FILES['item_image3']['name'];
@@ -127,18 +137,25 @@ if (isset($_POST['insert_item'])) {
     $temp_image2 = $_FILES['item_image2']['tmp_name'];
     $temp_image3 = $_FILES['item_image3']['tmp_name'];
 
-    if ($item_name == '' or $item_price == '' or $item_description == '' or  $item_quantity == '' or $product_category == ''  or  $item_image1 == ''  or  $item_image2 == ''  or  $item_image3 == '') {
-        echo "<script>alert('Please fill up all the fields')</script>";
-        exit();
+    $select_query = "SELECT * FROM products WHERE item_name='$item_name'";
+    $result_select = mysqli_query($con, $select_query);
+    $number = mysqli_num_rows($result_select);
+    if ($number > 0) {
+        echo "<script>alert('This product already exists')</script>";
     } else {
-        move_uploaded_file($temp_image1, "./item_images/$item_image1");
-        move_uploaded_file($temp_image2, "./item_images/$item_image2");
-        move_uploaded_file($temp_image3, "./item_images/$item_image3");
+        if ($item_name == '' or $item_price == '' or $item_description == '' or  $item_quantity == '' or $product_category == ''  or  $item_image1 == ''  or  $item_image2 == ''  or  $item_image3 == '') {
+            echo "<script>alert('Please fill up all the fields')</script>";
+            exit();
+        } else {
+            move_uploaded_file($temp_image1, "./item_images/$item_image1");
+            move_uploaded_file($temp_image2, "./item_images/$item_image2");
+            move_uploaded_file($temp_image3, "./item_images/$item_image3");
 
-        $insert_items = "INSERT INTO products (item_name,item_price,item_description,item_quantity,category_id,item_image1,item_image2,item_image3) VALUES ('$item_name','$item_price','$item_description','$item_quantity','$product_category','$item_image1','$item_image2','$item_image3')";
-        $result_query_item = mysqli_query($con, $insert_items);
-        if ($result_query_item) {
-            echo "<script>alert('Item successfully added')</script>";
+            $insert_items = "INSERT INTO products (item_name,item_price,item_description,item_quantity,category_id,item_image1,item_image2,item_image3) VALUES ('$item_name','$item_price','$item_description','$item_quantity','$product_category','$item_image1','$item_image2','$item_image3')";
+            $result_query_item = mysqli_query($con, $insert_items);
+            if ($result_query_item) {
+                echo "<script>alert('Item successfully added')</script>";
+            }
         }
     }
 }
