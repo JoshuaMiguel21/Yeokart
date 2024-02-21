@@ -16,12 +16,12 @@
 
 <body>
     <div class="container">
-        <div class="col-sm-12 col-md-6 col-lg-6" id="div1">
+        <div class="left-column">
             <form action="register_page.php" method="post">
-                <h1><b>Sign Up</b></h1>
-                <p>Fill up the form with the correct information</p>
+                <h1 style="text-align: center;"><b>Sign Up</b></h1>
+                <p style="text-align: center;">Fill up the form with the correct information</p>
                 <hr>
-
+                
                 <div class="form-group">
                 <?php
                     require('../database/db_account.php');
@@ -108,7 +108,7 @@
                             {
                                 $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
                                 $v_code = bin2hex(random_bytes(16));
-                                $query = "INSERT INTO `user_accounts` (`firstname`, `lastname`, `username`, `email`, `password`, `verification_code`, `is_verified`) VALUES ('$_POST[firstname]', '$_POST[lastname]', '$_POST[username]', '$_POST[email]', '$password', '$v_code', '0')";
+                                $query = "INSERT INTO `user_accounts` (`firstname`, `lastname`, `username`, `email`, `password`, `verification_code`, `is_verified`, `is_employee`, `is_admin`) VALUES ('$_POST[firstname]', '$_POST[lastname]', '$_POST[username]', '$_POST[email]', '$password', '$v_code', '0', '0', '0')";
                                 if(mysqli_query($con, $query) && sendMail($_POST['email'], $v_code))
                                 {
                                     echo "  <script>
@@ -144,6 +144,7 @@
                     }
                 ?>
                 </div>
+                <br>
                 <div class="form-group">
                     <label for="firstname">First Name</label>
                     <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Enter first name" required>
@@ -170,12 +171,12 @@
                 </div>
 
                 <div class="button-container">
-                    <a href="/pages/start_page.html"><button type="button" class="custom-button">Back</button></a>
-                    <button type="submit" class="custom-button" id="register" name="submit" id="signUp">Sign Up</button>
+                    <button type="submit" id="register" class="btn btn-custom btn-lg" name="submit">Sign Up</button>
+                    <center><a href="/pages/start_page.html"><button type="button" class="btn btn-custom btn-lg">Back to Login</button></a></center>
                 </div>
             </form>
         </div>
-        <div class="col-sm-12 col-md-6 col-lg-6" id="div2">
+        <div class="right-column">
             <img src="../res/logo.png" alt="Yeokart Logo">
             <p style="font-style: italic;">Sign up to see the world of KPOP</p>
         </div>

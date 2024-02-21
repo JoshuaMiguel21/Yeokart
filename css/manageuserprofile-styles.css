@@ -1,0 +1,182 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #F5EEE6;
+    width: 100%;
+    height: 100vh;
+}
+
+.content-wrapper {
+    display: flex;
+}
+
+.section {
+    padding: 20px 0;
+}
+
+h1 {
+    margin-top: 50px;
+    font-size: 50px;
+}
+
+nav {
+    background-color: #E6A4B4;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+}
+
+nav a {
+    text-decoration: none;
+    color: white;
+    margin: 0 10px;
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+    font-size: large;
+    padding: 10px;
+    border-radius: 15px;
+    transition: color 0.3s, background-color 0.3s; /* Add transition for smooth color and background change */
+}
+
+nav a:hover {
+    color: #FF5E78; 
+    background-color: #FFF; 
+    border-radius: 15px;
+}
+
+nav a i {
+    font-size: 30px;
+}
+
+nav .right-side{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav a.active {
+    color: #FF5E78;
+    background-color: #FFF;
+}
+
+#search[type=text] {
+    width: 50%;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: white;
+    background-image: url('../res/searchicon.png');
+    background-position: 10px 10px; 
+    background-repeat: no-repeat;
+    padding: 12px 20px 12px 40px;
+    
+}
+
+#right-side {
+    display: flex;
+    align-items: center;
+}
+
+.account-header-container {
+
+    display: flex;
+    justify-content: space-between;
+    justify-content: flex-end;
+    align-items: center;
+
+}
+
+.add-address-button {
+    background-color: #E6AAB4;
+    padding: 3px;
+    border: 2px solid #E6AAB4;
+    margin-right: 22px;
+    margin-top: 20px;
+    text-align: right;
+    color: white;;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 20px;transition: opacity 0.3s ease;
+}
+
+.add-address-button:hover {
+    opacity: 0.65;
+    color: white;
+}
+
+#account-header{
+    margin-right: auto;
+}
+
+.your-address-header{
+    margin-top: 15px;
+    margin-left: 67px;
+    font-weight: bold;
+}
+
+.return-user-button{
+    margin-top: 18px;
+    margin-left: 40px;
+    background-color: #E6AAB4;
+    padding: 3px;
+    border: 2px solid #E6AAB4;
+    text-align: right;
+    color: white;;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 20px;transition: opacity 0.3s ease;
+}
+
+.return-user-button:hover {
+    opacity: 0.65;
+    color: white;
+}
+
+.address1{
+    margin-top: 18px;
+    margin-left: 75px;
+}
+.address2{
+    margin-top: 18px;
+    margin-left: 75px;
+}
+.address3{
+    margin-top: 18px;
+    margin-left: 75px;
+}
+
+#address-description1{
+    margin-bottom: 20px;
+}
+
+.edit-button, 
+.delete-button{
+    margin-right: 10px;
+    margin-bottom: 20px;
+    background-color: #E6AAB4;
+    padding: 3px;
+    border: 2px solid #E6AAB4;
+    text-align: right;
+    color: white;;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 20px;transition: opacity 0.3s ease;
+}
+
+.edit-button:hover, 
+.delete-button:hover {
+    opacity: 0.65;
+    color: white;
+}
+
+
+
