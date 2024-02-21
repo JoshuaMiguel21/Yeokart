@@ -18,7 +18,7 @@
             <form action="login_page.php" method="post">
                 <h1 style="margin-bottom: 30px;"><b>Login</b></h1>
                 <hr>
-                <p style="font-style: italic;">Don't have an account yet? <a href="#"><strong style="font-style: italic;">Sign-up</strong></a></p>
+                <p style="font-style: italic;">Don't have an account yet? <a href="register_page.php"><strong style="font-style: italic;">Sign-up</strong></a></p>
                 <?php
 
                 session_start();

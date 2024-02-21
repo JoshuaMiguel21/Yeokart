@@ -26,6 +26,7 @@ hr {
 }
 
 .card {
+    text-decoration: none;
     margin: 20px;
     background: #E6A4B4;
     padding: 20px;
