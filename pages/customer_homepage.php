@@ -140,7 +140,8 @@
     <footer>
         <div class="footer-info">
             <div>
-                <p><img src="/res/logo.png" alt="Yeokart Logo" class="footer-logo">&copy; 2024 Yeokart. All rights reserved.</p>
+                <p><img src="/res/logo.png" alt="Yeokart Logo" class="footer-logo">&copy; 2024 Yeokart. All rights
+                    reserved.</p>
             </div>
 
             <div class="footer-links">

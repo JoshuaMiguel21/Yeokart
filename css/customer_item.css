@@ -257,6 +257,9 @@ footer {
     padding: 20px 0;
     text-align: center;
 }
+.footer-logo{
+    width: 60px;
+}
 
 .footer-links a {
     color: #fff;
