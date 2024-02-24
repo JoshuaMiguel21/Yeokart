@@ -21,14 +21,14 @@
         $email = mysqli_real_escape_string($con, $_GET['email']);
         $v_code = mysqli_real_escape_string($con, $_GET['v_code']);
 
-        $query = "SELECT * FROM `user_accounts` WHERE `email`='$email' AND `verification_code`='$v_code'";
+        $query = "SELECT * FROM `employee_accounts` WHERE `email`='$email' AND `verification_code`='$v_code'";
         $result = mysqli_query($con, $query);
 
         if ($result) {
             if (mysqli_num_rows($result) == 1) {
                 $result_fetch = mysqli_fetch_assoc($result);
                 if ($result_fetch['is_employee'] == 0) {
-                    $update = "UPDATE `user_accounts` SET `is_employee`='1' WHERE `email`='$email'";
+                    $update = "UPDATE `employee_accounts` SET `is_employee`='1' WHERE `email`='$email'";
                     if (mysqli_query($con, $update)) {
                         echo "  
                             <script>

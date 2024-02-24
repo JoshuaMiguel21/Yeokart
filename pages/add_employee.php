@@ -41,7 +41,7 @@
             $mail->Host       = 'smtp.gmail.com';                       //Set the SMTP server to send through
             $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
             $mail->Username   = 'cipcastro123@gmail.com';               //SMTP username
-            $mail->Password   = 'kycvxgkkrpixxtuv';                     //SMTP password
+            $mail->Password   = 'rzktkbebxdissxix';                     //SMTP password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         //Enable implicit TLS encryption
             $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
         
@@ -63,12 +63,13 @@
 
         catch (Exception $e) 
         {
+            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
             return false;
         }
     }
 
     if (isset($_POST['submit'])) {
-    $user_exist_query = "SELECT * FROM `user_accounts` WHERE `username`=? OR `email`=?";
+    $user_exist_query = "SELECT * FROM `employee_accounts` WHERE `username`=? OR `email`=?";
     $stmt = mysqli_prepare($con, $user_exist_query);
     mysqli_stmt_bind_param($stmt, 'ss', $_POST['username'], $_POST['email']);
     mysqli_stmt_execute($stmt);
@@ -85,7 +86,7 @@
         } else {
           $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
           $v_code = bin2hex(random_bytes(16));
-          $query = "INSERT INTO `user_accounts` (`firstname`, `lastname`, `username`, `email`, `password`, `verification_code`, `is_verified`, `is_employee`, `is_admin`) VALUES ('$_POST[firstname]', '$_POST[lastname]', '$_POST[username]', '$_POST[email]', '$password', '$v_code', '0', '0', '0')";
+          $query = "INSERT INTO `employee_accounts` (`firstname`, `lastname`, `username`, `email`, `password`, `verification_code`, `is_employee`) VALUES ('$_POST[firstname]', '$_POST[lastname]', '$_POST[username]', '$_POST[email]', '$password', '$v_code', '0')";
           if(mysqli_query($con, $query) && sendMail($_POST['email'], $v_code)){
                 echo "<script>
                         Swal.fire({

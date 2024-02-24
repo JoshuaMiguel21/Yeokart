@@ -26,13 +26,13 @@
         require('../database/db_account.php');
 
         // SQL query to select employees with is_employee = 1
-        $sql = "SELECT id, firstname, lastname, username, email FROM `user_accounts` WHERE is_employee = 1";
+        $sql = "SELECT id, firstname, lastname, username, email FROM `employee_accounts` WHERE is_employee = 1";
         $result = $con->query($sql);
 
 
         if(isset($_POST['deleteEmployee'])) {
             $employeeIdToDelete = $_POST['deleteEmployee'];
-            $deleteSql = "DELETE FROM `user_accounts` WHERE id = $employeeIdToDelete";
+            $deleteSql = "DELETE FROM `employee_accounts` WHERE id = $employeeIdToDelete";
 
             if ($con->query($deleteSql) === TRUE) {
                 echo"
