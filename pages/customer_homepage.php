@@ -47,7 +47,7 @@
                 $item_price = $row['item_price'];
                 $item_description = $row['item_description'];
                 $item_quantity = $row['item_quantity'];
-                $category_id = $row['category_id'];
+                $category_name = $row['category_name'];
                 $item_image1 = $row['item_image1'];
                 echo "<div class='card'>
                 <div class='product-image'>

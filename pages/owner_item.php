@@ -24,7 +24,7 @@
             </div>
             <div class="form-outline mb-4 w-50 m-auto">
                 <label for="item_description" class="form-label">Description:</label>
-                <input type="text" name="item_description" id="item_description" class="form-control" placeholder="Enter item description" autocomplete="off" required>
+                <textarea name="item_description" id="item_description" class="form-control" placeholder="Enter item description" required></textarea>
             </div>
             <div class="form-outline mb-4 w-50 m-auto">
                 <label for="item_quantity" class="form-label">Quantity:</label>
@@ -40,7 +40,7 @@
                     while ($row = mysqli_fetch_assoc($result_query_category)) {
                         $category_name = $row['category_name'];
                         $category_id = $row['category_id'];
-                        echo "<option value='$category_id'>$category_name</option>";
+                        echo "<option value='$category_name'>$category_name</option>";
                     }
                     ?>
                 </select>
@@ -66,6 +66,11 @@
                 <input type="submit" name="insert_item" class="btn btn-info mb-3 px-3" value="Add Item">
             </div>
         </form>
+        <div class="form-outline mb-4 mt-5">
+            <a href="./owner_item_homepage.php" class="btn btn-danger mb-3 px-3 ">
+                Back
+            </a>
+        </div>
     </div>
     <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -93,7 +98,7 @@
         function updateDropdown(category_id, category_name) {
             var select = document.getElementById("product_category");
             var option = document.createElement("option");
-            option.value = category_id;
+            option.value = category_name;
             option.text = category_name;
             select.add(option);
         }
@@ -115,9 +120,9 @@ if (isset($_POST['add_category'])) {
         $insert_query = "INSERT INTO categories (category_name) VALUES ('$category_name')";
         $result = mysqli_query($con, $insert_query);
         if ($result) {
-            $category_id = mysqli_insert_id($con); // Get the ID of the newly inserted category
+            $category_name = mysqli_insert_id($con); // Get the ID of the newly inserted category
             echo "<script>alert('Category has been added successfully')</script>";
-            echo "<script>updateDropdown($category_id, '$category_name')</script>"; // Call JavaScript function to update dropdown
+            echo "<script>updateDropdown('$category_name')</script>"; // Call JavaScript function to update dropdown
         }
     }
 }
@@ -151,7 +156,7 @@ if (isset($_POST['insert_item'])) {
             move_uploaded_file($temp_image2, "./item_images/$item_image2");
             move_uploaded_file($temp_image3, "./item_images/$item_image3");
 
-            $insert_items = "INSERT INTO products (item_name,item_price,item_description,item_quantity,category_id,item_image1,item_image2,item_image3) VALUES ('$item_name','$item_price','$item_description','$item_quantity','$product_category','$item_image1','$item_image2','$item_image3')";
+            $insert_items = "INSERT INTO products (item_name,item_price,item_description,item_quantity,category_name,item_image1,item_image2,item_image3) VALUES ('$item_name','$item_price','$item_description','$item_quantity','$product_category','$item_image1','$item_image2','$item_image3')";
             $result_query_item = mysqli_query($con, $insert_items);
             if ($result_query_item) {
                 echo "<script>alert('Item successfully added')</script>";

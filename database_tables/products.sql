@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 24, 2024 at 05:54 AM
+-- Generation Time: Feb 24, 2024 at 09:44 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -33,7 +33,7 @@ CREATE TABLE `products` (
   `item_price` int(128) NOT NULL,
   `item_description` varchar(500) NOT NULL,
   `item_quantity` int(255) NOT NULL,
-  `category_id` int(11) NOT NULL,
+  `category_name` varchar(255) NOT NULL,
   `item_image1` varchar(250) NOT NULL,
   `item_image2` varchar(250) NOT NULL,
   `item_image3` varchar(250) NOT NULL
