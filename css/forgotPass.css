@@ -25,7 +25,7 @@ body {
 }
 
 img {
-    max-width: 80%;
+    max-width: 90%;
     height: auto;
 }
 
@@ -41,8 +41,9 @@ label {
     margin-top: 10px;
 }
 
-.container p{
+#div2 p, #div1 .not-account{
     font-style: italic;
+    margin-top: 10px;
 }
 
 input {
@@ -69,4 +70,76 @@ input {
 .custom-button:hover {
     background-color: #506C8C;
     color: white;
+}
+
+@media (min-width: 683px) and (max-width: 960px) {
+    .container {
+        flex-direction: column;
+    }
+    
+    #div1, #div2 {
+        padding: 2rem;
+        margin: 1rem;
+    }
+
+    #div1 {
+        padding-top: 20px;
+    }
+
+    #div1 h2{
+        text-align: center;
+        font-size: 2rem;
+    }
+
+    label{
+        font-size: 0.8rem;
+    }
+
+    input[type="text"], input[type="email"]{
+        font-size: 0.8rem;
+    }
+
+    .custom-button {
+        font-size: 0.8rem;
+    }
+
+    #div1 p .not-account {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .container {
+        flex-direction: column;
+    }
+
+    #div1, #div2 {
+        padding: 2rem;
+        margin: 0 1rem;
+    }
+
+    #div1 {
+        padding-top: 20px;
+    }
+
+    #div1 h2{
+        text-align: center;
+        font-size: 2rem;
+    }
+
+    label{
+        font-size: 0.8rem;
+    }
+
+    input[type="text"], input[type="email"]{
+        font-size: 0.8rem;
+    }
+
+    .custom-button {
+        font-size: 0.8rem;
+    }
+
+    #div2, #div1 p, #div1 a{
+        font-size: 0.8rem;
+    }
 }

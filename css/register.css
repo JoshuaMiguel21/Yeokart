@@ -6,10 +6,8 @@ body {
 
 .container {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    height: 100vh;
 }
 
 .left-column,
@@ -18,7 +16,7 @@ body {
     padding: 20px;
 }
 
-.right-column {
+.left-column {
     text-align: center;
 }
 
@@ -30,10 +28,10 @@ img {
 
 form {
     background-color: #E6A4B4;
-    padding: 50px; /* Reduce padding for smaller screens */
+    padding: 25px 40px;
     border-radius: 10px;
     box-shadow: 10px 10px 5px #F3D7CA;
-    max-width: 800px;
+    width: 100%;
     margin: 0 auto;
 }
 
@@ -64,14 +62,14 @@ a .btn-custom,
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 600;
     margin-top: 15px;
     transition: background-color 0.3s ease;
 }
 
-#register{
-    margin-bottom: 20px ;
+#register {
+    margin-bottom: 20px;
 }
 
 a .btn-custom:hover,
@@ -80,29 +78,86 @@ a .btn-custom:hover,
     color: white;
 }
 
-@media (min-width: 768px) {
-    /* Apply styles for screens larger than 767px wide */
-    .container {
-        justify-content: space-between;
-    }
-
-    #div1 {
-        width: 48%;
-    }
-
-    #div2 {
-        width: 48%;
-    }
-}
-
-/* Media query for smaller screens */
-@media (max-width: 767px) {
+@media (min-width: 683px) and (max-width: 960px) {
     form {
-        padding: 15px; /* Adjust padding for smaller screens */
+        padding: 20px;
     }
 
     a .btn-custom,
     #register {
-        margin-top: 20px; /* Adjust margin for smaller screens */
+        margin-top: 10px;
+    }
+
+    .form-group,
+    .button-container {
+        width: 100%;
+    }
+
+    label {
+        font-size: 0.8rem;
+    }
+
+    .right-column p {
+        text-align: center;
+        font-size: 0.8rem;
+    }
+
+    .left-column {
+        display: none;
+    }
+
+    .right-column h1 {
+        text-align: center;
+        font-size: 2rem;
+    }
+
+    a .btn-custom, #register {
+        font-size: 0.8rem;
+    }
+
+    input[type="text"], input[type="email"], input[type="password"] {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 767px) {
+    form {
+        padding: 20px;
+    }
+
+    a .btn-custom,
+    #register {
+        margin-top: 10px;
+    }
+
+    .left-column {
+        display: none;
+    }
+
+    .form-group,
+    .button-container {
+        width: 100%;
+    }
+
+    label {
+        font-size: 0.8rem;
+    }
+
+    .right-column p {
+        text-align: center;
+        font-size: 0.8rem;
+    }
+
+    .right-column h1 {
+        text-align: center;
+        font-size: 2rem;
+    }
+
+    a .btn-custom, #register {
+        font-size: 0.8rem;
+    }
+
+    input[type="text"], input[type="email"], input[type="password"] {
+        font-size: 0.8rem;
     }
 }

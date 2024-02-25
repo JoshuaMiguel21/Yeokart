@@ -9,28 +9,29 @@ body {
     align-items: center;
     justify-content: center;
     height: 100vh;
+    margin: 30px;
 }
 
 #div1 {
     background-color: #E6A4B4;
     padding: 40px;
     border-radius: 10px;
-    margin: 20px;
     box-shadow: 10px 10px 5px #F3D7CA;
 }
 
 #div2 {
-    padding: 20px;
+    padding: 40px;
     text-align: center;
 }
 
 #div2 p {
-    margin-top: 20px;
     font-style: italic;
+    font-size: 1rem;
 }
 
 #div1 p {
-    margin-bottom: 30px;
+    margin-bottom: 10px;
+    font-size: 1rem;
 }
 
 img {
@@ -39,7 +40,7 @@ img {
 }
 
 form {
-    max-width: 400px;
+    width: 100%;
     margin: 0 auto;
 }
 
@@ -47,14 +48,16 @@ label {
     margin-top: 10px;
     font-weight: 600;
     display: block;
+    font-size: 1rem;
 }
 
-input {
+input[type="text"], input[type="email"], input[type="password"] {
     width: 100%;
-    padding: 8px;
+    padding: 10px;
     margin-top: 5px;
     margin-bottom: 10px;
     box-sizing: border-box;
+    font-size: 1rem;
 }
 
 .button-container {
@@ -69,7 +72,7 @@ input {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 600;
     margin-top: 15px;
     transition: background-color 0.3s ease;
@@ -84,11 +87,85 @@ input {
     margin-right: 10px;
 }
 
-.forgot-pass{
+.forgot-pass {
     font-style: italic;
     display: block;
     margin-top: 10px;
     margin-bottom: 20px;
-    text-align: center; 
+    text-align: center;
+    font-size: 1rem;
 }
 
+@media (max-width: 767px) {
+    .container {
+        flex-direction: column;
+    }
+
+    #div1{
+        padding: 20px;
+    }
+
+    #div1 p, #div2 p {
+        font-size: 0.8rem;
+        text-align: center;
+    }
+
+    #div1 h1 {
+        font-size: 2rem;
+        text-align: center;
+    }
+
+    label {
+        font-size: 0.8rem;
+    }
+
+    .custom-button {
+        font-size: 0.8rem;
+    }
+
+    input[type="text"], input[type="email"], input[type="password"] {
+        padding: 5px;
+        font-size: 0.8rem;
+    }
+
+    .forgot-pass {
+        font-size: 0.8rem;
+    }
+}
+
+@media (min-width: 683px) and (max-width: 960px) {
+    .container {
+        flex-direction: column;
+    }
+    
+    #div1{
+        padding: 20px;
+    }
+
+    #div1 p {
+        font-size: 0.8rem;
+        text-align: center;
+    }
+
+    #div1 h1 {
+        font-size: 2rem;
+        text-align: center;
+    }
+
+    label {
+        font-size: 0.8rem;
+    }
+
+    .custom-button {
+        font-size: 0.8rem;
+    }
+
+    input[type="text"], input[type="email"], input[type="password"] {
+        padding: 5px;
+        font-size: 0.8rem;
+    }
+
+    .forgot-pass {
+        font-size: 0.8rem;
+    }
+}
