@@ -8,7 +8,16 @@
     <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <body>
+    <?php
+    session_start();
 
+    if(isset($_SESSION['firstname'])) {
+        $firstname = $_SESSION['firstname'];
+    } else {
+        header("Location: login_page.php");
+        exit();
+    }
+    ?>
     <input type="checkbox" id="nav-toggle">
     <div class="sidebar">
         <div class="sidebar-brand">
@@ -18,7 +27,7 @@
             <ul>
                 <li>
                     <a href="" class="active"><span class="las la-igloo"></span>
-                    <span>Admin Dashboard</span></a>
+                    <span>Employee Dashboard</span></a>
                 </li>
                 <li>
                     <a href=""><span class="las la-users"></span>
@@ -31,14 +40,6 @@
                 <li>
                     <a href=""><span class="las la-shopping-bag"></span>
                     <span>Orders</span></a>
-                </li>
-                <li>
-                    <a href=""><span class="las la-chart-line"></span>
-                    <span>Report</span></a>
-                </li>
-                <li>
-                    <a href="manage_employees.php"><span class="las la-user-circle"></span>
-                    <span>Manage Employee</span></a>
                 </li>
                 <li>
                     <a href="logout.php"><span class="las la-sign-out-alt"></span>
@@ -60,8 +61,8 @@
             
             <div class="user-wrapper">
                 <div>
-                    <h3>Unknown</h3>
-                    <small>Super admin</small>
+                    <h3>Hi, <?php echo $firstname; ?></h3>
+                    <small>Employee</small>
                 </div>       
             </div>
         </header>
@@ -81,31 +82,11 @@
 
                 <div class="card-single">
                     <div>
-                        <h1>3</h1>
-                        <span>Employee</span>
-                    </div>
-                    <div>
-                        <span class="las la-user-tie"></span>
-                    </div>
-                </div>
-
-                <div class="card-single">
-                    <div>
                         <h1>154</h1>
                         <span>Orders</span>
                     </div>
                     <div>
                         <span class="las la-shopping-bag"></span>
-                    </div>
-                </div>
-
-                <div class="card-single">
-                    <div>
-                        <h1>54</h1>
-                        <span>Income</span>
-                    </div>
-                    <div>
-                        <span class="lab la-google-wallet"></span>
                     </div>
                 </div>
             </div>

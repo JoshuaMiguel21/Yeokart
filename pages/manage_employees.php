@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>Admin Dashboard</title>
     <link rel= "stylesheet" href= "https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css" >
-    <link rel="stylesheet" href="../css/owner_dashboard.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <body>
 
@@ -41,7 +41,7 @@
                     <span>Manage Employee</span></a>
                 </li>
                 <li>
-                    <a href=""><span class="las la-sign-out-alt"></span>
+                    <a href="logout.php"><span class="las la-sign-out-alt"></span>
                     <span>Logout</span></a>
                 </li>
             </ul>

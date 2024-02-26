@@ -59,9 +59,9 @@
                             }
                             // Check if the user is an employee
                             elseif ($employee && password_verify($password, $employee["password"])) {
-                                header("Location: emp_homepage.html");
+                                header("Location: emp_dashboard.php");
                                 $_SESSION['logged_in'] = true;
-                                $_SESSION['lastname'] = $employee['lastname'];
+                                $_SESSION['firstname'] = $employee['firstname'];
                                 $_SESSION['username'] = $employee['username'];
                                 die();
                             }

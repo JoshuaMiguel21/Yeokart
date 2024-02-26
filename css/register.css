@@ -1,7 +1,18 @@
-body {
-    background-color: #F5EEE6;
-    margin: 0;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root {
+    --main-color: #DD2F6E;
+    --color-dark: #1D2231;
+    --text-grey: #8390A2;
+}
+
+* {
     padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    list-style-type: none;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif; 
 }
 
 .container {
@@ -27,10 +38,11 @@ img {
 }
 
 form {
-    background-color: #E6A4B4;
+    background-color: var(--main-color);
     padding: 25px 40px;
     border-radius: 10px;
-    box-shadow: 10px 10px 5px #F3D7CA;
+    color: var(--color-dark);
+    box-shadow: 10px 10px 5px var(--text-grey);
     width: 100%;
     margin: 0 auto;
 }
@@ -54,28 +66,43 @@ input {
     justify-content: space-between;
 }
 
-a .btn-custom,
 #register {
-    background-color: #C6DFF7;
-    color: black;
-    padding: 10px 20px;
-    border: none;
+    background-color: #2ecc71;  
+    color: #ffffff;
+    padding: 12px 24px;
+    border: 2px solid #27ae60;  
     border-radius: 5px;
     cursor: pointer;
     font-size: 1rem;
     font-weight: 600;
     margin-top: 15px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+a .btn-custom{
+    background-color: #3498db;  
+    color: #ffffff;
+    padding: 12px 24px;
+    border: 2px solid #2980b9;  
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: 15px;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #register {
     margin-bottom: 20px;
 }
 
-a .btn-custom:hover,
+a .btn-custom:hover{
+    background-color: #2980b9;
+    color: #ffffff;
+}
 #register:hover {
-    background-color: #506C8C;
-    color: white;
+    background-color: #27ae60;  
+    color: #ffffff;
 }
 
 @media (min-width: 683px) and (max-width: 960px) {
