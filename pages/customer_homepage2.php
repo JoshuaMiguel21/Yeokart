@@ -177,6 +177,7 @@
                 },
                 1024: {
                     slidesPerView: 4,
+                    centeredSlides: false,
                 },
             },
         });
@@ -207,6 +208,7 @@
                 },
                 1024: {
                     slidesPerView: 4,
+                    centeredSlides: false,
                 },
             },
         });
