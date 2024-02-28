@@ -10,101 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="stylesheet" href="/css/style_customer_homepage.css">
 </head>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var searchForm = document.querySelector('.search-form');
-        var searchBtn = document.querySelector('#search-btn');
 
-        searchBtn.addEventListener('click', function() {
-            searchForm.classList.toggle('active');
-        });
-
-        window.addEventListener('resize', function() {
-            if (window.innerWidth > 786) {
-                searchForm.classList.remove('active');
-            }
-        });
-
-        window.addEventListener('scroll', function() {
-            if (window.scrollY > 80) {
-                document.querySelector('.header .header-2').classList.add('active');
-            } else {
-                document.querySelector('.header .header-2').classList.remove('active');
-            }
-        });
-
-        if (window.scrollY > 80) {
-            document.querySelector('.header .header-2').classList.add('active');
-        }
-    });
-
-    var swiper = new Swiper(".best-slider", {
-        spaceBetween: 20,
-        loop: true,
-        centeredSlides: true,
-        autoplay: {
-            delay: 9500,
-            disabledOnInteraction: false,
-        },
-        navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev"
-        },
-        breakpoints: {
-            0: {
-                slidesPerView: 1,
-            },
-            347: {
-                slidesPerView: 2,
-            },
-            450: {
-                slidesPerView: 3,
-            },
-            786: {
-                slidesPerView: 4,
-            },
-            991: {
-                slidesPerView: 4,
-            },
-            1024: {
-                slidesPerView: 5,
-            },
-        },
-    });
-    var swiper = new Swiper(".featured-slider", {
-        spaceBetween: 20,
-        loop: true,
-        centeredSlides: true,
-        autoplay: {
-            delay: 9500,
-            disabledOnInteraction: false,
-        },
-        navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev"
-        },
-        breakpoints: {
-            0: {
-                slidesPerView: 1,
-            },
-            347: {
-                slidesPerView: 2,
-            },
-            450: {
-                slidesPerView: 3,
-            },
-            786: {
-                slidesPerView: 4,
-            },
-            991: {
-                slidesPerView: 4,
-            },
-            1024: {
-                slidesPerView: 5,
-            },
-        },
-    });
-</script>
 
 <body>
     <header class="header">
@@ -147,18 +53,8 @@
             </div>
         </div>
     </section>
-    <section class="best" id="best">
-        <h1 class="heading"><span>Best Sellers</span></h1>
-        <div class="swiper best-slider">
-            <div class="swiper-wrapper">
-
-            </div>
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
-        </div>
-    </section>
     <section class="featured" id="featured">
-        <h1 class="heading"><span>Featured</span></h1>
+        <h1 class="heading"><span>Featured Books</span></h1>
         <div class="swiper featured-slider">
             <div class="swiper-wrapper">
                 <?php
@@ -173,18 +69,19 @@
                     $item_quantity = $row['item_quantity'];
                     $category_name = $row['category_name'];
                     $item_image1 = $row['item_image1'];
-                    echo "<div class='swiper-slide card'>
-                <div class='product-image'>
-                    <img src='./item_images/$item_image1' alt='Twice Album'>
-                </div>
-                <div class='product-info'>
-                    <h4>$item_name</h4>
-                    <h4>₱$item_price</h4>
-                </div>
-                <div class='button'>
-                    <button type='button'>View Item</button>
-                </div>
-            </div>";
+                    echo "<div class='swiper-slide box'>
+                    <div class='icons'>
+                        <a href='#' class='fas fa-eye'></a>
+                    </div>
+                    <div class='image'>
+                    <img src='./item_images/$item_image1' alt=''>
+                    </div>
+                    <div class='content'>
+                    <h3>$item_name</h3>
+                    <div class='price'>₱$item_price</div>
+                    <a href='#' class='btn'>Add to Cart</a>
+                    </div>
+                </div>";
                 }
                 ?>
             </div>
@@ -193,7 +90,61 @@
         </div>
     </section>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchForm = document.querySelector('.search-form');
+            const searchBtn = document.querySelector('#search-btn');
 
+            searchBtn.addEventListener('click', function() {
+                searchForm.classList.toggle('active');
+            });
+
+            window.addEventListener('scroll', function() {
+                searchForm.classList.remove('active');
+                const header2 = document.querySelector('.header .header-2');
+                if (window.scrollY > 80) {
+                    header2.classList.add('active');
+                } else {
+                    header2.classList.remove('active');
+                }
+            });
+
+            if (window.scrollY > 80) {
+                document.querySelector('.header .header-2').classList.add('active');
+            }
+        });
+
+        var swiper = new Swiper(".featured-slider", {
+            spaceBetween: 10,
+            loop: true,
+            centeredSlides: true,
+            autoplay: {
+                delay: 9500,
+                disabledOnInteraction: false,
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev"
+            },
+            breakpoints: {
+                0: {
+                    slidesPerView: 1,
+                },
+                347: {
+                    slidesPerView: 2,
+                },
+                450: {
+                    slidesPerView: 2,
+                },
+                768: {
+                    slidesPerView: 3,
+                },
+                1024: {
+                    slidesPerView: 4,
+                },
+            },
+        });
+    </script>
 </body>
 
 </html>
