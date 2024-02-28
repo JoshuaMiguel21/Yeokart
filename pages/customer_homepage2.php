@@ -211,11 +211,13 @@
             },
         });
         document.addEventListener('DOMContentLoaded', function() {
-            const itemNames = document.querySelectorAll('.item-name');
+            const itemNames = document.querySelectorAll('.marquee');
 
             itemNames.forEach(itemName => {
                 if (itemName.scrollWidth > itemName.clientWidth) {
                     itemName.classList.add('marquee');
+                } else {
+                    itemName.classList.remove('marquee');
                 }
             });
         });

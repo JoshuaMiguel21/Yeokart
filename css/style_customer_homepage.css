@@ -288,6 +288,7 @@ section{
     color: var(--black);
     font-size: 2.2rem;
     padding: 1.3rem 1.5rem;
+    text-decoration: none;
 }
 .featured .featured-slider .box .icons a:hover,
 .best .best-slider .box .icons a:hover{
@@ -298,17 +299,20 @@ section{
 .best .best-slider .box .content{
     background: #eee;
     padding: 1.5rem;
+    overflow: hidden;
 }
 .featured .featured-slider .box .content h3,
 .best .best-slider .box .content h3{
     font-size: 2rem;
     color: var(--black);
+    white-space: nowrap;
 }
 .featured .featured-slider .box .content .price,
 .best .best-slider .box .content .price{
     font-size: 2.2rem;
     color: var(--black);
     padding-top: 1rem;
+    max-width: 100%;
 }
 @keyframes marquee {
     0% { transform: translateX(0); }
@@ -317,9 +321,8 @@ section{
 
 .marquee {
     white-space: nowrap;
-    overflow: hidden;
     animation: marquee 10s linear infinite;
-    width: 200%;
+    width: 100%;
 }
 
 .featured .btn,
@@ -337,7 +340,7 @@ section{
     text-decoration: none;
 }
 
-.featured .btn:hover,
+.featured .btn:hover
 .best .btn:hover{
     background: var(--dark-color);
 }
