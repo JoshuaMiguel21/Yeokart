@@ -53,8 +53,44 @@
             </div>
         </div>
     </section>
+    <section class="best" id="best">
+        <h1 class="heading"><span>Best Sellers</span></h1>
+        <div class="swiper best-slider">
+            <div class="swiper-wrapper">
+                <?php
+                include('../database/db_items.php');
+                $select_query = $select_query = "SELECT * FROM products";
+                $result_query = mysqli_query($con, $select_query);
+                while ($row = mysqli_fetch_assoc($result_query)) {
+                    $item_id = $row['item_id'];
+                    $item_name = $row['item_name'];
+                    $item_price = $row['item_price'];
+                    $item_description = $row['item_description'];
+                    $item_quantity = $row['item_quantity'];
+                    $category_name = $row['category_name'];
+                    $item_image1 = $row['item_image1'];
+                    echo "<div class='swiper-slide box'>
+                    <div class='icons'>
+                        <a href='#' class='fas fa-eye'></a>
+                    </div>
+                    <div class='image'>
+                    <img src='./item_images/$item_image1' alt=''>
+                    </div>
+                    <div class='content'>
+                    <h3 class='marquee'>$item_name</h3>
+                    <div class='price'>₱$item_price</div>
+                    <a href='#' class='btn'>Add to Cart</a>
+                    </div>
+                </div>";
+                }
+                ?>
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+    </section>
     <section class="featured" id="featured">
-        <h1 class="heading"><span>Featured Books</span></h1>
+        <h1 class="heading"><span>Featured</span></h1>
         <div class="swiper featured-slider">
             <div class="swiper-wrapper">
                 <?php
@@ -77,7 +113,7 @@
                     <img src='./item_images/$item_image1' alt=''>
                     </div>
                     <div class='content'>
-                    <h3>$item_name</h3>
+                    <h3 class='marquee'>$item_name</h3>
                     <div class='price'>₱$item_price</div>
                     <a href='#' class='btn'>Add to Cart</a>
                     </div>
@@ -143,6 +179,45 @@
                     slidesPerView: 4,
                 },
             },
+        });
+        var swiper = new Swiper(".best-slider", {
+            spaceBetween: 10,
+            loop: true,
+            centeredSlides: true,
+            autoplay: {
+                delay: 9500,
+                disabledOnInteraction: false,
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev"
+            },
+            breakpoints: {
+                0: {
+                    slidesPerView: 1,
+                },
+                347: {
+                    slidesPerView: 2,
+                },
+                450: {
+                    slidesPerView: 2,
+                },
+                768: {
+                    slidesPerView: 3,
+                },
+                1024: {
+                    slidesPerView: 4,
+                },
+            },
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            const itemNames = document.querySelectorAll('.item-name');
+
+            itemNames.forEach(itemName => {
+                if (itemName.scrollWidth > itemName.clientWidth) {
+                    itemName.classList.add('marquee');
+                }
+            });
         });
     </script>
 </body>
