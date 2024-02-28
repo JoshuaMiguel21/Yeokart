@@ -258,6 +258,11 @@ th {
     color: #fff; /* Header text color */
 }
 
+.button-class{
+    display: flex;
+    justify-content: space-around;
+}
+
 .delete-button {
     background-color: #ff0000; /* Red color */
     color: #fff; /* Text color */
@@ -271,6 +276,18 @@ th {
 .delete-button:hover {
     background-color: #cc0000; /* Darker shade of red on hover */
 }
+
+.edit-button{
+    background-color: #3498db; 
+    color: #fff; /* Text color */
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+
 
 @media only screen and (max-width: 1200px){
     #nav-toggle:checked + .sidebar{

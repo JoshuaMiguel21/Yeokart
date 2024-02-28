@@ -7,6 +7,11 @@
     <link rel= "stylesheet" href= "https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css" >
     <link rel="stylesheet" href="../css/dashboard.css">
 </head>
+<script>
+    function confirmDelete() {
+        return confirm("Are you sure you want to delete this employee?");
+    }
+</script>
 <body>
 
     <input type="checkbox" id="nav-toggle">
@@ -71,7 +76,6 @@
                 <div class="left">
                     <h3>Employee Accounts</h3>
                 </div>
-
                 <a href="add_employee.php" class="btn-employee">
                     <i class="las la-user-plus"></i>
                     <span class="text">Add Employee</span>
@@ -95,6 +99,7 @@
                                     alert('Employee Deleted Successfully');
                                 </script>
                             ";
+                        echo "<script>window.location.href = './manage_employees.php';</script>";
                     } 
 
                     else 
@@ -128,7 +133,10 @@
                                 <td>" . $row["username"] . "</td>
                                 <td>" . $row["email"] . "</td>
                                 <td>
-                                    <center><button class='delete-button' type='submit' name='deleteEmployee' value='" . $row["id"] . "'>Delete</button></center>
+                                    <div class='button-class'>
+                                        <a href='edit_employee.php?id=" . $row["id"] . "' class='edit-button'>Edit</a>
+                                        <button class='delete-button' type='submit' name='deleteEmployee' value='" . $row["id"] . "'>Delete</button>
+                                    </div>
                                 </td>
                             </tr>";
 
@@ -161,6 +169,16 @@
                 $con->close();
             ?>
         </main>
+
+        <script>
+        // Add confirmation to the delete button
+        var deleteButtons = document.querySelectorAll('.delete-button');
+        deleteButtons.forEach(function(button) {
+            button.onclick = function() {
+                return confirmDelete();
+            };
+        });
+    </script>
     </div>
 </body>
 </html>

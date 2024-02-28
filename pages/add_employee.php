@@ -14,7 +14,7 @@
 </head>
 <body>
 <div class="container">
-  <h2 class="mt-4 mb-4">Manage Employees</h2>
+  <h2 class="mt-4 mb-4">Add Employees</h2>
 
   <form action="add_employee.php" method="post">
   <?php

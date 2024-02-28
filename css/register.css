@@ -12,7 +12,7 @@
     box-sizing: border-box;
     list-style-type: none;
     text-decoration: none;
-    font-family: 'Poppins', sans-serif; 
+    font-family: 'Poppins', sans-serif;
 }
 
 .container {
@@ -38,11 +38,11 @@ img {
 }
 
 form {
-    background-color: var(--main-color);
+    background-color: #fff;
     padding: 25px 40px;
     border-radius: 10px;
     color: var(--color-dark);
-    box-shadow: 10px 10px 5px var(--text-grey);
+    box-shadow: 10px 10px 5px #E6A4B4;
     width: 100%;
     margin: 0 auto;
 }
@@ -96,6 +96,27 @@ a .btn-custom{
     margin-bottom: 20px;
 }
 
+#yeokart-info{
+    font-style: italic;
+}
+::placeholder{
+    font-size: 0.8rem;
+}
+
+#message {
+    text-align: start;
+    bottom: -30px;
+    color: #fff;
+    font-size: 0.8rem;
+    display: none;
+}
+
+#passwordMatch{
+    text-align: start;
+    bottom: -30px;
+    font-size: 0.8rem;
+}
+
 a .btn-custom:hover{
     background-color: #2980b9;
     color: #ffffff;
@@ -124,7 +145,7 @@ a .btn-custom:hover{
         font-size: 0.8rem;
     }
 
-    .right-column p {
+    .right-column p{
         text-align: center;
         font-size: 0.8rem;
     }
@@ -170,7 +191,7 @@ a .btn-custom:hover{
         font-size: 0.8rem;
     }
 
-    .right-column p {
+    .right-column p{
         text-align: center;
         font-size: 0.8rem;
     }

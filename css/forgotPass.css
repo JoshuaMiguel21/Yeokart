@@ -23,10 +23,10 @@
 }
 
 #div1 {
-    background-color: var(--main-color);
+    background-color: #fff;
     padding: 40px;
     border-radius: 10px;
-    box-shadow: 10px 10px 5px var(--text-grey);
+    box-shadow: 10px 10px 5px #E6A4B4;
     color: var(--color-dark);
 }
 
@@ -66,14 +66,13 @@ input {
 }
 
 #div1 a {
-    color: #C6DFF7;
-    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    color: #3498db;
     text-decoration: none;
     transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 
 #div1 a:hover {
-    color: #3498db;
+    color: #2980b9;
 }
 
 .custom-button {

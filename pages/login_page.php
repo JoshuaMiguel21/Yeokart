@@ -12,7 +12,7 @@
     <title>Yeokart - Login Page</title>
 </head>
 
-<body>
+<body style="background-color: #E6A4B4;">
     <div class="container">
         <div class="col-sm-12 col-md-6 col-lg-6" id="div2">
             <img src="../res/logo.png" alt="Yeokart Logo">
@@ -52,7 +52,7 @@
                     if ($user || $employee || $admin) {
                         // Check if the user is an admin
                         if ($admin && $password == $admin["password"]) {
-                            header("Location: owner_homepage.html");
+                            header("Location: owner_dashboard.php");
                             $_SESSION['logged_in'] = true;
                             $_SESSION['username'] = $admin['username'];
                             die();

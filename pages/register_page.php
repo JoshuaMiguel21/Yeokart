@@ -13,12 +13,80 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.js"></script>
     <title>Yeokart Register Page</title>
 </head>
+<script>
+    $(document).ready(function () {
+        function validatePassword() {
+            var pass = document.getElementById("password");
+            var conf = document.getElementById("confirmPass");
+            var msg = document.getElementById("message");
+            var str = document.getElementById("strength");
 
-<body>
+            if (pass.value.length > 0) {
+                msg.style.display = "block";
+            } else {
+                msg.style.display = "none";
+            }
+
+            if (pass.value.length < 4) {
+                str.innerHTML = "weak";
+                pass.style.borderColor = "#ff5925";
+                msg.style.color = "#ff5925";
+                return false;
+            } else if (pass.value.length >= 4 && pass.value.length < 8) {
+                str.innerHTML = "medium";
+                pass.style.borderColor = "yellow";
+                msg.style.color = "yellow";
+            } else if (pass.value.length >= 8) {
+                str.innerHTML = "strong";
+                pass.style.borderColor = "#26d730";
+                msg.style.color = "#26d730";
+            }
+
+            if (pass.value !== conf.value) {
+                showPasswordMatchMessage('Passwords do not match', '#ff5925');
+                conf.style.borderColor = "#ff5925";
+                return false;
+            } else {
+                conf.style.borderColor = "#26d730";
+                showPasswordMatchMessage('Passwords match', '#26d730');
+            }
+
+            return true;
+        }
+
+        function showPasswordMatchMessage(message, color) {
+            $('#passwordMatch').text(message).css('color', color);
+        }
+
+        $('#password, #confirmPass').on('input', function () {
+            validatePassword();
+        });
+
+        $('form').submit(function (e) {
+            if (!validatePassword()) {
+                e.preventDefault();
+                showErrorAlert('Oops!', 'Please check your password and try again.');
+            }
+        });
+
+        function showErrorAlert(title, text) {
+            Swal.fire({
+                icon: 'error',
+                title: title,
+                text: text,
+                confirmButtonText: 'OK'
+            });
+        }
+    });
+</script>
+
+
+
+<body style="background-color: #E6A4B4;">
     <div class="container">
         <div class="left-column">
             <img src="../res/logo.png" alt="Yeokart Logo">
-            <p style="font-style: italic;">Sign up to see the world of KPOP</p>
+            <p id="yeokart-info">Sign up to see the world of KPOP</p>
         </div>
         <div class="right-column">
             <form action="register_page.php" method="post">
@@ -29,7 +97,6 @@
                 <div class="form-group">
                 <?php
                     require('../database/db_account.php');
-                    session_start();
                     
                     use PHPMailer\PHPMailer\PHPMailer;
                     use PHPMailer\PHPMailer\SMTP;
@@ -168,10 +235,13 @@
                 <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
+                    <p id="message">Password is <span id="strength"></span></p>
                 </div>
+
                 <div class="form-group">
                     <label for="confirmPass">Confirm Password</label>
                     <input type="password" class="form-control" id="confirmPass" name="confirmPass" placeholder="Confirm password" required>
+                    <small id="passwordMatch"></small>
                 </div>
 
                 <div class="button-container">

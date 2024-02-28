@@ -8,7 +8,21 @@
     <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <body>
+    <?php
+        require('../database/db_account.php');
 
+        $sql = "SELECT COUNT(*) AS employee_count FROM employee_accounts";
+        $result = $con->query($sql);
+
+        if ($result) {
+            $row = $result->fetch_assoc();
+            $employeeCount = $row['employee_count'];
+        }
+
+        else {
+            echo "Error: " . $sql . "<br>" . $con->error;
+        }    
+    ?>
     <input type="checkbox" id="nav-toggle">
     <div class="sidebar">
         <div class="sidebar-brand">
@@ -81,8 +95,8 @@
 
                 <div class="card-single">
                     <div>
-                        <h1>3</h1>
-                        <span>Employee</span>
+                        <h1><?php echo $employeeCount; ?></h1>
+                        <span>Employees</span>
                     </div>
                     <div>
                         <span class="las la-user-tie"></span>
