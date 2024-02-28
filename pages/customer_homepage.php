@@ -3,166 +3,227 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yeokart - Homepage</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
-    <link rel="stylesheet" href="../css/style_homepage_customer.css">
+    <title>Yeokart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="/css/style_customer_homepage.css">
 </head>
 
+
 <body>
-    <nav>
-        <a href="#" class="active"><i class="fas fa-home"></i></a>
-        <input type="text" name="search" placeholder="Search..">
-        <div class="right-side">
-            <a href="customer_item.html">Shop</a>
-            <a href="#"><i class="fas fa-user"></i></a>
-            <a href="customer_cart.html"><i class="fas fa-shopping-cart"></i></a>
+    <header class="header">
+        <div class="header-1">
+            <img src="/res/logo.png" alt="Yeokart Logo" class="logo">
+
+            <form action="" class="search-form">
+                <input type="search" name="" placeholder="Search here..." id="search-box">
+                <label for="search-box" class="fas fa-search"></label>
+            </form>
+            <div class="icons">
+                <div id="search-btn" class="fas fa-search"></div>
+                <a href="#">Shop</a>
+                <a href="#" class="fas fa-shopping-cart"></a>
+                <div id="user-btn" class="fas fa-user"></div>
+            </div>
         </div>
+        <div class="header-2">
+            <nav class="navbar">
+                <a href="#home">Home</a>
+                <a href="#best">Best Sellers</a>
+                <a href="#featured">Featured</a>
+            </nav>
+        </div>
+    </header>
+    <nav class="bottom-navbar">
+        <a href="#home" class="fas fa-home"></a>
+        <a href="#best" class="fas fa-thumbs-up"></a>
+        <a href="#featured" class="fas fa-list"></a>
     </nav>
-    <div class="start vh-100 d-flex align-items-center" id="home">
+    <section class="start vh-100 d-flex align-items-center" id="home">
         <div class="container">
             <div class="row">
                 <div class="col-lg-7 mx-auto text-center">
                     <h1 class="display-4 text-white">Welcome to Yeokart</h1>
                     <p class="text-white my-3">See the world of K-Pop!</p>
-                    <a href="#bestseller" class="btn me-2 btn1">Get Started</a>
-                    <a href="#discover" class="btn btn-outline-light">Learn More</a>
+                    <a href="#best" class="btn me-2 btn1">Get Started</a>
+                    <a href="#featured" class="btn btn-outline-light">Learn More</a>
                 </div>
             </div>
         </div>
-    </div>
-    <section class="section" id="bestseller">
-        <div class="container">
-            <?php
-            include('../database/db_items.php');
-            $select_query = $select_query = "SELECT * FROM products";
-            $result_query = mysqli_query($con, $select_query);
-            //$row = mysqli_fetch_assoc($result_query);
-            //echo $row['item_name']
-            while ($row = mysqli_fetch_assoc($result_query)) {
-                $item_id = $row['item_id'];
-                $item_name = $row['item_name'];
-                $item_price = $row['item_price'];
-                $item_description = $row['item_description'];
-                $item_quantity = $row['item_quantity'];
-                $category_name = $row['category_name'];
-                $item_image1 = $row['item_image1'];
-                echo "<div class='card'>
-                <div class='product-image'>
-                    <img src='./item_images/$item_image1' alt='Twice Album'>
-                </div>
-                <div class='product-info'>
-                    <h4>$item_name</h4>
-                    <h4>₱$item_price</h4>
-                </div>
-                <div class='button'>
-                    <button type='button'>View Item</button>
-                </div>
-            </div>";
+    </section>
+    <section class="best" id="best">
+        <h1 class="heading"><span>Best Sellers</span></h1>
+        <div class="swiper best-slider">
+            <div class="swiper-wrapper">
+                <?php
+                include('../database/db_items.php');
+                $select_query = $select_query = "SELECT * FROM products";
+                $result_query = mysqli_query($con, $select_query);
+                while ($row = mysqli_fetch_assoc($result_query)) {
+                    $item_id = $row['item_id'];
+                    $item_name = $row['item_name'];
+                    $item_price = $row['item_price'];
+                    $item_description = $row['item_description'];
+                    $item_quantity = $row['item_quantity'];
+                    $category_name = $row['category_name'];
+                    $item_image1 = $row['item_image1'];
+                    echo "<div class='swiper-slide box'>
+                    <div class='icons'>
+                        <a href='#' class='fas fa-eye'></a>
+                    </div>
+                    <div class='image'>
+                    <img src='./item_images/$item_image1' alt=''>
+                    </div>
+                    <div class='content'>
+                    <h3 class='marquee'>$item_name</h3>
+                    <div class='price'>₱$item_price</div>
+                    <a href='#' class='btn'>Add to Cart</a>
+                    </div>
+                </div>";
+                }
+                ?>
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+    </section>
+    <section class="featured" id="featured">
+        <h1 class="heading"><span>Featured</span></h1>
+        <div class="swiper featured-slider">
+            <div class="swiper-wrapper">
+                <?php
+                include('../database/db_items.php');
+                $select_query = $select_query = "SELECT * FROM products";
+                $result_query = mysqli_query($con, $select_query);
+                while ($row = mysqli_fetch_assoc($result_query)) {
+                    $item_id = $row['item_id'];
+                    $item_name = $row['item_name'];
+                    $item_price = $row['item_price'];
+                    $item_description = $row['item_description'];
+                    $item_quantity = $row['item_quantity'];
+                    $category_name = $row['category_name'];
+                    $item_image1 = $row['item_image1'];
+                    echo "<div class='swiper-slide box'>
+                    <div class='icons'>
+                        <a href='#' class='fas fa-eye'></a>
+                    </div>
+                    <div class='image'>
+                    <img src='./item_images/$item_image1' alt=''>
+                    </div>
+                    <div class='content'>
+                    <h3 class='marquee'>$item_name</h3>
+                    <div class='price'>₱$item_price</div>
+                    <a href='#' class='btn'>Add to Cart</a>
+                    </div>
+                </div>";
+                }
+                ?>
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchForm = document.querySelector('.search-form');
+            const searchBtn = document.querySelector('#search-btn');
+
+            searchBtn.addEventListener('click', function() {
+                searchForm.classList.toggle('active');
+            });
+
+            window.addEventListener('scroll', function() {
+                searchForm.classList.remove('active');
+                const header2 = document.querySelector('.header .header-2');
+                if (window.scrollY > 80) {
+                    header2.classList.add('active');
+                } else {
+                    header2.classList.remove('active');
+                }
+            });
+
+            if (window.scrollY > 80) {
+                document.querySelector('.header .header-2').classList.add('active');
             }
-            ?>
-            <div class="header">
-                <h2>Best Seller</h2>
-            </div>
+        });
 
-        </div>
-    </section>
-    <section class="section" id="discover">
-        <div class="container">
-            <div class="header">
-                <h2>Discover</h2>
-            </div>
-            <div class="card">
-                <div class="product-image">
-                    <img src="/res/twice_album_1.png" alt="Twice Album">
-                </div>
-                <div class="product-info">
-                    <h4>TWICE 7th Mini Album - Fancy You</h4>
-                    <h4>₱900.00</h4>
-                </div>
-                <div class="button">
-                    <button type="button">View Item</button>
-                </div>
-            </div>
-            <div class="card">
-                <div class="product-image">
-                    <img src="/res/twice_album_2.jpg" alt="Twice Album">
-                </div>
-                <div class="product-info">
-                    <h4>TWICE 4th Mini Album - Signal</h4>
-                    <h4>₱800.00</h4>
-                </div>
-                <div class="button">
-                    <button type="button">View Item</button>
-                </div>
-            </div>
-            <div class="card">
-                <div class="product-image">
-                    <img src="/res/twice_album_3.jfif" alt="Twice Album">
-                </div>
-                <div class="product-info">
-                    <h4>TWICE Special Album - Twicecoaster: Lane 2</h4>
-                    <h4>₱800.00</h4>
-                </div>
-                <div class="button">
-                    <button type="button">View Item</button>
-                </div>
-            </div>
-            <div class="card">
-                <div class="product-image">
-                    <img src="/res/twice_album_4.jpg" alt="Twice Album">
-                </div>
-                <div class="product-info">
-                    <h4>TWICE 5th Mini Album - What is Love?</h4>
-                    <h4>₱900.00</h4>
-                </div>
-                <div class="button">
-                    <button type="button">View Item</button>
-                </div>
-            </div>
-            <div class="card">
-                <div class="product-image">
-                    <img src="/res/twice_album_5.jpeg" alt="Twice Album">
-                </div>
-                <div class="product-info">
-                    <h4>TWICE 9th Mini Album - More & More</h4>
-                    <h4>₱950.00</h4>
-                </div>
-                <div class="button">
-                    <button type="button">View Item</button>
-                </div>
-            </div>
-        </div>
-    </section>
+        var swiper = new Swiper(".featured-slider", {
+            spaceBetween: 10,
+            loop: true,
+            centeredSlides: true,
+            autoplay: {
+                delay: 9500,
+                disabledOnInteraction: false,
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev"
+            },
+            breakpoints: {
+                0: {
+                    slidesPerView: 1,
+                },
+                347: {
+                    slidesPerView: 2,
+                },
+                450: {
+                    slidesPerView: 2,
+                },
+                768: {
+                    slidesPerView: 3,
+                },
+                1024: {
+                    slidesPerView: 4,
+                    centeredSlides: false,
+                },
+            },
+        });
+        var swiper = new Swiper(".best-slider", {
+            spaceBetween: 10,
+            loop: true,
+            centeredSlides: true,
+            autoplay: {
+                delay: 9500,
+                disabledOnInteraction: false,
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev"
+            },
+            breakpoints: {
+                0: {
+                    slidesPerView: 1,
+                },
+                347: {
+                    slidesPerView: 2,
+                },
+                450: {
+                    slidesPerView: 2,
+                },
+                768: {
+                    slidesPerView: 3,
+                },
+                1024: {
+                    slidesPerView: 4,
+                    centeredSlides: false,
+                },
+            },
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            const itemNames = document.querySelectorAll('.marquee');
 
-    <footer>
-        <div class="footer-info">
-            <div>
-                <p><img src="/res/logo.png" alt="Yeokart Logo" class="footer-logo">&copy; 2024 Yeokart. All rights
-                    reserved.</p>
-            </div>
-
-            <div class="footer-links">
-                <a href="#">Home</a>
-                <a href="customer_item.html">Shop</a>
-                <a href="#">Contact</a>
-                <a href="#">About Us</a>
-            </div>
-
-            <div class="social-links">
-                <li><a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
-                <li><a href="#" target="_blank"><i class="fab fa-twitter"></i></a></li>
-                <li><a href="#" target="_blank"><i class="fab fa-instagram"></i></a></li>
-            </div>
-        </div>
-    </footer>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
+            itemNames.forEach(itemName => {
+                if (itemName.scrollWidth > itemName.clientWidth) {
+                    itemName.classList.add('marquee');
+                } else {
+                    itemName.classList.remove('marquee');
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
