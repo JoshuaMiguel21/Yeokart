@@ -2,7 +2,7 @@
 $hostname = "localhost";
 $dbUser = "root";
 $dbPassword = "";
-$dbName = "item_catalog";
+$dbName = "yeokart_database";
 
 $con = mysqli_connect($hostname, $dbUser, $dbPassword, $dbName);
 

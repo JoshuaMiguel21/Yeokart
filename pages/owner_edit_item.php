@@ -65,22 +65,22 @@
                     <label for="item_image1" class="form-label">Item Image 1:</label>
                     <input type="file" name="item_image1" id="item_image1" class="form-control">
                     <?php if ($row['item_image1']) : ?>
-                        <p>Current Image: <?php echo $row['item_image1']; ?></p>
-                    <?php endif; ?>
+                        <p>Current Image: <br></br><img src='./item_images/<?php echo $row['item_image1']; ?>' alt='Twice Album' height="200px" width="200px">
+                        <?php endif; ?>
                 </div>
                 <div class="form-outline mb-4 w-50 m-auto">
                     <label for="item_image2" class="form-label">Item Image 2:</label>
                     <input type="file" name="item_image2" id="item_image2" class="form-control">
                     <?php if ($row['item_image2']) : ?>
-                        <p>Current Image: <?php echo $row['item_image2']; ?></p>
-                    <?php endif; ?>
+                        <p>Current Image: <br></br><img src='./item_images/<?php echo $row['item_image2']; ?>' alt='Twice Album' height="200px" width="200px">
+                        <?php endif; ?>
                 </div>
                 <div class="form-outline mb-4 w-50 m-auto">
                     <label for="item_image3" class="form-label">Item Image 3:</label>
                     <input type="file" name="item_image3" id="item_image3" class="form-control">
                     <?php if ($row['item_image3']) : ?>
-                        <p>Current Image: <?php echo $row['item_image3']; ?></p>
-                    <?php endif; ?>
+                        <p>Current Image: <br></br><img src='./item_images/<?php echo $row['item_image3']; ?>' alt='Twice Album' height="200px" width="200px">
+                        <?php endif; ?>
                 </div>
                 <div class="form-outline mb-4 w-50 m-auto">
                     <button type="submit" name="update_item" class="btn btn-info mb-3 px-3">Update Item</button>

@@ -98,7 +98,7 @@
         function updateDropdown(category_id, category_name) {
             var select = document.getElementById("product_category");
             var option = document.createElement("option");
-            option.value = category_name;
+            option.value = category_id;
             option.text = category_name;
             select.add(option);
         }
@@ -120,9 +120,9 @@ if (isset($_POST['add_category'])) {
         $insert_query = "INSERT INTO categories (category_name) VALUES ('$category_name')";
         $result = mysqli_query($con, $insert_query);
         if ($result) {
-            $category_name = mysqli_insert_id($con); // Get the ID of the newly inserted category
+            $category_id = mysqli_insert_id($con); // Get the ID of the newly inserted category
             echo "<script>alert('Category has been added successfully')</script>";
-            echo "<script>updateDropdown('$category_name')</script>"; // Call JavaScript function to update dropdown
+            echo "<script>updateDropdown('$category_id', '$category_name')</script>"; // Call JavaScript function to update dropdown
         }
     }
 }
