@@ -17,32 +17,37 @@
 <body>
     <div class="container">
         <div class="left-column">
+            <img src="../res/logo.png" alt="Yeokart Logo">
+            <p style="font-style: italic;">Sign up to see the world of KPOP</p>
+        </div>
+        <div class="right-column">
             <form action="register_page.php" method="post">
-                <h1 style="text-align: center;"><b>Sign Up</b></h1>
-                <p style="text-align: center;">Fill up the form with the correct information</p>
+                <h1><b>Sign Up</b></h1>
+                <p>Fill up the form with the correct information</p>
                 <hr>
-
+                
                 <div class="form-group">
-                    <?php
+                <?php
                     require('../database/db_account.php');
                     session_start();
-
+                    
                     use PHPMailer\PHPMailer\PHPMailer;
                     use PHPMailer\PHPMailer\SMTP;
                     use PHPMailer\PHPMailer\Exception;
 
-                    require('PHPMailer/src/PHPMailer.php');
+                    require ('PHPMailer/src/PHPMailer.php');
                     require("PHPMailer/src/SMTP.php");
                     require("PHPMailer/src/Exception.php");
 
 
                     function sendMail($email, $v_code)
                     {
-
-
+                        
+                       
                         $mail = new PHPMailer(true);
-
-                        try {
+                        
+                        try 
+                        {
                             //Server settings
                             $mail->isSMTP();                                            //Send using SMTP
                             $mail->Host       = 'smtp.gmail.com';                       //Set the SMTP server to send through
@@ -51,11 +56,11 @@
                             $mail->Password   = 'rzktkbebxdissxix';                     //SMTP password
                             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         //Enable implicit TLS encryption
                             $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
-
+                        
                             //Recipients
                             $mail->setFrom('cipcastro123@gmail.com', 'Ivan Castro');
                             $mail->addAddress($email);                                  //Add a recipient
-
+                         
                             //Content
                             $mail->isHTML(true);                                        //Set email format to HTML
                             $mail->Subject = 'Email Verification for the Creation of your Yeokart Account';
@@ -64,40 +69,52 @@
                                                 and to activate your membership, we need to verify your email address.</p>
                                                 <p>Please click the link below to complete the email verification process: </p>
                                                 <p><a href='http://localhost/Yeokart/pages/verify_email.php?email=$email&v_code=$v_code'>Verify Your Email</a></p>";
-
-
+                            
+                        
                             $mail->send();
                             return true;
-                        } catch (Exception $e) {
+                        } 
+
+                        catch (Exception $e) 
+                        {
                             return false;
                         }
                     }
 
-                    if (isset($_POST['submit'])) {
+                    if (isset($_POST['submit']))
+                    {
                         $user_exist_query = "SELECT * FROM `user_accounts` WHERE `username`='$_POST[username]' OR `email`='$_POST[email]'";
                         $result = mysqli_query($con, $user_exist_query);
 
-                        if ($result) {
-                            if (mysqli_num_rows($result) > 0) {
+                        if($result)
+                        {
+                            if(mysqli_num_rows($result) > 0)
+                            {
                                 $result_fetch = mysqli_fetch_assoc($result);
-                                if ($result_fetch['username'] == $_POST['username']) {
-                                    echo "
+                                if ($result_fetch['username']==$_POST['username'])
+                                {
+                                    echo"
                                         <script>
                                             alert('$result_fetch[username] - Username already taken');
                                         </script>
                                         ";
-                                } else {
-                                    echo "
+                                }
+                                else
+                                {
+                                    echo"
                                         <script>
                                             alert('$result_fetch[email] - E-mail already registered');
                                         </script>
-                                        ";
+                                        ";     
                                 }
-                            } else {
+                            }
+                            else
+                            {
                                 $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
                                 $v_code = bin2hex(random_bytes(16));
                                 $query = "INSERT INTO `user_accounts` (`firstname`, `lastname`, `username`, `email`, `password`, `verification_code`, `is_verified`) VALUES ('$_POST[firstname]', '$_POST[lastname]', '$_POST[username]', '$_POST[email]', '$password', '$v_code', '0')";
-                                if (mysqli_query($con, $query) && sendMail($_POST['email'], $v_code)) {
+                                if(mysqli_query($con, $query) && sendMail($_POST['email'], $v_code))
+                                {
                                     echo "  <script>
                                             Swal.fire({
                                                 icon: 'info',
@@ -106,7 +123,9 @@
                                                 confirmButtonText: 'OK'
                                             });
                                             </script>";
-                                } else {
+                                }
+                                else
+                                {
                                     echo "  <script>
                                                 Swal.fire({
                                                     title: 'Oops!',
@@ -117,15 +136,17 @@
                                             </script>";
                                 }
                             }
-                        } else {
-                            echo "
+                        }
+                        else
+                        {
+                            echo"
                                 <script>
                                     alert('Cannot Run Query');
                                 </script>
                                 ";
                         }
                     }
-                    ?>
+                ?>
                 </div>
                 <br>
                 <div class="form-group">
@@ -155,17 +176,12 @@
 
                 <div class="button-container">
                     <button type="submit" id="register" class="btn btn-custom btn-lg" name="submit">Sign Up</button>
-                    <center><a href="/pages/start_page.html"><button type="button" class="btn btn-custom btn-lg">Back to Login</button></a></center>
+                    <center><a href="/pages/login_page.php"><button type="button" class="btn btn-custom btn-lg">Back to Login</button></a></center>
                 </div>
             </form>
-        </div>
-        <div class="right-column">
-            <img src="../res/logo.png" alt="Yeokart Logo">
-            <p style="font-style: italic;">Sign up to see the world of KPOP</p>
         </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
-
 </html>

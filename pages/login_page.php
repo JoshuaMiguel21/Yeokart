@@ -14,68 +14,72 @@
 
 <body>
     <div class="container">
+        <div class="col-sm-12 col-md-6 col-lg-6" id="div2">
+            <img src="../res/logo.png" alt="Yeokart Logo">
+            <p style="font-style: italic;">Sign up to see the world of KPOP</p>
+        </div>
         <div class="col-sm-12 col-md-6 col-lg-6" id="div1">
             <form action="login_page.php" method="post">
-                <h1 style="margin-bottom: 30px;"><b>Login</b></h1>
+                <h1><b>Login</b></h1>
                 <hr>
                 <p style="font-style: italic;">Don't have an account yet? <a href="register_page.php"><strong style="font-style: italic;">Sign-up</strong></a></p>
                 <?php
 
-                session_start();
+                    session_start();
 
-                if (isset($_POST["login"])) {
-                    $email = $_POST["email"];
-                    $password = $_POST["password"];
+                    if (isset($_POST["login"])) {
+                        $email = $_POST["email"];
+                        $password = $_POST["password"];
 
-                    require_once "../database/db_account.php";
+                        require_once "../database/db_account.php";
 
-                    // Check user_accounts table
-                    $sql_user = "SELECT * FROM user_accounts WHERE email = '$email'";
-                    $result_user = mysqli_query($con, $sql_user);
-                    $user = mysqli_fetch_array($result_user, MYSQLI_ASSOC);
+                        // Check user_accounts table
+                        $sql_user = "SELECT * FROM user_accounts WHERE email = '$email'";
+                        $result_user = mysqli_query($con, $sql_user);
+                        $user = mysqli_fetch_array($result_user, MYSQLI_ASSOC);
 
-                    // Check employee_accounts table
-                    $sql_employee = "SELECT * FROM employee_accounts WHERE email = '$email'";
-                    $result_employee = mysqli_query($con, $sql_employee);
-                    $employee = mysqli_fetch_array($result_employee, MYSQLI_ASSOC);
+                        // Check employee_accounts table
+                        $sql_employee = "SELECT * FROM employee_accounts WHERE email = '$email'";
+                        $result_employee = mysqli_query($con, $sql_employee);
+                        $employee = mysqli_fetch_array($result_employee, MYSQLI_ASSOC);
 
-                    // Check admin_accounts table
-                    $sql_admin = "SELECT * FROM admin_account WHERE email = '$email'";
-                    $result_admin = mysqli_query($con, $sql_admin);
-                    $admin = mysqli_fetch_array($result_admin, MYSQLI_ASSOC);
+                        // Check admin_accounts table
+                        $sql_admin = "SELECT * FROM admin_account WHERE email = '$email'";
+                        $result_admin = mysqli_query($con, $sql_admin);
+                        $admin = mysqli_fetch_array($result_admin, MYSQLI_ASSOC);
 
-                    // Check if user exists in any of the tables
-                    if ($user || $employee || $admin) {
-                        // Check if the user is an admin
-                        if ($admin && $password == $admin["password"]) {
-                            header("Location: owner_homepage.html");
-                            $_SESSION['logged_in'] = true;
-                            $_SESSION['username'] = $admin['username'];
-                            die();
-                        }
-                        // Check if the user is an employee
-                        elseif ($employee && password_verify($password, $employee["password"])) {
-                            header("Location: emp_homepage.html");
-                            $_SESSION['logged_in'] = true;
-                            $_SESSION['lastname'] = $employee['lastname'];
-                            $_SESSION['username'] = $employee['username'];
-                            die();
-                        }
-                        // Check if the user is a verified customer
-                        elseif ($user && $user['is_verified'] == 1 && password_verify($password, $user["password"])) {
-                            header("Location: customer_homepage.php");
-                            $_SESSION['logged_in'] = true;
-                            $_SESSION['username'] = $user['username'];
-                            die();
+                        // Check if user exists in any of the tables
+                        if ($user || $employee || $admin) {
+                            // Check if the user is an admin
+                            if ($admin && $password == $admin["password"]) {
+                                header("Location: owner_homepage.html");
+                                $_SESSION['logged_in'] = true;
+                                $_SESSION['username'] = $admin['username'];
+                                die();
+                            }
+                            // Check if the user is an employee
+                            elseif ($employee && password_verify($password, $employee["password"])) {
+                                header("Location: emp_dashboard.php");
+                                $_SESSION['logged_in'] = true;
+                                $_SESSION['firstname'] = $employee['firstname'];
+                                $_SESSION['username'] = $employee['username'];
+                                die();
+                            }
+                            // Check if the user is a verified customer
+                            elseif ($user && $user['is_verified'] == 1 && password_verify($password, $user["password"])) {
+                                header("Location: customer_homepage.html");
+                                $_SESSION['logged_in'] = true;
+                                $_SESSION['username'] = $user['username'];
+                                die();
+                            } else {
+                                // Password or email does not match
+                                echo "<div class='alert alert-danger'>Password or Email does not match</div>";
+                            }
                         } else {
-                            // Password or email does not match
-                            echo "<div class='alert alert-danger'>Password or Email does not match</div>";
+                            // User does not exist
+                            echo "<div class='alert alert-danger'>Email not found</div>";
                         }
-                    } else {
-                        // User does not exist
-                        echo "<div class='alert alert-danger'>Email not found</div>";
                     }
-                }
 
                 ?>
                 <div class="form-group">
@@ -94,11 +98,6 @@
                 </div>
             </form>
         </div>
-        <div class="col-sm-12 col-md-6 col-lg-6" id="div2">
-            <img src="../res/logo.png" alt="Yeokart Logo">
-            <p style="font-style: italic;">Sign up to see the world of KPOP</p>
-        </div>
     </div>
 </body>
-
 </html>
