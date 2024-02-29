@@ -90,7 +90,7 @@
         </table>
     </div>
     <div class="form-outline mb-4 mt-5">
-        <a href="./owner_homepage.html" class="btn btn-danger mb-3 px-3 mx-auto">
+        <a href="./owner_dashboard.php" class="btn btn-danger mb-3 px-3 mx-auto">
             Back
         </a>
     </div>
