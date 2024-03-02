@@ -36,6 +36,24 @@
     text-align: center;
 }
 
+::placeholder{
+    font-size: 0.8rem;
+}
+
+#message {
+    text-align: start;
+    bottom: -30px;
+    color: #fff;
+    font-size: 0.8rem;
+    display: none;
+}
+
+#passwordMatch{
+    text-align: start;
+    bottom: -30px;
+    font-size: 0.8rem;
+}
+
 img {
     max-width: 90%;
     height: auto;

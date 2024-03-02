@@ -12,7 +12,7 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.js"></script>
   <link href="../css/add_employee.css" rel="stylesheet" />
 </head>
-<body>
+<body style="background-color: #DD2F6E;">
   <div class="container">
     <h2 class="mt-4 mb-4">Edit Employee</h2>
 

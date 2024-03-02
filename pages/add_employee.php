@@ -12,7 +12,73 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.js"></script>
   <link href="../css/add_employee.css" rel="stylesheet" />
 </head>
-<body>
+<script>
+    $(document).ready(function () {
+        function validatePassword() {
+            var pass = document.getElementById("password");
+            var conf = document.getElementById("confirmPass");
+            var msg = document.getElementById("message");
+            var str = document.getElementById("strength");
+
+            if (pass.value.length > 0) {
+                msg.style.display = "block";
+            } else {
+                msg.style.display = "none";
+            }
+
+            if (pass.value.length < 4) {
+                str.innerHTML = "weak";
+                pass.style.borderColor = "#ff5925";
+                msg.style.color = "#ff5925";
+                return false;
+            } else if (pass.value.length >= 4 && pass.value.length < 8) {
+                str.innerHTML = "medium";
+                pass.style.borderColor = "yellow";
+                msg.style.color = "yellow";
+            } else if (pass.value.length >= 8) {
+                str.innerHTML = "strong";
+                pass.style.borderColor = "#26d730";
+                msg.style.color = "#26d730";
+            }
+
+            if (pass.value !== conf.value) {
+                showPasswordMatchMessage('Passwords do not match', '#ff5925');
+                conf.style.borderColor = "#ff5925";
+                return false;
+            } else {
+                conf.style.borderColor = "#26d730";
+                showPasswordMatchMessage('Passwords match', '#26d730');
+            }
+
+            return true;
+        }
+
+        function showPasswordMatchMessage(message, color) {
+            $('#passwordMatch').text(message).css('color', color);
+        }
+
+        $('#password, #confirmPass').on('input', function () {
+            validatePassword();
+        });
+
+        $('form').submit(function (e) {
+            if (!validatePassword()) {
+                e.preventDefault();
+                showErrorAlert('Oops!', 'Please check your password and try again.');
+            }
+        });
+
+        function showErrorAlert(title, text) {
+            Swal.fire({
+                icon: 'error',
+                title: title,
+                text: text,
+                confirmButtonText: 'OK'
+            });
+        }
+    });
+</script>
+<body style="background-color: #DD2F6E;">
 <div class="container">
   <h2 class="mt-4 mb-4">Add Employees</h2>
 
@@ -135,7 +201,14 @@
 
     <div class="form-group">
       <label for="password">Password</label>
-      <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password" required>
+      <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
+      <p id="message">Password is <span id="strength"></span></p>
+    </div>
+
+    <div class="form-group">
+      <label for="confirmPass">Confirm Password</label>
+      <input type="password" class="form-control" id="confirmPass" name="confirmPass" placeholder="Confirm password" required>
+      <small id="passwordMatch"></small>
     </div>
 
     <div class="button-container">

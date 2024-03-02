@@ -13,7 +13,73 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.js"></script>
     <title>Yeokart - Password Update</title>
 </head>
+<script>
+    $(document).ready(function () {
+        function validatePassword() {
+            var pass = document.getElementById("password");
+            var conf = document.getElementById("confirmPass");
+            var msg = document.getElementById("message");
+            var str = document.getElementById("strength");
 
+            if (pass.value.length > 0) {
+                msg.style.display = "block";
+            } else {
+                msg.style.display = "none";
+            }
+
+            if (pass.value.length < 4) {
+                str.innerHTML = "weak";
+                pass.style.borderColor = "#ff5925";
+                msg.style.color = "#ff5925";
+                return false;
+
+            } else if (pass.value.length >= 4 && pass.value.length < 8) {
+                str.innerHTML = "medium";
+                pass.style.borderColor = "yellow";
+                msg.style.color = "yellow";
+            } else if (pass.value.length >= 8) {
+                str.innerHTML = "strong";
+                pass.style.borderColor = "#26d730";
+                msg.style.color = "#26d730";
+            }
+
+            if (pass.value !== conf.value) {
+                showPasswordMatchMessage('Passwords do not match', '#ff5925');
+                conf.style.borderColor = "#ff5925";
+                return false;
+            } else {
+                conf.style.borderColor = "#26d730";
+                showPasswordMatchMessage('Passwords match', '#26d730');
+            }
+
+            return true;
+        }
+
+        function showPasswordMatchMessage(message, color) {
+            $('#passwordMatch').text(message).css('color', color);
+        }
+
+        $('#password, #confirmPass').on('input', function () {
+            validatePassword();
+        });
+
+        $('form').submit(function (e) {
+            if (!validatePassword()) {
+                e.preventDefault();
+                showErrorAlert('Oops!', 'Please check your password and try again.');
+            }
+        });
+
+        function showErrorAlert(title, text) {
+            Swal.fire({
+                icon: 'error',
+                title: title,
+                text: text,
+                confirmButtonText: 'OK'
+            });
+        }
+    });
+</script>
 <body style="background-color: #E6A4B4;">
     <?php 
         require('../database/db_account.php');
@@ -44,9 +110,11 @@
                                     <p>Enter your new password and confirm it.</p>
                                     <hr>
                                     <label for='Password'>Password</label>
-                                    <input type='password' class='form-control' id='Password' name='Password' placeholder='Enter new password' required>
+                                    <input type='password' class='form-control' id='password' name='password' placeholder='Enter new password' required>
+                                    <p id='message'>Password is <span id='strength'></span></p>
                                     <label for='confirmPass'>Confirm Password</label>
                                     <input type='password' class='form-control' id='confirmPass' name='confirmPass' placeholder='Confirm password' required>
+                                    <small id='passwordMatch'></small>
                                     <input type='hidden' name='email' value='$email'>
                                     <br>
                                     <center><button type='submit' class='custom-button' name='submit' id='enter'>Submit</button></center>
@@ -74,7 +142,7 @@
 
         if(isset($_POST['submit'])) {
             $email = mysqli_real_escape_string($con, $_POST['email']); // Sanitize input
-            $password = mysqli_real_escape_string($con, $_POST['Password']);
+            $password = mysqli_real_escape_string($con, $_POST['password']);
             $confirmPassword = mysqli_real_escape_string($con, $_POST['confirmPass']);
 
             if($password == $confirmPassword) {

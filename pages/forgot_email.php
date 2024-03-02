@@ -11,9 +11,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.js"></script>
     <title>Yeokart - Forgot Password</title>
-    <title>Document</title>
 </head>
-<body>
+<body style="background-color: #E6A4B4;">
     <?php 
         require ('../database/db_account.php');
 
@@ -117,5 +116,27 @@
             }
         }
     ?>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 col-md-6 col-lg-6" id="div2">
+                <img src="../res/logo.png" alt="Yeokart Logo">
+                <p style="font-style: italic;">Welcome back chingu~</p>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-6" id="div1">
+                <form action="forgot_email.php" method="post">
+                    <h2 style="margin-bottom: 30px;"><b>Forgot Password</b></h2>
+                    <p>To continue, please enter your registered email in order to set a new password.</p>
+                    <hr>
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter your registered email" required>
+
+                    <center><p class="not-account">Not your account?<a href="./login_page.php"><strong> Login</strong></a></p></center>
+
+                    <button type="submit" name="submit" class="custom-button" id="enter">Enter</button>
+                </form>
+            </div>
+            
+        </div>
+    </div>
 </body>
 </html>

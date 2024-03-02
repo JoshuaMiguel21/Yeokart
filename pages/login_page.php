@@ -90,7 +90,7 @@
                     <label for="password">Password</label>
                     <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
                 </div>
-                <a href="forgot_email.html" class="forgot-pass"><strong>Forgot Password?</strong></a>
+                <a href="forgot_email.php" class="forgot-pass"><strong>Forgot Password?</strong></a>
 
                 <div class="button-container">
                     <a href="/pages/start_page.html"><button type="button" class="custom-button">Back</button></a>

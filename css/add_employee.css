@@ -17,19 +17,39 @@
 
 h2 {
     text-align: center;
+    font-weight: 700;
+    color: #fff;
 }
 
 form{
-    background-color: var(--main-color);
+    background-color: #fff;
     padding: 40px;
     border-radius: 10px;
     margin: 20px;
-    box-shadow: 10px 10px 5px var(--text-grey);
+    box-shadow: 10px 10px 5px #E6A4B4;
     color: var(--color-dark);
 }
 
 .button-container{
     text-align: center;
+}
+
+::placeholder{
+    font-size: 0.8rem;
+}
+
+#message {
+    text-align: start;
+    bottom: -30px;
+    color: #fff;
+    font-size: 0.8rem;
+    display: none;
+}
+
+#passwordMatch{
+    text-align: start;
+    bottom: -30px;
+    font-size: 0.8rem;
 }
 
 #submit{
