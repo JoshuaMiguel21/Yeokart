@@ -4,15 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.js"></script>
+    <link href="../css/add&edit_item.css" rel="stylesheet" />
 
     <title>Yeokart Edit Item Page</title>
 </head>
 
-<body>
+<body style="background-color: #DD2F6E;">
     <div class="container mt-3">
-        <h1 class="text-center">Edit Item</h1>
+        <h1 class="text-center text-white">Edit Item</h1>
         <?php
         include('../database/db_items.php');
         if (isset($_GET['item_id'])) {
@@ -27,22 +32,22 @@
                 <input type="hidden" name="current_image2" value="<?php echo $row['item_image2']; ?>">
                 <input type="hidden" name="current_image3" value="<?php echo $row['item_image3']; ?>">
                 <div class="form-outline mb-4 w-50 m-auto">
-                    <label for="item_name" class="form-label">Name:</label>
+                    <label for="item_name" class="form-outline mb-3 w-50 mr-auto ml-auto">Name:</label>
                     <input type="text" name="item_name" id="item_name" class="form-control" placeholder="Enter item name" autocomplete="off" value="<?php echo $row['item_name']; ?>" required>
                 </div>
-                <div class="form-outline mb-4 w-50 m-auto">
+                <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                     <label for="item_price" class="form-label">Price:</label>
                     <input type="number" name="item_price" id="item_price" class="form-control" placeholder="Enter item price" autocomplete="off" value="<?php echo $row['item_price']; ?>" required>
                 </div>
-                <div class="form-outline mb-4 w-50 m-auto">
+                <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                     <label for="item_description" class="form-label">Description:</label>
                     <textarea name="item_description" id="item_description" class="form-control" placeholder="Enter item description" required><?php echo $row['item_description']; ?></textarea>
                 </div>
-                <div class="form-outline mb-4 w-50 m-auto">
+                <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                     <label for="item_quantity" class="form-label">Quantity:</label>
                     <input type="number" name="item_quantity" id="item_quantity" class="form-control" placeholder="Enter item quantity" autocomplete="off" value="<?php echo $row['item_quantity']; ?>" required>
                 </div>
-                <div class="form-outline mb-4 w-50 m-auto">
+                <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                     <select name="product_category" id="product_category" class="form-select">
                         <option value="">Select item Category</option>
                         <?php
@@ -85,12 +90,13 @@
                 <div class="form-outline mb-4 w-50 m-auto">
                     <button type="submit" name="update_item" class="btn btn-info mb-3 px-3">Update Item</button>
                 </div>
-            </form>
-            <div class="form-outline mb-4 mt-5">
+                <div class="form-outline mb-4 w-50 m-auto">
                 <a href="./owner_item_homepage.php" class="btn btn-danger mb-3 px-3 ">
                     Back
                 </a>
             </div>
+            </form>
+            
         <?php
         }
         ?>

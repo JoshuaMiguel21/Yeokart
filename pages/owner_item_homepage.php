@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <title>Yeokart Item Catalog Page</title>
 </head>
 <script>
@@ -16,14 +16,83 @@
 </script>
 
 <body>
-    <div class="container mt-3">
+<input type="checkbox" id="nav-toggle">
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <h2><span>Yeokart</span></h2>
+        </div>
+        <div class="sidebar-menu">
+            <ul>
+                <li>
+                    <a href="owner_dashboard.php"><span class="las la-igloo"></span>
+                        <span>Admin Dashboard</span></a>
+                </li>
+                <li>
+                    <a href=""><span class="las la-users"></span>
+                        <span>Customers</span></a>
+                </li>
+                <li>
+                    <a href="./owner_item_homepage.php" class="active"><span class="las la-shopping-basket"></span>
+                        <span>Items</span></a>
+                </li>
+                <li>
+                    <a href=""><span class="las la-shopping-bag"></span>
+                        <span>Orders</span></a>
+                </li>
+                <li>
+                    <a href=""><span class="las la-chart-line"></span>
+                        <span>Report</span></a>
+                </li>
+                <li>
+                    <a href="manage_employees.php" class=""><span class="las la-user-circle"></span>
+                        <span>Manage Employee</span></a>
+                </li>
+                <li>
+                    <a href="logout.php"><span class="las la-sign-out-alt"></span>
+                        <span>Logout</span></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <h3>
+                <label for="nav-toggle">
+                    <span class="las la-bars"></span>
+                </label>
+
+                Manage Items
+            </h3>
+
+            <div class="user-wrapper">
+                <div>
+                    <h3>Unknown</h3>
+                    <small>Super admin</small>
+                </div>
+            </div>
+        </header>
+
+    <!-- <div class="container mt-3">
         <h1 class="text-center mb-4">Item Catalog</h1>
     </div>
-    <div class="form-outline mb-4 mt-5">
+     <div class="form-outline mb-4 mt-5">
         <a href="./owner_item.php" class="btn btn-info mb-3 px-3 mx-auto">
             Add a new Item
         </a>
-    </div>
+    </div> -->
+
+    <main>
+            <div class="head-title">
+                <div class="left">
+                    <h3>Item Catalog</h3>
+                </div>
+                <a href="owner_item.php" class="btn-employee">
+                    <i class="las la-user-plus"></i>
+                    <span class="text">Add Item</span>
+                </a>
+            </div>
+
     <div class="table">
         <table class="table">
             <thead>
@@ -34,7 +103,7 @@
                     <th>Quantity</th>
                     <th>Category</th>
                     <th>Images</th>
-                    <th>Action</th>
+                    <th><center>Action</center></th>
                 </tr>
             </thead>
             <tbody>
@@ -76,24 +145,28 @@
                     echo "<img src='./item_images/$item_image2' alt='Twice Album' width='50' height='50'>&nbsp;";
                     echo "<img src='./item_images/$item_image3' alt='Twice Album' width='50' height='50'>&nbsp;";
                     echo "</td>";
-                    echo "<td><a href='./owner_edit_item.php?item_id=$item_id' class='btn btn-primary'>Edit</a></td>";
-                    echo "<td>
-                    <form method='post' onsubmit='return confirmDelete()'>
-                        <input type='hidden' name='item_id' value='$item_id'>
-                        <button type='submit' name='delete_item' class='btn btn-danger'>Delete</button>
-                    </form>
-                </td>";
+                    echo "<td>";
+                    echo "<div class='button-class'>";
+                    echo "<a href='./owner_edit_item.php?item_id=$item_id' class='edit-button'>Edit</a> 
+                          <form method='post' onsubmit='return confirmDelete()'>
+                          <input type='hidden' name='item_id' value='$item_id'>
+                          <button type='submit' name='delete_item' class='delete-button'>Delete</button>
+                          </form>";
+                    echo "<div class='button-class'>";
+                    echo "</td>";
                     echo "</tr>";
                 }
                 ?>
             </tbody>
         </table>
     </div>
-    <div class="form-outline mb-4 mt-5">
+
+    <!-- <div class="form-outline mb-4 mt-5">
         <a href="./owner_dashboard.php" class="btn btn-danger mb-3 px-3 mx-auto">
             Back
         </a>
-    </div>
-</body>
+    </div> -->
 
+</body>
+          
 </html>
