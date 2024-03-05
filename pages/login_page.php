@@ -54,8 +54,8 @@
                         if ($admin && $password == $admin["password"]) {
                             header("Location: owner_dashboard.php");
                             $_SESSION['logged_in'] = true;
-                            $_SESSION['username'] = $admin['username'];
-                            $_SESSION['first_name'] = $admin['first_name'];
+                            $_SESSION['firstname'] = $admin['firstname'];
+                            $_SESSION['lastname'] = $admin['lastname'];
                             die();
                         }
                         // Check if the user is an employee

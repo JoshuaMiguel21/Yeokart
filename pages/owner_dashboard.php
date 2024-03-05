@@ -24,6 +24,24 @@
 
 <body>
     <?php
+        session_start();
+
+        if(isset($_SESSION['firstname'])) {
+            $firstname = $_SESSION['firstname'];
+        } else {
+            header("Location: login_page.php");
+            exit();
+        }
+
+        if(isset($_SESSION['lastname'])) {
+            $lastname = $_SESSION['lastname'];
+        } else {
+            header("Location: login_page.php");
+            exit();
+        }
+    ?>
+
+    <?php
     session_start();
     require('../database/db_yeokart.php');
 
@@ -128,7 +146,7 @@
             <div class="user-wrapper">
                 <div>
                     <div>
-                        <h3>Hi, <?php echo $firstname; ?></h3>
+                        <h3><?php echo $firstname ." ". $lastname;?></h3>
                         <small>Owner</small>
                     </div>
                 </div>

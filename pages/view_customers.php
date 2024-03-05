@@ -21,6 +21,23 @@
         window.location.href = 'logout.php';
     }
 </script>
+<?php
+        session_start();
+
+        if(isset($_SESSION['firstname'])) {
+            $firstname = $_SESSION['firstname'];
+        } else {
+            header("Location: login_page.php");
+            exit();
+        }
+
+        if(isset($_SESSION['lastname'])) {
+            $lastname = $_SESSION['lastname'];
+        } else {
+            header("Location: login_page.php");
+            exit();
+        }
+    ?>
 <body>
 
     <input type="checkbox" id="nav-toggle">
@@ -84,7 +101,7 @@
 
             <div class="user-wrapper">
                 <div>
-                    <h3>Rachel Falcis</h3>
+                    <h3><?php echo $firstname ." ". $lastname;?></h3>
                     <small>Owner</small>
                 </div>
             </div>
