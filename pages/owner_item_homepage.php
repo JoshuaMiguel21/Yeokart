@@ -106,7 +106,7 @@
             <div class="user-wrapper">
                 <div>
                     <div>
-                        <h3>Hi, <?php echo $firstname; ?></h3>
+                        <h3><?php echo $firstname ." ". $lastname;?></h3>
                         <small>Owner</small>
                     </div>
                 </div>

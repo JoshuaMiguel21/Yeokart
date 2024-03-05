@@ -42,15 +42,7 @@
     ?>
 
     <?php
-    session_start();
     require('../database/db_yeokart.php');
-
-    if (isset($_SESSION['first_name'])) {
-        $firstname = $_SESSION['first_name'];
-    } else {
-        header("Location: login_page.php");
-        exit();
-    }
 
     $sql = "SELECT COUNT(*) AS employee_count FROM employee_accounts";
     $result = $con->query($sql);
