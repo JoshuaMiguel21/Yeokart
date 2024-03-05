@@ -20,24 +20,25 @@
         <h1 class="text-center text-white">Edit Category</h1>
         <?php
         include('../database/db_yeokart.php');
+
         if (isset($_GET['category_id'])) {
             $category_id = $_GET['category_id'];
             $select_query = "SELECT * FROM categories WHERE category_id='$category_id'";
             $result_query = mysqli_query($con, $select_query);
             $row = mysqli_fetch_assoc($result_query);
         ?>
-            <form action="" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="category_id" value="<?php echo $row['category_id']; ?>">
-                <div class="form-outline mb-4 w-50 m-auto">
-                    <label for="category_name" class="form-outline mb-3 w-50 mr-auto ml-auto">Edit Name:</label>
-                    <input type="text" name="category_name" id="category_name" class="form-control" placeholder="Enter new name" autocomplete="off" value="<?php echo $row['category_name']; ?>" required>
+            <form action="" method="post">
+                <div class="form-outline mb-3 w-50 mr-auto ml-auto">
+                    <label for="category_name" class="form-label">Name:</label>
+                    <input type="text" name="category_name" id="category_name" class="form-control" placeholder="Enter category name" autocomplete="off" required value="<?php echo $row['category_name']; ?>">
                 </div>
-                <br></br>
-                <div class="form-outline mb-4 w-50 m-auto">
-                    <button type="submit" name="update_category" class="btn btn-info mb-3 px-3">Update Category</button>
+                <input type="hidden" name="category_id" value="<?php echo $category_id; ?>">
+                <div class="form-outline mb-3 w-50 mr-auto ml-auto">
+                    <input type="submit" name="update_category" class="btn btn-info mb-3 px-3" value="Update Category">
                 </div>
+
                 <div class="form-outline mb-4 w-50 m-auto">
-                    <a href="./owner_category_table.php" class="btn btn-danger mb-3 px-3 ">
+                    <a href="owner_category_table.php" class="btn btn-danger mb-0 px-3 ">
                         Back
                     </a>
                 </div>
@@ -53,16 +54,34 @@
 </html>
 <?php
 include('../database/db_yeokart.php');
-if (isset($_POST['update_category'])) {
-    $category_id = $_POST['category_id'];
-    $category_name = $_POST['category_name'];
 
+if (isset($_GET['category_id'])) {
+    $category_id = $_GET['category_id'];
+    $select_query = "SELECT * FROM categories WHERE category_id='$category_id'";
+    $result_select = mysqli_query($con, $select_query);
+    $row = mysqli_fetch_assoc($result_select);
+    $category_name = $row['category_name'];
 
-    $update_query = "UPDATE categories SET category_name='$category_name' WHERE category_id='$category_id'";
-    $result_query_category = mysqli_query($con, $update_query);
-    if ($result_query_category) {
-        echo "<script>alert('Category successfully updated')</script>";
-        echo "<script>window.location.href = './owner_category_table.php';</script>";
+    if (isset($_POST['update_category'])) {
+        $new_category_name = $_POST['category_name'];
+
+        $update_query = "UPDATE categories SET category_name='$new_category_name' WHERE category_id='$category_id'";
+        $result_update = mysqli_query($con, $update_query);
+
+        if ($result_update) {
+            echo "<script>alert('Category successfully updated')</script>";
+
+            $update_products_query = "UPDATE products SET category_name='$new_category_name' WHERE category_name='$category_name'";
+            $result_update_products = mysqli_query($con, $update_products_query);
+
+            if ($result_update_products) {
+            } else {
+                echo "<script>alert('Failed to update products category')</script>";
+            }
+            echo "<script>window.location.href = 'owner_category_table.php';</script>";
+        } else {
+            echo "<script>alert('Failed to update category')</script>";
+        }
     }
 }
 ?>

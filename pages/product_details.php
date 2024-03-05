@@ -15,7 +15,7 @@
 <body>
     <header class="header">
         <div class="header-1">
-            <img src="/res/logo.png" alt="Yeokart Logo" class="logo">
+            <img src="../res/logo.png" alt="Yeokart Logo" class="logo">
 
             <form action="" class="search-form">
                 <input type="search" name="" placeholder="Search here..." id="search-box">

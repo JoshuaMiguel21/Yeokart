@@ -74,7 +74,7 @@
                         <a href='#' class='fas fa-eye'></a>
                     </div>
                     <div class='image'>
-                    <img src='./item_images/$item_image1' alt=''>
+                    <img src='item_images/$item_image1' alt=''>
                     </div>
                     <div class='content'>
                     <h3 class='marquee'>$item_name</h3>
@@ -110,7 +110,7 @@
                         <a href='#' class='fas fa-eye'></a>
                     </div>
                     <div class='image'>
-                    <img src='./item_images/$item_image1' alt=''>
+                    <img src='item_images/$item_image1' alt=''>
                     </div>
                     <div class='content'>
                     <h3 class='marquee'>$item_name</h3>

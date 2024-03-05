@@ -127,7 +127,7 @@
                             echo "<td>" . $row['category_name'] . "</td>";
                             echo "<td>";
                             echo "<div class='button-class'>";
-                            echo "<a href='./owner_category_form.php?category_id=$category_id' class='edit-button'>Edit</a> ";
+                            echo "<a href='owner_category_form.php?category_id=$category_id' class='edit-button'>Edit</a> ";
                             echo "</td>";
                             echo "</tr>";
                         }

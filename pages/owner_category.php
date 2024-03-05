@@ -28,7 +28,7 @@
             </div>
 
             <div class="form-outline mb-4 w-50 m-auto">
-                <a href="./owner_category_table.php" class="btn btn-danger mb-0 px-3 ">
+                <a href="owner_category_table.php" class="btn btn-danger mb-0 px-3 ">
                     Back
                 </a>
             </div>

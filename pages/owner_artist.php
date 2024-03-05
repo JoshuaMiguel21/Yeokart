@@ -28,7 +28,7 @@
             </div>
 
             <div class="form-outline mb-4 w-50 m-auto">
-                <a href="./owner_artist_table.php" class="btn btn-danger mb-0 px-3 ">
+                <a href="owner_artist_table.php" class="btn btn-danger mb-0 px-3 ">
                     Back
                 </a>
             </div>
@@ -61,7 +61,7 @@ if (isset($_POST['insert_artist'])) {
             $result_query_artist = mysqli_query($con, $insert_artist);
             if ($result_query_artist) {
                 echo "<script>alert('Artist successfully added')</script>";
-                echo "<script>window.location.href = './owner_artist_table.php';</script>";
+                echo "<script>window.location.href = 'owner_artist_table.php';</script>";
             }
         }
     }

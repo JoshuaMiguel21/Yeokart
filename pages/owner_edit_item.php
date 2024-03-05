@@ -32,8 +32,9 @@
                 <input type="hidden" name="current_image2" value="<?php echo $row['item_image2']; ?>">
                 <input type="hidden" name="current_image3" value="<?php echo $row['item_image3']; ?>">
                 <div class="form-outline mb-4 w-50 m-auto">
-                    <label for="item_name" class="form-outline mb-3 w-50 mr-auto ml-auto">Name:</label>
-                    <input type="text" name="item_name" id="item_name" class="form-control" placeholder="Enter item name" autocomplete="off" value="<?php echo $row['item_name']; ?>" required>
+                    <label for="item_name" class="form-label">Name:</label>
+                    <span id="itemNameCounter"><?php echo strlen($row['item_name']); ?>/100</span>
+                    <input type="text" name="item_name" id="item_name" class="form-control" placeholder="Enter item name" autocomplete="off" value="<?php echo $row['item_name']; ?>" required maxlength="100">
                 </div>
                 <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                     <label for="item_price" class="form-label">Price:</label>
@@ -41,11 +42,12 @@
                 </div>
                 <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                     <label for="item_description" class="form-label">Description:</label>
-                    <textarea name="item_description" id="item_description" class="form-control" placeholder="Enter item description" required><?php echo $row['item_description']; ?></textarea>
+                    <span id="itemDescriptionCounter"><?php echo strlen($row['item_description']); ?>/300</span>
+                    <textarea name="item_description" id="item_description" class="form-control" placeholder="Enter item description" required maxlength="300"><?php echo $row['item_description']; ?></textarea>
                 </div>
                 <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                     <label for="item_quantity" class="form-label">Quantity:</label>
-                    <input type="number" name="item_quantity" id="item_quantity" class="form-control" placeholder="Enter item quantity" autocomplete="off" value="<?php echo $row['item_quantity']; ?>" required>
+                    <input type="number" name="item_quantity" id="item_quantity" class="form-control" placeholder="Enter item quantity" autocomplete="off" value="<?php echo $row['item_quantity']; ?>" min="0" required>
                 </div>
                 <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                     <select name="product_artist" id="product_artist" class="form-select">
@@ -165,21 +167,24 @@
         </div>
     </div>
     <script>
-        function updateDropdownArtist(artist_id, artist_name) {
-            var select = document.getElementById("product_artist");
-            var option = document.createElement("option");
-            option.value = artist_id;
-            option.text = artist_name;
-            select.add(option);
-        }
+        const itemNameInput = document.getElementById('item_name');
+        const itemDescriptionInput = document.getElementById('item_description');
+        const itemNameCounter = document.getElementById('itemNameCounter');
+        const itemDescriptionCounter = document.getElementById('itemDescriptionCounter');
 
-        function updateDropdownArtist(category_id, category_name) {
-            var select = document.getElementById("product_category");
-            var option = document.createElement("option");
-            option.value = category_id;
-            option.text = category_name;
-            select.add(option);
+        itemNameInput.addEventListener('input', updateCounter);
+        itemDescriptionInput.addEventListener('input', updateCounter);
+
+        function updateCounter() {
+            itemNameCounter.textContent = `${itemNameInput.value.length}/100`;
+            itemDescriptionCounter.textContent = `${itemDescriptionInput.value.length}/300`;
         }
+        const textarea = document.getElementById('item_description');
+
+        textarea.addEventListener('input', () => {
+            textarea.style.height = 'auto'; // Reset the height to auto to properly calculate the new height
+            textarea.style.height = `${textarea.scrollHeight}px`; // Set the height to match the content
+        });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
@@ -256,7 +261,7 @@ if (isset($_POST['update_item'])) {
     $result_query_item = mysqli_query($con, $update_query);
     if ($result_query_item) {
         echo "<script>alert('Item successfully updated')</script>";
-        echo "<script>window.location.href = './owner_item_homepage.php';</script>";
+        echo "<script>window.location.href = 'owner_item_homepage.php';</script>";
     }
 }
 ?>

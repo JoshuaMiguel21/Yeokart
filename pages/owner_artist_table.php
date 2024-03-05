@@ -32,7 +32,7 @@
                         <span>Customers</span></a>
                 </li>
                 <li>
-                    <a href="./owner_item_homepage.php" class="active"><span class="las la-shopping-basket"></span>
+                    <a href="owner_item_homepage.php" class="active"><span class="las la-shopping-basket"></span>
                         <span>Items</span></a>
                 </li>
                 <li>
@@ -127,7 +127,7 @@
                             echo "<td>" . $row['artist_name'] . "</td>";
                             echo "<td>";
                             echo "<div class='button-class'>";
-                            echo "<a href='./owner_artist_form.php?artist_id=$artist_id' class='edit-button'>Edit</a> ";
+                            echo "<a href='owner_artist_form.php?artist_id=$artist_id' class='edit-button'>Edit</a> ";
                             echo "</td>";
                             echo "</tr>";
                         }

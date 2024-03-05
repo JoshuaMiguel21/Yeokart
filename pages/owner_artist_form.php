@@ -20,24 +20,25 @@
         <h1 class="text-center text-white">Edit Artist</h1>
         <?php
         include('../database/db_yeokart.php');
+
         if (isset($_GET['artist_id'])) {
             $artist_id = $_GET['artist_id'];
             $select_query = "SELECT * FROM artists WHERE artist_id='$artist_id'";
             $result_query = mysqli_query($con, $select_query);
             $row = mysqli_fetch_assoc($result_query);
         ?>
-            <form action="" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="artist_id" value="<?php echo $row['artist_id']; ?>">
-                <div class="form-outline mb-4 w-50 m-auto">
-                    <label for="artist_name" class="form-outline mb-3 w-50 mr-auto ml-auto">Edit Name:</label>
-                    <input type="text" name="artist_name" id="artist_name" class="form-control" placeholder="Enter new name" autocomplete="off" value="<?php echo $row['artist_name']; ?>" required>
+            <form action="" method="post">
+                <div class="form-outline mb-3 w-50 mr-auto ml-auto">
+                    <label for="artist_name" class="form-label">Name:</label>
+                    <input type="text" name="artist_name" id="artist_name" class="form-control" placeholder="Enter artist name" autocomplete="off" required value="<?php echo $row['artist_name']; ?>">
                 </div>
-                <br></br>
-                <div class="form-outline mb-4 w-50 m-auto">
-                    <button type="submit" name="update_artist" class="btn btn-info mb-3 px-3">Update Artist</button>
+                <input type="hidden" name="artist_id" value="<?php echo $artist_id; ?>">
+                <div class="form-outline mb-3 w-50 mr-auto ml-auto">
+                    <input type="submit" name="update_artist" class="btn btn-info mb-3 px-3" value="Update Artist">
                 </div>
+
                 <div class="form-outline mb-4 w-50 m-auto">
-                    <a href="./owner_artist_table.php" class="btn btn-danger mb-3 px-3 ">
+                    <a href="./owner_artist_table.php" class="btn btn-danger mb-0 px-3 ">
                         Back
                     </a>
                 </div>
@@ -53,15 +54,34 @@
 </html>
 <?php
 include('../database/db_yeokart.php');
-if (isset($_POST['update_artist'])) {
-    $artist_id = $_POST['artist_id'];
-    $artist_name = $_POST['artist_name'];
 
-    $update_query = "UPDATE artists SET artist_name='$artist_name' WHERE artist_id='$artist_id'";
-    $result_query_artist = mysqli_query($con, $update_query);
-    if ($result_query_artist) {
-        echo "<script>alert('Artist successfully updated')</script>";
-        echo "<script>window.location.href = './owner_artist_table.php';</script>";
+if (isset($_GET['artist_id'])) {
+    $artist_id = $_GET['artist_id'];
+    $select_query = "SELECT * FROM artists WHERE artist_id='$artist_id'";
+    $result_select = mysqli_query($con, $select_query);
+    $row = mysqli_fetch_assoc($result_select);
+    $artist_name = $row['artist_name'];
+
+    if (isset($_POST['update_artist'])) {
+        $new_artist_name = $_POST['artist_name'];
+
+        $update_query = "UPDATE artists SET artist_name='$new_artist_name' WHERE artist_id='$artist_id'";
+        $result_update = mysqli_query($con, $update_query);
+
+        if ($result_update) {
+            echo "<script>alert('Artist successfully updated')</script>";
+
+            $update_products_query = "UPDATE products SET artist_name='$new_artist_name' WHERE artist_name='$artist_name'";
+            $result_update_products = mysqli_query($con, $update_products_query);
+
+            if ($result_update_products) {
+            } else {
+                echo "<script>alert('Failed to update products artist')</script>";
+            }
+            echo "<script>window.location.href = 'owner_artist_table.php';</script>";
+        } else {
+            echo "<script>alert('Failed to update category')</script>";
+        }
     }
 }
 ?>

@@ -49,7 +49,7 @@
                         <span>Customers</span></a>
                 </li>
                 <li>
-                    <a href="./owner_item_homepage.php"><span class="las la-shopping-basket"></span>
+                    <a href="owner_item_homepage.php"><span class="las la-shopping-basket"></span>
                         <span>Items</span></a>
                 </li>
                 <li>

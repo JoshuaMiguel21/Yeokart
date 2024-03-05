@@ -21,7 +21,8 @@
         <form action="" method="post" enctype="multipart/form-data">
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <label for="item_name" class="form-label">Name:</label>
-                <input type="text" name="item_name" id="item_name" class="form-control" placeholder="Enter item name" autocomplete="off" required>
+                <span id="itemNameCounter"><?php echo isset($row['item_name']) ? strlen($row['item_name']) : 0; ?>/100</span>
+                <input type="text" name="item_name" id="item_name" class="form-control" placeholder="Enter item name" autocomplete="off" required maxlength="100" required>
             </div>
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <label for="item_price" class="form-label">Price:</label>
@@ -29,11 +30,12 @@
             </div>
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <label for="item_description" class="form-label">Description:</label>
-                <textarea name="item_description" id="item_description" class="form-control" placeholder="Enter item description" required></textarea>
+                <span id="itemDescriptionCounter"><?php echo isset($row['item_description']) ? strlen($row['item_description']) : 0; ?>/300</span>
+                <textarea name="item_description" id="item_description" class="form-control" placeholder="Enter item description" required maxlength="300" required></textarea>
             </div>
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <label for="item_quantity" class="form-label">Quantity:</label>
-                <input type="number" name="item_quantity" id="item_quantity" class="form-control" placeholder="Enter item quantity" autocomplete="off" required>
+                <input type="number" name="item_quantity" id="item_quantity" class="form-control" placeholder="Enter item quantity" autocomplete="off" min="0" required>
             </div>
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <select name="product_artist" id="product_artist" class="form-select">
@@ -92,7 +94,7 @@
             </div>
 
             <div class="form-outline mb-4 w-50 m-auto">
-                <a href="./owner_item_homepage.php" class="btn btn-danger mb-0 px-3 ">
+                <a href="owner_item_homepage.php" class="btn btn-danger mb-0 px-3 ">
                     Back
                 </a>
             </div>
@@ -159,6 +161,24 @@
             option.text = category_name;
             select.add(option);
         }
+        const itemNameInput = document.getElementById('item_name');
+        const itemDescriptionInput = document.getElementById('item_description');
+        const itemNameCounter = document.getElementById('itemNameCounter');
+        const itemDescriptionCounter = document.getElementById('itemDescriptionCounter');
+
+        itemNameInput.addEventListener('input', updateCounter);
+        itemDescriptionInput.addEventListener('input', updateCounter);
+
+        function updateCounter() {
+            itemNameCounter.textContent = `${itemNameInput.value.length}/100`;
+            itemDescriptionCounter.textContent = `${itemDescriptionInput.value.length}/300`;
+        }
+        const textarea = document.getElementById('item_description');
+
+        textarea.addEventListener('input', () => {
+            textarea.style.height = 'auto'; // Reset the height to auto to properly calculate the new height
+            textarea.style.height = `${textarea.scrollHeight}px`; // Set the height to match the content
+        });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
@@ -166,6 +186,7 @@
 </html>
 <?php
 include('../database/db_yeokart.php');
+
 if (isset($_POST['add_artist'])) {
     $artist_name = $_POST['artist_name'];
     $select_query = "SELECT * FROM artists WHERE artist_name='$artist_name'";
@@ -235,6 +256,7 @@ if (isset($_POST['insert_item'])) {
             $result_query_item = mysqli_query($con, $insert_items);
             if ($result_query_item) {
                 echo "<script>alert('Item successfully added')</script>";
+                echo "<script>window.location.href = './owner_item_homepage.php';</script>";
             }
         }
     }

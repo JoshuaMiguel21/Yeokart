@@ -131,10 +131,10 @@
                             $result_query = mysqli_query($con, $delete_query);
                             if ($result_query) {
                                 echo "<script>alert('Item deleted successfully')</script>";
-                                echo "<script>window.location.href = './owner_item_homepage.php';</script>";
+                                echo "<script>window.location.href = 'owner_item_homepage.php';</script>";
                             } else {
                                 echo "<script>alert('Failed to delete item')</script>";
-                                echo "<script>window.location.href = './owner_item_homepage.php';</script>";
+                                echo "<script>window.location.href = 'owner_item_homepage.php';</script>";
                             }
                         }
                         $select_query = "SELECT * FROM products";
@@ -152,7 +152,7 @@
                             $item_image3 = $row['item_image3'];
                             echo "<tr>";
                             echo "<td>" . $row['item_name'] . "</td>";
-                            echo "<td>" . $row['item_price'] . "</td>";
+                            echo "<td> ₱" . $row['item_price'] . "</td>";
                             echo "<td style='max-width: 350px;'>" . $row['item_description'] . "</td>";
                             echo "<td>" . $row['item_quantity'] . "</td>";
                             echo "<td>" . $row['artist_name'] . "</td>";
@@ -164,7 +164,7 @@
                             echo "</td>";
                             echo "<td>";
                             echo "<div class='button-class'>";
-                            echo "<a href='./owner_edit_item.php?item_id=$item_id' class='edit-button'>Edit</a> 
+                            echo "<a href='owner_edit_item.php?item_id=$item_id' class='edit-button'>Edit</a> 
                           <form method='post' onsubmit='return confirmDelete()'>
                           <input type='hidden' name='item_id' value='$item_id'>
                           <button type='submit' name='delete_item' class='delete-button'>Delete</button>
