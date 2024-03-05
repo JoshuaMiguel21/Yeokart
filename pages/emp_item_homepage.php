@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Employee Dashboard</title>
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <title>Yeokart Item Catalog Page</title>
@@ -18,10 +18,9 @@
 <body>
     <?php
     session_start();
-    require('../database/db_yeokart.php');
 
-    if (isset($_SESSION['first_name'])) {
-        $firstname = $_SESSION['first_name'];
+    if (isset($_SESSION['firstname'])) {
+        $firstname = $_SESSION['firstname'];
     } else {
         header("Location: login_page.php");
         exit();
@@ -35,28 +34,20 @@
         <div class="sidebar-menu">
             <ul>
                 <li>
-                    <a href="owner_dashboard.php"><span class="las la-igloo"></span>
-                        <span>Owner Dashboard</span></a>
+                    <a href="emp_dashboard.php"><span class="las la-igloo"></span>
+                        <span>Employee Dashboard</span></a>
                 </li>
                 <li>
                     <a href=""><span class="las la-users"></span>
                         <span>Customers</span></a>
                 </li>
                 <li>
-                    <a href="owner_item_homepage.php" class="active"><span class="las la-shopping-basket"></span>
+                    <a href="emp_item_homepage.php" class="active"><span class="las la-shopping-basket"></span>
                         <span>Items</span></a>
                 </li>
                 <li>
                     <a href=""><span class="las la-shopping-bag"></span>
                         <span>Orders</span></a>
-                </li>
-                <li>
-                    <a href=""><span class="las la-chart-line"></span>
-                        <span>Report</span></a>
-                </li>
-                <li>
-                    <a href="manage_employees.php" class=""><span class="las la-user-circle"></span>
-                        <span>Manage Employee</span></a>
                 </li>
                 <li>
                     <a href="logout.php"><span class="las la-sign-out-alt"></span>
@@ -78,12 +69,11 @@
 
             <div class="user-wrapper">
                 <div>
-                    <div>
-                        <h3>Hi, <?php echo $firstname; ?></h3>
-                        <small>Owner</small>
-                    </div>
+                    <h3>Hi, <?php echo $firstname; ?></h3>
+                    <small>Employee</small>
                 </div>
             </div>
+        </header>
         </header>
 
         <!-- <div class="container mt-3">
@@ -100,21 +90,17 @@
                 <div class="left">
                     <h3>Item Catalog</h3>
                 </div>
-                <a href="owner_artist_table.php" class="btn-employee">
+                <a href="emp_artist_table.php" class="btn-employee">
                     <i class="las la-user-plus"></i>
                     <span class="text">View Artist Table</span>
                 </a>
-                <a href="owner_item_homepage.php" class="btn-employee">
+                <a href="emp_item_homepage.php" class="btn-employee">
                     <i class="las la-user-plus"></i>
                     <span class="text">View Item Catalog</span>
                 </a>
-                <a href="owner_category_table.php" class="btn-employee">
+                <a href="emp_category_table.php" class="btn-employee">
                     <i class="las la-user-plus"></i>
                     <span class="text">View Categories Table</span>
-                </a>
-                <a href="owner_item.php" class="btn-employee">
-                    <i class="las la-user-plus"></i>
-                    <span class="text">Add Item</span>
                 </a>
             </div>
 

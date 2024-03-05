@@ -4,14 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Owner Dashboard</title>
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 
 <body>
     <?php
+    session_start();
     require('../database/db_yeokart.php');
+
+    if (isset($_SESSION['first_name'])) {
+        $firstname = $_SESSION['first_name'];
+    } else {
+        header("Location: login_page.php");
+        exit();
+    }
 
     $sql = "SELECT COUNT(*) AS employee_count FROM employee_accounts";
     $result = $con->query($sql);
@@ -42,7 +50,7 @@
             <ul>
                 <li>
                     <a href="" class="active"><span class="las la-igloo"></span>
-                        <span>Admin Dashboard</span></a>
+                        <span>Owner Dashboard</span></a>
                 </li>
                 <li>
                     <a href=""><span class="las la-users"></span>
@@ -84,8 +92,10 @@
 
             <div class="user-wrapper">
                 <div>
-                    <h3>Rachel Falcis</h3>
-                    <small>Owner</small>
+                    <div>
+                        <h3>Hi, <?php echo $firstname; ?></h3>
+                        <small>Owner</small>
+                    </div>
                 </div>
             </div>
         </header>

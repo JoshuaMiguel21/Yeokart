@@ -55,6 +55,7 @@
                             header("Location: owner_dashboard.php");
                             $_SESSION['logged_in'] = true;
                             $_SESSION['username'] = $admin['username'];
+                            $_SESSION['first_name'] = $admin['first_name'];
                             die();
                         }
                         // Check if the user is an employee

@@ -28,6 +28,7 @@
             $row = mysqli_fetch_assoc($result_query);
         ?>
             <form action="" method="post">
+                <input type="hidden" name="previous_page" value="<?php echo $_SERVER['HTTP_REFERER']; ?>">
                 <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                     <label for="artist_name" class="form-label">Name:</label>
                     <input type="text" name="artist_name" id="artist_name" class="form-control" placeholder="Enter artist name" autocomplete="off" required value="<?php echo $row['artist_name']; ?>">
@@ -38,7 +39,7 @@
                 </div>
 
                 <div class="form-outline mb-4 w-50 m-auto">
-                    <a href="./owner_artist_table.php" class="btn btn-danger mb-0 px-3 ">
+                    <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>" class="btn btn-danger mb-3 px-3">
                         Back
                     </a>
                 </div>
@@ -78,7 +79,8 @@ if (isset($_GET['artist_id'])) {
             } else {
                 echo "<script>alert('Failed to update products artist')</script>";
             }
-            echo "<script>window.location.href = 'owner_artist_table.php';</script>";
+            $previous_page = $_POST['previous_page'];
+            echo "<script>document.location.href = '$previous_page';</script>";
         } else {
             echo "<script>alert('Failed to update category')</script>";
         }

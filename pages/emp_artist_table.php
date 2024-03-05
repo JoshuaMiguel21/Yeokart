@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Employee Dashboard</title>
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <title>Yeokart Item Catalog Page</title>
@@ -16,6 +16,16 @@
 </script>
 
 <body>
+    <?php
+    session_start();
+
+    if (isset($_SESSION['firstname'])) {
+        $firstname = $_SESSION['firstname'];
+    } else {
+        header("Location: login_page.php");
+        exit();
+    }
+    ?>
     <input type="checkbox" id="nav-toggle">
     <div class="sidebar">
         <div class="sidebar-brand">
@@ -24,28 +34,20 @@
         <div class="sidebar-menu">
             <ul>
                 <li>
-                    <a href="owner_dashboard.php"><span class="las la-igloo"></span>
-                        <span>Admin Dashboard</span></a>
+                    <a href="emp_dashboard.php"><span class="las la-igloo"></span>
+                        <span>Employee Dashboard</span></a>
                 </li>
                 <li>
                     <a href=""><span class="las la-users"></span>
                         <span>Customers</span></a>
                 </li>
                 <li>
-                    <a href="owner_item_homepage.php" class="active"><span class="las la-shopping-basket"></span>
+                    <a href="emp_item_homepage.php" class="active"><span class="las la-shopping-basket"></span>
                         <span>Items</span></a>
                 </li>
                 <li>
                     <a href=""><span class="las la-shopping-bag"></span>
                         <span>Orders</span></a>
-                </li>
-                <li>
-                    <a href=""><span class="las la-chart-line"></span>
-                        <span>Report</span></a>
-                </li>
-                <li>
-                    <a href="manage_employees.php" class=""><span class="las la-user-circle"></span>
-                        <span>Manage Employee</span></a>
                 </li>
                 <li>
                     <a href="logout.php"><span class="las la-sign-out-alt"></span>
@@ -62,49 +64,35 @@
                     <span class="las la-bars"></span>
                 </label>
 
-                Manage Items
+                Dashboard
             </h3>
 
             <div class="user-wrapper">
                 <div>
-                    <h3>Unknown</h3>
-                    <small>Super admin</small>
+                    <h3>Hi, <?php echo $firstname; ?></h3>
+                    <small>Employee</small>
                 </div>
             </div>
         </header>
-
-        <!-- <div class="container mt-3">
-        <h1 class="text-center mb-4">Item Catalog</h1>
-    </div>
-     <div class="form-outline mb-4 mt-5">
-        <a href="./owner_item.php" class="btn btn-info mb-3 px-3 mx-auto">
-            Add a new Item
-        </a>
-    </div> -->
-
+        </header>
         <main>
             <div class="head-title">
                 <div class="left">
                     <h3>Item Catalog</h3>
                 </div>
-                <a href="owner_artist_table.php" class="btn-employee">
+                <a href="emp_artist_table.php" class="btn-employee">
                     <i class="las la-user-plus"></i>
                     <span class="text">View Artist Table</span>
                 </a>
-                <a href="owner_item_homepage.php" class="btn-employee">
+                <a href="emp_item_homepage.php" class="btn-employee">
                     <i class="las la-user-plus"></i>
                     <span class="text">View Item Catalog</span>
                 </a>
-                <a href="owner_category_table.php" class="btn-employee">
+                <a href="emp_category_table.php" class="btn-employee">
                     <i class="las la-user-plus"></i>
                     <span class="text">View Categories Table</span>
                 </a>
-                <a href="owner_artist.php" class="btn-employee">
-                    <i class="las la-user-plus"></i>
-                    <span class="text">Add Artist</span>
-                </a>
             </div>
-
             <div class="table">
                 <table class="table">
                     <thead>
@@ -135,13 +123,3 @@
                     </tbody>
                 </table>
             </div>
-
-            <!-- <div class="form-outline mb-4 mt-5">
-        <a href="./owner_dashboard.php" class="btn btn-danger mb-3 px-3 mx-auto">
-            Back
-        </a>
-    </div> -->
-
-</body>
-
-</html>

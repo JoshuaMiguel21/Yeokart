@@ -31,6 +31,7 @@
                 <input type="hidden" name="current_image1" value="<?php echo $row['item_image1']; ?>">
                 <input type="hidden" name="current_image2" value="<?php echo $row['item_image2']; ?>">
                 <input type="hidden" name="current_image3" value="<?php echo $row['item_image3']; ?>">
+                <input type="hidden" name="previous_page" value="<?php echo $_SERVER['HTTP_REFERER']; ?>">
                 <div class="form-outline mb-4 w-50 m-auto">
                     <label for="item_name" class="form-label">Name:</label>
                     <span id="itemNameCounter"><?php echo strlen($row['item_name']); ?>/100</span>
@@ -112,7 +113,7 @@
                     <button type="submit" name="update_item" class="btn btn-info mb-3 px-3">Update Item</button>
                 </div>
                 <div class="form-outline mb-4 w-50 m-auto">
-                    <a href="./owner_item_homepage.php" class="btn btn-danger mb-3 px-3 ">
+                    <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>" class="btn btn-danger mb-3 px-3">
                         Back
                     </a>
                 </div>
@@ -261,7 +262,8 @@ if (isset($_POST['update_item'])) {
     $result_query_item = mysqli_query($con, $update_query);
     if ($result_query_item) {
         echo "<script>alert('Item successfully updated')</script>";
-        echo "<script>window.location.href = 'owner_item_homepage.php';</script>";
+        $previous_page = $_POST['previous_page'];
+        echo "<script>document.location.href = '$previous_page';</script>";
     }
 }
 ?>
