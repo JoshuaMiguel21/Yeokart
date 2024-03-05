@@ -69,7 +69,10 @@
                         elseif ($user && $user['is_verified'] == 1 && password_verify($password, $user["password"])) {
                             header("Location: customer_homepage.php");
                             $_SESSION['logged_in'] = true;
+                            $_SESSION['firstname'] = $user['firstname'];
+                            $_SESSION['lastname'] = $user['lastname'];
                             $_SESSION['username'] = $user['username'];
+                            $_SESSION['email'] = $user['email'];
                             die();
                         } else {
                             // Password or email does not match

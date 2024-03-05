@@ -236,7 +236,7 @@ table {
     border-collapse: collapse;
     width: 100%;
     margin-top: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Softened box shadow */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
 }
 
 th, td {
@@ -287,7 +287,74 @@ th {
     font-size: 14px;
 }
 
+.popup-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+}
 
+.popup-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    width: 90%;
+    max-width: 400px;
+}
+
+.popup-content p{
+    font-size: 1rem;
+    text-transform: none;
+}
+
+.popup-content .logout-btns{
+    margin-top: 20px;
+}
+
+.confirm-logout-btn, .cancel-logout-btn {
+    margin: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.confirm-logout-btn {
+    text-align: center;
+    background-color: var(--main-color);
+    color: white;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.confirm-logout-btn:hover{
+    background-color: #d11c49; 
+}
+
+.cancel-logout-btn {
+    text-align: center;
+    background-color: #ccc;
+    color: white;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.close-btn {
+    float: right;
+    font-size: 1rem;
+    cursor: pointer;
+}
 
 @media only screen and (max-width: 1200px){
     #nav-toggle:checked + .sidebar{

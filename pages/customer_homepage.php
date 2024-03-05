@@ -10,12 +10,41 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="stylesheet" href="../css/style_homepage_customer.css">
 </head>
+<?php
+    session_start();
 
+    if(isset($_SESSION['firstname'])) {
+        $firstname = $_SESSION['firstname'];
+    } else {
+        header("Location: login_page.php");
+        exit();
+    }
 
+    if(isset($_SESSION['lastname'])) {
+        $lastname = $_SESSION['lastname'];
+    } else {
+        header("Location: login_page.php");
+        exit();
+    }
+
+    if(isset($_SESSION['username'])) {
+        $username = $_SESSION['username'];
+    } else {
+        header("Location: login_page.php");
+        exit();
+    }
+
+    if(isset($_SESSION['email'])) {
+        $email = strtolower($_SESSION['email']);
+    } else {
+        header("Location: login_page.php");
+        exit();
+    }
+?>
 <body>
     <header class="header">
         <div class="header-1">
-            <img src="../res/logo.png" alt="Yeokart Logo" class="logo">
+        <a href="customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>
 
             <form action="" class="search-form">
                 <input type="search" name="" placeholder="Search here..." id="search-box">
@@ -25,7 +54,7 @@
                 <div id="search-btn" class="fas fa-search"></div>
                 <a href="#">Shop</a>
                 <a href="#" class="fas fa-shopping-cart"></a>
-                <div id="user-btn" class="fas fa-user"></div>
+                <a href="user_profile.php" id="user-btn" class="fas fa-user"></a>
             </div>
         </div>
         <div class="header-2">

@@ -9,10 +9,6 @@
     <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <script>
-    function confirmDelete() {
-        return confirm("Are you sure you want to delete this employee?");
-    }
-    
     function openLogoutPopup() {
         document.getElementById('logoutConfirmationPopup').style.display = 'flex';
     }
@@ -25,7 +21,6 @@
         window.location.href = 'logout.php';
     }
 </script>
-
 <body>
 
     <input type="checkbox" id="nav-toggle">
@@ -50,7 +45,7 @@
                         <span>Admin Dashboard</span></a>
                 </li>
                 <li>
-                    <a href="view_customers.php"><span class="las la-users"></span>
+                    <a href="view_customers.php" class="active"><span class="las la-users"></span>
                         <span>Customers</span></a>
                 </li>
                 <li>
@@ -66,7 +61,7 @@
                         <span>Report</span></a>
                 </li>
                 <li>
-                    <a href="manage_employees.php" class="active"><span class="las la-user-circle"></span>
+                    <a href="manage_employees.php"><span class="las la-user-circle"></span>
                         <span>Manage Employee</span></a>
                 </li>
                 <li>
@@ -84,7 +79,7 @@
                     <span class="las la-bars"></span>
                 </label>
 
-                Manage Employees
+                Customers
             </h3>
 
             <div class="user-wrapper">
@@ -98,51 +93,28 @@
         <main>
             <div class="head-title">
                 <div class="left">
-                    <h3>Employee Accounts</h3>
+                    <h3>Customer List</h3>
                 </div>
-                <a href="add_employee.php" class="btn-employee">
-                    <i class="las la-user-plus"></i>
-                    <span class="text">Add Employee</span>
-                </a>
             </div>
             <?php
             require('../database/db_yeokart.php');
 
-            $sql = "SELECT id, firstname, lastname, username, email FROM `employee_accounts` WHERE is_employee = 1";
+            $sql = "SELECT id, firstname, lastname, username, email FROM `user_accounts` WHERE is_verified = 1";
             $result = $con->query($sql);
 
-
-            if (isset($_POST['deleteEmployee'])) {
-                $employeeIdToDelete = $_POST['deleteEmployee'];
-                $deleteSql = "DELETE FROM `employee_accounts` WHERE id = $employeeIdToDelete";
-
-                if ($con->query($deleteSql) === TRUE) {
-                    echo "
-                                <script>
-                                    alert('Employee Deleted Successfully');
-                                </script>
-                            ";
-                    echo "<script>window.location.href = './manage_employees.php';</script>";
-                } else {
-                    echo "Error";
-                }
-            }
-
-            // Check if there are rows in the result
             if ($result->num_rows > 0) {
-                // Output data of each row
+
                 echo "<form method='post' action='#'>
                             <table border='1'>
                                 <tr>
-                                    <th>Employee Number</th>
+                                    <th>Customer Number</th>
                                     <th>Firstname</th>
                                     <th>Lastname</th>
                                     <th>Username</th>
                                     <th>Email</th>
-                                    <th><center>Action<center></th>
                                 </tr>";
 
-                // Counter variable for incremented number
+                
                 $counter = 1;
 
                 while ($row = $result->fetch_assoc()) {
@@ -152,15 +124,7 @@
                                 <td>" . $row["lastname"] . "</td>
                                 <td>" . $row["username"] . "</td>
                                 <td>" . $row["email"] . "</td>
-                                <td>
-                                    <div class='button-class'>
-                                        <a href='edit_employee.php?id=" . $row["id"] . "' class='edit-button'>Edit</a>
-                                        <button class='delete-button' type='submit' name='deleteEmployee' value='" . $row["id"] . "'>Delete</button>
-                                    </div>
-                                </td>
                             </tr>";
-
-                    // Increment the counter
                     $counter++;
                 }
 
@@ -169,35 +133,22 @@
                 echo "<form method='post' action='#'>
                             <table border='1'>
                                 <tr>
-                                    <th>Employee Number</th>
+                                    <th>Customer Number</th>
                                     <th>Firstname</th>
                                     <th>Lastname</th>
                                     <th>Username</th>
                                     <th>Email</th>
-                                    <th><center>Action<center></th>
                                 </tr>
                                 <tr>
-                                    <td colspan='6'><center><b>No employees found</b></center></td>
+                                    <td colspan='5'><center><b>No customer found</b></center></td>
                                 </tr>
                             </table>
                         </form>";
             }
 
-            // Close connection
             $con->close();
             ?>
         </main>
-
-        <script>
-            // Add confirmation to the delete button
-            var deleteButtons = document.querySelectorAll('.delete-button');
-            deleteButtons.forEach(function(button) {
-                button.onclick = function() {
-                    return confirmDelete();
-                };
-            });
-        </script>
     </div>
 </body>
-
 </html>

@@ -13,10 +13,31 @@
     function confirmDelete() {
         return confirm("Are you sure you want to delete this item?");
     }
+    function openLogoutPopup() {
+        document.getElementById('logoutConfirmationPopup').style.display = 'flex';
+    }
+
+    function closeLogoutPopup() {
+        document.getElementById('logoutConfirmationPopup').style.display = 'none';
+    }
+
+    function confirmLogout() {
+        window.location.href = 'logout.php';
+    }
 </script>
 
 <body>
     <input type="checkbox" id="nav-toggle">
+    <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>
+            <p>Are you sure you want to logout?<p>
+            <div class="logout-btns">
+                <button onclick="confirmLogout()" class="confirm-logout-btn">Logout</button>
+                <button onclick="closeLogoutPopup()" class="cancel-logout-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
     <div class="sidebar">
         <div class="sidebar-brand">
             <h2><span>Yeokart</span></h2>
@@ -48,7 +69,7 @@
                         <span>Manage Employee</span></a>
                 </li>
                 <li>
-                    <a href="logout.php"><span class="las la-sign-out-alt"></span>
+                    <a href="#" onclick="openLogoutPopup(); return false;"><span class="las la-sign-out-alt"></span>
                         <span>Logout</span></a>
                 </li>
             </ul>

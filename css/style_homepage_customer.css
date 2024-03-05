@@ -361,6 +361,229 @@ section{
     background: var(--black);
     color: #fff;
 }
+
+.user-profile .header-3 {
+    display: flex;
+    justify-content: space-between;
+}
+  
+.user-profile h2 {
+    font-size: 2.5rem;
+    font-weight: 500;
+}
+  
+.logout-link {
+    text-decoration: none;
+    font-size: 1.5rem;
+    color: var(--black);
+    margin-left: 30px;
+    transition: transform 0.3s ease;
+}
+    
+.logout-link i {
+    margin-left: 5px;
+    transition: transform 0.3s ease;
+}
+
+.logout-link:hover{
+    color: var(--pink);
+}
+    
+.logout-link:hover i {
+    transform: translateX(5px);
+    color: var(--pink);
+}
+  
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 20px 0px;
+}
+
+.left-column,
+.right-column {
+    color: var(--black);
+    border-radius: 10px;
+    min-width: 200px;
+}
+
+.left-column p,
+.right-column p {
+    font-size: 1.5rem;
+}
+
+.left-column {
+    background: #fff;
+    flex: 4; 
+    padding: 20px 0px;
+}
+
+.right-column {
+    background: #fff;
+    flex: 2; 
+    padding: 20px 0px;
+}
+
+.right-column .account-info {
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.right-column .account-info p {
+    color: black;
+    font-weight: 500;
+    text-transform: none;
+}
+
+.right-column .account-info i{
+    color: var(--pink);
+    margin-right: 10px;
+}
+
+hr {
+    border: none;
+    height: 1px;
+    background-color: var(--light-color);
+    margin: 20px 0;
+}
+
+hr.gradient {
+    height: 5px;
+    background: linear-gradient(45deg, #ff0080, #ff77ff);
+    border-radius: 5px;
+    width: 30px;
+}
+
+.close-btn {
+    float: right;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+
+.form-group {
+    margin-bottom: 1em;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5em;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.5em;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.submit-btn {
+    background-color: #007bff;
+    color: #fff;
+    padding: 0.5em 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.popup-container .popup-content h3 {
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.close-btn{
+    font-size: 2rem;
+}
+
+.popup-container .popup-content .form-group{
+    font-size: 1.3rem;
+    margin-top: 20px;
+}
+
+.update-btn {
+    text-align: center;
+    background-color: var(--pink);
+    color: white;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.3rem;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.update-btn:hover {
+    background-color: var(--dark-color); 
+    transform: scale(1.05);
+}
+
+.popup-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.popup-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    width: 90%;
+    max-width: 400px;
+}
+
+.popup-content p{
+    font-size: 1.5rem;
+    text-transform: none;
+}
+
+.popup-content .logout-btns{
+    margin-top: 20px;
+}
+
+.confirm-logout-btn, .cancel-logout-btn {
+    margin: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.confirm-logout-btn {
+    text-align: center;
+    background-color: var(--pink);
+    color: white;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.3rem;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.confirm-logout-btn:hover{
+    background-color: var(--dark-color); 
+}
+
+.cancel-logout-btn {
+    text-align: center;
+    background-color: #ccc;
+    color: white;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.3rem;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+
 @media (max-width:991px){
     html{
         font-size: 55%;
