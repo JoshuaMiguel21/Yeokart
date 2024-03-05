@@ -8,6 +8,19 @@
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="stylesheet" href="../css/dashboard.css">
 </head>
+<script>
+    function openLogoutPopup() {
+        document.getElementById('logoutConfirmationPopup').style.display = 'flex';
+    }
+
+    function closeLogoutPopup() {
+        document.getElementById('logoutConfirmationPopup').style.display = 'none';
+    }
+
+    function confirmLogout() {
+        window.location.href = 'logout.php';
+    }
+</script>
 
 <body>
     <?php
@@ -31,6 +44,17 @@
         echo "Error: " . $sql . "<br>" . $con->error;
     }
 
+    $sql = "SELECT COUNT(*) AS customer_count FROM user_accounts";
+    $result = $con->query($sql);
+
+    if ($result) {
+        $row = $result->fetch_assoc();
+        $userCount = $row['customer_count'];
+    } else {
+        echo "Error: " . $sql . "<br>" . $con->error;
+    }
+
+
     $sql = "SELECT COUNT(*) AS item_count FROM products";
     $result = $con->query($sql);
 
@@ -42,6 +66,17 @@
     }
     ?>
     <input type="checkbox" id="nav-toggle">
+    <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>
+            <p>Are you sure you want to logout?
+            <p>
+            <div class="logout-btns">
+                <button onclick="confirmLogout()" class="confirm-logout-btn">Logout</button>
+                <button onclick="closeLogoutPopup()" class="cancel-logout-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
     <div class="sidebar">
         <div class="sidebar-brand">
             <h2><span>Yeokart</span></h2>
@@ -49,11 +84,11 @@
         <div class="sidebar-menu">
             <ul>
                 <li>
-                    <a href="" class="active"><span class="las la-igloo"></span>
+                    <a href="owner_dashboard.php" class="active"><span class="las la-igloo"></span>
                         <span>Owner Dashboard</span></a>
                 </li>
                 <li>
-                    <a href=""><span class="las la-users"></span>
+                    <a href="view_customers.php"><span class="las la-users"></span>
                         <span>Customers</span></a>
                 </li>
                 <li>
@@ -73,7 +108,7 @@
                         <span>Manage Employee</span></a>
                 </li>
                 <li>
-                    <a href="logout.php"><span class="las la-sign-out-alt"></span>
+                    <a href="#" onclick="openLogoutPopup(); return false;"><span class="las la-sign-out-alt"></span>
                         <span>Logout</span></a>
                 </li>
             </ul>
@@ -105,7 +140,7 @@
             <div class="cards">
                 <div class="card-single">
                     <div>
-                        <h1>54</h1>
+                        <h1><?php echo $userCount; ?></h1>
                         <span>Customers</span>
                     </div>
                     <div>
