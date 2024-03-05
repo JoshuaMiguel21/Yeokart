@@ -31,7 +31,7 @@
                     $email = $_POST["email"];
                     $password = $_POST["password"];
 
-                    require_once "../database/db_account.php";
+                    require_once "../database/db_yeokart.php";
 
                     // Check user_accounts table
                     $sql_user = "SELECT * FROM user_accounts WHERE email = '$email'";

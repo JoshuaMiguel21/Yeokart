@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 24, 2024 at 04:57 AM
+-- Generation Time: Mar 04, 2024 at 02:28 AM
 -- Server version: 10.4.25-MariaDB
--- PHP Version: 8.0.23
+-- PHP Version: 8.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,40 +24,43 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `admin_account`
+-- Table structure for table `artists`
 --
 
-CREATE TABLE `admin_account` (
-  `id` int(11) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL
+CREATE TABLE `artists` (
+  `artist_id` int(11) NOT NULL,
+  `artist_name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `artists`
 --
 
-INSERT INTO `admin_account` (`id`, `email`, `password`) VALUES ('1', 'admin@gmail.com', 'Pa$$w0rd');
+INSERT INTO `artists` (`artist_id`, `artist_name`) VALUES
+(1, 'Twice'),
+(2, 'BTS'),
+(3, 'Red Velvet'),
+(4, 'ITZY');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `admin_account`
+-- Indexes for table `artists`
 --
-ALTER TABLE `admin_account`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `artists`
+  ADD PRIMARY KEY (`artist_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `admin_account`
+-- AUTO_INCREMENT for table `artists`
 --
-ALTER TABLE `admin_account`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `artists`
+  MODIFY `artist_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

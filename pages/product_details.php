@@ -8,14 +8,14 @@
     <title>Yeokart</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <link rel="stylesheet" href="../css/style_homepage_customer.css">
+    <link rel="stylesheet" href="../css/style_product_details.css">
 </head>
 
 
 <body>
     <header class="header">
         <div class="header-1">
-            <img src="../res/logo.png" alt="Yeokart Logo" class="logo">
+            <img src="/res/logo.png" alt="Yeokart Logo" class="logo">
 
             <form action="" class="search-form">
                 <input type="search" name="" placeholder="Search here..." id="search-box">
@@ -30,7 +30,7 @@
         </div>
         <div class="header-2">
             <nav class="navbar">
-                <a href="#home">Home</a>
+                <a href="./customer_homepage.php">Home</a>
                 <a href="#best">Best Sellers</a>
                 <a href="#featured">Featured</a>
             </nav>
@@ -41,56 +41,38 @@
         <a href="#best" class="fas fa-thumbs-up"></a>
         <a href="#featured" class="fas fa-list"></a>
     </nav>
-    <section class="start vh-100 d-flex align-items-center" id="home">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-7 mx-auto text-center">
-                    <h1 class="display-4 text-white">Welcome to Yeokart</h1>
-                    <p class="text-white my-3">See the world of K-Pop!</p>
-                    <a href="#best" class="btn me-2 btn1">Get Started</a>
-                    <a href="#featured" class="btn btn-outline-light">Learn More</a>
-                </div>
+
+    <section class="product-details" id="product-details">
+        <div class="product-details-left">
+            <div class="main-image">
+                <img src="./item_images/twice_album_1.png" alt="Product Image" width="100%">
             </div>
         </div>
-    </section>
-    <section class="best" id="best">
-        <h1 class="heading"><span>Best Sellers</span></h1>
-        <div class="swiper best-slider">
-            <div class="swiper-wrapper">
-                <?php
-                include('../database/db_yeokart.php');
-                $select_query = $select_query = "SELECT * FROM products";
-                $result_query = mysqli_query($con, $select_query);
-                while ($row = mysqli_fetch_assoc($result_query)) {
-                    $item_id = $row['item_id'];
-                    $item_name = $row['item_name'];
-                    $item_price = $row['item_price'];
-                    $item_description = $row['item_description'];
-                    $item_quantity = $row['item_quantity'];
-                    $category_name = $row['category_name'];
-                    $item_image1 = $row['item_image1'];
-                    echo "<div class='swiper-slide box'>
-                    <div class='icons'>
-                        <a href='#' class='fas fa-eye'></a>
-                    </div>
-                    <div class='image'>
-                    <img src='./item_images/$item_image1' alt=''>
-                    </div>
-                    <div class='content'>
-                    <h3 class='marquee'>$item_name</h3>
-                    <div class='price'>₱$item_price</div>
-                    <a href='#' class='btn'>Add to Cart</a>
-                    </div>
-                </div>";
-                }
-                ?>
-            </div>
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
+
+        </div>
+        <div class="product-details-right">
+            <!-- Add your text content here -->
+            <p>Albums</p>
+            <h2>TWICE 7th Mini Album - Fancy You</h2>
+            <h4>PHP 900</h4>
+            <select>
+                <option>Select Version</option>
+                <option>Version A</option>
+                <option>Version B</option>
+                <option>Version C</option>
+            </select>
+            <br></br>
+            <p>Select Quantity: <input type="number" value="1"></p>
+            <p>Stock: 40</p>
+            <a href="" class="btn">Add to Cart</a>
+            <h4>Product Description</h4>
+            <p>
+                "TWICE's 9th Mini Album, 'More & More,' is a vibrant and dynamic collection of songs that showcases the group's growth and maturity. The title track, 'More & More,' is a catchy and upbeat song with tropical house influences, while the rest of the album features a mix of dance tracks and emotional ballads. With its infectious melodies and powerful vocals, 'More & More' is sure to captivate fans and listeners alike, cementing TWICE's status as one of K-pop's leading girl groups."</p>
         </div>
     </section>
+
     <section class="featured" id="featured">
-        <h1 class="heading"><span>Featured</span></h1>
+        <h1 class="heading"><span>Related Products</span></h1>
         <div class="swiper featured-slider">
             <div class="swiper-wrapper">
                 <?php
@@ -125,6 +107,7 @@
             <div class="swiper-button-prev"></div>
         </div>
     </section>
+
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -149,7 +132,6 @@
                 document.querySelector('.header .header-2').classList.add('active');
             }
         });
-
         var swiper = new Swiper(".featured-slider", {
             spaceBetween: 10,
             loop: true,
@@ -180,48 +162,6 @@
                     centeredSlides: false,
                 },
             },
-        });
-        var swiper = new Swiper(".best-slider", {
-            spaceBetween: 10,
-            loop: true,
-            centeredSlides: true,
-            autoplay: {
-                delay: 9500,
-                disabledOnInteraction: false,
-            },
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev"
-            },
-            breakpoints: {
-                0: {
-                    slidesPerView: 1,
-                },
-                347: {
-                    slidesPerView: 2,
-                },
-                450: {
-                    slidesPerView: 2,
-                },
-                768: {
-                    slidesPerView: 3,
-                },
-                1024: {
-                    slidesPerView: 4,
-                    centeredSlides: false,
-                },
-            },
-        });
-        document.addEventListener('DOMContentLoaded', function() {
-            const itemNames = document.querySelectorAll('.marquee');
-
-            itemNames.forEach(itemName => {
-                if (itemName.scrollWidth > itemName.clientWidth) {
-                    itemName.classList.add('marquee');
-                } else {
-                    itemName.classList.remove('marquee');
-                }
-            });
         });
     </script>
 </body>

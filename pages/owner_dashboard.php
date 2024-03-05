@@ -11,7 +11,7 @@
 
 <body>
     <?php
-    require('../database/db_account.php');
+    require('../database/db_yeokart.php');
 
     $sql = "SELECT COUNT(*) AS employee_count FROM employee_accounts";
     $result = $con->query($sql);
@@ -84,8 +84,8 @@
 
             <div class="user-wrapper">
                 <div>
-                    <h3>Unknown</h3>
-                    <small>Super admin</small>
+                    <h3>Rachel Falcis</h3>
+                    <small>Owner</small>
                 </div>
             </div>
         </header>

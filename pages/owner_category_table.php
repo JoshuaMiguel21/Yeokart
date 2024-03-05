@@ -99,9 +99,9 @@
                     <i class="las la-user-plus"></i>
                     <span class="text">View Categories Table</span>
                 </a>
-                <a href="owner_item.php" class="btn-employee">
+                <a href="owner_category.php" class="btn-employee">
                     <i class="las la-user-plus"></i>
-                    <span class="text">Add Item</span>
+                    <span class="text">Add Category</span>
                 </a>
             </div>
 
@@ -109,13 +109,7 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Item Name</th>
-                            <th>Price</th>
-                            <th>Description</th>
-                            <th>Quantity</th>
-                            <th>Artist</th>
-                            <th>Category</th>
-                            <th>Images</th>
+                            <th>Categories</th>
                             <th>
                                 <center>Action</center>
                             </th>
@@ -124,52 +118,16 @@
                     <tbody>
                         <?php
                         include('../database/db_yeokart.php');
-                        if (isset($_POST['delete_item'])) {
-                            $item_id = $_POST['item_id'];
-                            // Perform deletion query
-                            $delete_query = "DELETE FROM products WHERE item_id='$item_id'";
-                            $result_query = mysqli_query($con, $delete_query);
-                            if ($result_query) {
-                                echo "<script>alert('Item deleted successfully')</script>";
-                                echo "<script>window.location.href = './owner_item_homepage.php';</script>";
-                            } else {
-                                echo "<script>alert('Failed to delete item')</script>";
-                                echo "<script>window.location.href = './owner_item_homepage.php';</script>";
-                            }
-                        }
-                        $select_query = "SELECT * FROM products";
+                        $select_query = "SELECT * FROM categories";
                         $result_query = mysqli_query($con, $select_query);
                         while ($row = mysqli_fetch_assoc($result_query)) {
-                            $item_id = $row['item_id'];
-                            $item_name = $row['item_name'];
-                            $item_price = $row['item_price'];
-                            $item_description = $row['item_description'];
-                            $item_quantity = $row['item_quantity'];
-                            $artist_name = $row['artist_name'];
+                            $category_id = $row['category_id'];
                             $category_name = $row['category_name'];
-                            $item_image1 = $row['item_image1'];
-                            $item_image2 = $row['item_image2'];
-                            $item_image3 = $row['item_image3'];
                             echo "<tr>";
-                            echo "<td>" . $row['item_name'] . "</td>";
-                            echo "<td>" . $row['item_price'] . "</td>";
-                            echo "<td style='max-width: 350px;'>" . $row['item_description'] . "</td>";
-                            echo "<td>" . $row['item_quantity'] . "</td>";
-                            echo "<td>" . $row['artist_name'] . "</td>";
                             echo "<td>" . $row['category_name'] . "</td>";
                             echo "<td>";
-                            echo "<img src='./item_images/$item_image1' alt='Twice Album' width='50' height='50'>&nbsp;";
-                            echo "<img src='./item_images/$item_image2' alt='Twice Album' width='50' height='50'>&nbsp;";
-                            echo "<img src='./item_images/$item_image3' alt='Twice Album' width='50' height='50'>&nbsp;";
-                            echo "</td>";
-                            echo "<td>";
                             echo "<div class='button-class'>";
-                            echo "<a href='./owner_edit_item.php?item_id=$item_id' class='edit-button'>Edit</a> 
-                          <form method='post' onsubmit='return confirmDelete()'>
-                          <input type='hidden' name='item_id' value='$item_id'>
-                          <button type='submit' name='delete_item' class='delete-button'>Delete</button>
-                          </form>";
-                            echo "<div class='button-class'>";
+                            echo "<a href='./owner_category_form.php?category_id=$category_id' class='edit-button'>Edit</a> ";
                             echo "</td>";
                             echo "</tr>";
                         }

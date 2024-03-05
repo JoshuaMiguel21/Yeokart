@@ -11,13 +11,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.js"></script>
     <link href="../css/add&edit_item.css" rel="stylesheet" />
-    
+
     <title>Yeokart Add Item Page</title>
 </head>
 
 <body style="background-color: #DD2F6E;">
     <div class="container mt-3">
-        <h1 class="text-center text-white" >Add New Item</h1>
+        <h1 class="text-center text-white">Add New Item</h1>
         <form action="" method="post" enctype="multipart/form-data">
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <label for="item_name" class="form-label">Name:</label>
@@ -36,10 +36,30 @@
                 <input type="number" name="item_quantity" id="item_quantity" class="form-control" placeholder="Enter item quantity" autocomplete="off" required>
             </div>
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
+                <select name="product_artist" id="product_artist" class="form-select">
+                    <option value="">Select Artist</option>
+                    <?php
+                    include('../database/db_yeokart.php');
+                    $select_query_artist = "Select * from artists";
+                    $result_query_artist = mysqli_query($con, $select_query_artist);
+                    while ($row = mysqli_fetch_assoc($result_query_artist)) {
+                        $artist_name = $row['artist_name'];
+                        $artist_id = $row['artist_id'];
+                        echo "<option value='$artist_name'>$artist_name</option>";
+                    }
+                    ?>
+                </select>
+            </div>
+            <div class="form-outline mb-3 w-50 mr-auto ml-auto">
+                <button type="button" class="btn btn-info mb-3 px-3" data-bs-toggle="modal" data-bs-target="#addArtistModal">
+                    Add an Artist
+                </button>
+            </div>
+            <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <select name="product_category" id="product_category" class="form-select">
                     <option value="">Select item Category</option>
                     <?php
-                    include('../database/db_items.php');
+                    include('../database/db_yeokart.php');
                     $select_query_category = "Select * from categories";
                     $result_query_category = mysqli_query($con, $select_query_category);
                     while ($row = mysqli_fetch_assoc($result_query_category)) {
@@ -57,27 +77,49 @@
             </div>
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <label for="item_image1" class="form-label">Item Image 1:</label>
-                <input type="file" name="item_image1" id="item_image1" class="form-control form-outline w-100" required>
+                <input type="file" name="item_image1" id="item_image1" accept="image/*" class="form-control form-outline w-100" required>
             </div>
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <label for="item_image2" class="form-label">Item Image 2:</label>
-                <input type="file" name="item_image2" id="item_image2" class="form-control" required>
+                <input type="file" name="item_image2" id="item_image2" accept="image/*" class="form-control" required>
             </div>
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <label for="item_image3" class="form-label">Item Image 3:</label>
-                <input type="file" name="item_image3" id="item_image3" class="form-control" required>
+                <input type="file" name="item_image3" id="item_image3" accept="image/*" class="form-control" required>
             </div>
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <input type="submit" name="insert_item" class="btn btn-info mb-3 px-3" value="Add Item">
             </div>
-            
+
             <div class="form-outline mb-4 w-50 m-auto">
-            <a href="./owner_item_homepage.php" class="btn btn-danger mb-0 px-3 ">
-                Back
-            </a>
-        </div>
+                <a href="./owner_item_homepage.php" class="btn btn-danger mb-0 px-3 ">
+                    Back
+                </a>
+            </div>
         </form>
-        
+
+    </div>
+    <div class="modal fade" id="addArtistModal" tabindex="-1" aria-labelledby="addArtistModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addArtistModalLabel">Add Artist</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="artistName" class="form-label">Artist Name:</label>
+                            <input type="text" class="form-control" name="artist_name" id="artist_name" autocomplete="off" placeholder="Enter artist name" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <input type="submit" class="btn btn-primary" name="add_artist" value="Add">
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
     <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -102,7 +144,15 @@
         </div>
     </div>
     <script>
-        function updateDropdown(category_id, category_name) {
+        function updateDropdownArtist(artist_id, artist_name) {
+            var select = document.getElementById("product_artist");
+            var option = document.createElement("option");
+            option.value = artist_id;
+            option.text = artist_name;
+            select.add(option);
+        }
+
+        function updateDropdownCategory(category_id, category_name) {
             var select = document.getElementById("product_category");
             var option = document.createElement("option");
             option.value = category_id;
@@ -115,7 +165,24 @@
 
 </html>
 <?php
-include('../database/db_items.php');
+include('../database/db_yeokart.php');
+if (isset($_POST['add_artist'])) {
+    $artist_name = $_POST['artist_name'];
+    $select_query = "SELECT * FROM artists WHERE artist_name='$artist_name'";
+    $result_select = mysqli_query($con, $select_query);
+    $number = mysqli_num_rows($result_select);
+    if ($number > 0) {
+        echo "<script>alert('This artist is already added')</script>";
+    } else {
+        $insert_query = "INSERT INTO artists (artist_name) VALUES ('$artist_name')";
+        $result = mysqli_query($con, $insert_query);
+        if ($result) {
+            $artist_id = mysqli_insert_id($con);
+            echo "<script>alert('Artist has been added successfully')</script>";
+            echo "<script>updateDropdownArtist('$artist_id', '$artist_name')</script>"; // Call JavaScript function to update dropdown
+        }
+    }
+}
 if (isset($_POST['add_category'])) {
     $category_name = $_POST['category_name'];
     $select_query = "SELECT * FROM categories WHERE category_name='$category_name'";
@@ -129,7 +196,7 @@ if (isset($_POST['add_category'])) {
         if ($result) {
             $category_id = mysqli_insert_id($con); // Get the ID of the newly inserted category
             echo "<script>alert('Category has been added successfully')</script>";
-            echo "<script>updateDropdown('$category_id', '$category_name')</script>"; // Call JavaScript function to update dropdown
+            echo "<script>updateDropdownCategory('$category_id', '$category_name')</script>"; // Call JavaScript function to update dropdown
         }
     }
 }
@@ -139,6 +206,7 @@ if (isset($_POST['insert_item'])) {
     $item_price = $_POST['item_price'];
     $item_description = mysqli_real_escape_string($con, $_POST['item_description']);
     $item_quantity = $_POST['item_quantity'];
+    $product_artist = $_POST['product_artist'];
     $product_category = $_POST['product_category'];
 
     $item_image1 = $_FILES['item_image1']['name'];
@@ -155,7 +223,7 @@ if (isset($_POST['insert_item'])) {
     if ($number > 0) {
         echo "<script>alert('This product already exists')</script>";
     } else {
-        if ($item_name == '' or $item_price == '' or $item_description == '' or  $item_quantity == '' or $product_category == ''  or  $item_image1 == ''  or  $item_image2 == ''  or  $item_image3 == '') {
+        if ($item_name == '' or $item_price == '' or $item_description == '' or  $item_quantity == '' or  $product_artist == '' or $product_category == ''  or  $item_image1 == ''  or  $item_image2 == ''  or  $item_image3 == '') {
             echo "<script>alert('Please fill up all the fields')</script>";
             exit();
         } else {
@@ -163,7 +231,7 @@ if (isset($_POST['insert_item'])) {
             move_uploaded_file($temp_image2, "./item_images/$item_image2");
             move_uploaded_file($temp_image3, "./item_images/$item_image3");
 
-            $insert_items = "INSERT INTO products (item_name,item_price,item_description,item_quantity,category_name,item_image1,item_image2,item_image3) VALUES ('$item_name','$item_price','$item_description','$item_quantity','$product_category','$item_image1','$item_image2','$item_image3')";
+            $insert_items = "INSERT INTO products (item_name,item_price,item_description,item_quantity,artist_name,category_name,item_image1,item_image2,item_image3) VALUES ('$item_name','$item_price','$item_description','$item_quantity', '$product_artist','$product_category','$item_image1','$item_image2','$item_image3')";
             $result_query_item = mysqli_query($con, $insert_items);
             if ($result_query_item) {
                 echo "<script>alert('Item successfully added')</script>";

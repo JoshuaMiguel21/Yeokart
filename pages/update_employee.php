@@ -12,27 +12,28 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.js"></script>
     <title>Yeokart Admin Side</title>
 </head>
+
 <body>
-<?php
-require('../database/db_account.php');
+    <?php
+    require('../database/db_yeokart.php');
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Validate the form data
-    $employeeId = $_POST['employeeId'];
-    $firstName = $_POST['firstname'];
-    $lastName = $_POST['lastname'];
-    $username = $_POST['username'];
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        // Validate the form data
+        $employeeId = $_POST['employeeId'];
+        $firstName = $_POST['firstname'];
+        $lastName = $_POST['lastname'];
+        $username = $_POST['username'];
 
-    // Perform the update query
-    $updateQuery = "UPDATE `employee_accounts` SET 
+        // Perform the update query
+        $updateQuery = "UPDATE `employee_accounts` SET 
                     firstname = '$firstName',
                     lastname = '$lastName',
                     username = '$username'
                     WHERE id = $employeeId";
 
-    if ($con->query($updateQuery) === TRUE) {
-        // Update successful
-        echo "<script>
+        if ($con->query($updateQuery) === TRUE) {
+            // Update successful
+            echo "<script>
                 Swal.fire({
                     icon: 'success',
                     title: 'Update Successful',
@@ -43,17 +44,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     window.location.href = 'manage_employees.php'; 
                 });
             </script>";
-    } else {
-        // Update failed
-        echo "Error updating employee: " . $con->error;
-    }
+        } else {
+            // Update failed
+            echo "Error updating employee: " . $con->error;
+        }
 
-    $con->close();
-} else {
-    // If the form is not submitted through POST method, redirect to an error page or home page
-    header("Location: error.php");
-    exit();
-}
-?>
+        $con->close();
+    } else {
+        // If the form is not submitted through POST method, redirect to an error page or home page
+        header("Location: error.php");
+        exit();
+    }
+    ?>
 </body>
+
 </html>

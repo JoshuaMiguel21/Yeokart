@@ -15,7 +15,7 @@
 
 <body>
     <?php
-    require('../database/db_account.php');
+    require('../database/db_yeokart.php');
 
     if (isset($_GET['email']) && isset($_GET['v_code'])) {
         $email = mysqli_real_escape_string($con, $_GET['email']);

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -12,21 +13,22 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.js"></script>
   <link href="../css/add_employee.css" rel="stylesheet" />
 </head>
+
 <body style="background-color: #DD2F6E;">
   <div class="container">
     <h2 class="mt-4 mb-4">Edit Employee</h2>
 
     <?php
-        require('../database/db_account.php');
+    require('../database/db_yeokart.php');
 
-        if (isset($_GET['id'])) {
-        $employeeId = $_GET['id'];
-        $query = "SELECT * FROM `employee_accounts` WHERE id = $employeeId";
-        $result = $con->query($query);
+    if (isset($_GET['id'])) {
+      $employeeId = $_GET['id'];
+      $query = "SELECT * FROM `employee_accounts` WHERE id = $employeeId";
+      $result = $con->query($query);
 
-        if ($result->num_rows > 0) {
-            $employee = $result->fetch_assoc();
-      ?>
+      if ($result->num_rows > 0) {
+        $employee = $result->fetch_assoc();
+    ?>
         <form action="update_employee.php" method="post">
           <input type="hidden" name="employeeId" value="<?php echo $employee['id']; ?>">
 
@@ -71,4 +73,5 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 </body>
+
 </html>

@@ -14,7 +14,7 @@
     <title>Yeokart - Password Update</title>
 </head>
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         function validatePassword() {
             var pass = document.getElementById("password");
             var conf = document.getElementById("confirmPass");
@@ -59,11 +59,11 @@
             $('#passwordMatch').text(message).css('color', color);
         }
 
-        $('#password, #confirmPass').on('input', function () {
+        $('#password, #confirmPass').on('input', function() {
             validatePassword();
         });
 
-        $('form').submit(function (e) {
+        $('form').submit(function(e) {
             if (!validatePassword()) {
                 e.preventDefault();
                 showErrorAlert('Oops!', 'Please check your password and try again.');
@@ -80,24 +80,25 @@
         }
     });
 </script>
+
 <body style="background-color: #E6A4B4;">
-    <?php 
-        require('../database/db_account.php');
+    <?php
+    require('../database/db_yeokart.php');
 
-        if(isset($_GET['email']) && isset($_GET['reset_token'])) {
-            date_default_timezone_set('Asia/Manila');
-            $date = date("Y-m-d");
-            $email = mysqli_real_escape_string($con, $_GET['email']); // Sanitize input
-            $reset_token = mysqli_real_escape_string($con, $_GET['reset_token']); // Sanitize input
+    if (isset($_GET['email']) && isset($_GET['reset_token'])) {
+        date_default_timezone_set('Asia/Manila');
+        $date = date("Y-m-d");
+        $email = mysqli_real_escape_string($con, $_GET['email']); // Sanitize input
+        $reset_token = mysqli_real_escape_string($con, $_GET['reset_token']); // Sanitize input
 
-            $query = "SELECT * FROM `user_accounts` WHERE `email`='$email' AND `reset_token`='$reset_token' AND `reset_token_expire`='$date'";
+        $query = "SELECT * FROM `user_accounts` WHERE `email`='$email' AND `reset_token`='$reset_token' AND `reset_token_expire`='$date'";
 
-            $result = mysqli_query($con, $query);
+        $result = mysqli_query($con, $query);
 
-            if($result) {
-                if(mysqli_num_rows($result) == 1) {
-                    // Display the password reset form
-                    echo "
+        if ($result) {
+            if (mysqli_num_rows($result) == 1) {
+                // Display the password reset form
+                echo "
                     <div class='container'>
                         <div class='row'>
                             <div class='col-sm-12 col-md-6 col-lg-6' id='div2'>
@@ -122,36 +123,36 @@
                             </div>
                         </div>
                     </div>";
-                } else {
-                    // Invalid or expired link
-                    echo "
+            } else {
+                // Invalid or expired link
+                echo "
                     <script>
                         alert('Invalid or Expired Link');
                         window.location.href='login_page.php';
                     </script>";
-                }
-            } else {
-                // Server error
-                echo "
+            }
+        } else {
+            // Server error
+            echo "
                 <script>
                     alert('Server Down! Try again later');
                     window.location.href='login_page.php';
                 </script>";
-            }
         }
+    }
 
-        if(isset($_POST['submit'])) {
-            $email = mysqli_real_escape_string($con, $_POST['email']); // Sanitize input
-            $password = mysqli_real_escape_string($con, $_POST['password']);
-            $confirmPassword = mysqli_real_escape_string($con, $_POST['confirmPass']);
+    if (isset($_POST['submit'])) {
+        $email = mysqli_real_escape_string($con, $_POST['email']); // Sanitize input
+        $password = mysqli_real_escape_string($con, $_POST['password']);
+        $confirmPassword = mysqli_real_escape_string($con, $_POST['confirmPass']);
 
-            if($password == $confirmPassword) {
-                $pass = password_hash($password, PASSWORD_BCRYPT);
-                $update = "UPDATE `user_accounts` SET `password`='$pass', `reset_token`= NULL, `reset_token_expire`= NULL WHERE `email`='$email'";
+        if ($password == $confirmPassword) {
+            $pass = password_hash($password, PASSWORD_BCRYPT);
+            $update = "UPDATE `user_accounts` SET `password`='$pass', `reset_token`= NULL, `reset_token_expire`= NULL WHERE `email`='$email'";
 
-                if(mysqli_query($con, $update)) {
-                    // Password updated successfully
-                    echo "  
+            if (mysqli_query($con, $update)) {
+                // Password updated successfully
+                echo "  
                             <script>
                                 Swal.fire({
                                     title: 'Successful!',
@@ -162,22 +163,22 @@
                                     window.location.href='login_page.php';
                                 });
                             </script>";
-                } else {
-                    // Server error
-                    echo "
+            } else {
+                // Server error
+                echo "
                     <script>
                         alert('Server Down! Try again later');
                         window.location.href='updatepassword.php';
                     </script>";
-                }
-            } else {
-                // Passwords do not match
-                echo "
+            }
+        } else {
+            // Passwords do not match
+            echo "
                 <script>
                     alert('Password and Confirm Password do not match');
                 </script>";
-            }
         }
+    }
     ?>
 </body>
 
