@@ -45,16 +45,6 @@
         }
     ?>
     <input type="checkbox" id="nav-toggle">
-    <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
-        <div class="popup-content">
-            <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>
-            <p>Are you sure you want to logout?<p>
-            <div class="logout-btns">
-                <button onclick="confirmLogout()" class="confirm-logout-btn">Logout</button>
-                <button onclick="closeLogoutPopup()" class="cancel-logout-btn">Cancel</button>
-            </div>
-        </div>
-    </div>
     <div class="sidebar">
         <div class="sidebar-brand">
             <h2><span>Yeokart</span></h2>
@@ -66,7 +56,7 @@
                         <span>Owner Dashboard</span></a>
                 </li>
                 <li>
-                    <a href="view_customers.php"><span class="las la-users"></span>
+                    <a href="owner_view_customers.php"><span class="las la-users"></span>
                         <span>Customers</span></a>
                 </li>
                 <li>
@@ -216,6 +206,17 @@
                         ?>
                     </tbody>
                 </table>
+            </div>
+
+            <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
+                <div class="popup-content">
+                    <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>
+                    <p>Are you sure you want to logout?<p>
+                    <div class="logout-btns">
+                        <button onclick="confirmLogout()" class="confirm-logout-btn">Logout</button>
+                        <button onclick="closeLogoutPopup()" class="cancel-logout-btn">Cancel</button>
+                    </div>
+                </div>
             </div>
 
             <!-- <div class="form-outline mb-4 mt-5">

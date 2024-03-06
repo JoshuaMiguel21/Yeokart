@@ -13,6 +13,17 @@
     function confirmDelete() {
         return confirm("Are you sure you want to delete this item?");
     }
+    function openLogoutPopup() {
+        document.getElementById('logoutConfirmationPopup').style.display = 'flex';
+    }
+
+    function closeLogoutPopup() {
+        document.getElementById('logoutConfirmationPopup').style.display = 'none';
+    }
+
+    function confirmLogout() {
+        window.location.href = 'logout.php';
+    }
 </script>
 
 <body>
@@ -50,7 +61,7 @@
                         <span>Orders</span></a>
                 </li>
                 <li>
-                    <a href="logout.php"><span class="las la-sign-out-alt"></span>
+                    <a href="#" onclick="openLogoutPopup(); return false;"><span class="las la-sign-out-alt"></span>
                         <span>Logout</span></a>
                 </li>
             </ul>
@@ -176,7 +187,16 @@
                     </tbody>
                 </table>
             </div>
-
+            <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
+                <div class="popup-content">
+                    <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>
+                    <p>Are you sure you want to logout?<p>
+                    <div class="logout-btns">
+                        <button onclick="confirmLogout()" class="confirm-logout-btn">Logout</button>
+                        <button onclick="closeLogoutPopup()" class="cancel-logout-btn">Cancel</button>
+                    </div>
+                </div>
+            </div>
             <!-- <div class="form-outline mb-4 mt-5">
         <a href="./owner_dashboard.php" class="btn btn-danger mb-3 px-3 mx-auto">
             Back
