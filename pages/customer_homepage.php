@@ -13,6 +13,13 @@
 <?php
 session_start();
 
+if(isset($_SESSION['id'])) {
+    $customer_id = $_SESSION['id'];
+} else {
+    header("Location: login_page.php");
+    exit();
+}
+
 if (isset($_SESSION['firstname'])) {
     $firstname = $_SESSION['firstname'];
 } else {
@@ -56,7 +63,7 @@ if (isset($_SESSION['email'])) {
                 <a href="#">Shop</a>
                 <a href="contact_page.php">Contact Us</a>
                 <a href="#" class="fas fa-shopping-cart"></a>
-                <a href="user_profile.php" id="user-btn" class="fas fa-user"></a>
+                <a href="customer_profile.php" id="user-btn" class="fas fa-user"></a>
             </div>
         </div>
         <div class="header-2">

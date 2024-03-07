@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['lastname'] = $lastname;
             $_SESSION['username'] = $username;
 
-            header("Location: user_profile.php");
+            header("Location: customer_profile.php");
             exit();
         } else {
             echo "Something went wrong. Please try again later.";

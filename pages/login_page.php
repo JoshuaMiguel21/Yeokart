@@ -70,6 +70,7 @@
                         elseif ($user && $user['is_verified'] == 1 && password_verify($password, $user["password"])) {
                             header("Location: customer_homepage.php");
                             $_SESSION['logged_in'] = true;
+                            $_SESSION['id'] = $user['id'];
                             $_SESSION['firstname'] = $user['firstname'];
                             $_SESSION['lastname'] = $user['lastname'];
                             $_SESSION['username'] = $user['username'];

@@ -133,15 +133,25 @@
             }
 
             if (isset($_POST['submit'])) {
-                $user_exist_query = "SELECT * FROM `employee_accounts` WHERE `username`=? OR `email`=?";
-                $stmt = mysqli_prepare($con, $user_exist_query);
-                mysqli_stmt_bind_param($stmt, 'ss', $_POST['username'], $_POST['email']);
-                mysqli_stmt_execute($stmt);
-                $result = mysqli_stmt_get_result($stmt);
-
-                if ($result) {
-                    if (mysqli_num_rows($result) > 0) {
-                        $result_fetch = mysqli_fetch_assoc($result);
+                $employee_exist_query = "SELECT * FROM `employee_accounts` WHERE `username`=? OR `email`=?";
+                $employee_stmt = mysqli_prepare($con, $employee_exist_query);
+                mysqli_stmt_bind_param($employee_stmt, 'ss', $_POST['username'], $_POST['email']);
+                mysqli_stmt_execute($employee_stmt);
+                $employee_result = mysqli_stmt_get_result($employee_stmt);
+            
+                $user_exist_query = "SELECT * FROM `user_accounts` WHERE `username`=? OR `email`=?";
+                $user_stmt = mysqli_prepare($con, $user_exist_query);
+                mysqli_stmt_bind_param($user_stmt, 'ss', $_POST['username'], $_POST['email']);
+                mysqli_stmt_execute($user_stmt);
+                $user_result = mysqli_stmt_get_result($user_stmt);
+            
+                if ($employee_result && $user_result) {
+                    $employee_rows = mysqli_num_rows($employee_result);
+                    $user_rows = mysqli_num_rows($user_result);
+            
+                    if ($employee_rows > 0 || $user_rows > 0) {
+                        $result_fetch = ($employee_rows > 0) ? mysqli_fetch_assoc($employee_result) : mysqli_fetch_assoc($user_result);
+            
                         if ($result_fetch['username'] == $_POST['username']) {
                             echo "<script>alert('$result_fetch[username] - Username already taken');</script>";
                         } else {
@@ -153,22 +163,22 @@
                         $query = "INSERT INTO `employee_accounts` (`firstname`, `lastname`, `username`, `email`, `password`, `verification_code`, `is_employee`) VALUES ('$_POST[firstname]', '$_POST[lastname]', '$_POST[username]', '$_POST[email]', '$password', '$v_code', '0')";
                         if (mysqli_query($con, $query) && sendMail($_POST['email'], $v_code)) {
                             echo "<script>
-                        Swal.fire({
-                            icon: 'info',
-                            title: 'Great news!',
-                            text: 'Your account is one step away from being fully secured. Please verify your email to proceed with the login.',
-                            confirmButtonText: 'OK'
-                        });
-                      </script>";
+                                Swal.fire({
+                                    icon: 'info',
+                                    title: 'Great news!',
+                                    text: 'Your account is one step away from being fully secured. Please verify your email to proceed with the login.',
+                                    confirmButtonText: 'OK'
+                                });
+                            </script>";
                         } else {
                             echo "<script>
-                        Swal.fire({
-                            title: 'Oops!',
-                            text: 'Server is down',
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        });
-                      </script>";
+                                Swal.fire({
+                                    title: 'Oops!',
+                                    text: 'Server is down',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            </script>";
                         }
                     }
                 } else {

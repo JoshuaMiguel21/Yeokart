@@ -146,11 +146,18 @@
 
                     if (isset($_POST['submit'])) {
                         $user_exist_query = "SELECT * FROM `user_accounts` WHERE `username`='$_POST[username]' OR `email`='$_POST[email]'";
-                        $result = mysqli_query($con, $user_exist_query);
-
-                        if ($result) {
-                            if (mysqli_num_rows($result) > 0) {
-                                $result_fetch = mysqli_fetch_assoc($result);
+                        $employee_exist_query = "SELECT * FROM `employee_accounts` WHERE `username`='$_POST[username]' OR `email`='$_POST[email]'";
+                        
+                        $user_result = mysqli_query($con, $user_exist_query);
+                        $employee_result = mysqli_query($con, $employee_exist_query);
+                    
+                        if ($user_result && $employee_result) {
+                            $user_rows = mysqli_num_rows($user_result);
+                            $employee_rows = mysqli_num_rows($employee_result);
+                    
+                            if ($user_rows > 0 || $employee_rows > 0) {
+                                $result_fetch = ($user_rows > 0) ? mysqli_fetch_assoc($user_result) : mysqli_fetch_assoc($employee_result);
+                    
                                 if ($result_fetch['username'] == $_POST['username']) {
                                     echo "
                                         <script>
