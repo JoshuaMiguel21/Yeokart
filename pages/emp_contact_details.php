@@ -3,15 +3,15 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>Employee Dashboard</title>
-    <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
-    <title>Yeokart Item Catalog Page</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <script>
     function confirmDelete() {
-        return confirm("Are you sure you want to delete this item?");
+        return confirm("Are you sure you want to delete this contact?");
     }
 
     function openLogoutPopup() {
@@ -27,17 +27,19 @@
     }
 </script>
 
-<body>
-    <?php
-    session_start();
+<?php
+session_start();
 
-    if (isset($_SESSION['firstname'])) {
-        $firstname = $_SESSION['firstname'];
-    } else {
-        header("Location: login_page.php");
-        exit();
-    }
-    ?>
+if (isset($_SESSION['firstname'])) {
+    $firstname = $_SESSION['firstname'];
+} else {
+    header("Location: login_page.php");
+    exit();
+}
+?>
+
+<body>
+
     <input type="checkbox" id="nav-toggle">
     <div class="sidebar">
         <div class="sidebar-brand">
@@ -54,7 +56,7 @@
                         <span>Customers</span></a>
                 </li>
                 <li>
-                    <a href="emp_item_homepage.php" class="active"><span class="las la-shopping-basket"></span>
+                    <a href="emp_item_homepage.php"><span class="las la-shopping-basket"></span>
                         <span>Items</span></a>
                 </li>
                 <li>
@@ -62,7 +64,7 @@
                         <span>Orders</span></a>
                 </li>
                 <li>
-                    <a href="emp_contact_details.php"><span class="las la-tasks"></span>
+                    <a href="emp_contact_details.php" class="active"><span class="las la-tasks"></span>
                         <span>Manage Content</span></a>
                 </li>
                 <li>
@@ -80,7 +82,7 @@
                     <span class="las la-bars"></span>
                 </label>
 
-                Dashboard
+                Manage Content
             </h3>
 
             <div class="user-wrapper">
@@ -90,30 +92,24 @@
                 </div>
             </div>
         </header>
-        </header>
         <main>
             <div class="head-title">
                 <div class="left">
-                    <h3>Item Catalog</h3>
+                    <h3>Contact Details</h3>
                 </div>
-                <a href="emp_artist_table.php" class="btn-employee">
-                    <i class="las la-user-plus"></i>
-                    <span class="text">View Artist Table</span>
-                </a>
-                <a href="emp_item_homepage.php" class="btn-employee">
-                    <i class="las la-user-plus"></i>
-                    <span class="text">View Item Catalog</span>
-                </a>
-                <a href="emp_category_table.php" class="btn-employee">
-                    <i class="las la-user-plus"></i>
-                    <span class="text">View Categories Table</span>
+                <a href="add_contacts.php" class="btn-employee">
+                    <i class="las la-plus"></i>
+                    <span class="text">Add Contacts</span>
                 </a>
             </div>
+
             <div class="table">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Categories</th>
+                            <th>Contact Title</th>
+                            <th>Contact Type</th>
+                            <th>Description</th>
                             <th>
                                 <center>Action</center>
                             </th>
@@ -122,16 +118,38 @@
                     <tbody>
                         <?php
                         include('../database/db_yeokart.php');
-                        $select_query = "SELECT * FROM categories";
+                        if (isset($_POST['delete_contacts'])) {
+                            $contacts_id = $_POST['contacts_id'];
+                            // Perform deletion query
+                            $delete_query = "DELETE FROM contacts WHERE contacts_id='$contacts_id'";
+                            $result_query = mysqli_query($con, $delete_query);
+                            if ($result_query) {
+                                echo "<script>alert('Contact deleted successfully')</script>";
+                                echo "<script>window.location.href = 'emp_contact_details.php';</script>";
+                            } else {
+                                echo "<script>alert('Failed to delete item')</script>";
+                                echo "<script>window.location.href = 'emp_contact_details.php';</script>";
+                            }
+                        }
+                        $select_query = "SELECT * FROM contacts";
                         $result_query = mysqli_query($con, $select_query);
                         while ($row = mysqli_fetch_assoc($result_query)) {
-                            $category_id = $row['category_id'];
-                            $category_name = $row['category_name'];
+                            $contacts_id = $row['contacts_id'];
+                            $contacts_name = $row['contacts_name'];
+                            $icon_link = $row['icon_link'];
+                            $contacts_description = $row['contacts_description'];
                             echo "<tr>";
-                            echo "<td>" . $row['category_name'] . "</td>";
+                            echo "<td>" . $row['contacts_name'] . "</td>";
+                            echo "<td><div class='iconbox'>" . $row['icon_link'] . "</div></td>";
+                            echo "<td style='max-width: 350px;'>" . $row['contacts_description'] . "</td>";
                             echo "<td>";
                             echo "<div class='button-class'>";
-                            echo "<a href='edit_category.php?category_id=$category_id' class='edit-button'>Edit</a> ";
+                            echo "<a href='edit_contacts.php?contacts_id=$contacts_id' class='edit-button'>Edit</a> 
+                          <form method='post' onsubmit='return confirmDelete()'>
+                          <input type='hidden' name='contacts_id' value='$contacts_id'>
+                          <button type='submit' name='delete_contacts' class='delete-button'>Delete</button>
+                          </form>";
+                            echo "<div class='button-class'>";
                             echo "</td>";
                             echo "</tr>";
                         }
@@ -139,6 +157,7 @@
                     </tbody>
                 </table>
             </div>
+
             <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
                 <div class="popup-content">
                     <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>
@@ -150,6 +169,13 @@
                     </div>
                 </div>
             </div>
+
+            <!-- <div class="form-outline mb-4 mt-5">
+        <a href="./owner_dashboard.php" class="btn btn-danger mb-3 px-3 mx-auto">
+            Back
+        </a>
+    </div> -->
+
 </body>
 
 </html>

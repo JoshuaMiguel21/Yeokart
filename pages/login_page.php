@@ -97,7 +97,7 @@
                 <a href="forgot_email.php" class="forgot-pass"><strong>Forgot Password?</strong></a>
 
                 <div class="button-container">
-                    <a href="pages/start_page.html"><button type="button" class="custom-button">Back</button></a>
+                    <a href="start_page.html"><button type="button" class="custom-button">Back</button></a>
                     <button type="submit" class="custom-button" value="login" name="login" id="login">Login</button>
                 </div>
             </form>

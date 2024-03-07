@@ -256,7 +256,7 @@ if (isset($_POST['insert_item'])) {
             $result_query_item = mysqli_query($con, $insert_items);
             if ($result_query_item) {
                 echo "<script>alert('Item successfully added')</script>";
-                echo "<script>window.location.href = './owner_item_homepage.php';</script>";
+                echo "<script>window.location.href = 'owner_item_homepage.php';</script>";
             }
         }
     }

@@ -13,6 +13,7 @@
     function confirmDelete() {
         return confirm("Are you sure you want to delete this item?");
     }
+
     function openLogoutPopup() {
         document.getElementById('logoutConfirmationPopup').style.display = 'flex';
     }
@@ -26,22 +27,23 @@
     }
 </script>
 <?php
-        session_start();
+session_start();
 
-        if(isset($_SESSION['firstname'])) {
-            $firstname = $_SESSION['firstname'];
-        } else {
-            header("Location: login_page.php");
-            exit();
-        }
+if (isset($_SESSION['firstname'])) {
+    $firstname = $_SESSION['firstname'];
+} else {
+    header("Location: login_page.php");
+    exit();
+}
 
-        if(isset($_SESSION['lastname'])) {
-            $lastname = $_SESSION['lastname'];
-        } else {
-            header("Location: login_page.php");
-            exit();
-        }
-    ?>
+if (isset($_SESSION['lastname'])) {
+    $lastname = $_SESSION['lastname'];
+} else {
+    header("Location: login_page.php");
+    exit();
+}
+?>
+
 <body>
     <input type="checkbox" id="nav-toggle">
     <div class="sidebar">
@@ -75,6 +77,10 @@
                         <span>Manage Employee</span></a>
                 </li>
                 <li>
+                    <a href="contact_details.php"><span class="las la-tasks"></span>
+                        <span>Manage Content</span></a>
+                </li>
+                <li>
                     <a href="#" onclick="openLogoutPopup(); return false;"><span class="las la-sign-out-alt"></span>
                         <span>Logout</span></a>
                 </li>
@@ -94,7 +100,7 @@
 
             <div class="user-wrapper">
                 <div>
-                    <h3><?php echo $firstname ." ". $lastname;?></h3>
+                    <h3><?php echo $firstname . " " . $lastname; ?></h3>
                     <small>Owner</small>
                 </div>
             </div>
@@ -112,22 +118,22 @@
         <main>
             <div class="head-title">
                 <div class="left">
-                    <h3>Item Catalog</h3>
+                    <h3>Artist Table</h3>
                 </div>
                 <a href="owner_artist_table.php" class="btn-employee">
-                    <i class="las la-user-plus"></i>
+                    <i class="las la-user"></i>
                     <span class="text">View Artist Table</span>
                 </a>
                 <a href="owner_item_homepage.php" class="btn-employee">
-                    <i class="las la-user-plus"></i>
+                    <i class="las la-archive"></i>
                     <span class="text">View Item Catalog</span>
                 </a>
                 <a href="owner_category_table.php" class="btn-employee">
-                    <i class="las la-user-plus"></i>
+                    <i class="las la-list"></i>
                     <span class="text">View Categories Table</span>
                 </a>
-                <a href="owner_artist.php" class="btn-employee">
-                    <i class="las la-user-plus"></i>
+                <a href="owner_item.php" class="btn-employee">
+                    <i class="las la-plus"></i>
                     <span class="text">Add Artist</span>
                 </a>
             </div>
@@ -165,7 +171,8 @@
             <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
                 <div class="popup-content">
                     <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>
-                    <p>Are you sure you want to logout?<p>
+                    <p>Are you sure you want to logout?
+                    <p>
                     <div class="logout-btns">
                         <button onclick="confirmLogout()" class="confirm-logout-btn">Logout</button>
                         <button onclick="closeLogoutPopup()" class="cancel-logout-btn">Cancel</button>

@@ -12,30 +12,31 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.js"></script>
     <link href="../css/add&edit_item.css" rel="stylesheet" />
 
-    <title>Yeokart Edit Artist Page</title>
+    <title>Yeokart Edit Contacts Page</title>
 </head>
 
 <body style="background-color: #DD2F6E;">
     <div class="container mt-3">
-        <h1 class="text-center text-white">Edit Artist</h1>
+        <h1 class="text-center text-white">Edit Contact</h1>
         <?php
         include('../database/db_yeokart.php');
 
-        if (isset($_GET['artist_id'])) {
-            $artist_id = $_GET['artist_id'];
-            $select_query = "SELECT * FROM artists WHERE artist_id='$artist_id'";
+        if (isset($_GET['contacts_id'])) {
+            $contacts_id = $_GET['contacts_id'];
+            $select_query = "SELECT * FROM contacts WHERE contacts_id='$contacts_id'";
             $result_query = mysqli_query($con, $select_query);
             $row = mysqli_fetch_assoc($result_query);
         ?>
             <form action="" method="post">
                 <input type="hidden" name="previous_page" value="<?php echo $_SERVER['HTTP_REFERER']; ?>">
                 <div class="form-outline mb-3 w-50 mr-auto ml-auto">
-                    <label for="artist_name" class="form-label">Name:</label>
-                    <input type="text" name="artist_name" id="artist_name" class="form-control" placeholder="Enter artist name" autocomplete="off" required value="<?php echo $row['artist_name']; ?>">
+                    <label for="contacts_description" class="form-label">Description:</label>
+                    <span id="contactsDescriptionCounter"><?php echo isset($row['contacts_description']) ? strlen($row['contacts_description']) : 0; ?>/80</span>
+                    <textarea name="contacts_description" id="contacts_description" class="form-control" placeholder="Enter contact description" required maxlength="80" required><?php echo isset($row['contacts_description']) ? $row['contacts_description'] : ''; ?></textarea>
                 </div>
-                <input type="hidden" name="artist_id" value="<?php echo $artist_id; ?>">
+                <input type="hidden" name="contacts_id" value="<?php echo $contacts_id; ?>">
                 <div class="form-outline mb-3 w-50 mr-auto ml-auto">
-                    <input type="submit" name="update_artist" class="btn btn-info mb-3 px-3" value="Update Artist">
+                    <input type="submit" name="update_contacts" class="btn btn-info mb-3 px-3" value="Update Contact">
                 </div>
 
                 <div class="form-outline mb-4 w-50 m-auto">
@@ -56,33 +57,33 @@
 <?php
 include('../database/db_yeokart.php');
 
-if (isset($_GET['artist_id'])) {
-    $artist_id = $_GET['artist_id'];
-    $select_query = "SELECT * FROM artists WHERE artist_id='$artist_id'";
+if (isset($_GET['contacts_id'])) {
+    $contacts_id = $_GET['contacts_id'];
+    $select_query = "SELECT * FROM contacts WHERE contacts_id='$contacts_id'";
     $result_select = mysqli_query($con, $select_query);
     $row = mysqli_fetch_assoc($result_select);
-    $artist_name = $row['artist_name'];
+    $contacts_description = $row['contacts_description'];
 
-    if (isset($_POST['update_artist'])) {
-        $new_artist_name = $_POST['artist_name'];
+    if (isset($_POST['update_contacts'])) {
+        $new_contacts_description = $_POST['contacts_description'];
 
-        $update_query = "UPDATE artists SET artist_name='$new_artist_name' WHERE artist_id='$artist_id'";
+        $update_query = "UPDATE contacts SET contacts_description='$new_contacts_description' WHERE contacts_id='$contacts_id'";
         $result_update = mysqli_query($con, $update_query);
 
         if ($result_update) {
-            echo "<script>alert('Artist successfully updated')</script>";
+            echo "<script>alert('Contact successfully updated')</script>";
 
-            $update_products_query = "UPDATE products SET artist_name='$new_artist_name' WHERE artist_name='$artist_name'";
-            $result_update_products = mysqli_query($con, $update_products_query);
+            $update_contacts_query = "UPDATE contacts SET contacts_description='$new_contacts_description' WHERE contacts_description='$contacts_description'";
+            $result_update_contacts = mysqli_query($con, $update_contacts_query);
 
-            if ($result_update_products) {
+            if ($result_update_contacts) {
             } else {
-                echo "<script>alert('Failed to update products artist')</script>";
+                echo "<script>alert('Failed to update contact')</script>";
             }
             $previous_page = $_POST['previous_page'];
             echo "<script>document.location.href = '$previous_page';</script>";
         } else {
-            echo "<script>alert('Failed to update artist')</script>";
+            echo "<script>alert('Failed to update contact')</script>";
         }
     }
 }

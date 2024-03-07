@@ -3,15 +3,15 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
-    <title>Yeokart Item Catalog Page</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <script>
     function confirmDelete() {
-        return confirm("Are you sure you want to delete this item?");
+        return confirm("Are you sure you want to delete this contact?");
     }
 
     function openLogoutPopup() {
@@ -27,24 +27,26 @@
     }
 </script>
 
+<?php
+session_start();
+
+if (isset($_SESSION['firstname'])) {
+    $firstname = $_SESSION['firstname'];
+} else {
+    header("Location: login_page.php");
+    exit();
+}
+
+if (isset($_SESSION['lastname'])) {
+    $lastname = $_SESSION['lastname'];
+} else {
+    header("Location: login_page.php");
+    exit();
+}
+?>
+
 <body>
-    <?php
-    session_start();
 
-    if (isset($_SESSION['firstname'])) {
-        $firstname = $_SESSION['firstname'];
-    } else {
-        header("Location: login_page.php");
-        exit();
-    }
-
-    if (isset($_SESSION['lastname'])) {
-        $lastname = $_SESSION['lastname'];
-    } else {
-        header("Location: login_page.php");
-        exit();
-    }
-    ?>
     <input type="checkbox" id="nav-toggle">
     <div class="sidebar">
         <div class="sidebar-brand">
@@ -61,7 +63,7 @@
                         <span>Customers</span></a>
                 </li>
                 <li>
-                    <a href="owner_item_homepage.php" class="active"><span class="las la-shopping-basket"></span>
+                    <a href="owner_item_homepage.php"><span class="las la-shopping-basket"></span>
                         <span>Items</span></a>
                 </li>
                 <li>
@@ -73,11 +75,11 @@
                         <span>Report</span></a>
                 </li>
                 <li>
-                    <a href="manage_employees.php" class=""><span class="las la-user-circle"></span>
+                    <a href="manage_employees.php"><span class="las la-user-circle"></span>
                         <span>Manage Employee</span></a>
                 </li>
                 <li>
-                    <a href="owner_contact_details.php"><span class="las la-tasks"></span>
+                    <a href="owner_contact_details.php" class="active"><span class="las la-tasks"></span>
                         <span>Manage Content</span></a>
                 </li>
                 <li>
@@ -95,48 +97,24 @@
                     <span class="las la-bars"></span>
                 </label>
 
-                Manage Items
+                Manage Content
             </h3>
 
             <div class="user-wrapper">
                 <div>
-                    <div>
-                        <h3><?php echo $firstname . " " . $lastname; ?></h3>
-                        <small>Owner</small>
-                    </div>
+                    <h3><?php echo $firstname . " " . $lastname; ?></h3>
+                    <small>Owner</small>
                 </div>
             </div>
         </header>
-
-        <!-- <div class="container mt-3">
-        <h1 class="text-center mb-4">Item Catalog</h1>
-    </div>
-     <div class="form-outline mb-4 mt-5">
-        <a href="./owner_item.php" class="btn btn-info mb-3 px-3 mx-auto">
-            Add a new Item
-        </a>
-    </div> -->
-
         <main>
             <div class="head-title">
                 <div class="left">
-                    <h3>Item Catalog</h3>
+                    <h3>Contact Details</h3>
                 </div>
-                <a href="owner_artist_table.php" class="btn-employee">
-                    <i class="las la-user"></i>
-                    <span class="text">View Artist Table</span>
-                </a>
-                <a href="owner_item_homepage.php" class="btn-employee">
-                    <i class="las la-archive"></i>
-                    <span class="text">View Item Catalog</span>
-                </a>
-                <a href="owner_category_table.php" class="btn-employee">
-                    <i class="las la-list"></i>
-                    <span class="text">View Categories Table</span>
-                </a>
-                <a href="owner_item.php" class="btn-employee">
+                <a href="add_contacts.php" class="btn-employee">
                     <i class="las la-plus"></i>
-                    <span class="text">Add Item</span>
+                    <span class="text">Add Contacts</span>
                 </a>
             </div>
 
@@ -144,13 +122,9 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Item Name</th>
-                            <th>Price</th>
+                            <th>Contact Title</th>
+                            <th>Contact Type</th>
                             <th>Description</th>
-                            <th>Quantity</th>
-                            <th>Artist</th>
-                            <th>Category</th>
-                            <th>Images</th>
                             <th>
                                 <center>Action</center>
                             </th>
@@ -159,50 +133,36 @@
                     <tbody>
                         <?php
                         include('../database/db_yeokart.php');
-                        if (isset($_POST['delete_item'])) {
-                            $item_id = $_POST['item_id'];
+                        if (isset($_POST['delete_contacts'])) {
+                            $contacts_id = $_POST['contacts_id'];
                             // Perform deletion query
-                            $delete_query = "DELETE FROM products WHERE item_id='$item_id'";
+                            $delete_query = "DELETE FROM contacts WHERE contacts_id='$contacts_id'";
                             $result_query = mysqli_query($con, $delete_query);
                             if ($result_query) {
-                                echo "<script>alert('Item deleted successfully')</script>";
-                                echo "<script>window.location.href = 'owner_item_homepage.php';</script>";
+                                echo "<script>alert('Contact deleted successfully')</script>";
+                                echo "<script>window.location.href = 'owner_contact_details.php';</script>";
                             } else {
                                 echo "<script>alert('Failed to delete item')</script>";
-                                echo "<script>window.location.href = 'owner_item_homepage.php';</script>";
+                                echo "<script>window.location.href = 'owner_contact_details.php';</script>";
                             }
                         }
-                        $select_query = "SELECT * FROM products";
+                        $select_query = "SELECT * FROM contacts";
                         $result_query = mysqli_query($con, $select_query);
                         while ($row = mysqli_fetch_assoc($result_query)) {
-                            $item_id = $row['item_id'];
-                            $item_name = $row['item_name'];
-                            $item_price = $row['item_price'];
-                            $item_description = $row['item_description'];
-                            $item_quantity = $row['item_quantity'];
-                            $artist_name = $row['artist_name'];
-                            $category_name = $row['category_name'];
-                            $item_image1 = $row['item_image1'];
-                            $item_image2 = $row['item_image2'];
-                            $item_image3 = $row['item_image3'];
+                            $contacts_id = $row['contacts_id'];
+                            $contacts_name = $row['contacts_name'];
+                            $icon_link = $row['icon_link'];
+                            $contacts_description = $row['contacts_description'];
                             echo "<tr>";
-                            echo "<td>" . $row['item_name'] . "</td>";
-                            echo "<td> ₱" . $row['item_price'] . "</td>";
-                            echo "<td style='max-width: 350px;'>" . $row['item_description'] . "</td>";
-                            echo "<td>" . $row['item_quantity'] . "</td>";
-                            echo "<td>" . $row['artist_name'] . "</td>";
-                            echo "<td>" . $row['category_name'] . "</td>";
-                            echo "<td>";
-                            echo "<img src='./item_images/$item_image1' alt='Twice Album' width='50' height='50'>&nbsp;";
-                            echo "<img src='./item_images/$item_image2' alt='Twice Album' width='50' height='50'>&nbsp;";
-                            echo "<img src='./item_images/$item_image3' alt='Twice Album' width='50' height='50'>&nbsp;";
-                            echo "</td>";
+                            echo "<td>" . $row['contacts_name'] . "</td>";
+                            echo "<td><div class='iconbox'>" . $row['icon_link'] . "</div></td>";
+                            echo "<td style='max-width: 350px;'>" . $row['contacts_description'] . "</td>";
                             echo "<td>";
                             echo "<div class='button-class'>";
-                            echo "<a href='edit_item.php?item_id=$item_id' class='edit-button'>Edit</a> 
+                            echo "<a href='edit_contacts.php?contacts_id=$contacts_id' class='edit-button'>Edit</a> 
                           <form method='post' onsubmit='return confirmDelete()'>
-                          <input type='hidden' name='item_id' value='$item_id'>
-                          <button type='submit' name='delete_item' class='delete-button'>Delete</button>
+                          <input type='hidden' name='contacts_id' value='$contacts_id'>
+                          <button type='submit' name='delete_contacts' class='delete-button'>Delete</button>
                           </form>";
                             echo "<div class='button-class'>";
                             echo "</td>";

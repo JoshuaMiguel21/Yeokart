@@ -22,22 +22,23 @@
     }
 </script>
 <?php
-        session_start();
+session_start();
 
-        if(isset($_SESSION['firstname'])) {
-            $firstname = $_SESSION['firstname'];
-        } else {
-            header("Location: login_page.php");
-            exit();
-        }
+if (isset($_SESSION['firstname'])) {
+    $firstname = $_SESSION['firstname'];
+} else {
+    header("Location: login_page.php");
+    exit();
+}
 
-        if(isset($_SESSION['lastname'])) {
-            $lastname = $_SESSION['lastname'];
-        } else {
-            header("Location: login_page.php");
-            exit();
-        }
-    ?>
+if (isset($_SESSION['lastname'])) {
+    $lastname = $_SESSION['lastname'];
+} else {
+    header("Location: login_page.php");
+    exit();
+}
+?>
+
 <body>
 
     <input type="checkbox" id="nav-toggle">
@@ -49,7 +50,7 @@
             <ul>
                 <li>
                     <a href="owner_dashboard.php"><span class="las la-igloo"></span>
-                        <span>Admin Dashboard</span></a>
+                        <span>Owner Dashboard</span></a>
                 </li>
                 <li>
                     <a href="owner_view_customers.php" class="active"><span class="las la-users"></span>
@@ -72,6 +73,10 @@
                         <span>Manage Employee</span></a>
                 </li>
                 <li>
+                    <a href="owner_contact_details.php"><span class="las la-tasks"></span>
+                        <span>Manage Content</span></a>
+                </li>
+                <li>
                     <a href="#" onclick="openLogoutPopup(); return false;"><span class="las la-sign-out-alt"></span>
                         <span>Logout</span></a>
                 </li>
@@ -91,7 +96,7 @@
 
             <div class="user-wrapper">
                 <div>
-                    <h3><?php echo $firstname ." ". $lastname;?></h3>
+                    <h3><?php echo $firstname . " " . $lastname; ?></h3>
                     <small>Owner</small>
                 </div>
             </div>
@@ -121,7 +126,7 @@
                                     <th>Email</th>
                                 </tr>";
 
-                
+
                 $counter = 1;
 
                 while ($row = $result->fetch_assoc()) {
@@ -160,7 +165,8 @@
     <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
         <div class="popup-content">
             <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>
-            <p>Are you sure you want to logout?<p>
+            <p>Are you sure you want to logout?
+            <p>
             <div class="logout-btns">
                 <button onclick="confirmLogout()" class="confirm-logout-btn">Logout</button>
                 <button onclick="closeLogoutPopup()" class="cancel-logout-btn">Cancel</button>
@@ -168,4 +174,5 @@
         </div>
     </div>
 </body>
+
 </html>

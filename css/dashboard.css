@@ -356,6 +356,18 @@ th {
     cursor: pointer;
 }
 
+.iconbox{
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    margin-left: 15px;
+    justify-content: center;
+    color: var( --main-color);
+    font-size: 32px;
+    border-radius: 100px;
+}
+
 @media only screen and (max-width: 1200px){
     #nav-toggle:checked + .sidebar{
         width: 70px;

@@ -13,6 +13,7 @@
     function confirmDelete() {
         return confirm("Are you sure you want to delete this item?");
     }
+
     function openLogoutPopup() {
         document.getElementById('logoutConfirmationPopup').style.display = 'flex';
     }
@@ -59,6 +60,10 @@
                 <li>
                     <a href=""><span class="las la-shopping-bag"></span>
                         <span>Orders</span></a>
+                </li>
+                <li>
+                    <a href="emp_contact_details.php"><span class="las la-tasks"></span>
+                        <span>Manage Content</span></a>
                 </li>
                 <li>
                     <a href="#" onclick="openLogoutPopup(); return false;"><span class="las la-sign-out-alt"></span>
@@ -137,13 +142,14 @@
             <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
                 <div class="popup-content">
                     <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>
-                    <p>Are you sure you want to logout?<p>
+                    <p>Are you sure you want to logout?
+                    <p>
                     <div class="logout-btns">
                         <button onclick="confirmLogout()" class="confirm-logout-btn">Logout</button>
                         <button onclick="closeLogoutPopup()" class="cancel-logout-btn">Cancel</button>
                     </div>
                 </div>
             </div>
-    </body>
+</body>
 
 </html>

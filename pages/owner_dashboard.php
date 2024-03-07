@@ -24,21 +24,21 @@
 
 <body>
     <?php
-        session_start();
+    session_start();
 
-        if(isset($_SESSION['firstname'])) {
-            $firstname = $_SESSION['firstname'];
-        } else {
-            header("Location: login_page.php");
-            exit();
-        }
+    if (isset($_SESSION['firstname'])) {
+        $firstname = $_SESSION['firstname'];
+    } else {
+        header("Location: login_page.php");
+        exit();
+    }
 
-        if(isset($_SESSION['lastname'])) {
-            $lastname = $_SESSION['lastname'];
-        } else {
-            header("Location: login_page.php");
-            exit();
-        }
+    if (isset($_SESSION['lastname'])) {
+        $lastname = $_SESSION['lastname'];
+    } else {
+        header("Location: login_page.php");
+        exit();
+    }
     ?>
 
     <?php
@@ -107,6 +107,10 @@
                         <span>Manage Employee</span></a>
                 </li>
                 <li>
+                    <a href="owner_contact_details.php"><span class="las la-tasks"></span>
+                        <span>Manage Content</span></a>
+                </li>
+                <li>
                     <a href="#" onclick="openLogoutPopup(); return false;"><span class="las la-sign-out-alt"></span>
                         <span>Logout</span></a>
                 </li>
@@ -127,7 +131,7 @@
             <div class="user-wrapper">
                 <div>
                     <div>
-                        <h3><?php echo $firstname ." ". $lastname;?></h3>
+                        <h3><?php echo $firstname . " " . $lastname; ?></h3>
                         <small>Owner</small>
                     </div>
                 </div>
