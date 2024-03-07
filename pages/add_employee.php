@@ -138,20 +138,20 @@
                 mysqli_stmt_bind_param($employee_stmt, 'ss', $_POST['username'], $_POST['email']);
                 mysqli_stmt_execute($employee_stmt);
                 $employee_result = mysqli_stmt_get_result($employee_stmt);
-            
+
                 $user_exist_query = "SELECT * FROM `user_accounts` WHERE `username`=? OR `email`=?";
                 $user_stmt = mysqli_prepare($con, $user_exist_query);
                 mysqli_stmt_bind_param($user_stmt, 'ss', $_POST['username'], $_POST['email']);
                 mysqli_stmt_execute($user_stmt);
                 $user_result = mysqli_stmt_get_result($user_stmt);
-            
+
                 if ($employee_result && $user_result) {
                     $employee_rows = mysqli_num_rows($employee_result);
                     $user_rows = mysqli_num_rows($user_result);
-            
+
                     if ($employee_rows > 0 || $user_rows > 0) {
                         $result_fetch = ($employee_rows > 0) ? mysqli_fetch_assoc($employee_result) : mysqli_fetch_assoc($user_result);
-            
+
                         if ($result_fetch['username'] == $_POST['username']) {
                             echo "<script>alert('$result_fetch[username] - Username already taken');</script>";
                         } else {
@@ -221,6 +221,12 @@
 
             <div class="button-container">
                 <button type="submit" id="submit" class="btn btn-custom btn-lg" name="submit">Submit</button>
+            </div>
+            <br></br>
+            <div class="button-container">
+                <a href="manage_employees.php" class="btn btn-danger mb-0 px-3 ">
+                    Back
+                </a>
             </div>
         </form>
     </div>

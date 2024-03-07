@@ -134,7 +134,7 @@ if (isset($_SESSION['lastname'])) {
                     <i class="las la-list"></i>
                     <span class="text">View Categories Table</span>
                 </a>
-                <a href="owner_category.php" class="btn-employee">
+                <a href="owner_artist.php" class="btn-employee">
                     <i class="las la-plus"></i>
                     <span class="text">Add Artist</span>
                 </a>

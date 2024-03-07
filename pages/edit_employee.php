@@ -56,6 +56,12 @@
           <div class="button-container">
             <button type="submit" id="submit" class="btn btn-custom btn-lg" name="submit">Update</button>
           </div>
+          <br></br>
+          <div class="button-container">
+            <a href="manage_employees.php" class="btn btn-danger mb-0 px-3 ">
+              Back
+            </a>
+          </div>
         </form>
     <?php
       } else {

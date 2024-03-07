@@ -57,7 +57,7 @@ if (isset($_SESSION['email'])) {
                 <a href="#">Shop</a>
                 <a href="contact_page.php">Contact Us</a>
                 <a href="#" class="fas fa-shopping-cart"></a>
-                <a href="user_profile.php" id="user-btn" class="fas fa-user"></a>
+                <a href="customer_profile.php" id="user-btn" class="fas fa-user"></a>
             </div>
         </div>
     </header>

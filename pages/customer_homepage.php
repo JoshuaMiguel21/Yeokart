@@ -13,7 +13,7 @@
 <?php
 session_start();
 
-if(isset($_SESSION['id'])) {
+if (isset($_SESSION['id'])) {
     $customer_id = $_SESSION['id'];
 } else {
     header("Location: login_page.php");
@@ -133,7 +133,7 @@ if (isset($_SESSION['email'])) {
             <div class="swiper-wrapper">
                 <?php
                 include('../database/db_yeokart.php');
-                $select_query = $select_query = "SELECT * FROM products";
+                $select_query = $select_query = "SELECT * FROM products WHERE is_featured = 1";
                 $result_query = mysqli_query($con, $select_query);
                 while ($row = mysqli_fetch_assoc($result_query)) {
                     $item_id = $row['item_id'];
