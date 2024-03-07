@@ -78,7 +78,7 @@ if (isset($_SESSION['lastname'])) {
                         <span>Manage Employee</span></a>
                 </li>
                 <li>
-                    <a href="owner_contact_details.php"><span class="las la-tasks"></span>
+                    <a href="owner_featured.php"><span class="las la-tasks"></span>
                         <span>Manage Content</span></a>
                 </li>
                 <li>
@@ -110,10 +110,13 @@ if (isset($_SESSION['lastname'])) {
         <main>
             <div class="head-title">
                 <div class="left">
-                    <h3>Employee Accounts</h3>
+                    <h3>Manage Featured Section</h3>
                 </div>
+
+            </div>
+            <div class="head-buttons">
                 <a href="add_employee.php" class="btn-employee">
-                    <i class="las la-user-plus"></i>
+                    <i class="las la-plus"></i>
                     <span class="text">Add Employee</span>
                 </a>
             </div>

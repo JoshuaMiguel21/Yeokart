@@ -53,11 +53,6 @@
                 </select>
             </div>
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
-                <button type="button" class="btn btn-info mb-3 px-3" data-bs-toggle="modal" data-bs-target="#addArtistModal">
-                    Add an Artist
-                </button>
-            </div>
-            <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <select name="product_category" id="product_category" class="form-select">
                     <option value="">Select item Category</option>
                     <?php
@@ -71,11 +66,6 @@
                     }
                     ?>
                 </select>
-            </div>
-            <div class="form-outline mb-3 w-50 mr-auto ml-auto">
-                <button type="button" class="btn btn-info mb-3 px-3" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
-                    Add a Category
-                </button>
             </div>
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <label for="item_image1" class="form-label">Item Image 1:</label>
@@ -101,66 +91,7 @@
         </form>
 
     </div>
-    <div class="modal fade" id="addArtistModal" tabindex="-1" aria-labelledby="addArtistModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form action="" method="post">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="addArtistModalLabel">Add Artist</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="artistName" class="form-label">Artist Name:</label>
-                            <input type="text" class="form-control" name="artist_name" id="artist_name" autocomplete="off" placeholder="Enter artist name" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <input type="submit" class="btn btn-primary" name="add_artist" value="Add">
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form action="" method="post">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="addCategoryModalLabel">Add Category</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="categoryName" class="form-label">Category Name:</label>
-                            <input type="text" class="form-control" name="category_name" id="category_name" autocomplete="off" placeholder="Enter category name" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <input type="submit" class="btn btn-primary" name="add_category" value="Add">
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
     <script>
-        function updateDropdownArtist(artist_id, artist_name) {
-            var select = document.getElementById("product_artist");
-            var option = document.createElement("option");
-            option.value = artist_id;
-            option.text = artist_name;
-            select.add(option);
-        }
-
-        function updateDropdownCategory(category_id, category_name) {
-            var select = document.getElementById("product_category");
-            var option = document.createElement("option");
-            option.value = category_id;
-            option.text = category_name;
-            select.add(option);
-        }
         const itemNameInput = document.getElementById('item_name');
         const itemDescriptionInput = document.getElementById('item_description');
         const itemNameCounter = document.getElementById('itemNameCounter');
@@ -186,41 +117,6 @@
 </html>
 <?php
 include('../database/db_yeokart.php');
-
-if (isset($_POST['add_artist'])) {
-    $artist_name = $_POST['artist_name'];
-    $select_query = "SELECT * FROM artists WHERE artist_name='$artist_name'";
-    $result_select = mysqli_query($con, $select_query);
-    $number = mysqli_num_rows($result_select);
-    if ($number > 0) {
-        echo "<script>alert('This artist is already added')</script>";
-    } else {
-        $insert_query = "INSERT INTO artists (artist_name) VALUES ('$artist_name')";
-        $result = mysqli_query($con, $insert_query);
-        if ($result) {
-            $artist_id = mysqli_insert_id($con);
-            echo "<script>alert('Artist has been added successfully')</script>";
-            echo "<script>updateDropdownArtist('$artist_id', '$artist_name')</script>"; // Call JavaScript function to update dropdown
-        }
-    }
-}
-if (isset($_POST['add_category'])) {
-    $category_name = $_POST['category_name'];
-    $select_query = "SELECT * FROM categories WHERE category_name='$category_name'";
-    $result_select = mysqli_query($con, $select_query);
-    $number = mysqli_num_rows($result_select);
-    if ($number > 0) {
-        echo "<script>alert('This category is already added')</script>";
-    } else {
-        $insert_query = "INSERT INTO categories (category_name) VALUES ('$category_name')";
-        $result = mysqli_query($con, $insert_query);
-        if ($result) {
-            $category_id = mysqli_insert_id($con); // Get the ID of the newly inserted category
-            echo "<script>alert('Category has been added successfully')</script>";
-            echo "<script>updateDropdownCategory('$category_id', '$category_name')</script>"; // Call JavaScript function to update dropdown
-        }
-    }
-}
 
 if (isset($_POST['insert_item'])) {
     $item_name = $_POST['item_name'];

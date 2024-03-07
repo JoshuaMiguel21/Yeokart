@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 05, 2024 at 07:58 AM
+-- Generation Time: Mar 07, 2024 at 03:42 PM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -30,14 +30,15 @@ SET time_zone = "+00:00";
 CREATE TABLE `products` (
   `item_id` int(11) NOT NULL,
   `item_name` varchar(255) NOT NULL,
-  `item_price` int(128) NOT NULL,
+  `item_price` decimal(10,2) NOT NULL,
   `item_description` varchar(500) NOT NULL,
   `item_quantity` int(255) NOT NULL,
   `artist_name` varchar(255) NOT NULL,
   `category_name` varchar(255) NOT NULL,
   `item_image1` varchar(250) NOT NULL,
   `item_image2` varchar(250) NOT NULL,
-  `item_image3` varchar(250) NOT NULL
+  `item_image3` varchar(250) NOT NULL,
+  `is_featured` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --

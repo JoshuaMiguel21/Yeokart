@@ -107,7 +107,7 @@
                         <span>Manage Employee</span></a>
                 </li>
                 <li>
-                    <a href="owner_contact_details.php"><span class="las la-tasks"></span>
+                    <a href="owner_featured.php"><span class="las la-tasks"></span>
                         <span>Manage Content</span></a>
                 </li>
                 <li>

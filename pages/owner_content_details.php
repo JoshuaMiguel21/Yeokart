@@ -79,7 +79,7 @@ if (isset($_SESSION['lastname'])) {
                         <span>Manage Employee</span></a>
                 </li>
                 <li>
-                    <a href="owner_contact_details.php" class="active"><span class="las la-tasks"></span>
+                    <a href="owner_featured.php" class="active"><span class="las la-tasks"></span>
                         <span>Manage Content</span></a>
                 </li>
                 <li>
@@ -110,8 +110,15 @@ if (isset($_SESSION['lastname'])) {
         <main>
             <div class="head-title">
                 <div class="left">
-                    <h3>Contact Details</h3>
+                    <h3>Manage Contact Details</h3>
                 </div>
+
+            </div>
+            <div class="head-buttons">
+                <a href="owner_featured.php" class="btn-employee">
+                    <i class="las la-user-plus"></i>
+                    <span class="text">Edit Featured Section</span>
+                </a>
                 <a href="add_contacts.php" class="btn-employee">
                     <i class="las la-plus"></i>
                     <span class="text">Add Contacts</span>
@@ -140,10 +147,10 @@ if (isset($_SESSION['lastname'])) {
                             $result_query = mysqli_query($con, $delete_query);
                             if ($result_query) {
                                 echo "<script>alert('Contact deleted successfully')</script>";
-                                echo "<script>window.location.href = 'owner_contact_details.php';</script>";
+                                echo "<script>window.location.href = 'owner_content_details.php';</script>";
                             } else {
                                 echo "<script>alert('Failed to delete item')</script>";
-                                echo "<script>window.location.href = 'owner_contact_details.php';</script>";
+                                echo "<script>window.location.href = 'owner_content_details.php';</script>";
                             }
                         }
                         $select_query = "SELECT * FROM contacts";

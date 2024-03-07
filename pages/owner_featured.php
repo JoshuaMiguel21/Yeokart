@@ -3,17 +3,13 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Dashboard</title>
-    <link rel="stylesheet" href="../css/dashboard.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Owner Dashboard</title>
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
-    <title>Yeokart Item Catalog Page</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <script>
-    function confirmDelete() {
-        return confirm("Are you sure you want to delete this item?");
-    }
-
     function openLogoutPopup() {
         document.getElementById('logoutConfirmationPopup').style.display = 'flex';
     }
@@ -27,17 +23,25 @@
     }
 </script>
 
-<body>
-    <?php
-    session_start();
+<?php
+session_start();
 
-    if (isset($_SESSION['firstname'])) {
-        $firstname = $_SESSION['firstname'];
-    } else {
-        header("Location: login_page.php");
-        exit();
-    }
-    ?>
+if (isset($_SESSION['firstname'])) {
+    $firstname = $_SESSION['firstname'];
+} else {
+    header("Location: login_page.php");
+    exit();
+}
+if (isset($_SESSION['lastname'])) {
+    $lastname = $_SESSION['lastname'];
+} else {
+    header("Location: login_page.php");
+    exit();
+}
+?>
+
+<body>
+
     <input type="checkbox" id="nav-toggle">
     <div class="sidebar">
         <div class="sidebar-brand">
@@ -46,15 +50,15 @@
         <div class="sidebar-menu">
             <ul>
                 <li>
-                    <a href="emp_dashboard.php"><span class="las la-igloo"></span>
-                        <span>Employee Dashboard</span></a>
+                    <a href="owner_dashboard.php"><span class="las la-igloo"></span>
+                        <span>Owner Dashboard</span></a>
                 </li>
                 <li>
-                    <a href=""><span class="las la-users"></span>
+                    <a href="owner_view_customers.php"><span class="las la-users"></span>
                         <span>Customers</span></a>
                 </li>
                 <li>
-                    <a href="emp_item_homepage.php" class="active"><span class="las la-shopping-basket"></span>
+                    <a href="owner_item_homepage.php"><span class="las la-shopping-basket"></span>
                         <span>Items</span></a>
                 </li>
                 <li>
@@ -62,7 +66,15 @@
                         <span>Orders</span></a>
                 </li>
                 <li>
-                    <a href="emp_featured.php"><span class="las la-tasks"></span>
+                    <a href=""><span class="las la-chart-line"></span>
+                        <span>Report</span></a>
+                </li>
+                <li>
+                    <a href="manage_employees.php"><span class="las la-user-circle"></span>
+                        <span>Manage Employee</span></a>
+                </li>
+                <li>
+                    <a href="owner_featured.php" class="active"><span class="las la-tasks"></span>
                         <span>Manage Content</span></a>
                 </li>
                 <li>
@@ -80,46 +92,27 @@
                     <span class="las la-bars"></span>
                 </label>
 
-                Manage Items
+                Manage Content
             </h3>
 
             <div class="user-wrapper">
                 <div>
-                    <h3>Hi, <?php echo $firstname; ?></h3>
-                    <small>Employee</small>
+                    <h3><?php echo $firstname . " " . $lastname; ?></h3>
+                    <small>Owner</small>
                 </div>
             </div>
         </header>
-        </header>
-
-        <!-- <div class="container mt-3">
-        <h1 class="text-center mb-4">Item Catalog</h1>
-    </div>
-     <div class="form-outline mb-4 mt-5">
-        <a href="./owner_item.php" class="btn btn-info mb-3 px-3 mx-auto">
-            Add a new Item
-        </a>
-    </div> -->
-
         <main>
             <div class="head-title">
                 <div class="left">
-                    <h3>Item Catalog</h3>
+                    <h3>Manage Featured Section</h3>
                 </div>
 
             </div>
             <div class="head-buttons">
-                <a href="emp_artist_table.php" class="btn-employee">
-                    <i class="las la-user-plus"></i>
-                    <span class="text">View Artist Table</span>
-                </a>
-                <a href="emp_item_homepage.php" class="btn-employee">
-                    <i class="las la-user-plus"></i>
-                    <span class="text">View Item Catalog</span>
-                </a>
-                <a href="emp_category_table.php" class="btn-employee">
-                    <i class="las la-user-plus"></i>
-                    <span class="text">View Categories Table</span>
+                <a href="owner_content_details.php" class="btn-employee">
+                    <i class="las la-edit"></i>
+                    <span class="text">Edit Contact Details</span>
                 </a>
             </div>
 
@@ -142,20 +135,39 @@
                     <tbody>
                         <?php
                         include('../database/db_yeokart.php');
-                        if (isset($_POST['delete_item'])) {
+
+                        if (isset($_POST['add_featured']) && isset($_POST['item_id'])) {
                             $item_id = $_POST['item_id'];
-                            // Perform deletion query
-                            $delete_query = "DELETE FROM products WHERE item_id='$item_id'";
-                            $result_query = mysqli_query($con, $delete_query);
-                            if ($result_query) {
-                                echo "<script>alert('Item deleted successfully')</script>";
-                                echo "<script>window.location.href = 'emp_item_homepage.php';</script>";
+                            $select_query = "SELECT is_featured FROM products WHERE item_id = $item_id";
+                            $result_query = mysqli_query($con, $select_query);
+                            $row = mysqli_fetch_assoc($result_query);
+                            $is_featured = $row['is_featured'];
+
+                            // Count the number of featured items
+                            $count_query = "SELECT COUNT(*) AS count FROM products WHERE is_featured = 1";
+                            $count_result = mysqli_query($con, $count_query);
+                            $count_row = mysqli_fetch_assoc($count_result);
+                            $featured_count = $count_row['count'];
+
+                            if ($is_featured == 1) {
+                                $update_query = "UPDATE products SET is_featured = 0 WHERE item_id = $item_id";
                             } else {
-                                echo "<script>alert('Failed to delete item')</script>";
-                                echo "<script>window.location.href = 'emp_item_homepage.php';</script>";
+                                if ($featured_count < 3) { // Change 3 to 5 for 5 featured items
+                                    $update_query = "UPDATE products SET is_featured = 1 WHERE item_id = $item_id";
+                                } else {
+                                    // Display a message or handle the limit reached case
+                                    echo "You can only have 3 featured items at a time."; // Change 3 to 5 for 5 featured items
+                                }
                             }
+
+                            if (isset($update_query)) {
+                                mysqli_query($con, $update_query);
+                            }
+                            echo "<script>window.location.href = 'owner_featured.php';</script>";
+                            exit();
                         }
-                        $select_query = "SELECT * FROM products";
+
+                        $select_query = "SELECT * FROM products ORDER BY is_featured DESC";
                         $result_query = mysqli_query($con, $select_query);
                         while ($row = mysqli_fetch_assoc($result_query)) {
                             $item_id = $row['item_id'];
@@ -168,6 +180,7 @@
                             $item_image1 = $row['item_image1'];
                             $item_image2 = $row['item_image2'];
                             $item_image3 = $row['item_image3'];
+                            $is_featured = $row['is_featured'];
                             echo "<tr>";
                             echo "<td>" . $row['item_name'] . "</td>";
                             echo "<td> ₱" . $row['item_price'] . "</td>";
@@ -182,12 +195,14 @@
                             echo "</td>";
                             echo "<td>";
                             echo "<div class='button-class'>";
-                            echo "<a href='edit_item.php?item_id=$item_id' class='edit-button'>Edit</a> 
-                          <form method='post' onsubmit='return confirmDelete()'>
-                          <input type='hidden' name='item_id' value='$item_id'>
-                          <button type='submit' name='delete_item' class='delete-button'>Delete</button>
-                          </form>";
-                            echo "<div class='button-class'>";
+                            echo "<form method='post'>";
+                            echo "<input type='hidden' name='item_id' value='$item_id'>";
+                            if ($is_featured == 1) {
+                                echo "<button type='submit' name='add_featured' class='edit-button featured'><i class='las la-check'></i></button>";
+                            } else {
+                                echo "<button type='submit' name='add_featured' class='edit-button'><i class='las la-plus'></i></button>";
+                            }
+                            echo "</form>";
                             echo "</td>";
                             echo "</tr>";
                         }

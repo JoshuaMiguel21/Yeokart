@@ -62,7 +62,7 @@
                         <span>Orders</span></a>
                 </li>
                 <li>
-                    <a href="emp_contact_details.php"><span class="las la-tasks"></span>
+                    <a href="emp_featured.php"><span class="las la-tasks"></span>
                         <span>Manage Content</span></a>
                 </li>
                 <li>
@@ -80,7 +80,7 @@
                     <span class="las la-bars"></span>
                 </label>
 
-                Dashboard
+                Manage Items
             </h3>
 
             <div class="user-wrapper">
@@ -94,8 +94,11 @@
         <main>
             <div class="head-title">
                 <div class="left">
-                    <h3>Item Catalog</h3>
+                    <h3>Category Table</h3>
                 </div>
+
+            </div>
+            <div class="head-buttons">
                 <a href="emp_artist_table.php" class="btn-employee">
                     <i class="las la-user-plus"></i>
                     <span class="text">View Artist Table</span>

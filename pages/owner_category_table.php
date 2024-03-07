@@ -61,7 +61,7 @@ if (isset($_SESSION['lastname'])) {
                         <span>Customers</span></a>
                 </li>
                 <li>
-                    <a href="./owner_item_homepage.php" class="active"><span class="las la-shopping-basket"></span>
+                    <a href="owner_item_homepage.php" class="active"><span class="las la-shopping-basket"></span>
                         <span>Items</span></a>
                 </li>
                 <li>
@@ -77,7 +77,7 @@ if (isset($_SESSION['lastname'])) {
                         <span>Manage Employee</span></a>
                 </li>
                 <li>
-                    <a href="contact_details.php"><span class="las la-tasks"></span>
+                    <a href="owner_featured.php"><span class="las la-tasks"></span>
                         <span>Manage Content</span></a>
                 </li>
                 <li>
@@ -120,6 +120,8 @@ if (isset($_SESSION['lastname'])) {
                 <div class="left">
                     <h3>Category Table</h3>
                 </div>
+            </div>
+            <div class="head-buttons">
                 <a href="owner_artist_table.php" class="btn-employee">
                     <i class="las la-user"></i>
                     <span class="text">View Artist Table</span>
@@ -132,7 +134,7 @@ if (isset($_SESSION['lastname'])) {
                     <i class="las la-list"></i>
                     <span class="text">View Categories Table</span>
                 </a>
-                <a href="owner_item.php" class="btn-employee">
+                <a href="owner_category.php" class="btn-employee">
                     <i class="las la-plus"></i>
                     <span class="text">Add Category</span>
                 </a>
