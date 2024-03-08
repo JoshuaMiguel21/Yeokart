@@ -1,3 +1,22 @@
+<?php
+include('../database/db_yeokart.php');
+
+// Assuming you're retrieving the item_id from the URL or form submission
+if (isset($_GET['item_id'])) {
+    $item_id = $_GET['item_id'];
+    $select_item_query = "SELECT * FROM products WHERE item_id = $item_id";
+    $result_item_query = mysqli_query($con, $select_item_query);
+
+    // Initialize $fetch_item to an empty array as a default state
+    $fetch_item = array();
+
+    if (mysqli_num_rows($result_item_query) > 0) {
+        // If there are results, fetch the first row
+        $fetch_item = mysqli_fetch_assoc($result_item_query);
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -45,29 +64,19 @@
     <section class="product-details" id="product-details">
         <div class="product-details-left">
             <div class="main-image">
-                <img src="./item_images/twice_album_1.png" alt="Product Image" width="100%">
+                <!-- Check if $fetch_item is not empty before accessing its elements -->
+                <?php if (!empty($fetch_item)): ?>
+                    <img src="../res/<?php echo $fetch_item['item_image1']; ?>" alt="Product Image" width="100%">
+                <?php endif; ?>
             </div>
         </div>
-
-        </div>
         <div class="product-details-right">
-            <!-- Add your text content here -->
-            <p>Albums</p>
-            <h2>TWICE 7th Mini Album - Fancy You</h2>
-            <h4>PHP 900</h4>
-            <select>
-                <option>Select Version</option>
-                <option>Version A</option>
-                <option>Version B</option>
-                <option>Version C</option>
-            </select>
-            <br></br>
-            <p>Select Quantity: <input type="number" value="1"></p>
-            <p>Stock: 40</p>
-            <a href="" class="btn">Add to Cart</a>
-            <h4>Product Description</h4>
-            <p>
-                "TWICE's 9th Mini Album, 'More & More,' is a vibrant and dynamic collection of songs that showcases the group's growth and maturity. The title track, 'More & More,' is a catchy and upbeat song with tropical house influences, while the rest of the album features a mix of dance tracks and emotional ballads. With its infectious melodies and powerful vocals, 'More & More' is sure to captivate fans and listeners alike, cementing TWICE's status as one of K-pop's leading girl groups."</p>
+            <?php if (!empty($fetch_item)): ?>
+                <p><?php echo $fetch_item['category_name']; ?></p>
+                <h2><?php echo $fetch_item['item_name']; ?></h2>
+                <h4>PHP <?php echo $fetch_item['item_price']; ?></h4>
+                <!-- Add more dynamic content here -->
+            <?php endif; ?>
         </div>
     </section>
 
