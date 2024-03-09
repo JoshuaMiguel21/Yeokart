@@ -30,8 +30,8 @@
             </div>
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <label for="item_description" class="form-label">Description:</label>
-                <span id="itemDescriptionCounter"><?php echo isset($row['item_description']) ? strlen($row['item_description']) : 0; ?>/300</span>
-                <textarea name="item_description" id="item_description" class="form-control" placeholder="Enter item description" required maxlength="300" required></textarea>
+                <span id="itemDescriptionCounter"><?php echo isset($row['item_description']) ? strlen($row['item_description']) : 0; ?>/500</span>
+                <textarea name="item_description" id="item_description" class="form-control" placeholder="Enter item description" required maxlength="500" required></textarea>
             </div>
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <label for="item_quantity" class="form-label">Quantity:</label>
@@ -102,7 +102,7 @@
 
         function updateCounter() {
             itemNameCounter.textContent = `${itemNameInput.value.length}/100`;
-            itemDescriptionCounter.textContent = `${itemDescriptionInput.value.length}/300`;
+            itemDescriptionCounter.textContent = `${itemDescriptionInput.value.length}/500`;
         }
         const textarea = document.getElementById('item_description');
 

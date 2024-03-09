@@ -32,24 +32,22 @@ if (isset($_GET['item_id'])) {
 
 
 <body>
-    <header class="header">
+<header class="header">
         <div class="header-1">
-            <img src="../res/logo.png" alt="Yeokart Logo" class="logo">
+            <a href="customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>
 
-            <form action="" class="search-form">
-                <input type="search" name="" placeholder="Search here..." id="search-box">
-                <label for="search-box" class="fas fa-search"></label>
-            </form>
+
             <div class="icons">
                 <div id="search-btn" class="fas fa-search"></div>
                 <a href="#">Shop</a>
+                <a href="contact_page.php">Contact Us</a>
                 <a href="#" class="fas fa-shopping-cart"></a>
-                <div id="user-btn" class="fas fa-user"></div>
+                <a href="customer_profile.php" id="user-btn" class="fas fa-user"></a>
             </div>
         </div>
         <div class="header-2">
             <nav class="navbar">
-                <a href="./customer_homepage.php">Home</a>
+                <a href="#home">Home</a>
                 <a href="#best">Best Sellers</a>
                 <a href="#featured">Featured</a>
             </nav>
@@ -65,16 +63,55 @@ if (isset($_GET['item_id'])) {
         <div class="product-details-left">
             <div class="main-image">
                 <!-- Check if $fetch_item is not empty before accessing its elements -->
-                <?php if (!empty($fetch_item)): ?>
+                <?php if (!empty($fetch_item)) : ?>
                     <img src="../res/<?php echo $fetch_item['item_image1']; ?>" alt="Product Image" width="100%">
                 <?php endif; ?>
             </div>
         </div>
         <div class="product-details-right">
-            <?php if (!empty($fetch_item)): ?>
+            <?php if (!empty($fetch_item)) : ?>
+                
+                <div class="category-name">
                 <p><?php echo $fetch_item['category_name']; ?></p>
+                </div>
+
+                <div class="item-name">
                 <h2><?php echo $fetch_item['item_name']; ?></h2>
-                <h4>PHP <?php echo $fetch_item['item_price']; ?></h4>
+                </div>
+
+                <div class="item-price">
+                <h4>&#8369;<?php echo $fetch_item['item_price']; ?></h4>
+                </div> 
+
+                <div class="select-version">
+                    <select id="version-dropdown">
+                        <option value="option1">Select Version</option>
+                        <option value="option1">Version A</option>
+                        <option value="option2">Version B</option>
+                        <option value="option3">Version C</option>
+                    </select>
+                </div>
+
+                <div class="select-quantity">
+                    <span>Select Quantity:</span>
+                    <button onclick="decrement()">-</button>
+                    <input type="number" id="quantity" name="quantity" min="1" value="1">
+                    <button onclick="increment()">+</button>
+                </div>
+
+                <div class="item-stock">
+                <p>Stock: <?php echo $fetch_item['item_quantity']; ?></p>
+                </div>
+
+                <div class="add-to-cart">
+                <button type="submit" name="add-to-cart-btn">Add To Cart</button>
+                </div>
+
+                <div class="product-description">
+                <h4>Product Description</h4>
+                <p><?php echo $fetch_item['item_description']; ?><p>
+                </div>
+
                 <!-- Add more dynamic content here -->
             <?php endif; ?>
         </div>
@@ -173,6 +210,20 @@ if (isset($_GET['item_id'])) {
             },
         });
     </script>
+
+    <!-- Script for quantity increment & decrement buttons -->
+    <script>
+        function increment() {
+            var input = document.getElementById('quantity');
+            input.stepUp();
+        }
+
+        function decrement() {
+            var input = document.getElementById('quantity');
+            input.stepDown();
+        }
+    </script>
+
 </body>
 
 </html>

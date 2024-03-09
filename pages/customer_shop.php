@@ -92,7 +92,7 @@ if (isset($_POST['view_item_button'])) {
                         </div>
                         <div class="product-info">
                             <h4><?php echo $fetch_item['item_name']; ?></h4>
-                            <h4><?php echo $fetch_item['item_price']; ?></h4>
+                            <h4>&#8369;<?php echo $fetch_item['item_price']; ?></h4>
                             <!-- Hidden fields to store item details -->
                             <input type="hidden" name="item_id" value="<?php echo $fetch_item['item_id']; ?>">
                             <input type="hidden" name="item_name" value="<?php echo $fetch_item['item_name']; ?>">
@@ -115,27 +115,6 @@ if (isset($_POST['view_item_button'])) {
         </section>
     </div>
 
-    <footer>
-        <div class="footer-info">
-            <div>
-                <p><img src="/res/logo.png" alt="Yeokart Logo" class="footer-logo">&copy; 2024 Yeokart. All rights
-                    reserved.</p>
-            </div>
-
-            <div class="footer-links">
-                <a href="customer_homepage.html">Home</a>
-                <a href="#">Shop</a>
-                <a href="#">Contact</a>
-                <a href="#">About Us</a>
-            </div>
-
-            <div class="social-links">
-                <li><a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
-                <li><a href="#" target="_blank"><i class="fab fa-twitter"></i></a></li>
-                <li><a href="#" target="_blank"><i class="fab fa-instagram"></i></a></li>
-            </div>
-        </div>
-    </footer>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
