@@ -60,7 +60,7 @@ if (isset($_SESSION['email'])) {
             </form>
             <div class="icons">
                 <div id="search-btn" class="fas fa-search"></div>
-                <a href="#">Shop</a>
+                <a href="customer_shop.php">Shop</a>
                 <a href="contact_page.php">Contact Us</a>
                 <a href="#" class="fas fa-shopping-cart"></a>
                 <a href="customer_profile.php" id="user-btn" class="fas fa-user"></a>
