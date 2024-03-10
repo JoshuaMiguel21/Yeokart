@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <title>Yeokart Item Catalog Page</title>
 </head>
@@ -24,6 +25,11 @@
 
     function confirmLogout() {
         window.location.href = 'logout.php';
+    }
+
+    function clearSearch() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('searchForm').submit();
     }
 </script>
 <?php
@@ -106,15 +112,6 @@ if (isset($_SESSION['lastname'])) {
             </div>
         </header>
 
-        <!-- <div class="container mt-3">
-        <h1 class="text-center mb-4">Item Catalog</h1>
-    </div>
-     <div class="form-outline mb-4 mt-5">
-        <a href="./owner_item.php" class="btn btn-info mb-3 px-3 mx-auto">
-            Add a new Item
-        </a>
-    </div> -->
-
         <main>
             <div class="head-title">
                 <div class="left">
@@ -139,6 +136,13 @@ if (isset($_SESSION['lastname'])) {
                     <span class="text">Add Category</span>
                 </a>
             </div>
+            <div class="head-search">
+                <form method="POST" id="searchForm">
+                    <input type="text" name="search" placeholder="Search categories..." id="searchInput">
+                    <button type="submit" name="search_button">Search</button>
+                    <button type="button" name="clear_button" onclick="clearSearch()">Clear</button>
+                </form>
+            </div>
 
             <div class="table">
                 <table class="table">
@@ -153,8 +157,16 @@ if (isset($_SESSION['lastname'])) {
                     <tbody>
                         <?php
                         include('../database/db_yeokart.php');
-                        $select_query = "SELECT * FROM categories";
+
+                        if (isset($_POST['search_button'])) {
+                            $search = $_POST['search'];
+                            $select_query = "SELECT * FROM categories WHERE category_name LIKE '%$search%'";
+                        } else {
+                            $select_query = "SELECT * FROM categories";
+                        }
+
                         $result_query = mysqli_query($con, $select_query);
+
                         while ($row = mysqli_fetch_assoc($result_query)) {
                             $category_id = $row['category_id'];
                             $category_name = $row['category_name'];
@@ -181,12 +193,6 @@ if (isset($_SESSION['lastname'])) {
                     </div>
                 </div>
             </div>
-            <!-- <div class="form-outline mb-4 mt-5">
-        <a href="./owner_dashboard.php" class="btn btn-danger mb-3 px-3 mx-auto">
-            Back
-        </a>
-    </div> -->
-
 </body>
 
 </html>

@@ -25,6 +25,11 @@
     function confirmLogout() {
         window.location.href = 'logout.php';
     }
+
+    function clearSearch() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('searchForm').submit();
+    }
 </script>
 <?php
 session_start();
@@ -139,6 +144,13 @@ if (isset($_SESSION['lastname'])) {
                     <span class="text">Add Artist</span>
                 </a>
             </div>
+            <div class="head-search">
+                <form method="POST" id="searchForm">
+                    <input type="text" name="search" placeholder="Search artists..." id="searchInput">
+                    <button type="submit" name="search_button">Search</button>
+                    <button type="button" name="clear_button" onclick="clearSearch()">Clear</button>
+                </form>
+            </div>
 
             <div class="table">
                 <table class="table">
@@ -153,8 +165,16 @@ if (isset($_SESSION['lastname'])) {
                     <tbody>
                         <?php
                         include('../database/db_yeokart.php');
-                        $select_query = "SELECT * FROM artists";
+
+                        if (isset($_POST['search_button'])) {
+                            $search = $_POST['search'];
+                            $select_query = "SELECT * FROM artists WHERE artist_name LIKE '%$search%'";
+                        } else {
+                            $select_query = "SELECT * FROM artists";
+                        }
+
                         $result_query = mysqli_query($con, $select_query);
+
                         while ($row = mysqli_fetch_assoc($result_query)) {
                             $artist_id = $row['artist_id'];
                             $artist_name = $row['artist_name'];

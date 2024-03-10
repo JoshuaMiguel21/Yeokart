@@ -25,6 +25,11 @@
     function confirmLogout() {
         window.location.href = 'logout.php';
     }
+
+    function clearSearch() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('searchForm').submit();
+    }
 </script>
 
 <body>
@@ -141,6 +146,13 @@
                     <span class="text">Add Item</span>
                 </a>
             </div>
+            <div class="head-search">
+                <form method="POST" id="searchForm">
+                    <input type="text" name="search" placeholder="Search items..." id="searchInput">
+                    <button type="submit" name="search_button">Search</button>
+                    <button type="button" name="clear_button" onclick="clearSearch()">Clear</button>
+                </form>
+            </div>
 
             <div class="table">
                 <table class="table">
@@ -174,7 +186,12 @@
                                 echo "<script>window.location.href = 'owner_item_homepage.php';</script>";
                             }
                         }
-                        $select_query = "SELECT * FROM products";
+                        if (isset($_POST['search_button'])) {
+                            $search = $_POST['search'];
+                            $select_query = "SELECT * FROM products WHERE item_name LIKE '%$search%'";
+                        } else {
+                            $select_query = "SELECT * FROM products";
+                        }
                         $result_query = mysqli_query($con, $select_query);
                         while ($row = mysqli_fetch_assoc($result_query)) {
                             $item_id = $row['item_id'];
