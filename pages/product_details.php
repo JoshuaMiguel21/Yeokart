@@ -61,6 +61,20 @@ if (isset($_GET['item_id'])) {
         $fetch_item = mysqli_fetch_assoc($result_item_query);
     }
 }
+
+if (isset($_POST['view_item_button'])) {
+    // Fetching item details based on item ID
+    $item_id = $_POST['item_id'];
+    $select_item_query = "SELECT * FROM products WHERE item_id = $item_id";
+    $result_item_query = mysqli_query($con, $select_item_query);
+    $fetch_item = mysqli_fetch_assoc($result_item_query);
+
+    // Redirecting to product_details.php with item details
+    if ($fetch_item) {
+        header("Location: product_details.php?item_id=$item_id");
+        exit();
+    }
+}
 ?>
 
 <body>
@@ -99,7 +113,7 @@ if (isset($_GET['item_id'])) {
             <div class="main-image">
                 <!-- Check if $fetch_item is not empty before accessing its elements -->
                 <?php if (!empty($fetch_item)) : ?>
-                    <img src="../res/<?php echo $fetch_item['item_image1']; ?>" alt="Product Image" width="100%">
+                    <img src="item_images/<?php echo $fetch_item['item_image1']; ?>" alt="Product Image" width="100%">
                 <?php endif; ?>
             </div>
         </div>
@@ -172,7 +186,10 @@ if (isset($_GET['item_id'])) {
                     $item_image1 = $row['item_image1'];
                     echo "<div class='swiper-slide box'>
                     <div class='icons'>
-                        <a href='#' class='fas fa-eye'></a>
+                        <form method='post'>
+                            <input type='hidden' name='item_id' value='" . $item_id . "'>
+                            <button type='submit' name='view_item_button' class='fas fa-eye'></button>
+                        </form>
                     </div>
                     <div class='image'>
                     <img src='item_images/$item_image1' alt=''>
