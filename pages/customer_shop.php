@@ -82,28 +82,28 @@ if (isset($_POST['view_item_button'])) {
                 <?php
                 $select_items = mysqli_query($con, "SELECT * FROM products");
                 if (mysqli_num_rows($select_items) > 0) {
-                    while($fetch_item = mysqli_fetch_assoc($select_items)){
-                        ?>
-                    <form method="post" action="">
-                    <div class="card">
-                        <div class="product-image">
-                            <!-- Assuming you have a field in products table for item image -->
-                            <img src="/res/<?php echo $fetch_item['item_image1']; ?>" alt="<?php echo $fetch_item['item_name']; ?>">
-                        </div>
-                        <div class="product-info">
-                            <h4><?php echo $fetch_item['item_name']; ?></h4>
-                            <h4>&#8369;<?php echo $fetch_item['item_price']; ?></h4>
-                            <!-- Hidden fields to store item details -->
-                            <input type="hidden" name="item_id" value="<?php echo $fetch_item['item_id']; ?>">
-                            <input type="hidden" name="item_name" value="<?php echo $fetch_item['item_name']; ?>">
-                            <input type="hidden" name="item_price" value="<?php echo $fetch_item['item_price']; ?>">
-                            <!-- You can add more hidden fields for other item details -->
-                        </div>
-                        <div class="button">
-                            <button type="submit" name="view_item_button">View Item</button>
-                        </div>
-                    </div>
-                </form>
+                    while ($fetch_item = mysqli_fetch_assoc($select_items)) {
+                ?>
+                        <form method="post" action="">
+                            <div class="card">
+                                <div class="product-image">
+                                    <!-- Assuming you have a field in products table for item image -->
+                                    <img src="item_images/<?php echo $fetch_item['item_image1']; ?>" alt="<?php echo $fetch_item['item_name']; ?>">
+                                </div>
+                                <div class="product-info">
+                                    <h4><?php echo $fetch_item['item_name']; ?></h4>
+                                    <h4>&#8369;<?php echo $fetch_item['item_price']; ?></h4>
+                                    <!-- Hidden fields to store item details -->
+                                    <input type="hidden" name="item_id" value="<?php echo $fetch_item['item_id']; ?>">
+                                    <input type="hidden" name="item_name" value="<?php echo $fetch_item['item_name']; ?>">
+                                    <input type="hidden" name="item_price" value="<?php echo $fetch_item['item_price']; ?>">
+                                    <!-- You can add more hidden fields for other item details -->
+                                </div>
+                                <div class="button">
+                                    <button type="submit" name="view_item_button">View Item</button>
+                                </div>
+                            </div>
+                        </form>
                 <?php
                     }
                 } else {

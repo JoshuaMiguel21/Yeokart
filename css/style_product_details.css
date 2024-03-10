@@ -166,6 +166,124 @@ section{
     background: var(--dark-color);
 }
 
+.product-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.product-details-left {
+    flex: 1;
+    margin-right: 20px; /* Adjust the spacing between columns */
+}
+
+.product-details-left .main-image {
+    max-width: 100%;
+    height: auto;
+}
+
+.product-details-right {
+    flex: 2; /* Adjust the width ratio of left and right columns */
+}
+
+.product-details-right .category-name p{
+    font-size: 16px;
+   line-height: 1.6;
+}
+
+.product-details-right .item-name h2{
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.product-details-right .item-price h4{
+    font-size: 20px;
+    margin-bottom: 12px;
+}
+
+.select-quantity {
+    display: flex;
+    align-items: center;
+}
+
+.select-quantity  span {
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.select-quantity input[type="number"] {
+    flex: 1; /* This makes the input expand to fill available space */
+    max-width: 100px; /* Adjust this value as needed to limit the width */
+    margin: 0 5px;
+    border: var(--border);
+    border-width: 2px;
+    padding: 5px;
+    font-size: 15px;
+}
+
+.select-quantity  button {
+    padding: 5px 10px;
+    cursor: pointer;
+    border: none;
+    background-color: #ddd;
+}
+
+.select-quantity  button:first-child {
+    border-radius: 5px 0 0 5px;
+}
+
+.select-quantity  button:last-child {
+    border-radius: 0 5px 5px 0;
+}
+
+/*.select-version{
+    flex: 1;
+    max-width: 130px;
+    margin: 0 5px;
+    border: var(--border);
+    border-width: 2px;
+    padding: 5px;
+    font-size: 15px;
+}*/
+
+.product-details-right .item-stock{
+    font-size: 15px;
+    margin-top: 10px;
+}
+
+.add-to-cart {
+    margin-top: 1rem;
+    display: inline-block;
+    border-radius: .5rem;
+    color: #fff; /* Text color is white */
+    background: var(--pink); /* Assuming you have a CSS variable defined for pink color */
+    font-size: 1.7rem;
+    text-align: center;
+    margin: 1.5rem 0; /* This line will override the margin-top and add margin to the top and bottom */
+    text-decoration: none; /* Buttons do not usually have text-decoration */
+    border: none; /* To remove the default button border */
+}
+
+.add-to-cart button {
+    padding: .9rem 3rem;
+    background: transparent; /* Set button background to transparent */
+    border: none; /* To remove the default button border */
+    color: inherit; /* Inherit text color from parent (.add-to-cart) */
+    cursor: pointer;
+}
+
+.add-to-cart:hover {
+    background: var(--dark-color);
+}
+
+.product-details-right .product-description h4{
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.product-details-right .product-description p{
+    font-size: 14px;
+}
 
 .featured .featured-slider .box,
 .best .best-slider .box{
@@ -256,7 +374,8 @@ section{
     width: 100%;
 }
 
-.featured .btn{
+.featured .btn,
+.best .btn{
     margin-top: 1rem;
     display: inline-block;
     padding: .9rem 3rem;
@@ -270,10 +389,10 @@ section{
     text-decoration: none;
 }
 
-.featured .btn:hover{
+.featured .btn:hover
+.best .btn:hover{
     background: var(--dark-color);
 }
-
 .swiper-button-next,
 .swiper-button-prev{
     border: var(--border-hover);
@@ -290,125 +409,6 @@ section{
 .swiper-button-prev:hover{
     background: var(--black);
     color: #fff;
-}
-
-.product-details {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-}
-
-.product-details-left {
-    flex: 1;
-    margin-right: 20px; /* Adjust the spacing between columns */
-}
-
-/* Example styles for image */
-.product-details-left .main-image {
-    max-width: 100%;
-    height: auto;
-}
-
-.product-details-right {
-    flex: 2; /* Adjust the width ratio of left and right columns */
-}
-
-.product-details-right .category-name p{
-    font-size: 16px;
-   line-height: 1.6;
-}
-
-.product-details-right .item-name h2{
-    font-size: 24px;
-    margin-bottom: 10px;
-}
-
-.product-details-right .item-price h4{
-    font-size: 20px;
-    margin-bottom: 12px;
-}
-
-.select-quantity {
-    display: flex;
-    align-items: center;
-}
-
-.select-quantity  span {
-    margin-right: 10px;
-    font-size: 16px;
-}
-
-.select-quantity input[type="number"] {
-    flex: 1; /* This makes the input expand to fill available space */
-    max-width: 100px; /* Adjust this value as needed to limit the width */
-    margin: 0 5px;
-    border: var(--border);
-    border-width: 2px;
-    padding: 5px;
-    font-size: 15px;
-}
-
-.select-quantity  button {
-    padding: 5px 10px;
-    cursor: pointer;
-    border: none;
-    background-color: #ddd;
-}
-
-.select-quantity  button:first-child {
-    border-radius: 5px 0 0 5px;
-}
-
-.select-quantity  button:last-child {
-    border-radius: 0 5px 5px 0;
-}
-
-select,
-input{
-    border: var(--border);
-    border-width: 2px;
-    padding: 5px;
-    font-size: 15px;
-    margin-bottom: 15px;
-}
-
-.product-details-right .item-stock{
-    font-size: 15px;
-    margin-top: 10px;
-}
-
-.add-to-cart {
-    margin-top: 1rem;
-    display: inline-block;
-    border-radius: .5rem;
-    color: #fff; /* Text color is white */
-    background: var(--pink); /* Assuming you have a CSS variable defined for pink color */
-    font-size: 1.7rem;
-    text-align: center;
-    margin: 1.5rem 0; /* This line will override the margin-top and add margin to the top and bottom */
-    text-decoration: none; /* Buttons do not usually have text-decoration */
-    border: none; /* To remove the default button border */
-}
-
-.add-to-cart button {
-    padding: .9rem 3rem;
-    background: transparent; /* Set button background to transparent */
-    border: none; /* To remove the default button border */
-    color: inherit; /* Inherit text color from parent (.add-to-cart) */
-    cursor: pointer;
-}
-
-.add-to-cart:hover {
-    background: var(--dark-color);
-}
-
-.product-details-right .product-description h4{
-    font-size: 16px;
-    margin-bottom: 10px;
-}
-
-.product-details-right .product-description p{
-    font-size: 14px;
 }
 
 @media (max-width:1024px){

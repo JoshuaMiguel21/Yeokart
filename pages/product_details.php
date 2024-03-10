@@ -1,22 +1,3 @@
-<?php
-include('../database/db_yeokart.php');
-
-// Assuming you're retrieving the item_id from the URL or form submission
-if (isset($_GET['item_id'])) {
-    $item_id = $_GET['item_id'];
-    $select_item_query = "SELECT * FROM products WHERE item_id = $item_id";
-    $result_item_query = mysqli_query($con, $select_item_query);
-
-    // Initialize $fetch_item to an empty array as a default state
-    $fetch_item = array();
-
-    if (mysqli_num_rows($result_item_query) > 0) {
-        // If there are results, fetch the first row
-        $fetch_item = mysqli_fetch_assoc($result_item_query);
-    }
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,19 +8,73 @@ if (isset($_GET['item_id'])) {
     <title>Yeokart</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <link rel="stylesheet" href="../css/style_product_details.css">
+    <link rel="stylesheet" href="../css/style_homepage_customer.css">
 </head>
+<?php
+session_start();
 
+if (isset($_SESSION['id'])) {
+    $customer_id = $_SESSION['id'];
+} else {
+    header("Location: login_page.php");
+    exit();
+}
+
+if (isset($_SESSION['firstname'])) {
+    $firstname = $_SESSION['firstname'];
+} else {
+    header("Location: login_page.php");
+    exit();
+}
+
+if (isset($_SESSION['lastname'])) {
+    $lastname = $_SESSION['lastname'];
+} else {
+    header("Location: login_page.php");
+    exit();
+}
+
+if (isset($_SESSION['username'])) {
+    $username = $_SESSION['username'];
+} else {
+    header("Location: login_page.php");
+    exit();
+}
+
+if (isset($_SESSION['email'])) {
+    $email = strtolower($_SESSION['email']);
+} else {
+    header("Location: login_page.php");
+    exit();
+}
+
+include('../database/db_yeokart.php');
+
+if (isset($_GET['item_id'])) {
+    $item_id = $_GET['item_id'];
+    $select_item_query = "SELECT * FROM products WHERE item_id = $item_id";
+    $result_item_query = mysqli_query($con, $select_item_query);
+
+    $fetch_item = array();
+
+    if (mysqli_num_rows($result_item_query) > 0) {
+        $fetch_item = mysqli_fetch_assoc($result_item_query);
+    }
+}
+?>
 
 <body>
-<header class="header">
+    <header class="header">
         <div class="header-1">
             <a href="customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>
 
-
+            <form action="" class="search-form">
+                <input type="search" name="" placeholder="Search here..." id="search-box">
+                <label for="search-box" class="fas fa-search"></label>
+            </form>
             <div class="icons">
                 <div id="search-btn" class="fas fa-search"></div>
-                <a href="#">Shop</a>
+                <a href="customer_shop.php">Shop</a>
                 <a href="contact_page.php">Contact Us</a>
                 <a href="#" class="fas fa-shopping-cart"></a>
                 <a href="customer_profile.php" id="user-btn" class="fas fa-user"></a>
@@ -70,27 +105,27 @@ if (isset($_GET['item_id'])) {
         </div>
         <div class="product-details-right">
             <?php if (!empty($fetch_item)) : ?>
-                
+
                 <div class="category-name">
-                <p><?php echo $fetch_item['category_name']; ?></p>
+                    <p><?php echo $fetch_item['category_name']; ?></p>
                 </div>
 
                 <div class="item-name">
-                <h2><?php echo $fetch_item['item_name']; ?></h2>
+                    <h2><?php echo $fetch_item['item_name']; ?></h2>
                 </div>
 
                 <div class="item-price">
-                <h4>&#8369;<?php echo $fetch_item['item_price']; ?></h4>
-                </div> 
+                    <h4>&#8369;<?php echo $fetch_item['item_price']; ?></h4>
+                </div>
 
-                <div class="select-version">
+                <!--<div class="select-version">
                     <select id="version-dropdown">
                         <option value="option1">Select Version</option>
                         <option value="option1">Version A</option>
                         <option value="option2">Version B</option>
                         <option value="option3">Version C</option>
                     </select>
-                </div>
+                </div>-->
 
                 <div class="select-quantity">
                     <span>Select Quantity:</span>
@@ -100,19 +135,19 @@ if (isset($_GET['item_id'])) {
                 </div>
 
                 <div class="item-stock">
-                <p>Stock: <?php echo $fetch_item['item_quantity']; ?></p>
+                    <p>Stock: <?php echo $fetch_item['item_quantity']; ?></p>
                 </div>
 
                 <div class="add-to-cart">
-                <button type="submit" name="add-to-cart-btn">Add To Cart</button>
+                    <button type="submit" name="add-to-cart-btn">Add To Cart</button>
                 </div>
 
                 <div class="product-description">
-                <h4>Product Description</h4>
-                <p><?php echo $fetch_item['item_description']; ?><p>
+                    <h4>Product Description</h4>
+                    <p><?php echo $fetch_item['item_description']; ?>
+                    <p>
                 </div>
 
-                <!-- Add more dynamic content here -->
             <?php endif; ?>
         </div>
     </section>
@@ -123,7 +158,9 @@ if (isset($_GET['item_id'])) {
             <div class="swiper-wrapper">
                 <?php
                 include('../database/db_yeokart.php');
-                $select_query = $select_query = "SELECT * FROM products";
+                $current_item_id = $fetch_item['item_id'];
+                $current_category = $fetch_item['category_name'];
+                $select_query = "SELECT * FROM products WHERE category_name = '$current_category' AND item_id != $current_item_id";
                 $result_query = mysqli_query($con, $select_query);
                 while ($row = mysqli_fetch_assoc($result_query)) {
                     $item_id = $row['item_id'];
@@ -138,7 +175,7 @@ if (isset($_GET['item_id'])) {
                         <a href='#' class='fas fa-eye'></a>
                     </div>
                     <div class='image'>
-                    <img src='./item_images/$item_image1' alt=''>
+                    <img src='item_images/$item_image1' alt=''>
                     </div>
                     <div class='content'>
                     <h3 class='marquee'>$item_name</h3>
@@ -153,7 +190,6 @@ if (isset($_GET['item_id'])) {
             <div class="swiper-button-prev"></div>
         </div>
     </section>
-
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -178,6 +214,17 @@ if (isset($_GET['item_id'])) {
                 document.querySelector('.header .header-2').classList.add('active');
             }
         });
+
+        function increment() {
+            var input = document.getElementById('quantity');
+            input.stepUp();
+        }
+
+        function decrement() {
+            var input = document.getElementById('quantity');
+            input.stepDown();
+        }
+
         var swiper = new Swiper(".featured-slider", {
             spaceBetween: 10,
             loop: true,
@@ -209,21 +256,18 @@ if (isset($_GET['item_id'])) {
                 },
             },
         });
+        document.addEventListener('DOMContentLoaded', function() {
+            const itemNames = document.querySelectorAll('.marquee');
+
+            itemNames.forEach(itemName => {
+                if (itemName.scrollWidth > itemName.clientWidth) {
+                    itemName.classList.add('marquee');
+                } else {
+                    itemName.classList.remove('marquee');
+                }
+            });
+        });
     </script>
-
-    <!-- Script for quantity increment & decrement buttons -->
-    <script>
-        function increment() {
-            var input = document.getElementById('quantity');
-            input.stepUp();
-        }
-
-        function decrement() {
-            var input = document.getElementById('quantity');
-            input.stepDown();
-        }
-    </script>
-
 </body>
 
 </html>
