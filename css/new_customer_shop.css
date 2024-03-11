@@ -176,33 +176,208 @@ section{
     margin-top: 5rem;
 }
 
-.box{
+.box {
+    width: calc(33.33% - 4rem); /* Adjust the width as needed */
+    margin: 2rem 2rem; /* Adjust the margin as needed */
     position: relative;
+    overflow: hidden;
+    border: var(--border);
+    text-align: center;
+    display: inline-block; /* Ensure the boxes are displayed inline */
+    vertical-align: top; /* Align the boxes to the top */
+    box-sizing: border-box; /* Include padding and border in the width */
+    background-color: #fff; /* Background color */
+    border-radius: 15px; /* Border radius for rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow for depth */
+    transition: all 0.3s ease; /* Smooth transition for hover effect */
 }
 
-.box-img img{
-    width: 200px;
-    height: auto;
-    border-radius: 20px;
-    margin-bottom: 1.2rem;
-    transition: all .45s ease;
+.box:hover {
+    border: var(--border-hover); /* Change border color on hover */
+    transform: translateY(-5px); /* Move box up slightly on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
 }
 
-.box h3{
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 10px;
-    line-height: 1.1;
+.box .image {
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20rem;
 }
 
-.box h4{
-    font-size: var(--font);
-    color: var(--other-color);
-    font-weight: 500;
-    margin-bottom: 2rem;
+.box .image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.box .content {
+    padding: 1.5rem;
+}
+
+.box h3 {
+    font-size: 1.8rem;
+    color: #333; /* Text color */
+    margin-bottom: 1rem;
+}
+
+.box .price {
+    font-size: 1.6rem;
+    color: #777; /* Price color */
+    margin-bottom: 1rem;
+}
+
+.box .btn {
+    display: inline-block;
+    padding: .9rem 3rem;
+    border-radius: .5rem;
+    color: #fff;
+    background: var(--pink);
+    font-size: 1.7rem;
+    cursor: pointer;
+    text-align: center;
+    margin: 1.5rem 0;
+    text-decoration: none;
+}
+
+.box .btn:hover {
+    background-color: var(--dark-color); /* Hover background color */
 }
 
 
+.best .best-slider .box,
+.featured .featured-slider .box {
+    width: calc(33.33% - 5rem); /* Adjust the width as needed */
+    margin: 2rem 2rem; /* Adjust the margin as needed */
+    position: relative;
+    overflow: hidden;
+    border: var(--border);
+    text-align: center;
+    display: inline-block; /* Ensure the boxes are displayed inline */
+    vertical-align: top; /* Align the boxes to the top */
+    box-sizing: border-box; /* Include padding and border in the width */
+}
+
+.best .best-slider .box:hover,
+.featured .featured-slider .box:hover {
+    border: var(--border-hover);
+}
+
+.best .best-slider .box .image,
+.featured .featured-slider .box .image {
+    padding: 1rem;
+    background: linear-gradient(15deg, #eee 30%, #fff 30.1%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20rem;
+}
+
+.best .best-slider .box:hover .image,
+.featured .featured-slider .box:hover .image {
+    transform: translateY(6rem);
+}
+
+.best .best-slider .box .image img,
+.featured .featured-slider .box .image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.best .best-slider .box .icons,
+.featured .featured-slider .box .icons {
+    border-bottom: var(--border-hover);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    z-index: 1;
+    transform: translateY(-100%);
+}
+
+.best .best-slider .box:hover .icons,
+.featured .featured-slider .box:hover .icons {
+    transform: translateY(0%);
+}
+
+.best .best-slider .box .icons button,
+.featured .featured-slider .box .icons button {
+    color: var(--black);
+    font-size: 2.2rem;
+    padding: 1.3rem 1.5rem;
+    text-decoration: none;
+}
+
+.best .best-slider .box .icons button:hover,
+.featured .featured-slider .box .icons button:hover {
+    background: var(--pink);
+    color: #fff;
+}
+
+.best .best-slider .box .content,
+.featured .featured-slider .box .content {
+    background: #eee;
+    padding: 1.5rem;
+    overflow: hidden;
+}
+
+.best .best-slider .box .content h3,
+.featured .featured-slider .box .content h3 {
+    font-size: 2rem;
+    color: var(--black);
+    white-space: nowrap;
+}
+
+.best .best-slider .box .content .price,
+.featured .featured-slider .box .content .price {
+    font-size: 2.2rem;
+    color: var(--black);
+    padding-top: 1rem;
+    max-width: 100%;
+}
+
+.best .best-slider .btn,
+.featured .featured-slider .btn {
+    margin-top: 1rem;
+    display: inline-block;
+    padding: .9rem 3rem;
+    border-radius: .5rem;
+    color: #fff;
+    background: var(--pink);
+    font-size: 1.7rem;
+    cursor: pointer;
+    text-align: center;
+    margin: 1.5rem 0;
+    text-decoration: none;
+}
+
+.best .best-slider .btn:hover,
+.featured .featured-slider .btn:hover {
+    background: var(--dark-color);
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+    border: var(--border-hover);
+    height: 4rem;
+    width: 4rem;
+    color: var(--black);
+    background: #fff;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+    font-size: 2rem;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+    background: var(--black);
+    color: #fff;
+}
 
 @media (max-width:1024px){
     html{

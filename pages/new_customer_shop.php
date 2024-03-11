@@ -41,7 +41,7 @@ if (isset($_POST['view_item_button'])) {
             </form>
             <div class="icons">
                 <div id="search-btn" class="fas fa-search"></div>
-                <a href="customer_shop.php">Shop</a>
+                <a href="new_customer_shop.php">Shop</a>
                 <a href="contact_page.php">Contact Us</a>
                 <a href="#" class="fas fa-shopping-cart"></a>
                 <a href="customer_profile.php" id="user-btn" class="fas fa-user"></a>
@@ -61,46 +61,45 @@ if (isset($_POST['view_item_button'])) {
         <a href="#featured" class="fas fa-list"></a>
     </nav>
 
-    <div class="middle-text">
-            <h2>Item Catalog</h2>
-        </div>
-
-    <section class="products">
-        <div class="product-content">
-            <?php
-            $select_items = mysqli_query($con, "SELECT * FROM products");
-            if (mysqli_num_rows($select_items) > 0) {
-                while ($fetch_item = mysqli_fetch_assoc($select_items)) {
-            ?>
-                    <div class="box">
-                        <div class="box-img">
-                            <img src="item_images/<?php echo $fetch_item['item_image1']; ?>" alt="<?php echo $fetch_item['item_name']; ?>">
+    <section class="best" id="best">
+        <h1 class="heading"><span>Item Catalog</span></h1>
+        <div class="swiper best-slider">
+            <div class="swiper-wrapper">
+                <?php
+                include('../database/db_yeokart.php');
+                $select_query = $select_query = "SELECT * FROM products";
+                $result_query = mysqli_query($con, $select_query);
+                while ($row = mysqli_fetch_assoc($result_query)) {
+                    $item_id = $row['item_id'];
+                    $item_name = $row['item_name'];
+                    $item_price = $row['item_price'];
+                    $item_description = $row['item_description'];
+                    $item_quantity = $row['item_quantity'];
+                    $category_name = $row['category_name'];
+                    $item_image1 = $row['item_image1'];
+                    $artist_name = $row['artist_name'];
+                ?>
+                    <div class='swiper-slide box'>
+                        <div class='icons'>
+                            <form method='post'>
+                                <input type='hidden' name='item_id' value='<?php echo $item_id; ?>'>
+                                <button type='submit' name='view_item_button' class='fas fa-eye'></button>
+                            </form>
                         </div>
-                        <h3><?php echo $fetch_item['item_name']; ?></h3>
-                        <h4><?php echo $fetch_item['category_name']; ?></h4>
-                        <div class="inbox">
-                            <div>
-                            <h4>&#8369; <?php echo $fetch_item['item_price']; ?><h4>
-                            </div>
-                            <div class="view-item-btn">
-                                <form action="" method="POST">
-                                    <input type="hidden" name="item_id" value="<?php echo $fetch_item['item_id']; ?>">
-                                    <button type="submit" name="view_item_button">View Item</button>
-                                </form>
-                            </div>
+                        <div class='image'>
+                            <img src='item_images/<?php echo $item_image1; ?>' alt=''>
+                        </div>
+                        <div class='content'>
+                            <h3 class='artist'><?php echo $artist_name; ?></h3>
+                            <h3 class='marquee'><?php echo $item_name; ?></h3>
+                            <div class='price'>₱ <?php echo $item_price; ?></div>
+                            <a href='product_details.php?item_id=<?php echo $item_id; ?>' class='btn'>View Item</a>
                         </div>
                     </div>
-            <?php
-                }
-            } else {
-                echo "<p class='no-products'>No products</p>";
-            }
-            ?>
+                <?php } ?>
+            </div>
         </div>
     </section>
-
-
-
 
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

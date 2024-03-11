@@ -123,6 +123,7 @@ if (isset($_POST['view_item_button'])) {
                     $item_quantity = $row['item_quantity'];
                     $category_name = $row['category_name'];
                     $item_image1 = $row['item_image1'];
+                    $artist_name = $row['artist_name'];
                     echo "<div class='swiper-slide box'>
                     <div class='icons'>
                         <form method='post'>
@@ -134,6 +135,7 @@ if (isset($_POST['view_item_button'])) {
                     <img src='item_images/$item_image1' alt=''>
                     </div>
                     <div class='content'>
+                    <h3 class='artist'>$artist_name</h3>
                     <h3 class='marquee'>$item_name</h3>
                     <div class='price'>₱$item_price</div>
                     <a href='#' class='btn'>Add to Cart</a>
