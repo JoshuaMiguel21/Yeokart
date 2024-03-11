@@ -31,6 +31,24 @@
         document.getElementById('searchInput').value = '';
         document.getElementById('searchForm').submit();
     }
+
+    function openAddCategoryPopup() {
+        document.getElementById('addCategoryPopup').style.display = 'flex';
+    }
+
+    function closeAddCategoryPopup() {
+        document.getElementById('addCategoryPopup').style.display = 'none';
+    }
+
+    function openEditCategoryPopup(category_id, category_name) {
+        document.getElementById('edit_category_id').value = category_id;
+        document.getElementById('edit_category_name').value = category_name;
+        document.getElementById('editCategoryPopup').style.display = 'flex';
+    }
+
+    function closeEditCategoryPopup() {
+        document.getElementById('editCategoryPopup').style.display = 'none';
+    }
 </script>
 <?php
 session_start();
@@ -131,7 +149,7 @@ if (isset($_SESSION['lastname'])) {
                     <i class="las la-list"></i>
                     <span class="text">View Categories Table</span>
                 </a>
-                <a href="owner_category.php" class="btn-employee">
+                <a href="#" onclick="openAddCategoryPopup()" class="btn-employee">
                     <i class="las la-plus"></i>
                     <span class="text">Add Category</span>
                 </a>
@@ -174,7 +192,7 @@ if (isset($_SESSION['lastname'])) {
                             echo "<td>" . $row['category_name'] . "</td>";
                             echo "<td>";
                             echo "<div class='button-class'>";
-                            echo "<a href='edit_category.php?category_id=$category_id' class='edit-button'>Edit</a> ";
+                            echo '<a href="#" onclick="openEditCategoryPopup(' . $category_id . ', \'' . $category_name . '\')" class="edit-button">Edit</a>';
                             echo "</td>";
                             echo "</tr>";
                         }
@@ -193,6 +211,99 @@ if (isset($_SESSION['lastname'])) {
                     </div>
                 </div>
             </div>
+
+            <div id="addCategoryPopup" class="popup-container" style="display: none;">
+                <div class="popup-content">
+                    <span class="close-btn" onclick="closeAddCategoryPopup()">&times;</span>
+                    <h2>Add New Category</h2>
+                    <form class="add-artist-form" method="post" enctype="multipart/form-data">
+                        <label for="category_name">Category Name:</label>
+                        <input type="text" id="category_name" name="category_name" class="form-control" placeholder="Enter category name" required>
+                        <button type="submit" name="insert_category">Add Category</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="editCategoryPopup" class="popup-container" style="display: none;">
+                <div class="popup-content">
+                    <span class="close-btn" onclick="closeEditCategoryPopup()">&times;</span>
+                    <h2>Edit Category</h2>
+                    <form class="add-artist-form" method="post" enctype="multipart/form-data">
+                        <input type="hidden" id="edit_category_id" name="category_id" value="">
+                        <label for="edit_category_name">Category Name:</label>
+                        <input type="text" id="edit_category_name" name="category_name" class="form-control" placeholder="Enter category name" required>
+                        <input type="hidden" id="previous_page" name="previous_page">
+                        <button type="submit" name="update_category">Update Category</button>
+                    </form>
+                </div>
+            </div>
+
+            <?php
+            include('../database/db_yeokart.php');
+
+            if (isset($_POST['insert_category'])) {
+                $category_name = $_POST['category_name'];
+
+                $select_query = "SELECT * FROM categories WHERE category_name='$category_name'";
+                $result_select = mysqli_query($con, $select_query);
+                $number = mysqli_num_rows($result_select);
+
+                if ($number > 0) {
+                    echo "<script>alert('This category already exists')</script>";
+                } else {
+                    if ($category_name == '') {
+                        echo "<script>alert('Please fill up the field')</script>";
+                        exit();
+                    } else {
+
+                        $insert_category = "INSERT INTO categories (category_name) VALUES ('$category_name')";
+                        $result_query_category = mysqli_query($con, $insert_category);
+                        if ($result_query_category) {
+                            echo "<script>alert('Category successfully added')</script>";
+                            echo "<script>window.location.href = './owner_category_table.php';</script>";
+                        }
+                    }
+                }
+            }
+
+            
+            if (isset($_POST['update_category'])) {
+                $category_id = $_POST['category_id'];
+                $category_name = $_POST['category_name'];
+
+                $get_old_category_query = "SELECT category_name FROM categories WHERE category_id='$category_id'";
+                $result_old_category = mysqli_query($con, $get_old_category_query);
+                $row_old_category = mysqli_fetch_assoc($result_old_category);
+                $old_category_name = $row_old_category['category_name'];
+
+                $select_query = "SELECT * FROM categories WHERE category_name='$category_name' AND category_id <> '$category_id'";
+                $result_select = mysqli_query($con, $select_query);
+                $number = mysqli_num_rows($result_select);
+
+                if ($number > 0) {
+                    echo "<script>alert('This category already exists')</script>";
+                } else {
+                    if ($category_name == '') {
+                        echo "<script>alert('Please fill up the field')</script>";
+                        exit();
+                    } else {
+                        $update_category = "UPDATE categories SET category_name='$category_name' WHERE category_id='$category_id'";
+                        $result_query_category = mysqli_query($con, $update_category);
+
+                        $update_products_category = "UPDATE products SET category_name='$category_name' WHERE category_name='$old_category_name'";
+                        $result_query_products_category = mysqli_query($con, $update_products_category);
+
+                        if ($result_query_category && $result_query_products_category) {
+                            echo "<script>alert('Category successfully updated')</script>";
+                            echo "<script>window.location.href = 'owner_category_table.php';</script>";
+                        }
+                    }
+                }
+            }
+            ?>
+
+
+
 </body>
 
 </html>

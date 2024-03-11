@@ -30,6 +30,24 @@
         document.getElementById('searchInput').value = '';
         document.getElementById('searchForm').submit();
     }
+
+    function openAddArtistPopup() {
+        document.getElementById('addArtistPopup').style.display = 'flex';
+    }
+
+    function closeAddArtistPopup() {
+        document.getElementById('addArtistPopup').style.display = 'none';
+    }
+
+    function openEditArtistPopup(artist_id, artist_name) {
+        document.getElementById('edit_artist_id').value = artist_id;
+        document.getElementById('edit_artist_name').value = artist_name;
+        document.getElementById('editArtistPopup').style.display = 'flex';
+    }
+
+    function closeEditArtistPopup() {
+        document.getElementById('editArtistPopup').style.display = 'none';
+    }
 </script>
 <?php
 session_start();
@@ -139,7 +157,7 @@ if (isset($_SESSION['lastname'])) {
                     <i class="las la-list"></i>
                     <span class="text">View Categories Table</span>
                 </a>
-                <a href="owner_artist.php" class="btn-employee">
+                <a href="#" onclick="openAddArtistPopup()" class="btn-employee">
                     <i class="las la-plus"></i>
                     <span class="text">Add Artist</span>
                 </a>
@@ -182,7 +200,7 @@ if (isset($_SESSION['lastname'])) {
                             echo "<td>" . $row['artist_name'] . "</td>";
                             echo "<td>";
                             echo "<div class='button-class'>";
-                            echo "<a href='edit_artist.php?artist_id=$artist_id' class='edit-button'>Edit</a> ";
+                            echo '<a href="#" onclick="openEditArtistPopup(' . $artist_id . ', \'' . $artist_name . '\')" class="edit-button">Edit</a>';
                             echo "</td>";
                             echo "</tr>";
                         }
@@ -201,6 +219,97 @@ if (isset($_SESSION['lastname'])) {
                     </div>
                 </div>
             </div>
+
+            <div id="addArtistPopup" class="popup-container" style="display: none;">
+                <div class="popup-content">
+                    <span class="close-btn" onclick="closeAddArtistPopup()">&times;</span>
+                    <h2>Add New Artist</h2>
+                    <form class="add-artist-form" method="post" enctype="multipart/form-data">
+                        <label for="artist_name">Artist Name:</label>
+                        <input type="text" id="artist_name" name="artist_name" class="form-control" placeholder="Enter artist name" required>
+                        <button type="submit" name="insert_artist">Add Artist</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="editArtistPopup" class="popup-container" style="display: none;">
+                <div class="popup-content">
+                    <span class="close-btn" onclick="closeEditArtistPopup()">&times;</span>
+                    <h2>Edit Artist</h2>
+                    <form class="add-artist-form" method="post" enctype="multipart/form-data">
+                        <input type="hidden" id="edit_artist_id" name="artist_id" value="">
+                        <label for="edit_artist_name">Artist Name:</label>
+                        <input type="text" id="edit_artist_name" name="artist_name" class="form-control" placeholder="Enter artist name" required>
+                        <input type="hidden" id="previous_page" name="previous_page">
+                        <button type="submit" name="update_artist">Update Artist</button>
+                    </form>
+                </div>
+            </div>
+
+            <?php
+            include('../database/db_yeokart.php');
+
+            if (isset($_POST['insert_artist'])) {
+                $artist_name = $_POST['artist_name'];
+
+                $select_query = "SELECT * FROM artists WHERE artist_name='$artist_name'";
+                $result_select = mysqli_query($con, $select_query);
+                $number = mysqli_num_rows($result_select);
+                if ($number > 0) {
+                    echo "<script>alert('This artist already exists')</script>";
+                } else {
+                    if ($artist_name == '') {
+                        echo "<script>alert('Please fill up the field')</script>";
+                        exit();
+                    } else {
+
+                        $insert_artist = "INSERT INTO artists (artist_name) VALUES ('$artist_name')";
+                        $result_query_artist = mysqli_query($con, $insert_artist);
+                        if ($result_query_artist) {
+                            echo "<script>alert('Artist successfully added')</script>";
+                            echo "<script>window.location.href = 'owner_artist_table.php';</script>";
+                        }
+                    }
+                }
+            }
+
+            if (isset($_POST['update_artist'])) {
+                $artist_id = $_POST['artist_id'];
+                $artist_name = $_POST['artist_name'];
+            
+                $get_old_artist_query = "SELECT artist_name FROM artists WHERE artist_id='$artist_id'";
+                $result_old_artist = mysqli_query($con, $get_old_artist_query);
+                $row_old_artist = mysqli_fetch_assoc($result_old_artist);
+                $old_artist_name = $row_old_artist['artist_name'];
+            
+                $select_query = "SELECT * FROM artists WHERE artist_name='$artist_name' AND artist_id <> '$artist_id'";
+                $result_select = mysqli_query($con, $select_query);
+                $number = mysqli_num_rows($result_select);
+            
+                if ($number > 0) {
+                    echo "<script>alert('This artist already exists')</script>";
+                } else {
+                    if ($artist_name == '') {
+                        echo "<script>alert('Please fill up the field')</script>";
+                        exit();
+                    } else {
+                        $update_artist = "UPDATE artists SET artist_name='$artist_name' WHERE artist_id='$artist_id'";
+                        $result_query_artist = mysqli_query($con, $update_artist);
+            
+                        $update_products_artist = "UPDATE products SET artist_name='$artist_name' WHERE artist_name='$old_artist_name'";
+                        $result_query_products_artist = mysqli_query($con, $update_products_artist);
+            
+                        if ($result_query_artist && $result_query_products_artist) {
+                            echo "<script>alert('Artist successfully updated')</script>";
+                            echo "<script>window.location.href = 'owner_artist_table.php';</script>";
+                        }
+                    }
+                }
+            }
+            ?>
+
+
+
             <!-- <div class="form-outline mb-4 mt-5">
         <a href="./owner_dashboard.php" class="btn btn-danger mb-3 px-3 mx-auto">
             Back
