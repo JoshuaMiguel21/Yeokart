@@ -30,8 +30,8 @@
             </div>
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <label for="item_description" class="form-label">Description:</label>
-                <span id="itemDescriptionCounter"><?php echo isset($row['item_description']) ? strlen($row['item_description']) : 0; ?>/500</span>
-                <textarea name="item_description" id="item_description" class="form-control" placeholder="Enter item description" required maxlength="500" required></textarea>
+                <span id="itemDescriptionCounter"><?php echo isset($row['item_description']) ? strlen($row['item_description']) : 0; ?>/300</span>
+                <textarea name="item_description" id="item_description" class="form-control" placeholder="Enter item description" required maxlength="300" required></textarea>
             </div>
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <label for="item_quantity" class="form-label">Quantity:</label>
@@ -102,7 +102,7 @@
 
         function updateCounter() {
             itemNameCounter.textContent = `${itemNameInput.value.length}/100`;
-            itemDescriptionCounter.textContent = `${itemDescriptionInput.value.length}/500`;
+            itemDescriptionCounter.textContent = `${itemDescriptionInput.value.length}/400`;
         }
         const textarea = document.getElementById('item_description');
 
@@ -152,7 +152,14 @@ if (isset($_POST['insert_item'])) {
             $result_query_item = mysqli_query($con, $insert_items);
             if ($result_query_item) {
                 echo "<script>alert('Item successfully added')</script>";
-                echo "<script>window.location.href = 'owner_item_homepage.php';</script>";
+
+                // Calculate the total number of pages based on the number of items
+                $total_items = mysqli_num_rows(mysqli_query($con, "SELECT * FROM products"));
+                $items_per_page = 10;
+                $total_pages = ceil($total_items / $items_per_page);
+
+                // Redirect to the last page
+                echo "<script>window.location.href = 'owner_item_homepage.php?page=$total_pages#item-$item_name';</script>";
             }
         }
     }

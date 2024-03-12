@@ -138,7 +138,7 @@ if (isset($_SESSION['lastname'])) {
             </div>
             <div class="head-search">
                 <form method="POST" id="searchForm">
-                    <input type="text" name="search" placeholder="Search categories..." id="searchInput">
+                    <input type="text" name="search" placeholder="Search categories..." id="searchInput" value="<?php echo isset($_POST['search']) ? $_POST['search'] : ''; ?>">
                     <button type="submit" name="search_button">Search</button>
                     <button type="button" name="clear_button" onclick="clearSearch()">Clear</button>
                 </form>

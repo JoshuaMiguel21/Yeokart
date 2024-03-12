@@ -113,15 +113,6 @@
             </div>
         </header>
 
-        <!-- <div class="container mt-3">
-        <h1 class="text-center mb-4">Item Catalog</h1>
-    </div>
-     <div class="form-outline mb-4 mt-5">
-        <a href="./owner_item.php" class="btn btn-info mb-3 px-3 mx-auto">
-            Add a new Item
-        </a>
-    </div> -->
-
         <main>
             <div class="head-title">
                 <div class="left">
@@ -158,13 +149,27 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Item Name</th>
-                            <th>Price</th>
-                            <th>Description</th>
-                            <th>Quantity</th>
-                            <th>Artist</th>
-                            <th>Category</th>
-                            <th>Images</th>
+                            <th>
+                                <center>Item Name</center>
+                            </th>
+                            <th>
+                                <center>Price</center>
+                            </th>
+                            <th>
+                                <center>Description</center>
+                            </th>
+                            <th>
+                                <center>Quantity</center>
+                            </th>
+                            <th>
+                                <center>Artist</center>
+                            </th>
+                            <th>
+                                <center>Category</center>
+                            </th>
+                            <th>
+                                <center>Images</center>
+                            </th>
                             <th>
                                 <center>Action</center>
                             </th>
@@ -180,17 +185,30 @@
                             $result_query = mysqli_query($con, $delete_query);
                             if ($result_query) {
                                 echo "<script>alert('Item deleted successfully')</script>";
-                                echo "<script>window.location.href = 'owner_item_homepage.php';</script>";
+
+                                // Calculate the total number of items
+                                $total_items = mysqli_num_rows(mysqli_query($con, "SELECT * FROM products"));
+
+                                // Calculate the total number of pages based on items per page
+                                $items_per_page = 10;
+                                $total_pages = ceil($total_items / $items_per_page);
+
+                                // Redirect to the last page
+                                echo "<script>window.location.href = 'owner_item_homepage.php?page=$total_pages';</script>";
                             } else {
                                 echo "<script>alert('Failed to delete item')</script>";
-                                echo "<script>window.location.href = 'owner_item_homepage.php';</script>";
+                                echo "<script>window.location.href = 'owner_item_homepage.php?page=$total_pages';</script>";
                             }
                         }
+                        $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                        $limit = 10;
+                        $offset = ($page - 1) * $limit;
+
                         if (isset($_POST['search_button'])) {
                             $search = $_POST['search'];
-                            $select_query = "SELECT * FROM products WHERE item_name LIKE '%$search%'";
+                            $select_query = "SELECT * FROM products WHERE item_name LIKE '%$search%' LIMIT $limit OFFSET $offset";
                         } else {
-                            $select_query = "SELECT * FROM products";
+                            $select_query = "SELECT * FROM products LIMIT $limit OFFSET $offset";
                         }
                         $result_query = mysqli_query($con, $select_query);
                         while ($row = mysqli_fetch_assoc($result_query)) {
@@ -207,7 +225,7 @@
                             echo "<tr>";
                             echo "<td>" . $row['item_name'] . "</td>";
                             echo "<td> ₱" . $row['item_price'] . "</td>";
-                            echo "<td style='max-width: 350px;'>" . $row['item_description'] . "</td>";
+                            echo "<td style='max-width: 2000px;'>" . $row['item_description'] . "</td>";
                             echo "<td>" . $row['item_quantity'] . "</td>";
                             echo "<td>" . $row['artist_name'] . "</td>";
                             echo "<td>" . $row['category_name'] . "</td>";
@@ -231,6 +249,20 @@
                     </tbody>
                 </table>
             </div>
+
+            <?php
+            // Next page button
+            $next_page_query = "SELECT * FROM products LIMIT $limit OFFSET " . ($page * $limit);
+            $next_page_result = mysqli_query($con, $next_page_query);
+
+            if ($page > 1) {
+                echo "<a href='owner_item_homepage.php?page=" . ($page - 1) . "' class='previous-page-button'>Previous Page</a>";
+            }
+
+            if (mysqli_num_rows($next_page_result) > 0) {
+                echo "<a href='owner_item_homepage.php?page=" . ($page + 1) . "' class='next-page-button'>Next Page</a>";
+            }
+            ?>
 
             <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
                 <div class="popup-content">
