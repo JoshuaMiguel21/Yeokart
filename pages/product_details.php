@@ -129,7 +129,7 @@ if (isset($_POST['view_item_button'])) {
                 </div>
 
                 <div class="item-price">
-                    <h4>&#8369;<?php echo $fetch_item['item_price']; ?></h4>
+                    <h4>&#8369; <?php echo $fetch_item['item_price']; ?></h4>
                 </div>
 
                 <!--<div class="select-version">
