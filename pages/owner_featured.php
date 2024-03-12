@@ -120,13 +120,27 @@ if (isset($_SESSION['lastname'])) {
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Item Name</th>
-                            <th>Price</th>
-                            <th>Description</th>
-                            <th>Quantity</th>
-                            <th>Artist</th>
-                            <th>Category</th>
-                            <th>Images</th>
+                            <th>
+                                <center>Item Name</center>
+                            </th>
+                            <th>
+                                <center>Price</center>
+                            </th>
+                            <th>
+                                <center>Description</center>
+                            </th>
+                            <th>
+                                <center>Quantity</center>
+                            </th>
+                            <th>
+                                <center>Artist</center>
+                            </th>
+                            <th>
+                                <center>Category</center>
+                            </th>
+                            <th>
+                                <center>Images</center>
+                            </th>
                             <th>
                                 <center>Action</center>
                             </th>
@@ -152,11 +166,11 @@ if (isset($_SESSION['lastname'])) {
                             if ($is_featured == 1) {
                                 $update_query = "UPDATE products SET is_featured = 0 WHERE item_id = $item_id";
                             } else {
-                                if ($featured_count < 3) { // Change 3 to 5 for 5 featured items
+                                if ($featured_count < 10) { // Change 3 to 5 for 5 featured items
                                     $update_query = "UPDATE products SET is_featured = 1 WHERE item_id = $item_id";
                                 } else {
                                     // Display a message or handle the limit reached case
-                                    echo "You can only have 3 featured items at a time."; // Change 3 to 5 for 5 featured items
+                                    echo "You can only have 10 featured items at a time."; // Change 3 to 5 for 5 featured items
                                 }
                             }
 
@@ -184,7 +198,7 @@ if (isset($_SESSION['lastname'])) {
                             echo "<tr>";
                             echo "<td>" . $row['item_name'] . "</td>";
                             echo "<td> ₱" . $row['item_price'] . "</td>";
-                            echo "<td style='max-width: 350px;'>" . $row['item_description'] . "</td>";
+                            echo "<td style='max-width: 2000px;'>" . $row['item_description'] . "</td>";
                             echo "<td>" . $row['item_quantity'] . "</td>";
                             echo "<td>" . $row['artist_name'] . "</td>";
                             echo "<td>" . $row['category_name'] . "</td>";

@@ -116,7 +116,7 @@ if (isset($_SESSION['lastname'])) {
             </div>
             <div class="head-buttons">
                 <a href="owner_featured.php" class="btn-employee">
-                    <i class="las la-user-plus"></i>
+                    <i class="las la-edit"></i>
                     <span class="text">Edit Featured Section</span>
                 </a>
                 <a href="add_contacts.php" class="btn-employee">

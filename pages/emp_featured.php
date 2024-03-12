@@ -106,13 +106,27 @@ if (isset($_SESSION['firstname'])) {
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Item Name</th>
-                            <th>Price</th>
-                            <th>Description</th>
-                            <th>Quantity</th>
-                            <th>Artist</th>
-                            <th>Category</th>
-                            <th>Images</th>
+                            <th>
+                                <center>Item Name</center>
+                            </th>
+                            <th>
+                                <center>Price</center>
+                            </th>
+                            <th>
+                                <center>Description</center>
+                            </th>
+                            <th>
+                                <center>Quantity</center>
+                            </th>
+                            <th>
+                                <center>Artist</center>
+                            </th>
+                            <th>
+                                <center>Category</center>
+                            </th>
+                            <th>
+                                <center>Images</center>
+                            </th>
                             <th>
                                 <center>Action</center>
                             </th>
@@ -170,7 +184,7 @@ if (isset($_SESSION['firstname'])) {
                             echo "<tr>";
                             echo "<td>" . $row['item_name'] . "</td>";
                             echo "<td> ₱" . $row['item_price'] . "</td>";
-                            echo "<td style='max-width: 350px;'>" . $row['item_description'] . "</td>";
+                            echo "<td style='max-width: 2000px;'>" . $row['item_description'] . "</td>";
                             echo "<td>" . $row['item_quantity'] . "</td>";
                             echo "<td>" . $row['artist_name'] . "</td>";
                             echo "<td>" . $row['category_name'] . "</td>";
