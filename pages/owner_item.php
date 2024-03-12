@@ -102,7 +102,7 @@
 
         function updateCounter() {
             itemNameCounter.textContent = `${itemNameInput.value.length}/100`;
-            itemDescriptionCounter.textContent = `${itemDescriptionInput.value.length}/400`;
+            itemDescriptionCounter.textContent = `${itemDescriptionInput.value.length}/300`;
         }
         const textarea = document.getElementById('item_description');
 

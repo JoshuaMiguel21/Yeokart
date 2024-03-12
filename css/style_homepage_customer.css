@@ -236,6 +236,12 @@ section{
     box-shadow: 0 0 0 2px #fff inset;
 }
 
+.wrapper {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 20px;
+}
+
 .featured .featured-slider .box,
 .best .best-slider .box{
     width: 25rem;
@@ -375,7 +381,12 @@ section{
 
 .product-details-left .main-image {
     max-width: 100%;
-    height: auto;
+    height: 40rem;
+}
+.product-details-left .main-image img{
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
 }
 
 .product-details-right {
@@ -996,7 +1007,18 @@ label {
     text-transform: none;
   }
 
-
+  @media (max-width:1440px){
+    html{
+        font-size: 60%;
+    }
+    .header .header-1{
+        padding: 2rem;
+    }
+    .wrapper {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+}
 @media (max-width:1024px){
     html{
         font-size: 60%;
@@ -1004,6 +1026,10 @@ label {
     .header .header-1{
         padding: 2rem;
     }
+    .wrapper {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
 }
 @media (max-width:991px){
     html{
@@ -1011,6 +1037,9 @@ label {
     }
     .header .header-1{
         padding: 2rem;
+    }
+    .wrapper {
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 @media (max-width:768px){
@@ -1023,7 +1052,9 @@ label {
     .header .header-2{
         display: none;
     }
-
+    .wrapper {
+        grid-template-columns: repeat(2, 1fr);
+    }
     .bottom-navbar{
         display: block;
     }
@@ -1052,9 +1083,15 @@ label {
     html{
         font-size: 43%;
     }
+    .wrapper {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 @media (max-width:375px){
     html{
         font-size: 30%;
+    }
+    .wrapper {
+        grid-template-columns: repeat(2, 1fr);
     }
 }

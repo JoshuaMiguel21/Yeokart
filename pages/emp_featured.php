@@ -138,11 +138,11 @@ if (isset($_SESSION['firstname'])) {
                             if ($is_featured == 1) {
                                 $update_query = "UPDATE products SET is_featured = 0 WHERE item_id = $item_id";
                             } else {
-                                if ($featured_count < 3) { // Change 3 to 5 for 5 featured items
+                                if ($featured_count < 10) { // Change 3 to 5 for 5 featured items
                                     $update_query = "UPDATE products SET is_featured = 1 WHERE item_id = $item_id";
                                 } else {
                                     // Display a message or handle the limit reached case
-                                    echo "You can only have 3 featured items at a time."; // Change 3 to 5 for 5 featured items
+                                    echo "You can only have 10 featured items at a time."; // Change 3 to 5 for 5 featured items
                                 }
                             }
 
