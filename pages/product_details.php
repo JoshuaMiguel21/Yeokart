@@ -88,7 +88,7 @@ if (isset($_POST['view_item_button'])) {
             </form>
             <div class="icons">
                 <div id="search-btn" class="fas fa-search"></div>
-                <a href="customer_shop.php">Shop</a>
+                <a href="new_customer_shop.php">Shop</a>
                 <a href="contact_page.php">Contact Us</a>
                 <a href="#" class="fas fa-shopping-cart"></a>
                 <a href="customer_profile.php" id="user-btn" class="fas fa-user"></a>
@@ -113,7 +113,7 @@ if (isset($_POST['view_item_button'])) {
             <div class="main-image">
                 <!-- Check if $fetch_item is not empty before accessing its elements -->
                 <?php if (!empty($fetch_item)) : ?>
-                    <img src="item_images/<?php echo $fetch_item['item_image1']; ?>" alt="Product Image" width="100%">
+                    <img src="item_images/<?php echo $fetch_item['item_image1']; ?>" alt="Product Image" width="100%" height="100%">
                 <?php endif; ?>
             </div>
         </div>
@@ -184,6 +184,7 @@ if (isset($_POST['view_item_button'])) {
                     $item_quantity = $row['item_quantity'];
                     $category_name = $row['category_name'];
                     $item_image1 = $row['item_image1'];
+                    $artist_name = $row['artist_name'];
                     echo "<div class='swiper-slide box'>
                     <div class='icons'>
                         <form method='post'>
@@ -195,6 +196,7 @@ if (isset($_POST['view_item_button'])) {
                     <img src='item_images/$item_image1' alt=''>
                     </div>
                     <div class='content'>
+                    <h3 class='artist'>$artist_name</h3>
                     <h3 class='marquee'>$item_name</h3>
                     <div class='price'>₱$item_price</div>
                     <a href='#' class='btn'>Add to Cart</a>
