@@ -198,39 +198,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <div class="address-list">
         <?php
-            require('../database/db_yeokart.php');
+        require('../database/db_yeokart.php');
 
-            $sql = "SELECT * FROM addresses WHERE customer_id = ?";
-            $stmt = $con->prepare($sql);
-            $stmt->bind_param("i", $_SESSION['id']);
-            $stmt->execute();
-            $result = $stmt->get_result();
+        $sql = "SELECT * FROM addresses WHERE customer_id = ? ORDER BY is_default DESC";
+        $stmt = $con->prepare($sql);
+        $stmt->bind_param("i", $_SESSION['id']);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                if ($row['is_default'] == 1) {
+                    echo "<div class='address-item default-address'>";
+                    echo "<h3>(Default)</h3>";
+                } else {
                     echo "<div class='address-item'>";
-                    if ($row['is_default'] == 1) {
-                        echo "<h3>(Default)</h3>"; 
-                    }
-                    echo "<p><strong>Address:</strong> " . htmlspecialchars($row['address']) . "</p>";
-                    echo "<p><strong>Street:</strong> " . htmlspecialchars($row['street']) . "</p>";
-                    echo "<p><strong>City:</strong> " . htmlspecialchars($row['city']) . "</p>";
-                    echo "<p><strong>Province:</strong> " . htmlspecialchars($row['province']) . "</p>";
-                    echo "<p><strong>Zip Code:</strong> " . htmlspecialchars($row['zipCode']) . "</p>";
-                    echo "<p><strong>Phone Number:</strong> " . htmlspecialchars($row['phoneNumber']) . "</p>";
-                    echo "<div class='buttons-container'>";
-                    echo "<button class='edit-btn' onclick='openEditPopup(" . $row['address_id'] . ")'>Edit</button>";
-                    echo "<button class='delete-btn' onclick='openDeletePopup(" . $row['address_id'] . ")'>Delete</button>";
-                    echo "</div>";
-                    echo "</div>";
                 }
-            } else {
-                echo "<p id='info1'>No addresses found.</p>";
-            }
 
-            $stmt->close();
-            $con->close();
-            ?>
+                echo "<p><strong>Address:</strong> " . htmlspecialchars($row['address']) . "</p>";
+                echo "<p><strong>Street:</strong> " . htmlspecialchars($row['street']) . "</p>";
+                echo "<p><strong>City:</strong> " . htmlspecialchars($row['city']) . "</p>";
+                echo "<p><strong>Province:</strong> " . htmlspecialchars($row['province']) . "</p>";
+                echo "<p><strong>Zip Code:</strong> " . htmlspecialchars($row['zipCode']) . "</p>";
+                echo "<p><strong>Phone Number:</strong> " . htmlspecialchars($row['phoneNumber']) . "</p>";
+                echo "<div class='buttons-container'>";
+                echo "<button class='edit-btn' onclick='openEditPopup(" . $row['address_id'] . ")'>Edit</button>";
+                echo "<button class='delete-btn' onclick='openDeletePopup(" . $row['address_id'] . ")'>Delete</button>";
+                echo "</div>";
+                echo "</div>";
+            }
+        } else {
+            echo "<p id='info1'>No addresses found.</p>";
+        }
+
+        $stmt->close();
+        $con->close();
+        ?>
+
             
         </div>
     </div>
