@@ -11,7 +11,16 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     <title>Yeokart - Login Page</title>
 </head>
-
+<script>
+function myFunction() {
+  var x = document.getElementById("password");
+  if (x.type === "password") {
+    x.type = "text";
+  } else {
+    x.type = "password";
+  }
+}
+</script>
 <body style="background-color: #E6A4B4;">
     <div class="container">
         <div class="col-sm-12 col-md-6 col-lg-6" id="div2">
@@ -95,6 +104,12 @@
                     <label for="password">Password</label>
                     <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
                 </div>
+                <div class="form-group">
+                    <input type="checkbox" onclick="myFunction()" id="showPasswordCheckbox">
+                    <label for="showPasswordCheckbox" class="checkbox-label">Show Password</label>
+                </div>
+
+                
                 <a href="forgot_email.php" class="forgot-pass"><strong>Forgot Password?</strong></a>
 
                 <div class="button-container">

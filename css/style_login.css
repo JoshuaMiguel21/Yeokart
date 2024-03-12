@@ -115,6 +115,78 @@ input[type="text"], input[type="email"], input[type="password"] {
     font-size: 1rem;
 }
 
+.form-group input[type="checkbox"] {
+    display: none;
+}
+
+.form-group label.checkbox-label {
+    position: relative;
+    padding-left: 30px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 1rem;
+    color: var(--color-dark);
+}
+
+.form-group label.checkbox-label:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid #007bff;
+    background-color: #fff;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.form-group input[type="checkbox"]:checked + label.checkbox-label:before {
+    background-color: #007bff; 
+    border-color: #007bff;
+}
+
+.form-group label.checkbox-label:after {
+    content: '\2713';
+    font-size: 16px;
+    color: #fff;
+    position: absolute;
+    top: 50%;
+    left: 6%;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out, color 0.5s ease;
+}
+
+.form-group input[type="checkbox"]:checked + label.checkbox-label:after {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    color: #fff;
+}
+
+.form-group label.checkbox-label:hover:before {
+    background-color: #f2f2f2;
+}
+
+@media (max-width: 767px) {
+    .form-group label.checkbox-label {
+        font-size: 0.8rem;
+    }
+
+    .form-group label.checkbox-label:before {
+        font-size: 12px;
+        top: 45%;
+    }
+
+    .form-group label.checkbox-label:after {
+        font-size: 12px;
+        left: 8%;
+        top: 48%;
+    }
+}
+
 @media (max-width: 767px) {
     .container {
         flex-direction: column;

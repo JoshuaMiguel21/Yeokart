@@ -168,7 +168,7 @@ if ($phoneResult->num_rows > 0) {
         </div>
 
         <div class="header-3">
-            <h2>My Account</h2>
+            <h1>My Account</h1>
             <div class="nav-user">
                 <a href="#" onclick="openPopup(); return false;" class="logout-link">EDIT PROFILE</a>
                 <a href="#" onclick="openLogoutPopup(); return false;" class="logout-link">LOG OUT<i class="fas fa-chevron-right"></i></a>

@@ -14,6 +14,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST['username']);
     $sessionUsername = $_SESSION['username'];
 
+    // Validate if the username already exists in user_accounts or employee_accounts
+    $checkExistingUser = "SELECT username FROM user_accounts WHERE username = ? UNION SELECT username FROM employee_accounts WHERE username = ?";
+    
+    if ($checkStmt = $con->prepare($checkExistingUser)) {
+        $checkStmt->bind_param("ss", $param_username, $param_username);
+        $param_username = $username;
+        $checkStmt->execute();
+        $checkStmt->store_result();
+
+        if ($checkStmt->num_rows > 0) {
+            echo "<script>alert('Username already exists. Please choose a different username.');</script>";
+            echo "<script>window.location.href = 'customer_profile.php';</script>";
+            exit();
+        }
+
+        $checkStmt->close();
+    }
+
+    // Proceed with the update query
     $sql = "UPDATE user_accounts SET firstname = ?, lastname = ?, username = ? WHERE username = ?";
     
     if ($stmt = $con->prepare($sql)) {
