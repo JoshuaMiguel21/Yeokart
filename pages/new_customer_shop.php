@@ -48,21 +48,6 @@ if (isset($_SESSION['email'])) {
     exit();
 }
 
-include('../database/db_yeokart.php');
-
-if (isset($_POST['view_item_button'])) {
-    // Fetching item details based on item ID
-    $item_id = $_POST['item_id'];
-    $select_item_query = "SELECT * FROM products WHERE item_id = $item_id";
-    $result_item_query = mysqli_query($con, $select_item_query);
-    $fetch_item = mysqli_fetch_assoc($result_item_query);
-
-    // Redirecting to product_details.php with item details
-    if ($fetch_item) {
-        header("Location: product_details.php?item_id=$item_id");
-        exit();
-    }
-}
 ?>
 
 <body>
@@ -114,19 +99,16 @@ if (isset($_POST['view_item_button'])) {
                 ?>
                     <div class='box'>
                         <div class='icons'>
-                            <form method='post'>
-                                <input type='hidden' name='item_id' value='<?php echo $item_id; ?>'>
-                                <button type='submit' name='view_item_button' class='fas fa-eye'></button>
-                            </form>
+                            <a href='#' class='fas fa-eye' onclick='handleImageClick(<?php echo $item_id; ?>)'></a>
                         </div>
                         <div class='image'>
-                            <img src='item_images/<?php echo $item_image1; ?>' alt=''>
+                            <img src='item_images/<?php echo $item_image1; ?>' alt='' onclick='handleImageClick(<?php echo $item_id; ?>)'>
                         </div>
                         <div class='content'>
                             <h3 class='artist'><?php echo $artist_name; ?></h3>
                             <h3 class='marquee'><?php echo $item_name; ?></h3>
                             <div class='price'>₱ <?php echo $item_price; ?></div>
-                            <a href='product_details.php?item_id=<?php echo $item_id; ?>' class='btn'>View Item</a>
+                            <a href='#' class='btn'>Add to Cart</a>
                         </div>
                     </div>
                 <?php } ?>
@@ -167,6 +149,13 @@ if (isset($_POST['view_item_button'])) {
                 }
             });
         });
+
+        function handleImageClick(itemId) {
+            // Construct the URL for the product details page
+            var url = "product_details.php?item_id=" + itemId;
+            // Redirect the user to the product details page
+            window.location.href = url;
+        }
     </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

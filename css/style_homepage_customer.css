@@ -107,6 +107,7 @@ section{
     color: var(--black);
     cursor: pointer;
     text-decoration: none;
+
 }
 .header .header-1 .icons div:hover, 
 .header .header-1 .icons a:hover{
@@ -266,7 +267,7 @@ section{
 }
 .featured .featured-slider .box:hover .image,
 .best .best-slider .box:hover .image{
-    transform:translateY(6rem) ;
+    transform:translateY(5rem) ;
 }
 .featured .featured-slider .box .image img,
 .best .best-slider .box .image img{
@@ -289,15 +290,15 @@ section{
 .best .best-slider .box:hover .icons{
     transform: translateY(0%);
 }
-.featured .featured-slider .box .icons button,
-.best .best-slider .box .icons button{
+.featured .featured-slider .box .icons a,
+.best .best-slider .box .icons a{
     color: var(--black);
     font-size: 2.2rem;
     padding: 1.3rem 1.5rem;
     text-decoration: none;
 }
-.featured .featured-slider .box .icons button:hover,
-.best .best-slider .box .icons button:hover{
+.featured .featured-slider .box .icons a:hover,
+.best .best-slider .box .icons a:hover{
     background: var(--pink);
     color: #fff;
 }

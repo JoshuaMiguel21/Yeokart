@@ -47,22 +47,6 @@ if (isset($_SESSION['email'])) {
     header("Location: login_page.php");
     exit();
 }
-
-include('../database/db_yeokart.php');
-
-if (isset($_POST['view_item_button'])) {
-    // Fetching item details based on item ID
-    $item_id = $_POST['item_id'];
-    $select_item_query = "SELECT * FROM products WHERE item_id = $item_id";
-    $result_item_query = mysqli_query($con, $select_item_query);
-    $fetch_item = mysqli_fetch_assoc($result_item_query);
-
-    // Redirecting to product_details.php with item details
-    if ($fetch_item) {
-        header("Location: product_details.php?item_id=$item_id");
-        exit();
-    }
-}
 ?>
 
 <body>
@@ -126,18 +110,15 @@ if (isset($_POST['view_item_button'])) {
                     $artist_name = $row['artist_name'];
                     echo "<div class='swiper-slide box'>
                     <div class='icons'>
-                        <form method='post'>
-                            <input type='hidden' name='item_id' value='" . $item_id . "'>
-                            <button type='submit' name='view_item_button' class='fas fa-eye'></button>
-                        </form>
+                        <a href='#' class='fas fa-eye'onclick='handleImageClick(\"$item_id\")'></a>
                     </div>
                     <div class='image'>
-                    <img src='item_images/$item_image1' alt=''>
-                    </div>
+                <img src='item_images/$item_image1' alt='' onclick='handleImageClick(\"$item_id\")'>
+            </div>
                     <div class='content'>
                     <h3 class='artist'>$artist_name</h3>
                     <h3 class='marquee'>$item_name</h3>
-                    <div class='price'>₱$item_price</div>
+                    <div class='price'>₱ $item_price</div>
                     <a href='#' class='btn'>Add to Cart</a>
                     </div>
                 </div>";
@@ -167,10 +148,7 @@ if (isset($_POST['view_item_button'])) {
                     $artist_name = $row['artist_name'];
                     echo "<div class='swiper-slide box'>
                     <div class='icons'>
-                        <form method='post'>
-                            <input type='hidden' name='item_id' value='" . $item_id . "'>
-                            <button type='submit' name='view_item_button' class='fas fa-eye'></button>
-                        </form>
+                        <a href='#' class='fas fa-eye'onclick='handleImageClick(\"$item_id\")'></a>
                     </div>
                     <div class='image'>
                     <img src='item_images/$item_image1' alt=''>
@@ -178,7 +156,7 @@ if (isset($_POST['view_item_button'])) {
                     <div class='content'>
                     <h3 class='artist'>$artist_name</h3>
                     <h3 class='marquee'>$item_name</h3>
-                    <div class='price'>₱$item_price</div>
+                    <div class='price'>₱ $item_price</div>
                     <a href='#' class='btn'>Add to Cart</a>
                     </div>
                 </div>";
@@ -309,6 +287,13 @@ if (isset($_POST['view_item_button'])) {
                 }
             });
         });
+
+        function handleImageClick(itemId) {
+            // Construct the URL for the product details page
+            var url = "product_details.php?item_id=" + itemId;
+            // Redirect the user to the product details page
+            window.location.href = url;
+        }
     </script>
 </body>
 
