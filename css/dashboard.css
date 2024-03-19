@@ -587,6 +587,10 @@ th {
     .cards {
         grid-template-columns: 100%;
     }
+
+    .main-content{
+        width: 757px;
+    }
 }
 
 
