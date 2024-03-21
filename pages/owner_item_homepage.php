@@ -139,7 +139,7 @@
             </div>
             <div class="head-search">
                 <form method="POST" id="searchForm">
-                    <input type="text" name="search" placeholder="Search items..." id="searchInput">
+                    <input type="text" name="search" placeholder="Search items..." id="searchInput" value="<?php echo isset($_POST['search']) ? $_POST['search'] : ''; ?>">
                     <button type="submit" name="search_button">Search</button>
                     <button type="button" name="clear_button" onclick="clearSearch()">Clear</button>
                 </form>
@@ -185,30 +185,18 @@
                             $result_query = mysqli_query($con, $delete_query);
                             if ($result_query) {
                                 echo "<script>alert('Item deleted successfully')</script>";
-
-                                // Calculate the total number of items
-                                $total_items = mysqli_num_rows(mysqli_query($con, "SELECT * FROM products"));
-
-                                // Calculate the total number of pages based on items per page
-                                $items_per_page = 10;
-                                $total_pages = ceil($total_items / $items_per_page);
-
-                                // Redirect to the last page
-                                echo "<script>window.location.href = 'owner_item_homepage.php?page=$total_pages';</script>";
+                                echo "<script>window.location.href = 'owner_item_homepage.php';</script>";
                             } else {
                                 echo "<script>alert('Failed to delete item')</script>";
-                                echo "<script>window.location.href = 'owner_item_homepage.php?page=$total_pages';</script>";
+                                echo "<script>window.location.href = 'owner_item_homepage.php';</script>";
                             }
                         }
-                        $page = isset($_GET['page']) ? $_GET['page'] : 1;
-                        $limit = 10;
-                        $offset = ($page - 1) * $limit;
 
                         if (isset($_POST['search_button'])) {
                             $search = $_POST['search'];
-                            $select_query = "SELECT * FROM products WHERE item_name LIKE '%$search%' LIMIT $limit OFFSET $offset";
+                            $select_query = "SELECT * FROM products WHERE item_name LIKE '%$search%'";
                         } else {
-                            $select_query = "SELECT * FROM products LIMIT $limit OFFSET $offset";
+                            $select_query = "SELECT * FROM products";
                         }
                         $result_query = mysqli_query($con, $select_query);
                         while ($row = mysqli_fetch_assoc($result_query)) {
@@ -249,20 +237,6 @@
                     </tbody>
                 </table>
             </div>
-
-            <?php
-            // Next page button
-            $next_page_query = "SELECT * FROM products LIMIT $limit OFFSET " . ($page * $limit);
-            $next_page_result = mysqli_query($con, $next_page_query);
-
-            if ($page > 1) {
-                echo "<a href='owner_item_homepage.php?page=" . ($page - 1) . "' class='previous-page-button'>Previous Page</a>";
-            }
-
-            if (mysqli_num_rows($next_page_result) > 0) {
-                echo "<a href='owner_item_homepage.php?page=" . ($page + 1) . "' class='next-page-button'>Next Page</a>";
-            }
-            ?>
 
             <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
                 <div class="popup-content">
