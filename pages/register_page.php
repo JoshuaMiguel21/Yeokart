@@ -236,7 +236,7 @@
 
                 <div class="button-container">
                     <button type="submit" id="register" class="btn btn-custom btn-lg" name="submit">Sign Up</button>
-                    <center><a href="login_page.php"><button type="button" class="btn btn-custom btn-lg">Back to Login</button></a></center>
+                    <center><a onclick="history.back()"><button type="button" class="btn btn-custom btn-lg">Back</button></a></center>
                 </div>
             </form>
         </div>
