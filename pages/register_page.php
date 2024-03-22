@@ -95,22 +95,19 @@
                 <hr>
 
                 <div class="form-group">
-                    <?php
-                    require('../database/db_yeokart.php');
+                <?php
+                require('../database/db_yeokart.php');
+                require('PHPMailer/src/PHPMailer.php');
+                require('PHPMailer/src/SMTP.php');
+                require('PHPMailer/src/Exception.php');
 
-                    use PHPMailer\PHPMailer\PHPMailer;
-                    use PHPMailer\PHPMailer\SMTP;
-                    use PHPMailer\PHPMailer\Exception;
+                use PHPMailer\PHPMailer\PHPMailer;
+                use PHPMailer\PHPMailer\SMTP;
+                use PHPMailer\PHPMailer\Exception;
 
-                    require('PHPMailer/src/PHPMailer.php');
-                    require("PHPMailer/src/SMTP.php");
-                    require("PHPMailer/src/Exception.php");
-
-
+                if (isset($_POST['submit'])) {
                     function sendMail($email, $v_code)
                     {
-
-
                         $mail = new PHPMailer(true);
 
                         try {
@@ -130,12 +127,11 @@
                             //Content
                             $mail->isHTML(true);                                        //Set email format to HTML
                             $mail->Subject = 'Email Verification for the Creation of your Yeokart Account';
-                            $mail->Body    = "  <p>Dear User,</p>
-                                                <p>Thank you for registering with <b>Yeokart</b>. To ensure the security of your account 
-                                                and to activate your membership, we need to verify your email address.</p>
-                                                <p>Please click the link below to complete the email verification process: </p>
-                                                <p><a href='http://localhost/Yeokart/pages/verify_email.php?email=$email&v_code=$v_code'>Verify Your Email</a></p>";
-
+                            $mail->Body    = "<p>Dear User,</p>
+                                            <p>Thank you for registering with <b>Yeokart</b>. To ensure the security of your account 
+                                            and to activate your membership, we need to verify your email address.</p>
+                                            <p>Please click the link below to complete the email verification process:</p>
+                                            <p><a href='http://localhost/Yeokart/pages/verify_email.php?email=$email&v_code=$v_code'>Verify Your Email</a></p>";
 
                             $mail->send();
                             return true;
@@ -144,66 +140,87 @@
                         }
                     }
 
-                    if (isset($_POST['submit'])) {
-                        $user_exist_query = "SELECT * FROM `user_accounts` WHERE `username`='$_POST[username]' OR `email`='$_POST[email]'";
-                        $employee_exist_query = "SELECT * FROM `employee_accounts` WHERE `username`='$_POST[username]' OR `email`='$_POST[email]'";
-                        
-                        $user_result = mysqli_query($con, $user_exist_query);
-                        $employee_result = mysqli_query($con, $employee_exist_query);
-                    
-                        if ($user_result && $employee_result) {
-                            $user_rows = mysqli_num_rows($user_result);
-                            $employee_rows = mysqli_num_rows($employee_result);
-                    
-                            if ($user_rows > 0 || $employee_rows > 0) {
-                                $result_fetch = ($user_rows > 0) ? mysqli_fetch_assoc($user_result) : mysqli_fetch_assoc($employee_result);
-                    
-                                if ($result_fetch['username'] == $_POST['username']) {
-                                    echo "
-                                        <script>
-                                            alert('$result_fetch[username] - Username already taken');
-                                        </script>
-                                        ";
-                                } else {
-                                    echo "
-                                        <script>
-                                            alert('$result_fetch[email] - E-mail already registered');
-                                        </script>
-                                        ";
-                                }
+                    $username = $_POST['username'];
+                    $email = $_POST['email'];
+
+                    $user_exist_query = "SELECT * FROM `user_accounts` WHERE `username`='$username' OR `email`='$email'";
+                    $employee_exist_query = "SELECT * FROM `employee_accounts` WHERE `username`='$username' OR `email`='$email'";
+
+                    $user_result = mysqli_query($con, $user_exist_query);
+                    $employee_result = mysqli_query($con, $employee_exist_query);
+
+                    if ($user_result && $employee_result) {
+                        $user_rows = mysqli_num_rows($user_result);
+                        $employee_rows = mysqli_num_rows($employee_result);
+
+                        if ($user_rows > 0 || $employee_rows > 0) {
+                            $result_fetch = ($user_rows > 0) ? mysqli_fetch_assoc($user_result) : mysqli_fetch_assoc($employee_result);
+
+                            if ($result_fetch['username'] == $username && $result_fetch['is_verified'] == 1 && $result_fetch['is_employee'] == 1) {
+                                echo "<script>alert('$username - Username already taken');</script>";
+                            } elseif ($result_fetch['email'] == $email && $result_fetch['is_verified'] == 1 && $result_fetch['is_employee'] == 1) {
+                                echo "<script>alert('$email - E-mail already registered');</script>";
                             } else {
-                                $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
-                                $v_code = bin2hex(random_bytes(16));
-                                $query = "INSERT INTO `user_accounts` (`firstname`, `lastname`, `username`, `email`, `password`, `verification_code`, `is_verified`) VALUES ('$_POST[firstname]', '$_POST[lastname]', '$_POST[username]', '$_POST[email]', '$password', '$v_code', '0')";
-                                if (mysqli_query($con, $query) && sendMail($_POST['email'], $v_code)) {
-                                    echo "  <script>
-                                            Swal.fire({
-                                                icon: 'info',
-                                                title: 'Great news!',
-                                                text: 'Your account is one step away from being fully secured. Please verify your email to proceed with the login.',
-                                                confirmButtonText: 'OK'
-                                            });
-                                            </script>";
-                                } else {
-                                    echo "  <script>
-                                                Swal.fire({
-                                                    title: 'Oops!',
-                                                    text: 'Server is down',
-                                                    icon: 'error',
-                                                    confirmButtonText: 'OK'
-                                                });
-                                            </script>";
+                                $user_query = "SELECT * FROM `user_accounts` WHERE `username`='$username' OR `email`='$email'";
+                                $user_check_result = mysqli_query($con, $user_query);
+                                $user_check_rows = mysqli_num_rows($user_check_result);
+
+                                if ($user_check_rows > 0) {
+                                    $user_data = mysqli_fetch_assoc($user_check_result);
+                                    if ($user_data['is_verified'] == 0) {
+                                        if (sendMail($_POST['email'], $user_data['verification_code'])) {
+                                            echo "<script>
+                                                    Swal.fire({
+                                                        icon: 'info',
+                                                        title: 'Email Sent!',
+                                                        text: 'Verification email has been sent again. Please check your email to proceed with the login.',
+                                                        confirmButtonText: 'OK'
+                                                    });
+                                                </script>";
+                                        } else {
+                                            echo "<script>
+                                                    Swal.fire({
+                                                        title: 'Oops!',
+                                                        text: 'Failed to send email. Please try again later.',
+                                                        icon: 'error',
+                                                        confirmButtonText: 'OK'
+                                                    });
+                                                </script>";
+                                        }
+                                    }
                                 }
                             }
                         } else {
-                            echo "
-                                <script>
-                                    alert('Cannot Run Query');
-                                </script>
-                                ";
+                            $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+                            $v_code = bin2hex(random_bytes(16));
+                            $query = "INSERT INTO `user_accounts` (`firstname`, `lastname`, `username`, `email`, `password`, `verification_code`, `is_verified`) VALUES ('$_POST[firstname]', '$_POST[lastname]', '$username', '$email', '$password', '$v_code', '0')";
+                                if (mysqli_query($con, $query) && sendMail($_POST['email'], $v_code)) {
+                                    echo "<script>
+                                            Swal.fire({
+                                            icon: 'info',
+                                            title: 'Email Sent!',
+                                            text: 'Verification email has been sent. Please check your email to proceed with the login.',
+                                            confirmButtonText: 'OK'
+                                            });
+                                        </script>";
+                                } else {
+                                    echo "<script>
+                                    Swal.fire({
+                                        title: 'Oops!',
+                                        text: 'Server is down or failed to send email. Please try again later.',
+                                        icon: 'error',
+                                        confirmButtonText: 'OK'
+                                    });
+                                    </script>";   
+                                }
                         }
                     }
-                    ?>
+                }
+                else{
+                    echo "<script>alert('Cannot Run Query');</script>";
+                }
+                ?>
+
                 </div>
                 <br>
                 <div class="form-group">
