@@ -215,9 +215,9 @@
                                 }
                         }
                     }
-                }
-                else{
-                    echo "<script>alert('Cannot Run Query');</script>";
+                    else{
+                        echo "<script>alert('Cannot Run Query');</script>";
+                    }
                 }
                 ?>
 

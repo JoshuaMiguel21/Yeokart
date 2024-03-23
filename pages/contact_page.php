@@ -44,20 +44,33 @@ if (isset($_SESSION['email'])) {
 ?>
 
 <body>
+    <input type="checkbox" id="click">
     <header class="header">
         <div class="header-1">
             <a href="customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>
-
-            <form action="" class="search-form">
-                <input type="search" name="" placeholder="Search here..." id="search-box">
-                <label for="search-box" class="fas fa-search"></label>
-            </form>
             <div class="icons">
-                <div id="search-btn" class="fas fa-search"></div>
-                <a href="new_customer_shop.php">Shop</a>
-                <a href="contact_page.php">Contact Us</a>
-                <a href="#" class="fas fa-shopping-cart"></a>
-                <a href="customer_profile.php" id="user-btn" class="fas fa-user"></a>
+                <form action="" class="search-form">
+                    <input type="search" name="" placeholder="Search here..." id="search-box">
+                    <label for="search-box" class="fas fa-search"></label>
+                </form>
+                <label for="click" class="menu-btn">
+                    <i class="fas fa-bars"></i>
+                </label>
+            </div>
+            <div class="icons">
+                <ul>
+                    <li class="search-ul">
+                        <form action="" class="search-form">
+                            <input type="search" name="" placeholder="Search here..." id="search-box">
+                            <label for="search-box" class="fas fa-search"></label>
+                        </form>
+                    </li>
+                    <li class="home-class"><a href="customer_homepage.php" id="home-nav">Home</a></li>
+                    <li><a href="new_customer_shop.php">Shop</a></li>
+                    <li><a href="contact_page.php" class="active">Contact Us</a></li>
+                    <li><a href="customer_cart.php"><i class="fas fa-shopping-cart"></i></a></li>
+                    <li><a href="customer_profile.php" id="user-btn"><i class="fas fa-user"></i></a></li>
+                </ul>
             </div>
         </div>
     </header>
@@ -117,6 +130,19 @@ if (isset($_SESSION['email'])) {
             if (window.scrollY > 80) {
                 document.querySelector('.header .header-2').classList.add('active');
             }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkbox = document.getElementById('click');
+            const contactsToHide = document.getElementById('contacts'); // Change 'home' to the ID of the section you want to hide/show
+           
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    contactsToHide.style.display = 'none';
+                } else {
+                    contactsToHide.style.display = 'block';
+                }
+            });
         });
     </script>
 </body>

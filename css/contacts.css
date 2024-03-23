@@ -100,17 +100,57 @@ section{
 .header .header-1 .search-form label:hover{
     color: var(--pink);
 }
-.header .header-1 .icons div, 
-.header .header-1 .icons a{
+
+.header .header-1 .icons a {
     font-size: 1.8rem;
     margin-left: 1.5rem;
     color: var(--black);
     cursor: pointer;
     text-decoration: none;
+    position: relative;
 }
-.header .header-1 .icons div:hover, 
-.header .header-1 .icons a:hover{
-    color: var(--pink);
+
+.header .header-1 .icons a::before {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--pink);
+    transition: width 0.3s ease;
+}
+
+.header .header-1 .icons a:hover::before {
+    width: 100%;
+}
+
+.header .header-1 .icons a.active::before {
+    width: 100%;
+}
+
+.icons ul {
+    display: flex;
+    list-style-type: none;
+}
+
+.icons li {
+    margin: 0 10px;
+}
+
+.header .header-1 .icons .search-ul {
+    display: none;
+}
+
+#home-nav {
+    display: none;
+}
+
+.menu-btn {
+    display: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: var(--black);
 }
 
 #search-btn{
@@ -234,8 +274,72 @@ section{
     text-decoration: none;
 }
 
+#click{
+    display: none;
+}
 
+@media (max-width: 940px) {
+    .header .header-1 .menu-btn {
+        display: block;
+        position: absolute;
+        top: 30px; 
+        right: 50px; 
+    }
 
+    #click:checked ~ .header .header-1 .menu-btn i:before {
+        content: "\f00d";
+    }
+
+    .header .header-1 .icons ul {
+        position: fixed;
+        padding-top: 50px;
+        top: 100px;
+        left: -100%;
+        background-color: var(--pink);
+        height: 100vh;
+        width: 100%;
+        display: block;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    #click:checked ~ .header .header-1 .icons ul {
+        left: 0%;
+    }
+
+    .header .header-1 .icons ul li {
+        margin: 40px 0;
+    }
+
+    .header .header-1 .icons ul li a {
+        color: #fff;
+        border-radius: 5px;
+        padding: 10px 20px;
+        transition: all 0.3s ease;
+    }
+
+    .header .header-1 .icons ul li a.active {
+        background-color: #fff;
+        color: var(--black);
+    }
+
+    .header .header-1 .icons a:hover {
+        background-color: #fff;
+        color: var(--black);
+    }
+
+    .header .header-1 .icons .home-class{
+        display: flex;
+        justify-content: center;
+    }
+
+    .header .header-1 .icons #home-nav{
+        display: block;
+        border-radius: 5px;
+        padding: 10px 20px;
+        transition: all 0.3s ease;
+    }
+}
 
 @media (max-width:1024px){
     html{
