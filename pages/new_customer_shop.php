@@ -63,7 +63,7 @@ if (isset($_SESSION['email'])) {
                 <div id="search-btn" class="fas fa-search"></div>
                 <a href="new_customer_shop.php">Shop</a>
                 <a href="contact_page.php">Contact Us</a>
-                <a href="#" class="fas fa-shopping-cart"></a>
+                <a href="customer_cart.php" class="fas fa-shopping-cart"></a>
                 <a href="customer_profile.php" id="user-btn" class="fas fa-user"></a>
             </div>
         </div>
@@ -108,7 +108,7 @@ if (isset($_SESSION['email'])) {
                             <h3 class='artist'><?php echo $artist_name; ?></h3>
                             <h3 class='marquee'><?php echo $item_name; ?></h3>
                             <div class='price'>₱ <?php echo $item_price; ?></div>
-                            <a href='#' class='btn'>Add to Cart</a>
+                            <a href='product_details.php?item_id=<?php echo $item_id; ?>' class='btn'><i class='fa-solid fa-cart-plus'></i> Add to Cart</a>
                         </div>
                     </div>
                 <?php } ?>

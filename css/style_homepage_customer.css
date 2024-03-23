@@ -333,7 +333,8 @@ section{
 }
 
 .featured .btn,
-.best .btn{
+.best .btn,
+.cart .btn{
     margin-top: 1rem;
     display: inline-block;
     padding: .9rem 3rem;
@@ -347,8 +348,15 @@ section{
     text-decoration: none;
 }
 
+.featured .btn i,
+.best .btn i,
+.cart .btn i {
+    color: #fff !important;
+}
+
 .featured .btn:hover
-.best .btn:hover{
+.best .btn:hover,
+.cart .btn:hover{
     background: var(--dark-color);
 }
 .swiper-button-next,
@@ -437,11 +445,11 @@ section{
 }
 
 .select-quantity  button:first-child {
-    border-radius: 5px 0 0 5px;
+    border-radius: 0 0 0 0;
 }
 
 .select-quantity  button:last-child {
-    border-radius: 0 5px 5px 0;
+    border-radius: 0 0 0 0;
 }
 
 /*.select-version{
@@ -502,6 +510,99 @@ section{
     font-size: 3rem;
     color: var(--black);
     background: #fff;
+}
+
+.cart .header-3 {
+    display: flex;
+    justify-content: space-between;
+}
+  
+.cart h1 {
+    font-size: 3rem;
+    color: var(--black);
+    background: #fff;
+}
+
+.cart .left-column{
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.project{
+    display: flex;
+}
+
+.shop{
+    flex: 75%;
+}
+
+.cart .left-column .box{
+    display: flex;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background: #eee;
+    transition: all .6s ease;
+    box-shadow: var(--box-shadow);
+    border-width: 2px;
+    border-color: var(--pink);
+    margin: 20px;
+}
+
+.cart .left-column .box:hover{
+    transform: scale(1.02);
+}
+
+.cart .left-column .box img{
+    width: 300px;
+    height: 200px;
+    object-fit:contain;
+}
+
+.cart .left-column .box .content{
+    padding: 20px;
+    position: relative;
+    width: 100%;
+}
+
+.cart .left-column .box .content h3{
+    margin-bottom: 10px;
+    font-size: 20px;
+}
+
+.cart .left-column .box .content h4{
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+.btn-area{
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 25px;
+    background-color: var(--pink);
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.btn-area:hover{
+    background-color: var(--dark-color);
+    color: white;
+}
+
+.cart .right-column .account{
+    flex: 25%;
+    margin-left: 20px;
+    padding: 20px;
+    height: 400px;
+    background: #eee;
+    box-shadow: var(--box-shadow);
+}
+.center-btn {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px; /* Adjust as needed */
 }
 
 .nav-user{
@@ -753,7 +854,7 @@ hr.gradient {
 
 .btn-cancel, .cancel-logout-btn {
     text-align: center;
-    background-color: #ccc;
+    background-color: #b9b0b0;
     color: white;
     padding: 10px 24px;
     border: none;

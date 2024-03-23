@@ -11,6 +11,29 @@
     <link rel="stylesheet" href="../css/style_homepage_customer.css">
 </head>
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchForm = document.querySelector('.search-form');
+        const searchBtn = document.querySelector('#search-btn');
+
+        searchBtn.addEventListener('click', function() {
+            searchForm.classList.toggle('active');
+        });
+
+        window.addEventListener('scroll', function() {
+            searchForm.classList.remove('active');
+            const header2 = document.querySelector('.header .header-2');
+            if (window.scrollY > 80) {
+                header2.classList.add('active');
+            } else {
+                header2.classList.remove('active');
+            }
+        });
+
+        if (window.scrollY > 80) {
+            document.querySelector('.header .header-2').classList.add('active');
+        }
+    });
+
     function openPopup() {
         document.getElementById('editProfilePopup').style.display = 'flex';
     }
@@ -125,9 +148,9 @@ if ($phoneResult->num_rows > 0) {
             </form>
             <div class="icons">
                 <div id="search-btn" class="fas fa-search"></div>
-                <a href="customer_shop.php">Shop</a>
+                <a href="new_customer_shop.php">Shop</a>
                 <a href="contact_page.php">Contact Us</a>
-                <a href="#" class="fas fa-shopping-cart"></a>
+                <a href="customer_cart.php" class="fas fa-shopping-cart"></a>
                 <a href="customer_profile.php" id="user-btn" class="fas fa-user"></a>
             </div>
         </div>
