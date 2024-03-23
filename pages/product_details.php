@@ -61,6 +61,62 @@ if (isset($_GET['item_id'])) {
         $fetch_item = mysqli_fetch_assoc($result_item_query);
     }
 }
+
+/*if (isset($_POST['add-to-cart-btn'])) {
+    $customer_id = $_SESSION['id'];
+    $item_name = $fetch_item['item_name'];
+    $price = $fetch_item['item_price'];
+    $item_image = $fetch_item['item_image1'];
+    $quantity = $_POST['quantity'];
+
+    $insert_cart_query = "INSERT INTO cart (customer_id, item_name, price, item_image1, quantity) VALUES ('$customer_id', '$item_name', '$price', '$item_image', '$quantity')";
+    mysqli_query($con, $insert_cart_query);
+}*/
+if (isset($_GET['item_id'])) {
+    $item_id = $_GET['item_id'];
+    $select_item_query = "SELECT * FROM products WHERE item_id = $item_id";
+    $result_item_query = mysqli_query($con, $select_item_query);
+
+    $fetch_item = array();
+
+    if (mysqli_num_rows($result_item_query) > 0) {
+        $fetch_item = mysqli_fetch_assoc($result_item_query);
+    }
+}
+
+if (isset($_POST['add-to-cart-btn'])) {
+    $customer_id = $_SESSION['id'];
+    $item_name = $fetch_item['item_name'];
+    $price = $fetch_item['item_price'];
+    $item_image = $fetch_item['item_image1'];
+    $quantity = $_POST['quantity'];
+    $item_stock = $fetch_item['item_quantity'];
+
+    // Check if the quantity exceeds the stock
+    if ($quantity > $item_stock) {
+        echo '<script>alert("You cannot add more than the available stock.")</script>';
+    } else {
+        // Check if the item already exists in the cart for the same customer ID
+        $select_cart_query = "SELECT * FROM cart WHERE customer_id = '$customer_id' AND item_name = '$item_name'";
+        $result_cart_query = mysqli_query($con, $select_cart_query);
+
+        if (mysqli_num_rows($result_cart_query) > 0) {
+            // Update the quantity of the existing item in the cart
+            $row = mysqli_fetch_assoc($result_cart_query);
+            $existing_quantity = $row['quantity'];
+            $new_quantity = $existing_quantity + $quantity;
+
+            $update_cart_query = "UPDATE cart SET quantity = $new_quantity WHERE customer_id = '$customer_id' AND item_name = '$item_name'";
+            mysqli_query($con, $update_cart_query);
+        } else {
+            // Insert a new row for the item in the cart
+            $insert_cart_query = "INSERT INTO cart (customer_id, item_name, price, item_image1, quantity) VALUES ('$customer_id', '$item_name', '$price', '$item_image', '$quantity')";
+            mysqli_query($con, $insert_cart_query);
+        }
+    }
+}
+
+
 ?>
 
 <body>
@@ -76,7 +132,7 @@ if (isset($_GET['item_id'])) {
                 <div id="search-btn" class="fas fa-search"></div>
                 <a href="new_customer_shop.php">Shop</a>
                 <a href="contact_page.php">Contact Us</a>
-                <a href="#" class="fas fa-shopping-cart"></a>
+                <a href="customer_cart.php" class="fas fa-shopping-cart"></a>
                 <a href="customer_profile.php" id="user-btn" class="fas fa-user"></a>
             </div>
         </div>
@@ -103,20 +159,10 @@ if (isset($_GET['item_id'])) {
                     <div class="item-price">
                         <h4>&#8369; <?php echo $fetch_item['item_price']; ?></h4>
                     </div>
-
-                    <!--<div class="select-version">
-                    <select id="version-dropdown">
-                        <option value="option1">Select Version</option>
-                        <option value="option1">Version A</option>
-                        <option value="option2">Version B</option>
-                        <option value="option3">Version C</option>
-                    </select>
-                </div>-->
-
                     <div class="select-quantity">
                         <span>Select Quantity:</span>
                         <button onclick="decrement()">-</button>
-                        <input type="number" id="quantity" name="quantity" min="1" value="1">
+                        <input type="number" id="quantity" name="quantity" min="1" max="<?php echo $fetch_item['item_quantity']; ?>" value="1" onchange="updateHiddenQuantity(this.value)">
                         <button onclick="increment()">+</button>
                     </div>
 
@@ -125,7 +171,14 @@ if (isset($_GET['item_id'])) {
                     </div>
 
                     <div class="add-to-cart">
-                        <button type="submit" name="add-to-cart-btn">Add To Cart</button>
+                        <form method="post">
+                            <input type="hidden" name="item_id" value="<?php echo $fetch_item['item_id']; ?>">
+                            <input type="hidden" name="item_name" value="<?php echo $fetch_item['item_name']; ?>">
+                            <input type="hidden" name="item_price" value="<?php echo $fetch_item['item_price']; ?>">
+                            <input type="hidden" name="item_image" value="<?php echo $fetch_item['item_image1']; ?>">
+                            <input type="hidden" id="hidden-quantity" name="quantity" value="1"> <!-- Updated the ID -->
+                            <button type="submit" onclick="return checkStock(<?php echo $fetch_item['item_quantity']; ?>);" name="add-to-cart-btn"><i class='fa-solid fa-cart-plus'></i> Add to Cart</button>
+                        </form>
                     </div>
 
                     <div class="product-description">
@@ -158,19 +211,19 @@ if (isset($_GET['item_id'])) {
                         $item_image1 = $row['item_image1'];
                         $artist_name = $row['artist_name'];
                         echo "<div class='swiper-slide box'>
-                    <div class='icons'>
-                        <a href='#' class='fas fa-eye'onclick='handleImageClick(\"$item_id\")'></a>
-                    </div>
-                    <div class='image'>
-                <img src='item_images/$item_image1' alt='' onclick='handleImageClick(\"$item_id\")'>
-            </div>
-                    <div class='content'>
-                    <h3 class='artist'>$artist_name</h3>
-                    <h3 class='marquee'>$item_name</h3>
-                    <div class='price'>₱ $item_price</div>
-                    <a href='#' class='btn'>Add to Cart</a>
-                    </div>
-                </div>";
+                                <div class='icons'>
+                                    <a href='#' class='fas fa-eye'onclick='handleImageClick(\"$item_id\")'></a>
+                                </div>
+                                <div class='image'>
+                                    <img src='item_images/$item_image1' alt='' onclick='handleImageClick(\"$item_id\")'>
+                                </div>
+                                <div class='content'>
+                                    <h3 class='artist'>$artist_name</h3>
+                                    <h3 class='marquee'>$item_name</h3>
+                                    <div class='price'>₱ $item_price</div>
+                                    <a href='product_details.php?item_id=$item_id' class='btn'><i class='fa-solid fa-cart-plus'></i> Add to Cart</a>
+                                </div>
+                        </div>";
                     }
                     ?>
                 </div>
@@ -206,11 +259,27 @@ if (isset($_GET['item_id'])) {
             function increment() {
                 var input = document.getElementById('quantity');
                 input.stepUp();
+                updateHiddenQuantity(input.value);
             }
 
             function decrement() {
                 var input = document.getElementById('quantity');
                 input.stepDown();
+                updateHiddenQuantity(input.value);
+            }
+
+            function updateHiddenQuantity(value) {
+                var hiddenInput = document.getElementById('hidden-quantity');
+                hiddenInput.value = value;
+            }
+
+            function checkStock(stock) {
+                var quantity = document.getElementById('quantity').value;
+                if (parseInt(quantity) > parseInt(stock)) {
+                    alert("You cannot add more than the available stock.");
+                    return false;
+                }
+                return true;
             }
 
             var swiper = new Swiper(".featured-slider", {
