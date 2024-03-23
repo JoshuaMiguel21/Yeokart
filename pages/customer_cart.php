@@ -247,7 +247,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_id']) && isset($
             // Update subtotal and total in the frontend
             var subtotalElement = document.getElementById('subtotal' + cartId);
             var newSubtotal = quantity * price;
-            subtotalElement.textContent = "Subtotal: ₱ " + newSubtotal.toFixed(2);
+            subtotalElement.textContent = "Subtotal: ₱ " + newSubtotal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
             // Calculate new total
             updateTotal();
@@ -255,7 +255,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_id']) && isset($
 
         function updateTotal() {
             var totalElements = document.querySelectorAll('.subtotal');
-            var total = Array.from(totalElements).reduce((acc, elem) => acc + parseFloat(elem.textContent.replace('Subtotal: ₱ ', '')), 0);
+            var total = Array.from(totalElements).reduce((acc, elem) => {
+                var subtotalText = elem.textContent.replace('Subtotal: ₱ ', '').replace(',', ''); // Remove currency symbol and comma
+                var subtotalValue = parseFloat(subtotalText);
+                return acc + subtotalValue;
+            }, 0);
             var totalElement = document.querySelector('.total');
             totalElement.innerHTML = "Total: ₱ " + total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
