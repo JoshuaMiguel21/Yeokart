@@ -149,7 +149,7 @@ if (isset($_POST['add-to-cart-btn'])) {
                 <?php if (!empty($fetch_item)) : ?>
 
                     <div class="category-name">
-                        <p><?php echo $fetch_item['category_name']; ?></p>
+                    <p><?php echo $fetch_item['category_name'], ' / ', $fetch_item['artist_name']; ?></p>
                     </div>
 
                     <div class="item-name">
