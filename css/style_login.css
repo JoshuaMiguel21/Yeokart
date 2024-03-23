@@ -199,12 +199,10 @@ input[type="text"], input[type="email"], input[type="password"] {
 
     #div1 p, #div2 p {
         font-size: 0.8rem;
-        text-align: center;
     }
 
     #div1 h1 {
         font-size: 2rem;
-        text-align: center;
     }
 
     label {
@@ -226,10 +224,6 @@ input[type="text"], input[type="email"], input[type="password"] {
 }
 
 @media (min-width: 576px) and (max-width: 960px) {
-    .container {
-        flex-direction: column;
-    }
-    
     #div1{
         max-height: 512px;
         padding: 20px;
@@ -238,16 +232,13 @@ input[type="text"], input[type="email"], input[type="password"] {
     #div2{
         max-height: 256px;
     }
-
     
     #div1 p {
         font-size: 0.8rem;
-        text-align: center;
     }
 
     #div1 h1 {
         font-size: 2rem;
-        text-align: center;
     }
 
     label {

@@ -19,6 +19,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    height: 100vh;
 }
 
 .left-column,
@@ -126,7 +127,141 @@ a .btn-custom:hover{
     color: #ffffff;
 }
 
-@media (min-width: 683px) and (max-width: 960px) {
+@media (max-width: 767px) {
+    .container {
+        flex-direction: column;
+    }
+    
+    div.left-column{
+        padding-top: 75px;
+        max-height: 512px;
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-bottom: 20px;
+    }
+
+    div.right-column{
+        width: 99%;
+    }
+
+    
+    #div1 p {
+        font-size: 0.8rem;
+        text-align: center;
+    }
+
+    #div1 h1 {
+        font-size: 0.8rem;
+        text-align: center;
+    }
+
+    label {
+        font-size: 0.8rem;
+    }
+
+    input[type="text"], input[type="email"], input[type="password"] {
+        padding: 5px;
+        font-size: 0.8rem;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 960px) {
+
+    .container {
+        flex-direction: column;
+    }
+
+    form {
+        padding: 20px;
+    }
+
+    .form-group,
+    .button-container {
+        width: 100%;
+    }
+
+    div.left-column{
+        padding-top: 125px;
+        max-height: 75%;
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-bottom: 20px;
+    }
+
+    div.right-column{
+        height: 40%;
+        width: 90%;
+    }
+
+    div.right-column p {
+        font-size: 0.8rem;
+    }
+
+    div.right-column h1 {
+        font-size: 2rem;
+    }
+
+    label {
+        font-size: 0.8rem;
+    }
+
+    a .btn-custom,
+    #register {
+        margin-top: 10px;
+    }
+
+    input[type="text"], input[type="email"], input[type="password"] {
+        padding: 5px;
+        font-size: 0.8rem;
+    }
+
+    .forgot-pass {
+        font-size: 0.8rem;
+    }
+}
+
+@media (min-width: 961px) {
+
+    .form-group,
+    .button-container {
+        width: 100%;
+    }
+
+    div.left-column{
+        max-height: 60%;
+    }
+
+    div.right-column{
+        width: 90%;
+    }
+
+    div.right-column p {
+        font-size: 0.8rem;
+    }
+
+    div.right-column h1 {
+        font-size: 2rem;
+    }
+
+    label {
+        font-size: 0.8rem;
+    }
+
+    .custom-button {
+        font-size: 0.8rem;
+    }
+
+    input[type="text"], input[type="email"], input[type="password"] {
+        padding: 5px;
+        font-size: 0.8rem;
+    }
+
+    .forgot-pass {
+        font-size: 0.8rem;
+    }
+}
+
+/*@media (min-width: 683px) and (max-width: 960px) {
     form {
         padding: 20px;
     }
@@ -208,4 +343,4 @@ a .btn-custom:hover{
     input[type="text"], input[type="email"], input[type="password"] {
         font-size: 0.8rem;
     }
-}
+}*/
