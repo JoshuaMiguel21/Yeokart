@@ -73,11 +73,11 @@
             </div>
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <label for="item_image2" class="form-label">Item Image 2:</label>
-                <input type="file" name="item_image2" id="item_image2" accept="image/*" class="form-control" required>
+                <input type="file" name="item_image2" id="item_image2" accept="image/*" class="form-control">
             </div>
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <label for="item_image3" class="form-label">Item Image 3:</label>
-                <input type="file" name="item_image3" id="item_image3" accept="image/*" class="form-control" required>
+                <input type="file" name="item_image3" id="item_image3" accept="image/*" class="form-control">
             </div>
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <input type="submit" name="insert_item" class="btn btn-info mb-3 px-3" value="Add Item">
@@ -140,7 +140,7 @@ if (isset($_POST['insert_item'])) {
     if ($number > 0) {
         echo "<script>alert('This product already exists')</script>";
     } else {
-        if ($item_name == '' or $item_price == '' or $item_description == '' or  $item_quantity == '' or  $product_artist == '' or $product_category == ''  or  $item_image1 == ''  or  $item_image2 == ''  or  $item_image3 == '') {
+        if ($item_name == '' or $item_price == '' or $item_description == '' or  $item_quantity == '' or  $product_artist == '' or $product_category == '') {
             echo "<script>alert('Please fill up all the fields')</script>";
             exit();
         } else {

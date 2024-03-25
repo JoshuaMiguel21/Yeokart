@@ -142,33 +142,40 @@ if (isset($_POST['add-to-cart-btn'])) {
         </div>
         <section class="product-details" id="product-details">
             <div class="product-details-left">
-                <div class="main-image fade">
-                    <!-- Check if $fetch_item is not empty before accessing its elements -->
-                    <?php if (!empty($fetch_item)) : ?>
-                        <img src="item_images/<?php echo $fetch_item['item_image1']; ?>" alt="Product Image" width="100%" height="100%">
+                <?php if (!empty($fetch_item['item_image1']) || !empty($fetch_item['item_image2']) || !empty($fetch_item['item_image3'])) : ?>
+                    <div class="main-image fade">
+                        <!-- Check if $fetch_item is not empty before accessing its elements -->
+                        <?php if (!empty($fetch_item['item_image1'])) : ?>
+                            <img src="item_images/<?php echo $fetch_item['item_image1']; ?>" alt="Product Image" width="100%" height="100%">
+                        <?php endif; ?>
+                    </div>
+                    <?php if (!empty($fetch_item['item_image2'])) : ?>
+                        <div class="main-image fade">
+                            <!-- Check if $fetch_item is not empty before accessing its elements -->
+                            <img src="item_images/<?php echo $fetch_item['item_image2']; ?>" alt="Product Image" width="100%" height="100%">
+                        </div>
                     <?php endif; ?>
-                </div>
-                <div class="main-image fade">
-                    <!-- Check if $fetch_item is not empty before accessing its elements -->
-                    <?php if (!empty($fetch_item)) : ?>
-                        <img src="item_images/<?php echo $fetch_item['item_image2']; ?>" alt="Product Image" width="100%" height="100%">
+                    <?php if (!empty($fetch_item['item_image3'])) : ?>
+                        <div class="main-image fade">
+                            <!-- Check if $fetch_item is not empty before accessing its elements -->
+                            <img src="item_images/<?php echo $fetch_item['item_image3']; ?>" alt="Product Image" width="100%" height="100%">
+                        </div>
                     <?php endif; ?>
-                </div>
-                <div class="main-image fade">
-                    <!-- Check if $fetch_item is not empty before accessing its elements -->
-                    <?php if (!empty($fetch_item)) : ?>
-                        <img src="item_images/<?php echo $fetch_item['item_image3']; ?>" alt="Product Image" width="100%" height="100%">
+                    <?php if (!empty($fetch_item['item_image2']) || !empty($fetch_item['item_image3'])) : ?>
+                        <a class="prev" onClick="plusSlides(-1)">&#10094;</a>
+                        <a class="next" onClick="plusSlides(1)">&#10095;</a>
                     <?php endif; ?>
-                </div>
 
-                <a class="prev" onClick="plusSlides(-1)">&#10094;</a>
-                <a class="next" onClick="plusSlides(1)">&#10095;</a>
-
-                <div style="text-align: center">
-                    <span class="dot" onClick="currentSlides(1)"></span>
-                    <span class="dot" onClick="currentSlides(2)"></span>
-                    <span class="dot" onClick="currentSlides(3)"></span>
-                </div>
+                    <div style="text-align: center">
+                        <span class="dot" onClick="currentSlides(1)"></span>
+                        <?php if (!empty($fetch_item['item_image2'])) : ?>
+                            <span class="dot" onClick="currentSlides(2)"></span>
+                        <?php endif; ?>
+                        <?php if (!empty($fetch_item['item_image3'])) : ?>
+                            <span class="dot" onClick="currentSlides(3)"></span>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
             </div>
 
 
