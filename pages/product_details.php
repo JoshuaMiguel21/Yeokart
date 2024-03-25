@@ -138,18 +138,41 @@ if (isset($_POST['add-to-cart-btn'])) {
         </div>
         <section class="product-details" id="product-details">
             <div class="product-details-left">
-                <div class="main-image">
+                <div class="main-image fade">
                     <!-- Check if $fetch_item is not empty before accessing its elements -->
                     <?php if (!empty($fetch_item)) : ?>
                         <img src="item_images/<?php echo $fetch_item['item_image1']; ?>" alt="Product Image" width="100%" height="100%">
                     <?php endif; ?>
                 </div>
+                <div class="main-image fade">
+                    <!-- Check if $fetch_item is not empty before accessing its elements -->
+                    <?php if (!empty($fetch_item)) : ?>
+                        <img src="item_images/<?php echo $fetch_item['item_image2']; ?>" alt="Product Image" width="100%" height="100%">
+                    <?php endif; ?>
+                </div>
+                <div class="main-image fade">
+                    <!-- Check if $fetch_item is not empty before accessing its elements -->
+                    <?php if (!empty($fetch_item)) : ?>
+                        <img src="item_images/<?php echo $fetch_item['item_image3']; ?>" alt="Product Image" width="100%" height="100%">
+                    <?php endif; ?>
+                </div>
+
+                <a class="prev" onClick="plusSlides(-1)">&#10094;</a>
+                <a class="next" onClick="plusSlides(1)">&#10095;</a>
+
+                <div style="text-align: center">
+                <span class="dot" onClick="currentSlides(1)"></span>
+                <span class="dot" onClick="currentSlides(2)"></span>
+                <span class="dot" onClick="currentSlides(3)"></span>
             </div>
+            </div>
+
+
             <div class="product-details-right">
                 <?php if (!empty($fetch_item)) : ?>
 
                     <div class="category-name">
-                    <p><?php echo $fetch_item['category_name'], ' / ', $fetch_item['artist_name']; ?></p>
+                        <p><?php echo $fetch_item['category_name'], ' / ', $fetch_item['artist_name']; ?></p>
                     </div>
 
                     <div class="item-name">
@@ -344,6 +367,39 @@ if (isset($_POST['add-to-cart-btn'])) {
                 });
             });
         </script>
+
+<script>
+    var slideIndex = 1;
+    showSlides(slideIndex);
+
+    function plusSlides(n) {
+        showSlides(slideIndex += n);
+    }
+
+    function currentSlide(n) {
+        showSlides(slideIndex = n);
+    }
+
+    function showSlides(n) {
+        var i;
+        var slides = document.getElementsByClassName("main-image");
+        var dots = document.getElementsByClassName("dot");
+        if (n > slides.length) {
+            slideIndex = slides.length;
+        }
+        if (n < 1) {
+            slideIndex = 1;
+        }
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+        for (i = 0; i < dots.length; i++) {
+            dots[i].className = dots[i].className.replace(" active", "");
+        }
+        slides[slideIndex - 1].style.display = "block";
+        dots[slideIndex - 1].className += " active";
+    }
+</script>
 </body>
 
 </html>
