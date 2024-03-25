@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 25, 2024 at 09:40 AM
+-- Generation Time: Mar 25, 2024 at 09:39 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -24,22 +24,18 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `products`
+-- Table structure for table `orders`
 --
 
-CREATE TABLE `products` (
-  `item_id` int(11) NOT NULL,
-  `item_name` varchar(255) NOT NULL,
-  `item_price` decimal(10,2) NOT NULL,
-  `item_description` varchar(500) NOT NULL,
-  `item_quantity` int(255) NOT NULL,
-  `artist_name` varchar(255) NOT NULL,
-  `category_name` varchar(255) NOT NULL,
-  `item_image1` varchar(250) NOT NULL,
-  `item_image2` varchar(250) NOT NULL,
-  `item_image3` varchar(250) NOT NULL,
-  `is_featured` tinyint(1) NOT NULL,
-  `times_sold` int(11) NOT NULL
+CREATE TABLE `orders` (
+  `order_id` varchar(36) NOT NULL,
+  `customer_id` int(11) DEFAULT NULL,
+  `firstname` varchar(255) DEFAULT NULL,
+  `lastname` varchar(255) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `items_ordered` text DEFAULT NULL,
+  `total` decimal(10,2) DEFAULT NULL,
+  `date_of_purchase` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -47,20 +43,21 @@ CREATE TABLE `products` (
 --
 
 --
--- Indexes for table `products`
+-- Indexes for table `orders`
 --
-ALTER TABLE `products`
-  ADD PRIMARY KEY (`item_id`);
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`order_id`),
+  ADD KEY `customer_id` (`customer_id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- Constraints for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `products`
+-- Constraints for table `orders`
 --
-ALTER TABLE `products`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `orders`
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `user_accounts` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

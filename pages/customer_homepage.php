@@ -176,8 +176,8 @@ if ($result) {
                         <a href='#' class='fas fa-eye'onclick='handleImageClick(\"$item_id\")'></a>
                     </div>
                     <div class='image'>
-                    <img src='item_images/$item_image1' alt=''>
-                    </div>
+                <img src='item_images/$item_image1' alt='' onclick='handleImageClick(\"$item_id\")'>
+            </div>
                     <div class='content'>
                     <h3 class='artist'>$artist_name</h3>
                     <h3 class='marquee'>$item_name</h3>
