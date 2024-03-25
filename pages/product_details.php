@@ -123,17 +123,29 @@ if (isset($_POST['add-to-cart-btn'])) {
     <header class="header">
         <div class="header-1">
             <a href="customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>
-
-            <form action="" class="search-form">
-                <input type="search" name="" placeholder="Search here..." id="search-box">
-                <label for="search-box" class="fas fa-search"></label>
-            </form>
             <div class="icons">
-                <div id="search-btn" class="fas fa-search"></div>
-                <a href="new_customer_shop.php">Shop</a>
-                <a href="contact_page.php">Contact Us</a>
-                <a href="customer_cart.php" class="fas fa-shopping-cart"></a>
-                <a href="customer_profile.php" id="user-btn" class="fas fa-user"></a>
+                <form action="" class="search-form">
+                    <input type="search" name="" placeholder="Search here..." id="search-box">
+                    <label for="search-box" class="fas fa-search"></label>
+                </form>
+                <label for="click" class="menu-btn">
+                    <i class="fas fa-bars"></i>
+                </label>
+            </div>
+            <div class="icons">
+                <ul>
+                    <li class="search-ul">
+                        <form action="" class="search-form">
+                            <input type="search" name="" placeholder="Search here..." id="search-box">
+                            <label for="search-box" class="fas fa-search"></label>
+                        </form>
+                    </li>
+                    <li class="home-class"><a href="customer_homepage.php" id="home-nav" class="active">Home</a></li>
+                    <li><a href="new_customer_shop.php">Shop</a></li>
+                    <li><a href="contact_page.php">Contact Us</a></li>
+                    <li><a href="customer_cart.php"><i class="fas fa-shopping-cart"></i></a></li>
+                    <li><a href="customer_profile.php" id="user-btn"><i class="fas fa-user"></i></a></li>
+                </ul>
             </div>
         </div>
         <section class="product-details" id="product-details">
@@ -161,10 +173,10 @@ if (isset($_POST['add-to-cart-btn'])) {
                 <a class="next" onClick="plusSlides(1)">&#10095;</a>
 
                 <div style="text-align: center">
-                <span class="dot" onClick="currentSlides(1)"></span>
-                <span class="dot" onClick="currentSlides(2)"></span>
-                <span class="dot" onClick="currentSlides(3)"></span>
-            </div>
+                    <span class="dot" onClick="currentSlides(1)"></span>
+                    <span class="dot" onClick="currentSlides(2)"></span>
+                    <span class="dot" onClick="currentSlides(3)"></span>
+                </div>
             </div>
 
 
@@ -368,38 +380,38 @@ if (isset($_POST['add-to-cart-btn'])) {
             });
         </script>
 
-<script>
-    var slideIndex = 1;
-    showSlides(slideIndex);
+        <script>
+            var slideIndex = 1;
+            showSlides(slideIndex);
 
-    function plusSlides(n) {
-        showSlides(slideIndex += n);
-    }
+            function plusSlides(n) {
+                showSlides(slideIndex += n);
+            }
 
-    function currentSlide(n) {
-        showSlides(slideIndex = n);
-    }
+            function currentSlide(n) {
+                showSlides(slideIndex = n);
+            }
 
-    function showSlides(n) {
-        var i;
-        var slides = document.getElementsByClassName("main-image");
-        var dots = document.getElementsByClassName("dot");
-        if (n > slides.length) {
-            slideIndex = slides.length;
-        }
-        if (n < 1) {
-            slideIndex = 1;
-        }
-        for (i = 0; i < slides.length; i++) {
-            slides[i].style.display = "none";
-        }
-        for (i = 0; i < dots.length; i++) {
-            dots[i].className = dots[i].className.replace(" active", "");
-        }
-        slides[slideIndex - 1].style.display = "block";
-        dots[slideIndex - 1].className += " active";
-    }
-</script>
+            function showSlides(n) {
+                var i;
+                var slides = document.getElementsByClassName("main-image");
+                var dots = document.getElementsByClassName("dot");
+                if (n > slides.length) {
+                    slideIndex = slides.length;
+                }
+                if (n < 1) {
+                    slideIndex = 1;
+                }
+                for (i = 0; i < slides.length; i++) {
+                    slides[i].style.display = "none";
+                }
+                for (i = 0; i < dots.length; i++) {
+                    dots[i].className = dots[i].className.replace(" active", "");
+                }
+                slides[slideIndex - 1].style.display = "block";
+                dots[slideIndex - 1].className += " active";
+            }
+        </script>
 </body>
 
 </html>
