@@ -5,12 +5,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yeokart</title>
+    <title>Shopping Cart-Yeokart</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="stylesheet" href="../css/style_homepage_customer.css">
 </head>
 <?php
+require('../database/db_yeokart.php');
 session_start();
 
 if (isset($_SESSION['id'])) {
@@ -48,7 +49,15 @@ if (isset($_SESSION['email'])) {
     exit();
 }
 
-include('../database/db_yeokart.php');
+$sql = "SELECT COUNT(*) AS cart_count FROM cart WHERE customer_id = $customer_id";
+$result = $con->query($sql);
+
+if ($result) {
+    $row = $result->fetch_assoc();
+    $cartCount = $row['cart_count'];
+} else {
+    echo "Error: " . $sql . "<br>" . $con->error;
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_id']) && isset($_POST['quantity'])) {
     $cartId = $_POST['cart_id'];
@@ -81,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_id']) && isset($
             <div class="icons">
                 <ul>
                     <li class="search-ul">
-                        <form action="" class="search-form">
+                        <form action="" class="search-form1">
                             <input type="search" name="" placeholder="Search here..." id="search-box">
                             <label for="search-box" class="fas fa-search"></label>
                         </form>
@@ -89,13 +98,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_id']) && isset($
                     <li class="home-class"><a href="customer_homepage.php" id="home-nav">Home</a></li>
                     <li><a href="new_customer_shop.php">Shop</a></li>
                     <li><a href="contact_page.php">Contact Us</a></li>
-                    <li><a href="customer_cart.php" class="active"><i class="fas fa-shopping-cart"></i></a></li>
+                    <li><a href="customer_cart.php" class="active"><i class="fas fa-shopping-cart"><span id="cart-num"><?php echo $cartCount; ?></span></i></a></li>
                     <li><a href="customer_profile.php" id="user-btn"><i class="fas fa-user"></i></a></li>
                 </ul>
             </div>
         </div>
     </header>
-    <section class="cart">
+    <section class="cart" id="cart">
         <div class="header-3">
             <h1>Shopping Cart</h1>
         </div>
@@ -165,8 +174,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_id']) && isset($
         <div class="popup-del-content">
             <span class="close" onclick="closeDeletePopup()">&times;</span>
             <h2>Confirm Deletion</h2>
-            <p>Are you sure you want to delete this item?</p>
-            <button class="btn-confirm" onclick="confirmDeletion()">Delete</button>
+            <p>Are you sure you want to remove this item from your cart?</p>
+            <button class="btn-confirm" onclick="confirmDeletion()">Remove</button>
             <button class="btn-cancel" onclick="closeDeletePopup()">Cancel</button>
         </div>
     </div>
@@ -285,6 +294,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_id']) && isset($
                     itemName.classList.add('marquee');
                 } else {
                     itemName.classList.remove('marquee');
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkbox = document.getElementById('click');
+            const cartToHide = document.getElementById('cart');
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    cartToHide.style.display = 'none';
+                } else {
+                    cartToHide.style.display = 'block';
                 }
             });
         });

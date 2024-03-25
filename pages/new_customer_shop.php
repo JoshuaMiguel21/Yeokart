@@ -5,12 +5,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yeokart</title>
+    <title>Shop-Yeokart</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="stylesheet" href="../css/style_homepage_customer.css">
 </head>
 <?php
+require('../database/db_yeokart.php');
 session_start();
 
 if (isset($_SESSION['id'])) {
@@ -48,6 +49,16 @@ if (isset($_SESSION['email'])) {
     exit();
 }
 
+$sql = "SELECT COUNT(*) AS cart_count FROM cart WHERE customer_id = $customer_id";
+$result = $con->query($sql);
+
+if ($result) {
+    $row = $result->fetch_assoc();
+    $cartCount = $row['cart_count'];
+} else {
+    echo "Error: " . $sql . "<br>" . $con->error;
+}
+
 ?>
 
 <body>
@@ -67,7 +78,7 @@ if (isset($_SESSION['email'])) {
             <div class="icons">
                 <ul>
                     <li class="search-ul">
-                        <form action="" class="search-form">
+                        <form action="" class="search-form1">
                             <input type="search" name="" placeholder="Search here..." id="search-box">
                             <label for="search-box" class="fas fa-search"></label>
                         </form>
@@ -75,7 +86,7 @@ if (isset($_SESSION['email'])) {
                     <li class="home-class"><a href="customer_homepage.php" id="home-nav">Home</a></li>
                     <li><a href="new_customer_shop.php" class="active">Shop</a></li>
                     <li><a href="contact_page.php">Contact Us</a></li>
-                    <li><a href="customer_cart.php"><i class="fas fa-shopping-cart"></i></a></li>
+                    <li><a href="customer_cart.php"><i class="fas fa-shopping-cart"><span id="cart-num"><?php echo $cartCount; ?></span></i></a></li>
                     <li><a href="customer_profile.php" id="user-btn"><i class="fas fa-user"></i></a></li>
                 </ul>
             </div>
@@ -169,6 +180,18 @@ if (isset($_SESSION['email'])) {
             // Redirect the user to the product details page
             window.location.href = url;
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkbox = document.getElementById('click');
+            const bestToHide = document.getElementById('best');
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    bestToHide.style.display = 'none';
+                } else {
+                    bestToHide.style.display = 'block';
+                }
+            });
+        });
     </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

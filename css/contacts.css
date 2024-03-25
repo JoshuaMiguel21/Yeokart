@@ -72,7 +72,8 @@ section{
 .header .header-1 .logo{
     width: 150px;
 }
-.header .header-1 .search-form{
+.header .header-1 .search-form, 
+.header .header-1 .search-form1{
     width: 50rem;
     height: 5rem;
     border: var(--border);
@@ -83,7 +84,8 @@ section{
     border-radius: .5rem;
 }
 
-.header .header-1 .search-form input{
+.header .header-1 .search-form input, 
+.header .header-1 .search-form1 input{
     font-size: 1.6rem;
     padding: 0 1.2rem;
     height: 100%;
@@ -91,12 +93,15 @@ section{
     text-transform: none;
     color:var(--black);
 }
-.header .header-1 .search-form label{
+
+.header .header-1 .search-form label, 
+.header .header-1 .search-form1 label{
     font-size: 2.5rem;
     padding-right: 1.5rem;
     color: var(--black);
     cursor: pointer;
 }
+
 .header .header-1 .search-form label:hover{
     color: var(--pink);
 }
@@ -176,6 +181,7 @@ section{
 .header .header-2 .navbar a:hover{
     background: var(--dark-color);
 }
+
 .header .header-2.active{
     position: fixed;
     top: 0;
@@ -278,7 +284,31 @@ section{
     display: none;
 }
 
+#cart-num{
+    display: flex;
+    width: 23px;
+    height: 23px;
+    font-size: 14px;
+    background-color: var(--pink);
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    right: -20px;
+}
+
+
+
 @media (max-width: 940px) {
+    #cart-num{
+        background-color: #fff;
+        color: var(--black);
+        top: 50%;
+        right: 0px;
+    }
+
     .header .header-1 .menu-btn {
         display: block;
         position: absolute;
@@ -290,9 +320,9 @@ section{
         content: "\f00d";
     }
 
-    .header .header-1 .icons ul {
+    .header .header-1 .icons ul{
         position: fixed;
-        padding-top: 50px;
+        padding-top: 30px;
         top: 100px;
         left: -100%;
         background-color: var(--pink);
@@ -364,6 +394,14 @@ section{
     body{
         padding-bottom: 6rem;
     }
+
+    .header .header-1 .icons .search-ul{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0px 30px;
+    }
+
     .header .header-2{
         display: none;
     }
@@ -389,14 +427,24 @@ section{
         display: none;
         z-index: 999;
     }
-    .header .header-1 .search-form.active{
-        top:115%;
-        display: block;
-    }
 }
 @media (max-width:450px){
     html{
         font-size: 43%;
+    }
+
+    .header .header-1 .icons ul {
+        top: 90px;
+    }
+
+    #cart-num{
+        background-color: #fff;
+        width: 18px;
+        height: 18px;
+        font-size: 10px;
+        color: var(--black);
+        top: 50%;
+        right: 5px;
     }
 }
 @media (max-width:375px){

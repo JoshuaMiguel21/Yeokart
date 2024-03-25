@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yeokart</title>
+    <title>Account-Yeokart</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="stylesheet" href="../css/style_homepage_customer.css">
@@ -131,6 +131,16 @@ if (isset($_SESSION['email'])) {
     exit();
 }
 
+$sql = "SELECT COUNT(*) AS cart_count FROM cart WHERE customer_id = $customer_id";
+$result = $con->query($sql);
+
+if ($result) {
+    $row = $result->fetch_assoc();
+    $cartCount = $row['cart_count'];
+} else {
+    echo "Error: " . $sql . "<br>" . $con->error;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $customer_id = $_SESSION['id'];
     $address = $_POST['address'];
@@ -174,7 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="icons">
                 <ul>
                     <li class="search-ul">
-                        <form action="" class="search-form">
+                        <form action="" class="search-form1">
                             <input type="search" name="" placeholder="Search here..." id="search-box">
                             <label for="search-box" class="fas fa-search"></label>
                         </form>
@@ -182,7 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <li class="home-class"><a href="customer_homepage.php" id="home-nav">Home</a></li>
                     <li><a href="new_customer_shop.php">Shop</a></li>
                     <li><a href="contact_page.php">Contact Us</a></li>
-                    <li><a href="customer_cart.php"><i class="fas fa-shopping-cart"></i></a></li>
+                    <li><a href="customer_cart.php"><i class="fas fa-shopping-cart"><span id="cart-num"><?php echo $cartCount; ?></span></i></a></li>
                     <li><a href="customer_profile.php" id="user-btn" class="active"><i class="fas fa-user"></i></a></li>
                 </ul>
             </div>

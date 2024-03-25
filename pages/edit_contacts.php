@@ -12,7 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.js"></script>
     <link href="../css/add&edit_item.css" rel="stylesheet" />
 
-    <title>Yeokart Edit Contacts Page</title>
+    <title>Yeokart</title>
 </head>
 
 <body style="background-color: #DD2F6E;">

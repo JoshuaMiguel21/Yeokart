@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="../css/style_homepage_customer.css">
 </head>
 <?php
+require('../database/db_yeokart.php');
 session_start();
 
 if (isset($_SESSION['id'])) {
@@ -48,7 +49,15 @@ if (isset($_SESSION['email'])) {
     exit();
 }
 
-include('../database/db_yeokart.php');
+$sql = "SELECT COUNT(*) AS cart_count FROM cart WHERE customer_id = $customer_id";
+$result = $con->query($sql);
+
+if ($result) {
+    $row = $result->fetch_assoc();
+    $cartCount = $row['cart_count'];
+} else {
+    echo "Error: " . $sql . "<br>" . $con->error;
+}
 
 if (isset($_GET['item_id'])) {
     $item_id = $_GET['item_id'];
@@ -120,22 +129,36 @@ if (isset($_POST['add-to-cart-btn'])) {
 ?>
 
 <body>
-    <header class="header">
+    <input type="checkbox" id="click">
+    <header class="header" style="box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
         <div class="header-1">
             <a href="customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>
-
-            <form action="" class="search-form">
-                <input type="search" name="" placeholder="Search here..." id="search-box">
-                <label for="search-box" class="fas fa-search"></label>
-            </form>
             <div class="icons">
-                <div id="search-btn" class="fas fa-search"></div>
-                <a href="new_customer_shop.php">Shop</a>
-                <a href="contact_page.php">Contact Us</a>
-                <a href="customer_cart.php" class="fas fa-shopping-cart"></a>
-                <a href="customer_profile.php" id="user-btn" class="fas fa-user"></a>
+                <form action="" class="search-form">
+                    <input type="search" name="" placeholder="Search here..." id="search-box">
+                    <label for="search-box" class="fas fa-search"></label>
+                </form>
+                <label for="click" class="menu-btn">
+                    <i class="fas fa-bars"></i>
+                </label>
+            </div>
+            <div class="icons">
+                <ul>
+                    <li class="search-ul">
+                        <form action="" class="search-form1">
+                            <input type="search" name="" placeholder="Search here..." id="search-box">
+                            <label for="search-box" class="fas fa-search"></label>
+                        </form>
+                    </li>
+                    <li class="home-class"><a href="customer_homepage.php" id="home-nav">Home</a></li>
+                    <li><a href="new_customer_shop.php" class="active">Shop</a></li>
+                    <li><a href="contact_page.php">Contact Us</a></li>
+                    <li><a href="customer_cart.php"><i class="fas fa-shopping-cart"><span id="cart-num"><?php echo $cartCount; ?></span></i></a></li>
+                    <li><a href="customer_profile.php" id="user-btn"><i class="fas fa-user"></i></a></li>
+                </ul>
             </div>
         </div>
+    </header>
         <section class="product-details" id="product-details">
             <div class="product-details-left">
                 <div class="main-image">
@@ -177,7 +200,7 @@ if (isset($_POST['add-to-cart-btn'])) {
                             <input type="hidden" name="item_price" value="<?php echo $fetch_item['item_price']; ?>">
                             <input type="hidden" name="item_image" value="<?php echo $fetch_item['item_image1']; ?>">
                             <input type="hidden" id="hidden-quantity" name="quantity" value="1"> <!-- Updated the ID -->
-                            <button type="submit" onclick="return checkStock(<?php echo $fetch_item['item_quantity']; ?>);" name="add-to-cart-btn"><i class='fa-solid fa-cart-plus'></i> Add to Cart</button>
+                            <button type="submit" name="add-to-cart-btn" onclick="return checkStock(<?php echo $fetch_item['item_quantity']; ?>);" name="add-to-cart-btn"><i class='fa-solid fa-cart-plus'></i> Add to Cart</button>
                         </form>
                     </div>
 
@@ -231,6 +254,19 @@ if (isset($_POST['add-to-cart-btn'])) {
                 <div class="swiper-button-prev"></div>
             </div>
         </section>
+
+        <div id="cart-notification" class="cart-notification">
+            <div class="notification-content">
+                <span id="cart-item-name"></span> added to your cart
+            </div>
+            <div class="notification-actions">
+                <span id="close-notification" class="close-notification">&times;</span>
+                <img src="" alt="" id="cart-item-image">
+                <a href="customer_cart.php">VIEW CART</a>
+            </div>
+            <div class="loading-overlay"></div>
+        </div>
+
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
@@ -343,6 +379,48 @@ if (isset($_POST['add-to-cart-btn'])) {
                     }
                 });
             });
+
+            document.addEventListener('DOMContentLoaded', function() {
+            const checkbox = document.getElementById('click');
+            const featuredToHide = document.getElementById('featured');
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    featuredToHide.style.display = 'none';
+                } else {
+                    featuredToHide.style.display = 'block';
+                }
+            });
+        });
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const closeNotification = document.getElementById('close-notification');
+                const cartNotification = document.getElementById('cart-notification');
+
+                
+                closeNotification.addEventListener('click', function () {
+                    cartNotification.style.display = 'none';
+                });
+
+
+                <?php if (isset($_POST['add-to-cart-btn'])) : ?>
+                    
+                    document.getElementById('cart-notification').style.display = 'block';
+                    document.getElementById('cart-item-name').innerText = "<?php echo $fetch_item['item_name']; ?>";
+                    document.getElementById('cart-item-image').src = "item_images/<?php echo $fetch_item['item_image1']; ?>";
+                <?php endif; ?>
+            });
+
+            function toggleLoading() {
+                const loadingOverlay = document.querySelector('.loading-overlay');
+                loadingOverlay.classList.toggle('loading');
+                
+                setTimeout(() => {
+                    const cartNotification = document.querySelector('#cart-notification');
+                    cartNotification.style.display = 'none';
+                }, 4000);
+            }
+
+            toggleLoading();
         </script>
 </body>
 

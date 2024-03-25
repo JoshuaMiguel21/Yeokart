@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="../css/style_homepage_customer.css">
 </head>
 <?php
+require('../database/db_yeokart.php');
 session_start();
 
 if (isset($_SESSION['id'])) {
@@ -48,9 +49,17 @@ if (isset($_SESSION['email'])) {
     exit();
 }
 
+$sql = "SELECT COUNT(*) AS cart_count FROM cart WHERE customer_id = $customer_id";
+$result = $con->query($sql);
+
+if ($result) {
+    $row = $result->fetch_assoc();
+    $cartCount = $row['cart_count'];
+} else {
+    echo "Error: " . $sql . "<br>" . $con->error;
+}
 
 ?>
-
 
 <body>
     <input type="checkbox" id="click">
@@ -69,7 +78,7 @@ if (isset($_SESSION['email'])) {
             <div class="icons">
                 <ul>
                     <li class="search-ul">
-                        <form action="" class="search-form">
+                        <form action="" class="search-form1">
                             <input type="search" name="" placeholder="Search here..." id="search-box">
                             <label for="search-box" class="fas fa-search"></label>
                         </form>
@@ -77,7 +86,7 @@ if (isset($_SESSION['email'])) {
                     <li class="home-class"><a href="customer_homepage.php" id="home-nav" class="active">Home</a></li>
                     <li><a href="new_customer_shop.php">Shop</a></li>
                     <li><a href="contact_page.php">Contact Us</a></li>
-                    <li><a href="customer_cart.php"><i class="fas fa-shopping-cart"></i></a></li>
+                    <li><a href="customer_cart.php"><i class="fas fa-shopping-cart"><span id="cart-num"><?php echo $cartCount; ?></span></i></a></li>
                     <li><a href="customer_profile.php" id="user-btn"><i class="fas fa-user"></i></a></li>
                 </ul>
             </div>
