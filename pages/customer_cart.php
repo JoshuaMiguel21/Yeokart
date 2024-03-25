@@ -62,9 +62,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_id']) && isset($
     header("Location: " . $_SERVER['PHP_SELF']);
     exit();
 }
+
+$select_query = "SELECT address FROM addresses WHERE customer_id = $customer_id AND is_default = 1";
+$result_query = mysqli_query($con, $select_query);
+if (mysqli_num_rows($result_query) > 0) {
+    $row = mysqli_fetch_assoc($result_query);
+    $address = $row['address'];
+
+    // Display address in JavaScript
+    echo "<script>";
+    echo "var address = '" . $address . "';";
+    echo "</script>";
+} else {
+    // Display default address if none found
+    echo "<script>";
+    echo "var address = 'No address found';";
+    echo "</script>";
+}
 ?>
 
-<body>
+<body onload="restoreScrollPosition()">
     <input type="checkbox" id="click">
     <header class="header" style="box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
         <div class="header-1">
@@ -156,7 +173,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_id']) && isset($
                     </div>
                     <hr>
                     <div class="account-info center-btn">
-                        <a href='#' class='btn'><i class="fa-solid fa-cart-arrow-down"></i>Place Order</a>
+                        <?php
+                        if ($total > 0) {
+                            echo "<a href='#' class='btn' onClick='openSummaryPopup()'><i class='fa fa-cart-arrow-down'></i>Place Order</a>";
+                        } else {
+                            echo "<button class='btn' disabled style='background-color: gray; cursor: not-allowed;'><i class='fa fa-cart-arrow-down'></i>Place Order</button>";
+                        }
+                        ?>
                     </div>
                 </div>
             </div>
@@ -165,12 +188,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_id']) && isset($
         <div class="popup-del-content">
             <span class="close" onclick="closeDeletePopup()">&times;</span>
             <h2>Confirm Deletion</h2>
-            <p>Are you sure you want to delete this item?</p>
+            <p>Do you wish to remove this item from your cart?</p>
             <button class="btn-confirm" onclick="confirmDeletion()">Delete</button>
             <button class="btn-cancel" onclick="closeDeletePopup()">Cancel</button>
         </div>
     </div>
+    <div id="summaryPopup" class="popup-add" style="display: none;">
+        <div class="popup-add-content">
+            <span class="close" onclick="closeSummaryPopup()">&times;</span>
+            <h2>Order Summary</h2>
+            <p><strong>First name: </strong><span id="summaryFirstname"></span></p>
+            <p><strong>Last name: </strong><span id="summaryLastname"></span></p>
+            <label for="addressDropdown">Select Address: <select id="addressDropdown"></select></label>
+            <ul id="cartList"></ul>
+            <p><strong>Total: </strong>₱ <span id="summaryTotal"></span></p>
+            <p><strong>Date of Purchase: </strong><span id="summaryDate"></span></p>
+            <button class="btn-confirm" onclick="placeOrder()">Confirm Order</button>
+            <button class="btn-cancel" onclick="closeSummaryPopup()">Cancel</button>
+        </div>
+    </div>
     <script>
+        function storeScrollPosition() {
+            sessionStorage.setItem('scrollPosition', window.scrollY);
+        }
+
+        function restoreScrollPosition() {
+            var scrollPosition = sessionStorage.getItem('scrollPosition');
+            if (scrollPosition) {
+                window.scrollTo(0, scrollPosition);
+                sessionStorage.removeItem('scrollPosition');
+            }
+        }
+
         function openDeletePopup(cartId) {
             document.getElementById("deletePopup").style.display = "block";
             document.getElementById("deletePopup").setAttribute("data-cartId", cartId);
@@ -178,6 +227,78 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_id']) && isset($
 
         function closeDeletePopup() {
             document.getElementById("deletePopup").style.display = "none";
+        }
+
+        function openSummaryPopup() {
+            // Fetch other information
+            var firstname = "<?php echo $firstname; ?>";
+            var lastname = "<?php echo $lastname; ?>";
+            var total = "<?php echo $total; ?>";
+            var currentDate = new Date().toLocaleDateString();
+
+            // Retrieve all addresses associated with the customer ID
+            var addresses = [];
+            <?php
+            $select_query = "SELECT * FROM addresses WHERE customer_id = $customer_id";
+            $result_query = mysqli_query($con, $select_query);
+            if (mysqli_num_rows($result_query) > 0) {
+                while ($row = mysqli_fetch_assoc($result_query)) {
+                    echo "addresses.push('{$row['address']}');";
+                }
+            }
+            ?>
+
+            var cartItems = [];
+            <?php
+            $select_query_cart = "SELECT item_name, quantity, (quantity * price) AS subtotal FROM cart WHERE customer_id = $customer_id";
+            $result_query_cart = mysqli_query($con, $select_query_cart);
+            $cartItems = array();
+            if (mysqli_num_rows($result_query_cart) > 0) {
+                while ($row = mysqli_fetch_assoc($result_query_cart)) {
+                    $cartItems[] = $row;
+                }
+            }
+
+            $itemsOrdered = "";
+            foreach ($cartItems as $item) {
+                $itemsOrdered .= "{$item['item_name']} ({$item['quantity']}) (₱ {$item['subtotal']}), ";
+            }
+            $itemsOrdered = rtrim($itemsOrdered, ', '); // Remove trailing comma and space
+            ?>
+            var cartItems = <?php echo json_encode($cartItems); ?>;
+
+            // Display information in the popup
+            document.getElementById("summaryPopup").style.display = "block";
+            document.getElementById("summaryFirstname").innerText = firstname;
+            document.getElementById("summaryLastname").innerText = lastname;
+            document.getElementById("summaryTotal").innerText = Number(total).toLocaleString('en-US', {
+                maximumFractionDigits: 2
+            });
+            document.getElementById("summaryDate").innerText = currentDate;
+
+            // Populate the address selection dropdown
+            var dropdown = document.getElementById("addressDropdown");
+            dropdown.innerHTML = ""; // Clear previous options
+            addresses.forEach(address => {
+                var option = document.createElement("option");
+                option.text = address;
+                dropdown.add(option);
+            });
+
+            var cartList = document.getElementById("cartList");
+            cartList.innerHTML = ""; // Clear previous items
+            var itemsOrderedLabel = document.createElement("label");
+            itemsOrderedLabel.textContent = "Items Ordered:";
+            cartList.appendChild(itemsOrderedLabel);
+            cartItems.forEach(item => {
+                var listItem = document.createElement("li");
+                listItem.innerText = `${item.item_name} (${item.quantity}) (₱ ${Number(item.subtotal).toLocaleString('en-US', {maximumFractionDigits: 2})})`;
+                cartList.appendChild(listItem);
+            });
+        }
+
+        function closeSummaryPopup() {
+            document.getElementById("summaryPopup").style.display = "none";
         }
 
         function confirmDeletion() {
@@ -202,6 +323,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_id']) && isset($
         }
 
         function increment(cartId, price) {
+            storeScrollPosition();
+
             var input = document.getElementById('quantity' + cartId);
             if (input.value === '') {
                 input.value = 1; // Set default value to 2 if input is empty
@@ -213,23 +336,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_id']) && isset($
             // Update subtotal
             var subtotalElement = document.getElementById('subtotal' + cartId);
             var newSubtotal = newValue * price;
-            subtotalElement.textContent = "Subtotal: ₱ " + newSubtotal.toFixed(2);
+            subtotalElement.textContent = "Subtotal: ₱ " + newSubtotal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
 
             // Update total
             updateTotal();
         }
 
         function decrement(cartId, price) {
+            storeScrollPosition();
+
             var input = document.getElementById('quantity' + cartId);
             var newValue = parseInt(input.value) - 1;
             if (newValue >= 1) {
                 input.value = newValue;
-                updateQuantity(cartId, newValue);
+                updateQuantity(cartId, newValue, price);
 
                 // Update subtotal
                 var subtotalElement = document.getElementById('subtotal' + cartId);
                 var newSubtotal = newValue * price;
-                subtotalElement.textContent = "Subtotal: ₱ " + newSubtotal.toFixed(2);
+                subtotalElement.textContent = "Subtotal: ₱ " + newSubtotal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
 
                 // Update total
                 updateTotal();
@@ -238,32 +363,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_id']) && isset($
 
         function updateQuantity(cartId, quantity, price) {
             var form = document.createElement('form');
-            form.method = 'POST';
-            form.target = 'update_frame'; // Target the hidden iframe
-            form.action = '';
-
-            var hiddenField1 = document.createElement('input');
-            hiddenField1.type = 'hidden';
-            hiddenField1.name = 'cart_id';
-            hiddenField1.value = cartId;
-            form.appendChild(hiddenField1);
-
-            var hiddenField2 = document.createElement('input');
-            hiddenField2.type = 'hidden';
-            hiddenField2.name = 'quantity';
-            hiddenField2.value = quantity;
-            form.appendChild(hiddenField2);
-
+            form.method = 'post';
+            form.action = '<?php echo $_SERVER['PHP_SELF']; ?>';
+            var inputCartId = document.createElement('input');
+            inputCartId.type = 'hidden';
+            inputCartId.name = 'cart_id';
+            inputCartId.value = cartId;
+            form.appendChild(inputCartId);
+            var inputQuantity = document.createElement('input');
+            inputQuantity.type = 'hidden';
+            inputQuantity.name = 'quantity';
+            inputQuantity.value = quantity;
+            form.appendChild(inputQuantity);
             document.body.appendChild(form);
             form.submit();
-
-            // Update subtotal and total in the frontend
-            var subtotalElement = document.getElementById('subtotal' + cartId);
-            var newSubtotal = quantity * price;
-            subtotalElement.textContent = "Subtotal: ₱ " + newSubtotal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-            // Calculate new total
-            updateTotal();
         }
 
         function updateTotal() {
@@ -275,6 +388,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_id']) && isset($
             }, 0);
             var totalElement = document.querySelector('.total');
             totalElement.innerHTML = "Total: ₱ " + total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        function placeOrder() {
+            var addressDropdown = document.getElementById("addressDropdown");
+            var selectedAddress = addressDropdown.options[addressDropdown.selectedIndex].text;
+
+            var cartItems = <?php echo json_encode($cartItems); ?>;
+
+            var itemsOrdered = cartItems.map(item => `${item.item_name} (${item.quantity}) (₱ ${item.subtotal})`).join(', ');
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "place_order_process.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            xhr.onload = function() {
+                if (xhr.status == 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.success) {
+                        alert("Order placed successfully!");
+                        window.location.reload();
+                    } else {
+                        alert("Failed to place order. Please try again.");
+                    }
+                } else {
+                    alert("Error placing order. Please try again.");
+                }
+            };
+
+            var data = "customer_id=<?php echo $customer_id; ?>&firstname=<?php echo $firstname; ?>&lastname=<?php echo $lastname; ?>&address=" + selectedAddress + "&total=<?php echo $total; ?>&items_ordered=" + encodeURIComponent(itemsOrdered);
+            xhr.send(data);
         }
 
         document.addEventListener('DOMContentLoaded', function() {

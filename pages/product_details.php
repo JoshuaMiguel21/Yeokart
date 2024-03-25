@@ -129,11 +129,19 @@ if (isset($_POST['add-to-cart-btn'])) {
                 <label for="search-box" class="fas fa-search"></label>
             </form>
             <div class="icons">
-                <div id="search-btn" class="fas fa-search"></div>
-                <a href="new_customer_shop.php">Shop</a>
-                <a href="contact_page.php">Contact Us</a>
-                <a href="customer_cart.php" class="fas fa-shopping-cart"></a>
-                <a href="customer_profile.php" id="user-btn" class="fas fa-user"></a>
+                <ul>
+                    <li class="search-ul">
+                        <form action="" class="search-form">
+                            <input type="search" name="" placeholder="Search here..." id="search-box">
+                            <label for="search-box" class="fas fa-search"></label>
+                        </form>
+                    </li>
+                    <li class="home-class"><a href="customer_homepage.php" id="home-nav">Home</a></li>
+                    <li><a href="new_customer_shop.php">Shop</a></li>
+                    <li><a href="contact_page.php">Contact Us</a></li>
+                    <li><a href="customer_cart.php"><i class="fas fa-shopping-cart"></i></a></li>
+                    <li><a href="customer_profile.php" id="user-btn"><i class="fas fa-user"></i></a></li>
+                </ul>
             </div>
         </div>
         <section class="product-details" id="product-details">
@@ -149,7 +157,7 @@ if (isset($_POST['add-to-cart-btn'])) {
                 <?php if (!empty($fetch_item)) : ?>
 
                     <div class="category-name">
-                    <p><?php echo $fetch_item['category_name'], ' / ', $fetch_item['artist_name']; ?></p>
+                        <p><?php echo $fetch_item['category_name'], ' / ', $fetch_item['artist_name']; ?></p>
                     </div>
 
                     <div class="item-name">

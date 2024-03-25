@@ -644,6 +644,25 @@ section{
     margin-top: 20px; /* Adjust as needed */
 }
 
+.summary .header-3 {
+    display: flex;
+    justify-content: space-between;
+}
+  
+.summary h1 {
+    font-size: 3rem;
+    color: var(--black);
+    background: #fff;
+}
+
+.summary .container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: left;
+    padding: 20px 0px;
+}
+
 .nav-user{
     display: flex;
     align-items: center;
