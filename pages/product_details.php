@@ -230,7 +230,12 @@ if (isset($_POST['add-to-cart-btn'])) {
                             <input type="hidden" name="item_price" value="<?php echo $fetch_item['item_price']; ?>">
                             <input type="hidden" name="item_image" value="<?php echo $fetch_item['item_image1']; ?>">
                             <input type="hidden" id="hidden-quantity" name="quantity" value="1"> <!-- Updated the ID -->
-                            <button type="submit" name="add-to-cart-btn" onclick="return checkStock(<?php echo $fetch_item['item_quantity']; ?>);" name="add-to-cart-btn"><i class='fa-solid fa-cart-plus'></i> Add to Cart</button>
+
+                            <?php if ($fetch_item['item_quantity'] > 0) : ?>
+                                <button type="submit" name="add-to-cart-btn" onclick="return checkStock(<?php echo $fetch_item['item_quantity']; ?>);" name="add-to-cart-btn"><i class='fa-solid fa-cart-plus'></i> Add to Cart</button>
+                            <?php else : ?>
+                                <button type="button" disabled style="cursor: not-allowed; background-color: gray; border-radius: 3px;"><i class='fa-solid fa-cart-plus'></i> Out of Stock</button>
+                            <?php endif; ?>
                         </form>
                     </div>
 

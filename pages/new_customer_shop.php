@@ -58,7 +58,6 @@ if ($result) {
 } else {
     echo "Error: " . $sql . "<br>" . $con->error;
 }
-
 ?>
 
 <body>
@@ -109,7 +108,7 @@ if ($result) {
             <div class="wrapper">
                 <?php
                 include('../database/db_yeokart.php');
-                $select_query = $select_query = "SELECT * FROM products";
+                $select_query = "SELECT * FROM products";
                 $result_query = mysqli_query($con, $select_query);
                 while ($row = mysqli_fetch_assoc($result_query)) {
                     $item_id = $row['item_id'];
@@ -132,13 +131,18 @@ if ($result) {
                             <h3 class='artist'><?php echo $artist_name; ?></h3>
                             <h3 class='marquee'><?php echo $item_name; ?></h3>
                             <div class='price'>₱ <?php echo $item_price; ?></div>
-                            <a href='product_details.php?item_id=<?php echo $item_id; ?>' class='btn'><i class='fa-solid fa-cart-plus'></i> Add to Cart</a>
+                            <?php if ($item_quantity > 0) { ?>
+                                <a href='product_details.php?item_id=<?php echo $item_id; ?>' class='btn'><i class='fa-solid fa-cart-plus'></i> Add to Cart</a>
+                            <?php } else { ?>
+                                <button class='btn' disabled style="cursor: not-allowed; background-color: gray; border-radius: 3px;"><i class='fa-solid fa-cart-plus'></i> Out of Stock</button>
+                            <?php } ?>
                         </div>
                     </div>
                 <?php } ?>
             </div>
         </div>
     </section>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const searchForm = document.querySelector('.search-form');
