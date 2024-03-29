@@ -74,7 +74,7 @@
                         <span>Orders</span></a>
                 </li>
                 <li>
-                    <a href=""><span class="las la-chart-line"></span>
+                    <a href="monthly_report.php"><span class="las la-chart-line"></span>
                         <span>Report</span></a>
                 </li>
                 <li>
