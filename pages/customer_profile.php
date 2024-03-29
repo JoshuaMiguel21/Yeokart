@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account-Yeokart</title>
+    <title>Account - Yeokart</title>
+    <link rel="icon" type="image/png" href="../res/icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="stylesheet" href="../css/style_homepage_customer.css">
@@ -225,9 +226,84 @@ if ($phoneResult->num_rows > 0) {
         <hr>
         <div class="container">
             <div class="left-column">
-                <p id="info">ORDER HISTORY
-                <p>
-                    <hr class="gradient">
+                <p id="info">ORDER HISTORY</p>
+                <hr class="gradient">
+
+                <?php
+                    require('../database/db_yeokart.php');
+                                       
+                    if (isset($_SESSION['id'])) {
+                        $customer_id = $_SESSION['id'];
+                    } else {
+                        header("Location: login_page.php");
+                        exit();
+                    }
+
+                    // Query to fetch orders
+                    $sql = "SELECT `order_id`, `customer_id`, `firstname`, `lastname`, `address`, `items_ordered`, `total`, `date_of_purchase`, `item_quantity` FROM `orders` WHERE `customer_id` = $customer_id";
+
+                    $result = $con->query($sql);
+
+                    if ($result->num_rows > 0) {
+                        echo '<table class="order-table">';
+                        echo '<thead>';
+                        echo '<tr>';
+                        echo '<th>Order ID</th>';
+                        echo '<th>Date</th>';
+                        echo '<th>Total</th>';
+                        echo '</tr>';
+                        echo '</thead>';
+                        echo '<tbody>';
+
+                        while ($row = $result->fetch_assoc()) {
+                            echo '<tr class="order-row">';
+                            echo '<td>' . $row['order_id'] . '</td>';
+                            echo '<td>' . $row['date_of_purchase'] . '</td>';
+                            echo '<td>' . '$' . $row['total'] . '</td>';
+                            echo '</tr>';
+                            echo '<tr class="hidden-row">';
+                            echo '<td colspan="3">';
+                            echo '<div class="order-details-card">';
+                        
+                            $items = explode(",", $row['items_ordered']);
+                            $quantities = explode(",", $row['item_quantity']);
+                        
+                            foreach ($items as $key => $item_name) {
+                                $item_name = trim($item_name);
+                                $item_query = "SELECT * FROM products WHERE item_name = '$item_name'";
+                                $item_result = $con->query($item_query);
+                        
+                                if ($item_result->num_rows > 0) {
+                                    $item_row = $item_result->fetch_assoc();
+                        
+                                    echo "<div class='cart-item' style='background-color: #fff;'>";
+                                    echo "<img src='item_images/{$item_row['item_image1']}' alt='Item Image' class='cart-item-image'>";
+                                    echo "<div class='item-details'>";
+                                    echo "<p><b>Name: </b>{$item_row['item_name']}</p>";
+                                    echo "<p>Price: $" . $item_row['item_price'] . "</p>";
+                                    echo "</div>";
+                                    echo "<p>Quantity: {$quantities[$key]}</p>";
+                                    echo "<p>Total: $" . ($item_row['item_price'] * $quantities[$key]) . "</p>";
+                                    echo "</div>";
+                                } else {
+                                    echo "Item not found";
+                                }
+                            }
+                            echo '<div class="total-for-order">';
+                            echo '<p class="total-label">Total for Orders: </p>';
+                            echo '<p class="total-price">&nbsp$' . $row['total'] . '</p>';
+                            echo '</div>';
+                            echo '</div>';
+                            echo '</td>';
+                            echo '</tr>';
+                        }                        
+                        echo '</tbody>';
+                        echo '</table>';
+                    } else {
+                        echo "0 results";
+                    }
+                    $con->close();
+                ?>
             </div>
 
             <div class="right-column">
@@ -262,6 +338,24 @@ if ($phoneResult->num_rows > 0) {
             </div>
         </div>
     </section>
-</body>
+    <script>
 
+    document.addEventListener('DOMContentLoaded', function() {
+    const orderRows = document.querySelectorAll('.order-row');
+
+    let currentlyOpenRow = null;
+
+    orderRows.forEach(function(row) {
+        row.addEventListener('click', function() {
+            const hiddenRow = row.nextElementSibling;
+            if (currentlyOpenRow && currentlyOpenRow !== hiddenRow) {
+                currentlyOpenRow.classList.remove('hidden-row-visible');
+            }
+            hiddenRow.classList.toggle('hidden-row-visible');
+            currentlyOpenRow = hiddenRow.classList.contains('hidden-row-visible') ? hiddenRow : null;
+        });
+    });
+});
+    </script>    
+</body>       
 </html>

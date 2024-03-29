@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shop-Yeokart</title>
+    <title>Shop - Yeokart</title>
+    <link rel="icon" type="image/png" href="../res/icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="stylesheet" href="../css/style_homepage_customer.css">
@@ -157,13 +158,12 @@ $result_artists = mysqli_query($con, $select_artists);
         </div>
     </section>
 
-<<<<<<< HEAD
     <!-- Popup Container -->
     <div class="popup-overlay" id="filterPopup">
-        <div class="popup-content">
+        <div class="popup-content" id="popup-filter">
             <!-- Filter Content -->
             <div class="filter-section">
-                <span class="close-button" onclick="toggleFilterPopup()">X</span>
+                <span class="close-button" onclick="toggleFilterPopup()">&times;</span>
 
                 <h4>Filter by Category</h4>
                 <div class="filter-category">
@@ -190,9 +190,7 @@ $result_artists = mysqli_query($con, $select_artists);
 
         </div>
     </div>
-
-=======
->>>>>>> a71582455855da4236e5b26c1340512eda56f5c8
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const searchForm = document.querySelector('.search-form');
