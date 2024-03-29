@@ -3,16 +3,15 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>Manage Content - Yeokart</title>
-    <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+    <title>Manage Orders - Yeokart</title>
     <link rel="icon" type="image/png" href="../res/icon.png">
 </head>
 <script>
     function confirmDelete() {
-        return confirm("Are you sure you want to delete this contact?");
+        return confirm("Are you sure you want to delete this item?");
     }
 
     function openLogoutPopup() {
@@ -26,47 +25,49 @@
     function confirmLogout() {
         window.location.href = 'logout.php';
     }
+
+    function clearSearch() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('searchForm').submit();
+    }
 </script>
 
-<?php
-session_start();
-
-if (!isset($_SESSION['nav_toggle'])) {
-    // Set it to unchecked by default
-    $_SESSION['nav_toggle'] = false;
-}
-
-// Check if the nav-toggle checkbox has been toggled
-if (isset($_POST['nav_toggle'])) {
-    // Update the session variable accordingly
-    $_SESSION['nav_toggle'] = $_POST['nav_toggle'] === 'true' ? true : false;
-}
-
-// Redirect to login page if session variables are not set
-if (!isset($_SESSION['firstname']) || !isset($_SESSION['lastname'])) {
-    header("Location: login_page.php");
-    exit();
-}
-
-if (isset($_SESSION['firstname'])) {
-    $firstname = $_SESSION['firstname'];
-} else {
-    header("Location: login_page.php");
-    exit();
-}
-
-if (isset($_SESSION['lastname'])) {
-    $lastname = $_SESSION['lastname'];
-} else {
-    header("Location: login_page.php");
-    exit();
-}
-?>
-
 <body>
+    <?php
+    session_start();
 
+    if (!isset($_SESSION['nav_toggle'])) {
+        $_SESSION['nav_toggle'] = false;
+    }
+    
+    // Check if the nav-toggle checkbox has been toggled
+    if (isset($_POST['nav_toggle'])) {
+        // Update the session variable accordingly
+        $_SESSION['nav_toggle'] = $_POST['nav_toggle'] === 'true' ? true : false;
+    }
+    
+    // Redirect to login page if session variables are not set
+    if (!isset($_SESSION['firstname']) || !isset($_SESSION['lastname'])) {
+        header("Location: login_page.php");
+        exit();
+    }
+
+    if (isset($_SESSION['firstname'])) {
+        $firstname = $_SESSION['firstname'];
+    } else {
+        header("Location: login_page.php");
+        exit();
+    }
+
+    if (isset($_SESSION['lastname'])) {
+        $lastname = $_SESSION['lastname'];
+    } else {
+        header("Location: login_page.php");
+        exit();
+    }
+    ?>
     <input type="checkbox" id="nav-toggle" <?php echo $_SESSION['nav_toggle'] ? 'checked' : ''; ?>>
-     <div class="sidebar <?php echo $_SESSION['nav_toggle'] ? 'open' : ''; ?>">
+    <div class="sidebar <?php echo $_SESSION['nav_toggle'] ? 'open' : ''; ?>">
         <div class="sidebar-brand">
             <h2><span>Yeokart</span></h2>
         </div>
@@ -85,7 +86,7 @@ if (isset($_SESSION['lastname'])) {
                         <span>Items</span></a>
                 </li>
                 <li>
-                    <a href="owner_orders.php"><span class="las la-shopping-bag"></span>
+                    <a href="owner_orders.php" class="active"><span class="las la-shopping-bag"></span>
                         <span>Orders</span></a>
                 </li>
                 <li>
@@ -93,11 +94,11 @@ if (isset($_SESSION['lastname'])) {
                         <span>Report</span></a>
                 </li>
                 <li>
-                    <a href="manage_employees.php"><span class="las la-user-circle"></span>
+                    <a href="manage_employees.php" class=""><span class="las la-user-circle"></span>
                         <span>Manage Employee</span></a>
                 </li>
                 <li>
-                    <a href="owner_featured.php" class="active"><span class="las la-tasks"></span>
+                    <a href="owner_featured.php"><span class="las la-tasks"></span>
                         <span>Manage Content</span></a>
                 </li>
                 <li>
@@ -115,81 +116,69 @@ if (isset($_SESSION['lastname'])) {
                     <span class="las la-bars"></span>
                 </label>
 
-                Manage Content
+                Manage Orders
             </h3>
 
             <div class="user-wrapper">
                 <div>
-                    <h3><?php echo $firstname . " " . $lastname; ?></h3>
-                    <small>Owner</small>
+                    <div>
+                        <h3><?php echo $firstname . " " . $lastname; ?></h3>
+                        <small>Owner</small>
+                    </div>
                 </div>
             </div>
         </header>
+
         <main>
             <div class="head-title">
                 <div class="left">
-                    <h3>Manage Contact Details</h3>
+                    <h3>Order List</h3>
                 </div>
-
-            </div>
-            <div class="head-buttons">
-                <a href="owner_featured.php" class="btn-employee">
-                    <i class="las la-edit"></i>
-                    <span class="text">Edit Featured Section</span>
-                </a>
-                <a href="add_contacts.php" class="btn-employee">
-                    <i class="las la-plus"></i>
-                    <span class="text">Add Contacts</span>
-                </a>
             </div>
 
             <div class="table">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Contact Title</th>
-                            <th>Contact Type</th>
-                            <th>Description</th>
-                            <th>
-                                <center>Action</center>
-                            </th>
+                            <th>Order ID</th>
+                            <th>Customer ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Address</th>
+                            <th>Items Ordered</th>
+                            <th>Item Quantity</th>
+                            <th>Total</th>
+                            <th>Date of Purchase</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
                         include('../database/db_yeokart.php');
-                        if (isset($_POST['delete_contacts'])) {
-                            $contacts_id = $_POST['contacts_id'];
-                            // Perform deletion query
-                            $delete_query = "DELETE FROM contacts WHERE contacts_id='$contacts_id'";
-                            $result_query = mysqli_query($con, $delete_query);
-                            if ($result_query) {
-                                echo "<script>alert('Contact deleted successfully')</script>";
-                                echo "<script>window.location.href = 'owner_content_details.php';</script>";
-                            } else {
-                                echo "<script>alert('Failed to delete item')</script>";
-                                echo "<script>window.location.href = 'owner_content_details.php';</script>";
-                            }
-                        }
-                        $select_query = "SELECT * FROM contacts";
+
+                        $select_query = "SELECT `order_id`, `customer_id`, `firstname`, `lastname`, `address`, `items_ordered`, `item_quantity`, `total`, `date_of_purchase` FROM `orders` WHERE 1";
                         $result_query = mysqli_query($con, $select_query);
+
                         while ($row = mysqli_fetch_assoc($result_query)) {
-                            $contacts_id = $row['contacts_id'];
-                            $contacts_name = $row['contacts_name'];
-                            $icon_link = $row['icon_link'];
-                            $contacts_description = $row['contacts_description'];
                             echo "<tr>";
-                            echo "<td>" . $row['contacts_name'] . "</td>";
-                            echo "<td><div class='iconbox'>" . $row['icon_link'] . "</div></td>";
-                            echo "<td style='max-width: 350px;'>" . $row['contacts_description'] . "</td>";
+                            echo "<td>" . $row['order_id'] . "</td>";
+                            echo "<td>" . $row['customer_id'] . "</td>";
+                            echo "<td>" . $row['firstname'] . "</td>";
+                            echo "<td>" . $row['lastname'] . "</td>";
+                            echo "<td>" . $row['address'] . "</td>";
+                            echo "<td>" . $row['items_ordered'] . "</td>";
+                            echo "<td>" . $row['item_quantity'] . "</td>";
+                            echo "<td>₱" . $row['total'] . "</td>";
+                            echo "<td>" . $row['date_of_purchase'] . "</td>";
                             echo "<td>";
                             echo "<div class='button-class'>";
-                            echo "<a href='edit_contacts.php?contacts_id=$contacts_id' class='edit-button'>Edit</a> 
-                          <form method='post' onsubmit='return confirmDelete()'>
-                          <input type='hidden' name='contacts_id' value='$contacts_id'>
-                          <button type='submit' name='delete_contacts' class='delete-button'>Delete</button>
-                          </form>";
-                            echo "<div class='button-class'>";
+                            echo '<select onchange="updateOrderStatus(this.value, ' . $row['order_id'] . ')">';
+                            echo '<option value="Pending" ' . ($row['status'] == 'Pending' ? 'selected' : '') . '>Pending</option>';
+                            echo '<option value="Processing" ' . ($row['status'] == 'Processing' ? 'selected' : '') . '>Processing</option>';
+                            echo '<option value="Shipped" ' . ($row['status'] == 'Shipped' ? 'selected' : '') . '>Shipped</option>';
+                            echo '<option value="Delivered" ' . ($row['status'] == 'Delivered' ? 'selected' : '') . '>Delivered</option>';
+                            echo '</select>';
+                            echo "</div>";
                             echo "</td>";
                             echo "</tr>";
                         }
@@ -197,6 +186,8 @@ if (isset($_SESSION['lastname'])) {
                     </tbody>
                 </table>
             </div>
+
+        </main>
 
             <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
                 <div class="popup-content">
@@ -215,7 +206,7 @@ if (isset($_SESSION['lastname'])) {
             Back
         </a>
     </div> -->
-
+    
     <script>
         // Function to toggle the sidebar and update session variable
         function toggleSidebar() {
@@ -228,9 +219,6 @@ if (isset($_SESSION['lastname'])) {
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhttp.send("nav_toggle=" + newState);
         }
-
-        // Add event listener to checkbox change
-        document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
     </script>
 </body>
 

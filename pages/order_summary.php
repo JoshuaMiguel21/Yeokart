@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Shopping Cart Summary - Yeokart</title>
+    <link rel="icon" type="image/png" href="../res/icon.png">
 </head>
 <style>
 .swal2-custom-popup {
@@ -149,8 +150,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_order'])) {
     $date_of_purchase = date("Y-m-d");
     $order_id = uniqid();
 
-    $insert_query = $con->prepare("INSERT INTO orders ( order_id, customer_id, firstname, lastname, address, items_ordered, total, date_of_purchase) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    $insert_query->bind_param("sissssss", $order_id, $customer_id, $firstname, $lastname, $fullAddress, $items_ordered_str, $overallTotal, $date_of_purchase);
+    $item_quantities = array_column($cartItems, 'quantity');
+    $item_quantities_str = implode(", ", $item_quantities);
+
+    $insert_query = $con->prepare("INSERT INTO orders (order_id, customer_id, firstname, lastname, address, items_ordered, item_quantity, total, date_of_purchase) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $insert_query->bind_param("sisssssss", $order_id, $customer_id, $firstname, $lastname, $fullAddress, $items_ordered_str, $item_quantities_str, $overallTotal, $date_of_purchase);
     
     if ($insert_query->execute()) {
 
@@ -226,7 +230,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_order'])) {
               </script>";
     }
 }
-
 
 ?>
     <header class="order-header">

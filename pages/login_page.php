@@ -9,7 +9,8 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-    <title>Yeokart - Login Page</title>
+    <title>Yeokart - Login</title>
+    <link rel="icon" type="image/png" href="../res/icon.png">
 </head>
 <script>
 function myFunction() {

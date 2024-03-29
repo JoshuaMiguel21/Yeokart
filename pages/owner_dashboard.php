@@ -4,9 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>Owner Dashboard</title>
+    <title>Owner Dashboard - Yeokart</title>
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="icon" type="image/png" href="../res/icon.png">
 </head>
 <script>
     function openLogoutPopup() {
@@ -25,6 +26,23 @@
 <body>
     <?php
     session_start();
+
+    if (!isset($_SESSION['nav_toggle'])) {
+        // Set it to unchecked by default
+        $_SESSION['nav_toggle'] = false;
+    }
+    
+    // Check if the nav-toggle checkbox has been toggled
+    if (isset($_POST['nav_toggle'])) {
+        // Update the session variable accordingly
+        $_SESSION['nav_toggle'] = $_POST['nav_toggle'] === 'true' ? true : false;
+    }
+    
+    // Redirect to login page if session variables are not set
+    if (!isset($_SESSION['firstname']) || !isset($_SESSION['lastname'])) {
+        header("Location: login_page.php");
+        exit();
+    }
 
     if (isset($_SESSION['firstname'])) {
         $firstname = $_SESSION['firstname'];
@@ -75,8 +93,8 @@
         echo "Error: " . $sql . "<br>" . $con->error;
     }
     ?>
-    <input type="checkbox" id="nav-toggle">
-    <div class="sidebar">
+     <input type="checkbox" id="nav-toggle" <?php echo $_SESSION['nav_toggle'] ? 'checked' : ''; ?>>
+     <div class="sidebar <?php echo $_SESSION['nav_toggle'] ? 'open' : ''; ?>">
         <div class="sidebar-brand">
             <h2><span>Yeokart</span></h2>
         </div>
@@ -95,7 +113,7 @@
                         <span>Items</span></a>
                 </li>
                 <li>
-                    <a href=""><span class="las la-shopping-bag"></span>
+                    <a href="owner_orders.php"><span class="las la-shopping-bag"></span>
                         <span>Orders</span></a>
                 </li>
                 <li>
@@ -174,7 +192,7 @@
                 <div class="card-single">
                     <div>
                         <h1>54</h1>
-                        <span>Income</span>
+                        <span>Orders</span>
                     </div>
                     <div>
                         <span class="lab la-google-wallet"></span>
@@ -195,6 +213,23 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Function to toggle the sidebar and update session variable
+        function toggleSidebar() {
+            var isChecked = document.getElementById('nav-toggle').checked;
+            var newState = isChecked ? 'true' : 'false';
+
+            // Update session variable using AJAX
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "", true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send("nav_toggle=" + newState);
+        }
+
+        // Add event listener to checkbox change
+        document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
+    </script>
 </body>
 
 </html>

@@ -12,7 +12,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.js"></script>
     <link href="../css/add&edit_item.css" rel="stylesheet" />
 
-    <title>Yeokart</title>
+    <title>Add Contacts - Yeokart</title>
+    <link rel="icon" type="image/png" href="../res/icon.png">
 </head>
 
 <body style="background-color: #DD2F6E;">

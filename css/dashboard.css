@@ -68,30 +68,30 @@
     padding-right: 1rem;
 }
 
-#nav-toggle:checked + .sidebar{
+#nav-toggle:not(:checked) + .sidebar {
     width: 70px;
 }
 
-#nav-toggle:checked + .sidebar .sidebar-brand,
-#nav-toggle:checked + .sidebar li{
+#nav-toggle:not(:checked) + .sidebar .sidebar-brand,
+#nav-toggle:not(:checked) + .sidebar li {
     padding-left: 1rem;
     text-align: center;
 }
 
-#nav-toggle:checked + .sidebar li a{
+#nav-toggle:not(:checked) + .sidebar li a {
     padding-left: 0rem;
 }
 
-#nav-toggle:checked + .sidebar .sidebar-brand h2 span:last-child,
-#nav-toggle:checked + .sidebar li a span:last-child {
+#nav-toggle:not(:checked) + .sidebar .sidebar-brand h2 span:last-child,
+#nav-toggle:not(:checked) + .sidebar li a span:last-child {
     display: none;
 }
 
-#nav-toggle:checked ~ .main-content{
+#nav-toggle:not(:checked) ~ .main-content {
     margin-left: 70px;
 }
 
-#nav-toggle:checked ~ .main-content header{
+#nav-toggle:not(:checked) ~ .main-content header {
     width: calc(100% - 70px);
     left: 70px;
 }
@@ -459,6 +459,36 @@ th {
 .add-artist-form button:hover {
     background-color: var(--dark-color); 
     transform: scale(1.05);
+}
+
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+select:hover {
+    border-color: #999;
+}
+
+select:focus {
+    outline: none;
+    border-color: #0066ff;
+    box-shadow: 0 0 5px rgba(0, 102, 255, 0.5);
+}
+
+option {
+    background-color: #fff;
+    color: #333;
+}
+
+option:hover {
+    background-color: #f2f2f2;
 }
 
 @media only screen and (max-width: 1200px){

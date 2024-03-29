@@ -310,8 +310,9 @@ section{
 }
 
 /* Popup Content */
-.popup-content {
+#popup-filter{
     display: auto;
+    background: transparent;
     align-items: center;
     justify-content: center;
     /* Set a specific height for the popup content */
@@ -893,6 +894,8 @@ section{
     background: #fff;
     flex: 4; 
     padding: 20px 0px;
+    padding-right: 0px;
+    margin-right: 40px;
 }
 
 .right-column {
@@ -1003,23 +1006,18 @@ hr.gradient {
 
 .popup-container {
     display: none;
-    position: relative;
+    position: fixed;
     top: 0;
     left: 0;
-    max-width: 500px;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
-    margin: 20px auto;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
 .popup-content {
-    background: transparent;
+    background-color: #fff;
     max-width: 500px;
     width: 100%;
     margin: 20px auto;
@@ -1620,6 +1618,79 @@ label {
     }
 }
 
+.order-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    border: 1px solid #ddd;
+}
+
+.order-table th,
+.order-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.order-table th {
+    background-color: #DD2F6E;
+    color: #fff;
+    font-size: 14px;
+}
+
+.order-table td{
+    font-size: 12px;
+}
+
+.order-row {
+    cursor: pointer;
+}
+    
+.order-row:hover {
+    background-color: #f5f5f5;
+}
+    
+.hidden-row td {
+    padding: 10px;
+}
+    
+.hidden-row p {
+    margin: 0;
+}
+
+.hidden-row {
+    display: none;
+}
+
+.hidden-row-visible {
+    display: table-row;
+    background-color: #FCC8D1;
+}
+
+.total-for-order {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin-top: 10px;
+    display: flex;
+}
+
+.total-for-order p {
+    margin: 5px 0;
+    text-transform: none;
+}
+
+.total-label {
+    font-weight: bold;
+    color: #333;
+}
+
+.total-price {
+    font-size: 16px;
+    color: #DD2F6E;
+}
+
 @media (max-width: 940px) {
     #cart-num{
         background-color: #fff;
@@ -1781,7 +1852,26 @@ label {
     .bottom-navbar{
         display: block;
     }
+
+    .order-table th,
+    .order-table td {
+        padding: 10px;
+        font-size: 1.2rem;
+    }
+
+    .hidden-row .order-details-card {
+        font-size: 1.2rem;
+    }
     
+    .hidden-row .order-details-card p {
+        font-size: 1.2rem;
+    }
+    
+    .hidden-row .order-details-card .cart-item img{
+        width: 50px;
+        height: 50px;
+    }
+
     .header .header-1{
         box-shadow:var(--box-shadow);
         position: relative;
