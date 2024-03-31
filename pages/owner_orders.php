@@ -156,11 +156,11 @@
                         <?php
                         include('../database/db_yeokart.php');
 
-                        $select_query = "SELECT `order_id`, `customer_id`, `firstname`, `lastname`, `address`, `items_ordered`, `item_quantity`, `total`, `date_of_purchase` FROM `orders` WHERE 1";
+                        $select_query = "SELECT `order_id`, `customer_id`, `firstname`, `lastname`, `address`, `items_ordered`, `item_quantity`, `total`, `date_of_purchase`, `status` FROM `orders` WHERE 1";
                         $result_query = mysqli_query($con, $select_query);
 
                         while ($row = mysqli_fetch_assoc($result_query)) {
-                            echo "<tr>";
+                            echo '<tr id="order-row-' . $row['order_id'] . '">';
                             echo "<td>" . $row['order_id'] . "</td>";
                             echo "<td>" . $row['customer_id'] . "</td>";
                             echo "<td>" . $row['firstname'] . "</td>";
@@ -171,17 +171,24 @@
                             echo "<td>₱" . $row['total'] . "</td>";
                             echo "<td>" . $row['date_of_purchase'] . "</td>";
                             echo "<td>";
-                            echo "<div class='button-class'>";
-                            echo '<select onchange="updateOrderStatus(this.value, ' . $row['order_id'] . ')">';
-                            echo '<option value="Pending" ' . ($row['status'] == 'Pending' ? 'selected' : '') . '>Pending</option>';
-                            echo '<option value="Processing" ' . ($row['status'] == 'Processing' ? 'selected' : '') . '>Processing</option>';
-                            echo '<option value="Shipped" ' . ($row['status'] == 'Shipped' ? 'selected' : '') . '>Shipped</option>';
-                            echo '<option value="Delivered" ' . ($row['status'] == 'Delivered' ? 'selected' : '') . '>Delivered</option>';
+                            echo '<div class="button-class">';
+                            echo '<select class="orderStatusSelect" onchange="updateOrderStatus(this.value, \'' . $row['order_id'] . '\')">';
+                            include('../database/db_yeokart.php');
+                        
+                            // Fetch ENUM values for order status from the database
+                            $status_query = "SHOW COLUMNS FROM `orders` LIKE 'status'";
+                            $status_result = mysqli_query($con, $status_query);
+                            $status_row = mysqli_fetch_assoc($status_result);
+                            preg_match("/^enum\(\'(.*)\'\)$/", $status_row['Type'], $matches);
+                            $status_enum_values = explode("','", $matches[1]);
+                            foreach ($status_enum_values as $value) {
+                                echo '<option value="' . $value . '" ' . ($row['status'] == $value ? 'selected' : '') . '>' . $value . '</option>';
+                            }
                             echo '</select>';
-                            echo "</div>";
+                            echo '</div>';
                             echo "</td>";
                             echo "</tr>";
-                        }
+                        }                                       
                         ?>
                     </tbody>
                 </table>
@@ -201,12 +208,6 @@
                 </div>
             </div>
 
-            <!-- <div class="form-outline mb-4 mt-5">
-        <a href="./owner_dashboard.php" class="btn btn-danger mb-3 px-3 mx-auto">
-            Back
-        </a>
-    </div> -->
-    
     <script>
         // Function to toggle the sidebar and update session variable
         function toggleSidebar() {
@@ -219,6 +220,57 @@
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhttp.send("nav_toggle=" + newState);
         }
+
+        function updateOrderStatus(status, orderId) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "update_order_status.php", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log("Order status updated successfully");
+            }
+        };
+        xhttp.send("order_id=" + orderId + "&status=" + status);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+    var orderRows = document.querySelectorAll('tr[id^="order-row-"]');
+
+    orderRows.forEach(function(orderRow) {
+        var orderStatusSelect = orderRow.querySelector('.orderStatusSelect');
+        var orderId = orderRow.getAttribute('id').split('-')[2]; // Extract order ID from row ID
+        var selectedStatus = localStorage.getItem('selectedStatus_' + orderId) || 'Pending'; 
+
+        // Set initial border color based on the stored status
+        orderStatusSelect.style.border = getBorderStyle(selectedStatus);
+
+        // Add event listener to update border color on status change
+        orderStatusSelect.addEventListener('change', function() {
+            var selectedOption = this.options[this.selectedIndex];
+            var selectedValue = selectedOption.value;
+            this.style.border = getBorderStyle(selectedValue);
+
+            // Store selected status in local storage
+            localStorage.setItem('selectedStatus_' + orderId, selectedValue);
+        });
+    });
+
+    // Function to get border style based on status
+    function getBorderStyle(status) {
+        switch (status) {
+            case 'Pending':
+                return '1px solid red';
+            case 'Processing':
+                return '1px solid blue';
+            case 'Shipped':
+                return '1px solid #FFD700';
+            case 'Delivered':
+                return '1px solid green';
+            default:
+                return ''; 
+        }
+    }
+});
     </script>
 </body>
 

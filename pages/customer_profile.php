@@ -240,7 +240,7 @@ if ($phoneResult->num_rows > 0) {
                     }
 
                     // Query to fetch orders
-                    $sql = "SELECT `order_id`, `customer_id`, `firstname`, `lastname`, `address`, `items_ordered`, `total`, `date_of_purchase`, `item_quantity` FROM `orders` WHERE `customer_id` = $customer_id";
+                    $sql = "SELECT `order_id`, `customer_id`, `firstname`, `lastname`, `address`, `items_ordered`, `total`, `date_of_purchase`, `item_quantity`, `status` FROM `orders` WHERE `customer_id` = $customer_id";
 
                     $result = $con->query($sql);
 
@@ -250,7 +250,7 @@ if ($phoneResult->num_rows > 0) {
                         echo '<tr>';
                         echo '<th>Order ID</th>';
                         echo '<th>Date</th>';
-                        echo '<th>Total</th>';
+                        echo '<th>Status</th>';
                         echo '</tr>';
                         echo '</thead>';
                         echo '<tbody>';
@@ -259,7 +259,7 @@ if ($phoneResult->num_rows > 0) {
                             echo '<tr class="order-row">';
                             echo '<td>' . $row['order_id'] . '</td>';
                             echo '<td>' . $row['date_of_purchase'] . '</td>';
-                            echo '<td>' . '$' . $row['total'] . '</td>';
+                            echo '<td>' . strtoupper($row['status']) . '</td>';
                             echo '</tr>';
                             echo '<tr class="hidden-row">';
                             echo '<td colspan="3">';
@@ -280,10 +280,10 @@ if ($phoneResult->num_rows > 0) {
                                     echo "<img src='item_images/{$item_row['item_image1']}' alt='Item Image' class='cart-item-image'>";
                                     echo "<div class='item-details'>";
                                     echo "<p><b>Name: </b>{$item_row['item_name']}</p>";
-                                    echo "<p>Price: $" . $item_row['item_price'] . "</p>";
+                                    echo "<p>Price: ₱" . $item_row['item_price'] . "</p>";
                                     echo "</div>";
                                     echo "<p>Quantity: {$quantities[$key]}</p>";
-                                    echo "<p>Total: $" . ($item_row['item_price'] * $quantities[$key]) . "</p>";
+                                    echo "<p>Total: ₱" . ($item_row['item_price'] * $quantities[$key]) . "</p>";
                                     echo "</div>";
                                 } else {
                                     echo "Item not found";
@@ -291,7 +291,7 @@ if ($phoneResult->num_rows > 0) {
                             }
                             echo '<div class="total-for-order">';
                             echo '<p class="total-label">Total for Orders: </p>';
-                            echo '<p class="total-price">&nbsp$' . $row['total'] . '</p>';
+                            echo '<p class="total-price">&nbsp₱' . $row['total'] . '</p>';
                             echo '</div>';
                             echo '</div>';
                             echo '</td>';
