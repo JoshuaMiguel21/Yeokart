@@ -62,6 +62,16 @@
     <?php
     require('../database/db_yeokart.php');
 
+    $sql = "SELECT COUNT(*) AS order_count FROM orders";
+    $result = $con->query($sql);
+
+    if ($result) {
+        $row = $result->fetch_assoc();
+        $orderCount = $row['order_count'];
+    } else {
+        echo "Error: " . $sql . "<br>" . $con->error;
+    }
+
     $sql = "SELECT COUNT(*) AS employee_count FROM employee_accounts";
     $result = $con->query($sql);
 
@@ -185,17 +195,17 @@
                         <span>Items</span>
                     </div>
                     <div>
-                        <span class="las la-shopping-bag"></span>
+                        <span class="las la-shopping-basket"></span>
                     </div>
                 </div>
 
                 <div class="card-single">
                     <div>
-                        <h1>54</h1>
+                        <h1><?php echo $orderCount; ?></h1>
                         <span>Orders</span>
                     </div>
                     <div>
-                        <span class="lab la-google-wallet"></span>
+                        <span class="las la-shopping-bag"></span>
                     </div>
                 </div>
             </div>
