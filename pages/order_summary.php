@@ -16,188 +16,211 @@
     <link rel="icon" type="image/png" href="../res/icon.png">
 </head>
 <style>
-.swal2-custom-popup {
-    font-size: 20px;
-    width: 600px;
-}
+    .swal2-custom-popup {
+        font-size: 20px;
+        width: 600px;
+    }
 
-.swal2-custom-title {
-    font-size: 24px;
-}
+    .swal2-custom-title {
+        font-size: 24px;
+    }
 
-.swal2-custom-text {
-    font-size: 18px;
-    text-transform: none;
-}
+    .swal2-custom-text {
+        font-size: 18px;
+        text-transform: none;
+    }
 </style>
 
 <body style="margin: 30px;">
-<?php
-require('../database/db_yeokart.php');
-session_start();
+    <?php
+    require('../database/db_yeokart.php');
+    session_start();
 
-if (isset($_SESSION['id'])) {
-    $customer_id = $_SESSION['id'];
-} else {
-    header("Location: login_page.php");
-    exit();
-}
-
-if (isset($_SESSION['firstname'])) {
-    $firstname = $_SESSION['firstname'];
-} else {
-    header("Location: login_page.php");
-    exit();
-}
-
-if (isset($_SESSION['lastname'])) {
-    $lastname = $_SESSION['lastname'];
-} else {
-    header("Location: login_page.php");
-    exit();
-}
-
-if (isset($_SESSION['username'])) {
-    $username = $_SESSION['username'];
-} else {
-    header("Location: login_page.php");
-    exit();
-}
-
-if (isset($_SESSION['email'])) {
-    $email = strtolower($_SESSION['email']);
-} else {
-    header("Location: login_page.php");
-    exit();
-}
-
-$sql = "SELECT COUNT(*) AS cart_count FROM cart WHERE customer_id = $customer_id";
-$result = $con->query($sql);
-
-if ($result) {
-    $row = $result->fetch_assoc();
-    $cartCount = $row['cart_count'];
-} else {
-    echo "Error: " . $sql . "<br>" . $con->error;
-}
-
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['address_id'])) {
-    $_SESSION['selectedAddressId'] = $_POST['address_id'];
-}
-
-$selectedAddressId = isset($_SESSION['selectedAddressId']) ? $_SESSION['selectedAddressId'] : null;
-
-$query = "";
-if ($selectedAddressId) {
-    $query = "SELECT `address_id`, `customer_id`, `address`, `street`, `city`, `province`, `zipCode`, `phoneNumber`, `is_default` FROM `addresses` WHERE `address_id` = $selectedAddressId";
-} else {
-    // If no address has been selected yet, fetch the default address
-    $query = "SELECT `address_id`, `customer_id`, `address`, `street`, `city`, `province`, `zipCode`, `phoneNumber`, `is_default` FROM `addresses` WHERE `customer_id` = $customer_id AND `is_default` = 1";
-}
-
-$result = mysqli_query($con, $query);
-
-if (mysqli_num_rows($result) > 0) {
-    $row = mysqli_fetch_assoc($result);
-    $address = $row['address'];
-    $street = $row['street'];
-    $city = $row['city'];
-    $province = $row['province'];
-    $zipCode = $row['zipCode'];
-    $phoneNumber = $row['phoneNumber'];
-    
-    $fullAddress = trim($address . " " . $street . " " . $city . " " . $province . " " . $zipCode);
-} else {
-    $address = "No default address found";
-    $street = "";
-    $city = "";
-    $province = "";
-    $zipCode = "";
-    $phoneNumber = "";
-    $fullAddress = "No default address found"; 
-}
-
-$customer_id = $_SESSION['id'];
-$query = "SELECT * FROM `addresses` WHERE `customer_id` = $customer_id";
-$result = mysqli_query($con, $query);
-
-$addresses = array();
-while ($row = mysqli_fetch_assoc($result)) {
-    $addresses[] = $row;
-}
-
-$customer_id = $_SESSION['id'];
-
-$select_query_cart = "SELECT * FROM cart WHERE customer_id = $customer_id";
-$result_query_cart = mysqli_query($con, $select_query_cart);
-
-$cartItems = array();
-
-if (mysqli_num_rows($result_query_cart) > 0) {
-    while ($row = mysqli_fetch_assoc($result_query_cart)) {
-        $cartItems[] = $row;
+    if (isset($_SESSION['id'])) {
+        $customer_id = $_SESSION['id'];
+    } else {
+        header("Location: login_page.php");
+        exit();
     }
-}
 
-$overallTotal = 0;
-foreach ($cartItems as $item) {
-    $overallTotal += $item['price'] * $item['quantity'];
-}
+    if (isset($_SESSION['firstname'])) {
+        $firstname = $_SESSION['firstname'];
+    } else {
+        header("Location: login_page.php");
+        exit();
+    }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_order'])) { 
-    $items_ordered = array_column($cartItems, 'item_name');
-    $items_ordered_str = implode(", ", $items_ordered);
-    $date_of_purchase = date("Y-m-d");
-    $order_id = uniqid();
+    if (isset($_SESSION['lastname'])) {
+        $lastname = $_SESSION['lastname'];
+    } else {
+        header("Location: login_page.php");
+        exit();
+    }
 
-    $item_quantities = array_column($cartItems, 'quantity');
-    $item_quantities_str = implode(", ", $item_quantities);
+    if (isset($_SESSION['username'])) {
+        $username = $_SESSION['username'];
+    } else {
+        header("Location: login_page.php");
+        exit();
+    }
 
-    $insert_query = $con->prepare("INSERT INTO orders (order_id, customer_id, firstname, lastname, address, items_ordered, item_quantity, total, date_of_purchase) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $insert_query->bind_param("sisssssss", $order_id, $customer_id, $firstname, $lastname, $fullAddress, $items_ordered_str, $item_quantities_str, $overallTotal, $date_of_purchase);
-    
-    if ($insert_query->execute()) {
+    if (isset($_SESSION['email'])) {
+        $email = strtolower($_SESSION['email']);
+    } else {
+        header("Location: login_page.php");
+        exit();
+    }
 
-        $clear_cart_query = "DELETE FROM cart WHERE customer_id = ?";
-        $clear_cart_stmt = $con->prepare($clear_cart_query);
-        $clear_cart_stmt->bind_param("i", $customer_id);
-        $clear_cart_stmt->execute();
+    $sql = "SELECT COUNT(*) AS cart_count FROM cart WHERE customer_id = $customer_id";
+    $result = $con->query($sql);
 
-        foreach ($cartItems as $item) {
-            $item_name = $item['item_name'];
-            $quantity_purchased = $item['quantity'];
-        
-            $product_query = $con->prepare("SELECT `item_quantity`, `times_sold` FROM `products` WHERE `item_name` = ?");
-            $product_query->bind_param("s", $item_name);
-            $product_query->execute();
-            $product_result = $product_query->get_result();
-        
-            if ($product_result->num_rows > 0) {
-                $product_row = $product_result->fetch_assoc();
-                $current_stock = $product_row['item_quantity'];
-                $current_times_sold = $product_row['times_sold'];
-        
-                $new_stock = $current_stock - $quantity_purchased;
-                $new_times_sold = $current_times_sold + $quantity_purchased;
-        
-                $update_query = $con->prepare("UPDATE `products` SET `item_quantity` = ?, `times_sold` = ? WHERE `item_name` = ?");
-                $update_query->bind_param("iis", $new_stock, $new_times_sold, $item_name);
-        
-                if (!$update_query->execute()) {
-                    echo "Error updating product stock and sales data for item: " . $item_name;
-                }
-            } else {
-                echo "Product not found for item: " . $item_name;
-            }
+    if ($result) {
+        $row = $result->fetch_assoc();
+        $cartCount = $row['cart_count'];
+    } else {
+        echo "Error: " . $sql . "<br>" . $con->error;
+    }
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['address_id'])) {
+        $_SESSION['selectedAddressId'] = $_POST['address_id'];
+    }
+
+    $selectedAddressId = isset($_SESSION['selectedAddressId']) ? $_SESSION['selectedAddressId'] : null;
+
+    $query = "";
+    if ($selectedAddressId) {
+        $query = "SELECT `address_id`, `customer_id`, `address`, `street`, `city`, `province`, `zipCode`, `phoneNumber`, `is_default` FROM `addresses` WHERE `address_id` = $selectedAddressId";
+    } else {
+        // If no address has been selected yet, fetch the default address
+        $query = "SELECT `address_id`, `customer_id`, `address`, `street`, `city`, `province`, `zipCode`, `phoneNumber`, `is_default` FROM `addresses` WHERE `customer_id` = $customer_id AND `is_default` = 1";
+    }
+
+    $result = mysqli_query($con, $query);
+
+    if (mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        $address = $row['address'];
+        $street = $row['street'];
+        $city = $row['city'];
+        $province = $row['province'];
+        $zipCode = $row['zipCode'];
+        $phoneNumber = $row['phoneNumber'];
+
+        $fullAddress = trim($address . " " . $street . " " . $city . " " . $province . " " . $zipCode);
+    } else {
+        $address = "No default address found";
+        $street = "";
+        $city = "";
+        $province = "";
+        $zipCode = "";
+        $phoneNumber = "";
+        $fullAddress = "No default address found";
+    }
+
+    $customer_id = $_SESSION['id'];
+    $query = "SELECT * FROM `addresses` WHERE `customer_id` = $customer_id";
+    $result = mysqli_query($con, $query);
+
+    $addresses = array();
+    while ($row = mysqli_fetch_assoc($result)) {
+        $addresses[] = $row;
+    }
+
+    $customer_id = $_SESSION['id'];
+
+    $select_query_cart = "SELECT * FROM cart WHERE customer_id = $customer_id";
+    $result_query_cart = mysqli_query($con, $select_query_cart);
+
+    $cartItems = array();
+
+    if (mysqli_num_rows($result_query_cart) > 0) {
+        while ($row = mysqli_fetch_assoc($result_query_cart)) {
+            $cartItems[] = $row;
         }
-        
-        unset($_SESSION['selectedAddressId']);
+    }
 
-        echo "<script>
+    $cartTotal = 0;
+    foreach ($cartItems as $item) {
+        $cartTotal += $item['price'] * $item['quantity'];
+    }
+    $shippingFee = 0;
+    $overallTotal = 0;
+
+    // Calculate total quantity of items with category "Albums"
+    $totalAlbumsQuantity = array_reduce($cartItems, function ($acc, $item) {
+        if ($item['category'] === 'Albums') {
+            return $acc + $item['quantity'];
+        }
+        return $acc;
+    }, 0);
+
+    // Determine the province based on the selected address or default to Metro Manila
+    $province = $province === 'Metro Manila' ? 'Metro Manila' : $province;
+
+    // Calculate shipping fee based on quantity and province
+    if ($totalAlbumsQuantity < 3) {
+        $shippingFee = $province === 'Metro Manila' ? 100 : 180;
+    } else {
+        $shippingFee = $province === 'Metro Manila' ? 120 : 220;
+    }
+
+    // Update overall total
+    $overallTotal = $cartTotal + $shippingFee;
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_order'])) {
+        $items_ordered = array_column($cartItems, 'item_name');
+        $items_ordered_str = implode(", ", $items_ordered);
+        $date_of_purchase = date("Y-m-d");
+        $order_id = uniqid();
+
+        $item_quantities = array_column($cartItems, 'quantity');
+        $item_quantities_str = implode(", ", $item_quantities);
+
+        $insert_query = $con->prepare("INSERT INTO orders (order_id, customer_id, firstname, lastname, address, items_ordered, item_quantity, total, shipping_fee, overall_total, date_of_purchase) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $insert_query->bind_param("sisssssssss", $order_id, $customer_id, $firstname, $lastname, $fullAddress, $items_ordered_str, $item_quantities_str, $cartTotal, $shippingFee, $overallTotal, $date_of_purchase);
+
+        if ($insert_query->execute()) {
+
+            $clear_cart_query = "DELETE FROM cart WHERE customer_id = ?";
+            $clear_cart_stmt = $con->prepare($clear_cart_query);
+            $clear_cart_stmt->bind_param("i", $customer_id);
+            $clear_cart_stmt->execute();
+
+            foreach ($cartItems as $item) {
+                $item_name = $item['item_name'];
+                $quantity_purchased = $item['quantity'];
+
+                $product_query = $con->prepare("SELECT `item_quantity`, `times_sold` FROM `products` WHERE `item_name` = ?");
+                $product_query->bind_param("s", $item_name);
+                $product_query->execute();
+                $product_result = $product_query->get_result();
+
+                if ($product_result->num_rows > 0) {
+                    $product_row = $product_result->fetch_assoc();
+                    $current_stock = $product_row['item_quantity'];
+                    $current_times_sold = $product_row['times_sold'];
+
+                    $new_stock = $current_stock - $quantity_purchased;
+                    $new_times_sold = $current_times_sold + $quantity_purchased;
+
+                    $update_query = $con->prepare("UPDATE `products` SET `item_quantity` = ?, `times_sold` = ? WHERE `item_name` = ?");
+                    $update_query->bind_param("iis", $new_stock, $new_times_sold, $item_name);
+
+                    if (!$update_query->execute()) {
+                        echo "Error updating product stock and sales data for item: " . $item_name;
+                    }
+                } else {
+                    echo "Product not found for item: " . $item_name;
+                }
+            }
+
+            unset($_SESSION['selectedAddressId']);
+
+            echo "<script>
                 Swal.fire({
                     icon: 'success', 
-                    title: 'Order Placed!',
-                    text: 'Your order has been placed successfully.',
+                    title: 'Order Placed Successfully!',
+                    text: 'Proceed with the payment and send the proof of payment to verify your order.',
                     confirmButtonText: 'OK',
                     customClass: {
                         popup: 'swal2-custom-popup',
@@ -208,12 +231,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_order'])) {
                     allowOutsideClick: false 
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = 'customer_cart.php'; 
+                        window.location.href = 'customer_profile.php'; 
                     }
                 });
               </script>";
-    } else {
-        echo "<script>
+        } else {
+            echo "<script>
                 Swal.fire({
                     icon: 'error', 
                     title: 'Error!',
@@ -228,10 +251,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_order'])) {
                     allowOutsideClick: false 
                 });
               </script>";
+        }
     }
-}
 
-?>
+    ?>
     <header class="order-header">
         <img src="../res/logo.png" alt="Yeokart Logo" class="logo1" width="200px" height="80px">
         <a href="customer_cart.php" class="cart-dir"><i class="fas fa-shopping-cart"></i></a>
@@ -239,56 +262,86 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_order'])) {
     <hr class="order-hr">
 
     <div class="left">
+        <div class="reminders-container">
+            <div class="reminders-inf">
+                <h3><i class="fa-solid fa-circle-info"></i>Important Reminders</h3>
+            </div>
+            <p><strong class="name">Mode of Payment</strong></p>
+            <p><strong>GCash</strong></p>
+            <ul>
+                <li>Rachel Falcis (0912-345-6789)</li>
+                <li>Employee 1 (0987-654-3210)</li>
+                <li>Employee 2 (0999-111-2222)</li>
+            </ul>
+            <p>After Placing your order, you may now proceed to pay through GCash and please <strong>don't forget to provide us the proof of payment by uploading the screenshot of the transaction</strong> in your account profile.</p>
+            <p><strong class="name">Mode of Delivery</strong></p>
+            <p>We will arrange the delivery through a courier service, but the customer will be responsible for the delivery fee.
+                The shipping rates will be provided below.</p>
+            <p>The customer can choose if they want to pay the shipping fee through GCash or Cash on Delivery.</p>
+            <p><strong class="name">Shipping Fee</strong></p>
+            <p><strong>These are the rates for the Shipping fee.</strong></p>
+            <p>Small to Medium Items (Up to 2 albums)</p>
+            <ul>
+                <li>Metro Manila - <strong>₱ 100</strong></li>
+                <li>Provinces - <strong>₱ 180</strong></li>
+            </ul>
+            <p>Large Items (More than 3 albums)</p>
+            <ul>
+                <li>Metro Manila - <strong>₱ 120</strong></li>
+                <li>Provinces - <strong>₱ 220</strong></li>
+            </ul>
+
+        </div>
         <div class="address-container">
             <div class="address-inf">
                 <h3><i class="fas fa-map-marker-alt"></i>Address</h3>
                 <a href="#" onclick="showPopup()">Choose another address</a>
             </div>
-            <p><strong class="name"><?php echo $firstname ." ". $lastname; ?></strong></p>
-            <?php if($address !== "No default address found"): ?>
+            <p><strong class="name"><?php echo $firstname . " " . $lastname; ?></strong></p>
+            <?php if ($address !== "No default address found") : ?>
                 <p><strong>Address:</strong> <?php echo $address; ?></p>
                 <p><strong>Street:</strong> <?php echo $street; ?></p>
                 <p><strong>City:</strong> <?php echo $city; ?></p>
                 <p><strong>Province:</strong> <?php echo $province; ?></p>
                 <p><strong>Zip Code:</strong> <?php echo $zipCode; ?></p>
                 <p><strong>Phone Number:</strong> <?php echo $phoneNumber; ?></p>
-            <?php else: ?>
+            <?php else : ?>
                 <p><strong>No default address found</strong></p>
             <?php endif; ?>
         </div>
 
-
         <div class="my-cart">
-            <h3>Your Cart<span><?php echo "(".$cartCount ." items)"; ?></span></h3>
+            <h3>Your Cart<span><?php echo "(" . $cartCount . " items)"; ?></span></h3>
             <?php
-                foreach ($cartItems as $item) {
-                    echo "<div class='cart-item'>";
-                    echo "<img src='item_images/{$item['item_image1']}' alt='Item Image' class='cart-item-image'>";
-                    echo "<div class='item-details'>";
-                    echo "<p><b>Name: </b>{$item['item_name']}</p>";
-                    echo "<p>Price: ₱ " . number_format($item['price'], 2) . "</p>";
-                    echo "</div>";
-                    echo "<p>Quantity: {$item['quantity']}</p>";
-                    echo "<p>Total: ₱ " . number_format($item['price'] * $item['quantity'], 2) . "</p>";
-                    echo "</div>";
-                }
+            foreach ($cartItems as $item) {
+                echo "<div class='cart-item'>";
+                echo "<img src='item_images/{$item['item_image1']}' alt='Item Image' class='cart-item-image'>";
+                echo "<div class='item-details'>";
+                echo "<p><b>Name: </b>{$item['item_name']}</p>";
+                echo "<p>Price: ₱ " . number_format($item['price'], 2) . "</p>";
+                echo "</div>";
+                echo "<p>Quantity: {$item['quantity']}</p>";
+                echo "<p>Total: ₱ " . number_format($item['price'] * $item['quantity'], 2) . "</p>";
+                echo "</div>";
+            }
             ?>
         </div>
     </div>
-    
+
     <form method="POST" action="">
         <div class="right">
             <div class="order-summary">
                 <h3>Order Summary</h3>
+                <p><strong>Cart Total: </strong>₱ <?php echo number_format($cartTotal, 2); ?></p>
+                <p><strong>Shipping Fee: </strong>₱ <?php echo number_format($shippingFee, 2); ?></p>
                 <p><strong>Overall Total: </strong>₱ <?php echo number_format($overallTotal, 2); ?></p>
-                <p><strong>Date Purchased: </strong><?php echo date("F j, Y"); ?></p>
+                <p><strong>Date of Purchase: </strong><?php echo date("F j, Y"); ?></p>
                 <div class="button-order">
                     <button type="submit" class="btn-confirm" name="confirm_order"><i class='fa fa-cart-arrow-down'></i>Place Order</button>
-                </div>     
+                </div>
             </div>
         </div>
     </form>
-
 
     <div id="chooseAddressPopup" class="popup-container" style="display: none;">
         <div class="popup-content">
@@ -315,7 +368,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_order'])) {
         function showPopup() {
             document.getElementById('chooseAddressPopup').style.display = 'block';
         }
-
     </script>
 </body>
 

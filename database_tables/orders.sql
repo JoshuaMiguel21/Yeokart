@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 01, 2024 at 03:23 AM
+-- Generation Time: Apr 01, 2024 at 04:46 PM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -36,18 +36,11 @@ CREATE TABLE `orders` (
   `items_ordered` text DEFAULT NULL,
   `item_quantity` text DEFAULT NULL,
   `total` decimal(10,2) DEFAULT NULL,
+  `shipping_fee` decimal(10,2) DEFAULT NULL,
+  `overall_total` decimal(10,2) DEFAULT NULL,
   `date_of_purchase` date DEFAULT NULL,
   `status` enum('Pending','Processing','Shipped','Delivered') NOT NULL DEFAULT 'Pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `orders`
---
-
-INSERT INTO `orders` (`order_id`, `customer_id`, `firstname`, `lastname`, `address`, `items_ordered`, `item_quantity`, `total`, `date_of_purchase`, `status`) VALUES
-('66078e95dde1f', 2, 'Ivan', 'Castro', '54D Magsalin Compound Caingin Street Quezon City Metro Manila 1116', 'Naruto', '1', '600.00', '2024-03-30', 'Pending'),
-('6607902142cae', 2, 'Ivan', 'Castro', '54D Magsalin Compound Caingin Street Quezon City Metro Manila 1116', 'Zoro', '1', '500.00', '2024-03-30', 'Delivered'),
-('66079051e7f9b', 1, 'Ivan', 'Castro', 'Goodhaven Compound 2 Urbano Street Quezon City Metro Manila 1116', 'Naruto, Zoro', '6, 6', '1800.00', '2024-03-30', 'Pending');
 
 --
 -- Indexes for dumped tables

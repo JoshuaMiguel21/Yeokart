@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 23, 2024 at 02:22 PM
+-- Generation Time: Apr 01, 2024 at 04:45 PM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -31,6 +31,7 @@ CREATE TABLE `cart` (
   `cart_id` int(11) NOT NULL,
   `customer_id` int(11) DEFAULT NULL,
   `item_name` varchar(255) DEFAULT NULL,
+  `category` varchar(255) DEFAULT NULL,
   `item_image1` varchar(255) DEFAULT NULL,
   `quantity` int(11) DEFAULT NULL,
   `price` decimal(10,2) DEFAULT NULL
@@ -55,7 +56,7 @@ ALTER TABLE `cart`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- Constraints for dumped tables

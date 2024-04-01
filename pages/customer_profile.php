@@ -230,117 +230,121 @@ if ($phoneResult->num_rows > 0) {
                 <hr class="gradient">
 
                 <?php
-                    require('../database/db_yeokart.php');
-                                       
-                    if (isset($_SESSION['id'])) {
-                        $customer_id = $_SESSION['id'];
-                    } else {
-                        header("Location: login_page.php");
-                        exit();
-                    }
+                require('../database/db_yeokart.php');
 
-                    // Query to fetch orders
-                    $sql = "SELECT `order_id`, `customer_id`, `firstname`, `lastname`, `address`, `items_ordered`, `total`, `date_of_purchase`, `item_quantity`, `status` FROM `orders` WHERE `customer_id` = $customer_id";
+                if (isset($_SESSION['id'])) {
+                    $customer_id = $_SESSION['id'];
+                } else {
+                    header("Location: login_page.php");
+                    exit();
+                }
 
-                    $result = $con->query($sql);
+                // Query to fetch orders
+                $sql = "SELECT `order_id`, `customer_id`, `firstname`, `lastname`, `address`, `items_ordered`, `total`, `shipping_fee`, `overall_total`, `date_of_purchase`, `item_quantity`, `status` FROM `orders` WHERE `customer_id` = $customer_id";
 
-                    if ($result->num_rows > 0) {
-                        echo '<table class="order-table">';
-                        echo '<thead>';
-                        echo '<tr>';
-                        echo '<th>Order ID</th>';
-                        echo '<th>Date</th>';
-                        echo '<th>Status</th>';
+                $result = $con->query($sql);
+
+                if ($result->num_rows > 0) {
+                    echo '<table class="order-table">';
+                    echo '<thead>';
+                    echo '<tr>';
+                    echo '<th>Order ID</th>';
+                    echo '<th>Date</th>';
+                    echo '<th>Status</th>';
+                    echo '</tr>';
+                    echo '</thead>';
+                    echo '<tbody>';
+
+                    while ($row = $result->fetch_assoc()) {
+                        echo '<tr class="order-row">';
+                        echo '<td>' . $row['order_id'] . '</td>';
+                        echo '<td>' . $row['date_of_purchase'] . '</td>';
+                        echo '<td>' . strtoupper($row['status']) . '</td>';
                         echo '</tr>';
-                        echo '</thead>';
-                        echo '<tbody>';
+                        echo '<tr class="hidden-row">';
+                        echo '<td colspan="3">';
+                        echo '<div class="order-details-card">';
 
-                        while ($row = $result->fetch_assoc()) {
-                            echo '<tr class="order-row">';
-                            echo '<td>' . $row['order_id'] . '</td>';
-                            echo '<td>' . $row['date_of_purchase'] . '</td>';
-                            echo '<td>' . strtoupper($row['status']) . '</td>';
-                            echo '</tr>';
-                            echo '<tr class="hidden-row">';
-                            echo '<td colspan="3">';
-                            echo '<div class="order-details-card">';
-                        
-                            $status = strtoupper($row['status']);
-                            echo '<div class="alert';
-                            switch ($status) {
-                                case "DELIVERED":
-                                    echo ' alert-success';
-                                    break;
-                                case "PROCESSING":
-                                    echo ' alert-info';
-                                    break;
-                                case "PENDING":
-                                    echo ' alert-danger';
-                                    break;
-                                case "SHIPPED":
-                                    echo ' alert-warning';
-                                    break;
-                                default:
-                                    echo ' alert-danger';
-                                    break;
-                            }
-                            echo '" role="alert">';
-                            echo '<strong>Status:</strong> ' . $status . '<br>';
-                            if ($status == "DELIVERED") {
-                                echo 'Your order has been delivered. Thank you for shopping with us!';
-                            } elseif ($status == "PROCESSING") {
-                                echo 'Your order is currently being processed. Please wait for further updates.';
-                            } elseif ($status == "PENDING") {
-                                echo 'Your order is pending. We are waiting for payment confirmation.';
-                            } elseif ($status == "SHIPPED") {
-                                echo 'Your order has been shipped. You will receive it soon.';
-                            } else {
-                                echo 'Your order status is ' . $status . '. For more information, please contact customer support.';
-                            }
-                        
-                            echo '</div>'; // Close alert div
-                        
-                            $items = explode(",", $row['items_ordered']);
-                            $quantities = explode(",", $row['item_quantity']);
-                        
-                            foreach ($items as $key => $item_name) {
-                                $item_name = trim($item_name);
-                                $item_query = "SELECT * FROM products WHERE item_name = '$item_name'";
-                                $item_result = $con->query($item_query);
-                        
-                                if ($item_result->num_rows > 0) {
-                                    $item_row = $item_result->fetch_assoc();
-                        
-                                    echo "<div class='cart-item' style='background-color: #fff;'>";
-                                    echo "<img src='item_images/{$item_row['item_image1']}' alt='Item Image' class='cart-item-image'>";
-                                    echo "<div class='item-details'>";
-                                    echo "<p><b>Name: </b>{$item_row['item_name']}</p>";
-                                    echo "<p>Price: ₱" . $item_row['item_price'] . "</p>";
-                                    echo "</div>";
-                                    echo "<p>Quantity: {$quantities[$key]}</p>";
-                                    echo "<p>Total: ₱" . ($item_row['item_price'] * $quantities[$key]) . "</p>";
-                                    echo "</div>";
-                                } else {
-                                    echo "Item not found";
-                                }
-                            }
-                        
-                            echo '<div class="total-for-order">';
-                            echo '<p class="total-label">Total for Orders: </p>';
-                            echo '<p class="total-price">&nbsp₱' . $row['total'] . '</p>';
-                            echo '</div>'; // Close total-for-order div
-                        
-                            echo '</div>'; // Close order-details-card div
-                            echo '</div>'; // Close hidden-row div
-                            echo '</td>';
-                            echo '</tr>';
+                        $status = strtoupper($row['status']);
+                        echo '<div class="alert';
+                        switch ($status) {
+                            case "DELIVERED":
+                                echo ' alert-success';
+                                break;
+                            case "PROCESSING":
+                                echo ' alert-info';
+                                break;
+                            case "PENDING":
+                                echo ' alert-danger';
+                                break;
+                            case "SHIPPED":
+                                echo ' alert-warning';
+                                break;
+                            default:
+                                echo ' alert-danger';
+                                break;
                         }
-                        echo '</tbody>';
-                        echo '</table>';
-                    } else {
-                        echo "0 results";
+                        echo '" role="alert">';
+                        echo '<strong>Status:</strong> ' . $status . '<br>';
+                        if ($status == "DELIVERED") {
+                            echo 'Your order has been delivered. Thank you for shopping with us!';
+                        } elseif ($status == "PROCESSING") {
+                            echo 'Your order is currently being processed. Please wait for further updates.';
+                        } elseif ($status == "PENDING") {
+                            echo 'Your order is pending. We are waiting for payment confirmation.';
+                        } elseif ($status == "SHIPPED") {
+                            echo 'Your order has been shipped. You will receive it soon.';
+                        } else {
+                            echo 'Your order status is ' . $status . '. For more information, please contact customer support.';
+                        }
+
+                        echo '</div>'; // Close alert div
+
+                        $items = explode(",", $row['items_ordered']);
+                        $quantities = explode(",", $row['item_quantity']);
+
+                        foreach ($items as $key => $item_name) {
+                            $item_name = trim($item_name);
+                            $item_query = "SELECT * FROM products WHERE item_name = '$item_name'";
+                            $item_result = $con->query($item_query);
+
+                            if ($item_result->num_rows > 0) {
+                                $item_row = $item_result->fetch_assoc();
+
+                                echo "<div class='cart-item' style='background-color: #fff;'>";
+                                echo "<img src='item_images/{$item_row['item_image1']}' alt='Item Image' class='cart-item-image'>";
+                                echo "<div class='item-details'>";
+                                echo "<p><b>Name: </b>{$item_row['item_name']}</p>";
+                                echo "<p>Price: ₱" . $item_row['item_price'] . "</p>";
+                                echo "</div>";
+                                echo "<p>Quantity: {$quantities[$key]}</p>";
+                                echo "<p>Total: ₱" . ($item_row['item_price'] * $quantities[$key]) . "</p>";
+                                echo "</div>";
+                            } else {
+                                echo "Item not found";
+                            }
+                        }
+
+                        echo '<div class="total-for-order">';
+                        echo '<p class="total-label">Subtotal: </p>';
+                        echo '<p class="total-price">&nbsp;₱' . $row['total'] . '</p>';
+                        echo '<p class="total-label">Shipping Fee: </p>';
+                        echo '<p class="total-price">&nbsp;₱' . $row['shipping_fee'] . '</p>';
+                        echo '<p class="total-label">Overall Total: </p>';
+                        echo '<p class="total-price">&nbsp;₱' . $row['overall_total'] . '</p>';
+                        echo '</div>'; // Close total-for-order div
+
+                        echo '</div>'; // Close order-details-card div
+                        echo '</div>'; // Close hidden-row div
+                        echo '</td>';
+                        echo '</tr>';
                     }
-                    $con->close();
+                    echo '</tbody>';
+                    echo '</table>';
+                } else {
+                    echo "0 results";
+                }
+                $con->close();
                 ?>
             </div>
 
@@ -377,23 +381,23 @@ if ($phoneResult->num_rows > 0) {
         </div>
     </section>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const orderRows = document.querySelectorAll('.order-row');
 
-    document.addEventListener('DOMContentLoaded', function() {
-    const orderRows = document.querySelectorAll('.order-row');
+            let currentlyOpenRow = null;
 
-    let currentlyOpenRow = null;
-
-    orderRows.forEach(function(row) {
-        row.addEventListener('click', function() {
-            const hiddenRow = row.nextElementSibling;
-            if (currentlyOpenRow && currentlyOpenRow !== hiddenRow) {
-                currentlyOpenRow.classList.remove('hidden-row-visible');
-            }
-            hiddenRow.classList.toggle('hidden-row-visible');
-            currentlyOpenRow = hiddenRow.classList.contains('hidden-row-visible') ? hiddenRow : null;
+            orderRows.forEach(function(row) {
+                row.addEventListener('click', function() {
+                    const hiddenRow = row.nextElementSibling;
+                    if (currentlyOpenRow && currentlyOpenRow !== hiddenRow) {
+                        currentlyOpenRow.classList.remove('hidden-row-visible');
+                    }
+                    hiddenRow.classList.toggle('hidden-row-visible');
+                    currentlyOpenRow = hiddenRow.classList.contains('hidden-row-visible') ? hiddenRow : null;
+                });
+            });
         });
-    });
-});
-    </script>    
-</body>       
+    </script>
+</body>
+
 </html>

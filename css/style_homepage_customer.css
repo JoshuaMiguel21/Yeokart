@@ -1442,14 +1442,17 @@ label {
     box-sizing: border-box;
 }
 
-.left .address-container{
+.left .address-container,
+.left .reminders-container{
     background-color: #eee;
     border-radius: 10px;
     padding: 20px;
     box-shadow: var(--box-shadow);
+    margin-bottom: 20px;
 }
 
-.left .address-container h3 {
+.left .address-container h3,
+.left .reminders-container h3 {
     font-size: 1.7rem;
 }
 
@@ -1466,28 +1469,33 @@ label {
     text-transform: lowercase;
 }
 
-.left .address-container i{
+.left .address-container i,
+.left .reminders-container i{
     color: var(--pink);
     margin-right: 5px;
 }
 
-.left .address-container p .name{
+.left .address-container p .name,
+.left .reminders-container p .name{
     font-size: 1.4rem;
     color: var(--pink);
 }
 
-.left .address-container p strong{
+.left .address-container p strong,
+.left .reminders-container p strong{
     font-size: 1.2rem;
 }
 
-.left .address-container .address-inf{
+.left .address-container .address-inf,
+.left .reminders-container .reminders-inf{
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 25px;
 }
 
-.left .address-container .address-inf a{
+.left .address-container .address-inf a,
+.left .reminders-container .reminders-inf a{
     text-decoration: none;
     font-size: 1.2rem;
     color: var(--pink);
@@ -1713,11 +1721,13 @@ label {
 .total-for-order p {
     margin: 5px 0;
     text-transform: none;
+    margin-left: 10px;
 }
 
 .total-label {
     font-weight: bold;
     color: #333;
+    
 }
 
 .total-price {
