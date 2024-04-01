@@ -133,6 +133,7 @@ a .btn-custom:hover{
     }
     
     div.left-column{
+        margin-top: 100%;
         padding-top: 75px;
         max-height: 512px;
         padding-left: 20px;
