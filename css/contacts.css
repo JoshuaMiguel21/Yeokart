@@ -379,6 +379,16 @@ section{
         padding: 2rem;
     }
 }
+
+@media (min-width:1025px){
+    html{
+        font-size: 55%;
+    }
+    .header .header-1{
+        padding: 2rem;
+    }
+}
+
 @media (max-width:991px){
     html{
         font-size: 55%;
