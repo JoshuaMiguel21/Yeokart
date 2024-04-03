@@ -57,7 +57,7 @@ if (isset($_SESSION['firstname'])) {
                         <span>Items</span></a>
                 </li>
                 <li>
-                    <a href=""><span class="las la-shopping-bag"></span>
+                    <a href="emp_orders.php"><span class="las la-shopping-bag"></span>
                         <span>Orders</span></a>
                 </li>
                 <li>
@@ -190,9 +190,14 @@ if (isset($_SESSION['firstname'])) {
                             echo "<td>" . $row['artist_name'] . "</td>";
                             echo "<td>" . $row['category_name'] . "</td>";
                             echo "<td>";
-                            echo "<img src='./item_images/$item_image1' alt='Twice Album' width='50' height='50'>&nbsp;";
-                            echo "<img src='./item_images/$item_image2' alt='Twice Album' width='50' height='50'>&nbsp;";
-                            echo "<img src='./item_images/$item_image3' alt='Twice Album' width='50' height='50'>&nbsp;";
+                            echo "<img src='./item_images/$item_image1' alt='' width='50' height='50'>&nbsp;";
+                            if (!empty($item_image2)) {
+                                echo "<img src='./item_images/$item_image2' alt='' width='50' height='50'>&nbsp;";
+                            }
+
+                            if (!empty($item_image3)) {
+                                echo "<img src='./item_images/$item_image3' alt='' width='50' height='50'>&nbsp;";
+                            }
                             echo "</td>";
                             echo "<td>";
                             echo "<div class='button-class'>";

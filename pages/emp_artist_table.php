@@ -8,7 +8,7 @@
     <link rel="icon" type="image/png" href="../res/icon.png">
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
-    
+
 </head>
 <script>
     function confirmDelete() {
@@ -69,7 +69,7 @@
                         <span>Items</span></a>
                 </li>
                 <li>
-                    <a href=""><span class="las la-shopping-bag"></span>
+                    <a href="emp_orders.php"><span class="las la-shopping-bag"></span>
                         <span>Orders</span></a>
                 </li>
                 <li>
@@ -185,16 +185,16 @@
             if (isset($_POST['update_artist'])) {
                 $artist_id = $_POST['artist_id'];
                 $artist_name = $_POST['artist_name'];
-            
+
                 $get_old_artist_query = "SELECT artist_name FROM artists WHERE artist_id='$artist_id'";
                 $result_old_artist = mysqli_query($con, $get_old_artist_query);
                 $row_old_artist = mysqli_fetch_assoc($result_old_artist);
                 $old_artist_name = $row_old_artist['artist_name'];
-            
+
                 $select_query = "SELECT * FROM artists WHERE artist_name='$artist_name' AND artist_id <> '$artist_id'";
                 $result_select = mysqli_query($con, $select_query);
                 $number = mysqli_num_rows($result_select);
-            
+
                 if ($number > 0) {
                     echo "<script>alert('This artist already exists')</script>";
                 } else {
@@ -204,10 +204,10 @@
                     } else {
                         $update_artist = "UPDATE artists SET artist_name='$artist_name' WHERE artist_id='$artist_id'";
                         $result_query_artist = mysqli_query($con, $update_artist);
-            
+
                         $update_products_artist = "UPDATE products SET artist_name='$artist_name' WHERE artist_name='$old_artist_name'";
                         $result_query_products_artist = mysqli_query($con, $update_products_artist);
-            
+
                         if ($result_query_artist && $result_query_products_artist) {
                             echo "<script>alert('Artist successfully updated')</script>";
                             echo "<script>window.location.href = 'emp_artist_table.php';</script>";

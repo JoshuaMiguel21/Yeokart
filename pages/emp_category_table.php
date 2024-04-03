@@ -69,7 +69,7 @@
                         <span>Items</span></a>
                 </li>
                 <li>
-                    <a href=""><span class="las la-shopping-bag"></span>
+                    <a href="emp_orders.php"><span class="las la-shopping-bag"></span>
                         <span>Orders</span></a>
                 </li>
                 <li>
@@ -182,7 +182,7 @@
             <?php
             include('../database/db_yeokart.php');
 
-            
+
             if (isset($_POST['update_category'])) {
                 $category_id = $_POST['category_id'];
                 $category_name = $_POST['category_name'];

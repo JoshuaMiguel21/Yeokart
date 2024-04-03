@@ -61,7 +61,7 @@ if (isset($_SESSION['firstname'])) {
                         <span>Items</span></a>
                 </li>
                 <li>
-                    <a href=""><span class="las la-shopping-bag"></span>
+                    <a href="emp_orders.php"><span class="las la-shopping-bag"></span>
                         <span>Orders</span></a>
                 </li>
                 <li>

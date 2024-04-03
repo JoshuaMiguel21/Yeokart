@@ -362,6 +362,9 @@ $con->close();
                 <span class="close-btn" onclick="closeUploadProofPopup()">&times;</span>
                 <h2>Upload Proof of Payment</h2>
                 <form class="add-artist-form" method="post" enctype="multipart/form-data">
+                    <br></br>
+                    <p>GCash Account: <strong>Rachel Falcis (0912-345-6789)</strong></p>
+                    <br></br>
                     <input type="file" name="proof_of_payment" id="proof_of_payment" accept="image/*">
                     <input type="hidden" name="order_id" id="order_id" value="">
                     <img src="" alt="Proof of Payment" id="proof_of_payment_image" style="max-width: 100%; display: none;">

@@ -270,8 +270,6 @@
             <p><strong>GCash</strong></p>
             <ul>
                 <li>Rachel Falcis (0912-345-6789)</li>
-                <li>Employee 1 (0987-654-3210)</li>
-                <li>Employee 2 (0999-111-2222)</li>
             </ul>
             <p>After Placing your order, you may now proceed to pay through GCash and please <strong>don't forget to provide us the proof of payment by uploading the screenshot of the transaction</strong> in your account profile.</p>
             <p><strong class="name">Mode of Delivery</strong></p>

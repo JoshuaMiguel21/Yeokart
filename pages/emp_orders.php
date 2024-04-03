@@ -36,34 +36,18 @@
     <?php
     session_start();
 
-    if (!isset($_SESSION['nav_toggle'])) {
-        $_SESSION['nav_toggle'] = false;
-    }
-
-    // Check if the nav-toggle checkbox has been toggled
-    if (isset($_POST['nav_toggle'])) {
-        // Update the session variable accordingly
-        $_SESSION['nav_toggle'] = $_POST['nav_toggle'] === 'true' ? true : false;
-    }
-
-    // Redirect to login page if session variables are not set
-    if (!isset($_SESSION['firstname']) || !isset($_SESSION['lastname'])) {
-        header("Location: login_page.php");
-        exit();
-    }
-
     if (isset($_SESSION['firstname'])) {
         $firstname = $_SESSION['firstname'];
     } else {
         header("Location: login_page.php");
         exit();
     }
-
-    if (isset($_SESSION['lastname'])) {
-        $lastname = $_SESSION['lastname'];
-    } else {
-        header("Location: login_page.php");
-        exit();
+    if (!isset($_SESSION['nav_toggle'])) {
+        $_SESSION['nav_toggle'] = false;
+    }
+    if (isset($_POST['nav_toggle'])) {
+        // Update the session variable accordingly
+        $_SESSION['nav_toggle'] = $_POST['nav_toggle'] === 'true' ? true : false;
     }
     ?>
     <input type="checkbox" id="nav-toggle" <?php echo $_SESSION['nav_toggle'] ? 'checked' : ''; ?>>
@@ -74,31 +58,23 @@
         <div class="sidebar-menu">
             <ul>
                 <li>
-                    <a href="owner_dashboard.php"><span class="las la-igloo"></span>
-                        <span>Owner Dashboard</span></a>
+                    <a href="emp_dashboard.php"><span class="las la-igloo"></span>
+                        <span>Employee Dashboard</span></a>
                 </li>
                 <li>
-                    <a href="owner_view_customers.php"><span class="las la-users"></span>
+                    <a href=""><span class="las la-users"></span>
                         <span>Customers</span></a>
                 </li>
                 <li>
-                    <a href="owner_item_homepage.php"><span class="las la-shopping-basket"></span>
+                    <a href="emp_item_homepage.php"><span class="las la-shopping-basket"></span>
                         <span>Items</span></a>
                 </li>
                 <li>
-                    <a href="owner_orders.php" class="active"><span class="las la-shopping-bag"></span>
+                    <a href="emp_orders.php" class="active"><span class="las la-shopping-bag"></span>
                         <span>Orders</span></a>
                 </li>
                 <li>
-                    <a href=""><span class="las la-chart-line"></span>
-                        <span>Report</span></a>
-                </li>
-                <li>
-                    <a href="manage_employees.php" class=""><span class="las la-user-circle"></span>
-                        <span>Manage Employee</span></a>
-                </li>
-                <li>
-                    <a href="owner_featured.php"><span class="las la-tasks"></span>
+                    <a href="emp_featured.php"><span class="las la-tasks"></span>
                         <span>Manage Content</span></a>
                 </li>
                 <li>
@@ -108,7 +84,6 @@
             </ul>
         </div>
     </div>
-
     <div class="main-content">
         <header>
             <h3>
@@ -121,10 +96,8 @@
 
             <div class="user-wrapper">
                 <div>
-                    <div>
-                        <h3><?php echo $firstname . " " . $lastname; ?></h3>
-                        <small>Owner</small>
-                    </div>
+                    <h3>Hi, <?php echo $firstname; ?></h3>
+                    <small>Employee</small>
                 </div>
             </div>
         </header>
@@ -218,7 +191,6 @@
             </div>
         </div>
     </div>
-
     <script>
         // Function to toggle the sidebar and update session variable
         function toggleSidebar() {
