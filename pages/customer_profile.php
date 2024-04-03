@@ -67,33 +67,9 @@ session_start();
 
 if (isset($_SESSION['id'])) {
     $customer_id = $_SESSION['id'];
-} else {
-    header("Location: login_page.php");
-    exit();
-}
-
-if (isset($_SESSION['firstname'])) {
     $firstname = $_SESSION['firstname'];
-} else {
-    header("Location: login_page.php");
-    exit();
-}
-
-if (isset($_SESSION['lastname'])) {
     $lastname = $_SESSION['lastname'];
-} else {
-    header("Location: login_page.php");
-    exit();
-}
-
-if (isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
-} else {
-    header("Location: login_page.php");
-    exit();
-}
-
-if (isset($_SESSION['email'])) {
     $email = strtolower($_SESSION['email']);
 } else {
     header("Location: login_page.php");
@@ -128,9 +104,6 @@ $defaultAddressResult = $con->query($defaultAddressQuery);
 if ($defaultAddressResult->num_rows > 0) {
     $defaultAddress = $defaultAddressResult->fetch_assoc();
     $displayAddress = htmlspecialchars($defaultAddress['address']);
-    /*if (!empty($defaultAddress['address_line2'])) {
-            $displayAddress .= ", " . htmlspecialchars($defaultAddress['address_line2']);
-        }*/
     $displayAddress .= ", " . htmlspecialchars($defaultAddress['street']);
     $displayAddress .= ", " . htmlspecialchars($defaultAddress['city']);
     $displayAddress .= ", " . htmlspecialchars($defaultAddress['province']);
@@ -148,6 +121,8 @@ if ($phoneResult->num_rows > 0) {
     $displayPhone = "No default phone number set.";
 }
 
+// Close the database connection
+$con->close();
 ?>
 
 <body>
@@ -240,7 +215,7 @@ if ($phoneResult->num_rows > 0) {
                 }
 
                 // Query to fetch orders
-                $sql = "SELECT `order_id`, `customer_id`, `firstname`, `lastname`, `address`, `items_ordered`, `total`, `shipping_fee`, `overall_total`, `date_of_purchase`, `item_quantity`, `status` FROM `orders` WHERE `customer_id` = $customer_id";
+                $sql = "SELECT `order_id`, `customer_id`, `firstname`, `lastname`, `address`, `items_ordered`, `total`, `shipping_fee`, `overall_total`, `date_of_purchase`, `item_quantity`, `status`, `proof_of_payment`  FROM `orders` WHERE `customer_id` = $customer_id";
 
                 $result = $con->query($sql);
 
@@ -251,18 +226,21 @@ if ($phoneResult->num_rows > 0) {
                     echo '<th>Order ID</th>';
                     echo '<th>Date</th>';
                     echo '<th>Status</th>';
+                    echo '<th>Proof of Payment</th>';
                     echo '</tr>';
                     echo '</thead>';
                     echo '<tbody>';
 
                     while ($row = $result->fetch_assoc()) {
+                        $order_id = $row['order_id'];
                         echo '<tr class="order-row">';
                         echo '<td>' . $row['order_id'] . '</td>';
                         echo '<td>' . $row['date_of_purchase'] . '</td>';
                         echo '<td>' . strtoupper($row['status']) . '</td>';
+                        echo '<td class="upload-proof-cell" data-order-id="' . $order_id . '" data-proof="' . $row['proof_of_payment'] . '"><a href="#">Upload Proof of Payment</a></td>';
                         echo '</tr>';
                         echo '<tr class="hidden-row">';
-                        echo '<td colspan="3">';
+                        echo '<td colspan="4">';
                         echo '<div class="order-details-card">';
 
                         $status = strtoupper($row['status']);
@@ -379,6 +357,44 @@ if ($phoneResult->num_rows > 0) {
                 </div>
             </div>
         </div>
+        <div id="uploadProofPopup" class="popup-container" style="display: none;">
+            <div class="popup-content">
+                <span class="close-btn" onclick="closeUploadProofPopup()">&times;</span>
+                <h2>Upload Proof of Payment</h2>
+                <form class="add-artist-form" method="post" enctype="multipart/form-data">
+                    <input type="file" name="proof_of_payment" id="proof_of_payment" accept="image/*">
+                    <input type="hidden" name="order_id" id="order_id" value="">
+                    <img src="" alt="Proof of Payment" id="proof_of_payment_image" style="max-width: 100%; display: none;">
+                    <button type="submit" name="upload_proof" class="upload-btn">Upload</button>
+                </form>
+            </div>
+        </div>
+        <?php
+        require('../database/db_yeokart.php');
+
+        if (isset($_POST['upload_proof'])) {
+            $order_id = $_POST['order_id'];
+            if (isset($_FILES['proof_of_payment']['name']) && !empty($_FILES['proof_of_payment']['name'])) {
+                $upload_proof = $_FILES['proof_of_payment']['name'];
+                $temp_proof = $_FILES['proof_of_payment']['tmp_name'];
+
+                if (move_uploaded_file($temp_proof, "./item_images/$upload_proof")) {
+                    $stmt = $con->prepare("UPDATE orders SET proof_of_payment = ? WHERE order_id = ?");
+                    $stmt->bind_param("ss", $upload_proof, $order_id);
+                    $stmt->execute();
+                    $stmt->close();
+
+                    echo "Proof of payment uploaded successfully.";
+                } else {
+                    echo "Failed to move uploaded file.";
+                }
+            } else {
+                echo "No file uploaded.";
+            }
+        }
+
+        $con->close();
+        ?>
     </section>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -397,6 +413,37 @@ if ($phoneResult->num_rows > 0) {
                 });
             });
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadProofCells = document.querySelectorAll('.upload-proof-cell');
+
+            uploadProofCells.forEach(function(cell) {
+                cell.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    const orderId = cell.getAttribute('data-order-id');
+                    openUploadProofPopup(orderId);
+                });
+            });
+        });
+
+        function openUploadProofPopup(orderId) {
+            document.getElementById('order_id').value = orderId;
+            document.getElementById('uploadProofPopup').style.display = 'flex';
+            // Check if the proof_of_payment field is not empty
+            const proofOfPayment = document.querySelector('.upload-proof-cell[data-order-id="' + orderId + '"]').getAttribute('data-proof');
+            if (proofOfPayment !== "") {
+                // Display the image in the popup
+                const proofOfPaymentImage = document.getElementById('proof_of_payment_image');
+                proofOfPaymentImage.src = "./item_images/" + proofOfPayment;
+                proofOfPaymentImage.style.display = 'block';
+            }
+        }
+
+        function closeUploadProofPopup() {
+            document.getElementById('uploadProofPopup').style.display = 'none';
+            // Hide the image when closing the popup
+            document.getElementById('proof_of_payment_image').style.display = 'none';
+        }
     </script>
 </body>
 

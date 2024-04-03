@@ -39,13 +39,13 @@
     if (!isset($_SESSION['nav_toggle'])) {
         $_SESSION['nav_toggle'] = false;
     }
-    
+
     // Check if the nav-toggle checkbox has been toggled
     if (isset($_POST['nav_toggle'])) {
         // Update the session variable accordingly
         $_SESSION['nav_toggle'] = $_POST['nav_toggle'] === 'true' ? true : false;
     }
-    
+
     // Redirect to login page if session variables are not set
     if (!isset($_SESSION['firstname']) || !isset($_SESSION['lastname'])) {
         header("Location: login_page.php");
@@ -150,16 +150,18 @@
                             <th>Total</th>
                             <th>Date of Purchase</th>
                             <th>Status</th>
+                            <th>Proof of Payment</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
                         include('../database/db_yeokart.php');
 
-                        $select_query = "SELECT `order_id`, `customer_id`, `firstname`, `lastname`, `address`, `items_ordered`, `item_quantity`, `total`, `date_of_purchase`, `status` FROM `orders` WHERE 1";
+                        $select_query = "SELECT `order_id`, `customer_id`, `firstname`, `lastname`, `address`, `items_ordered`, `item_quantity`, `total`, `date_of_purchase`, `status`, `proof_of_payment` FROM `orders` WHERE 1";
                         $result_query = mysqli_query($con, $select_query);
 
                         while ($row = mysqli_fetch_assoc($result_query)) {
+                            $proof_of_payment = $row['proof_of_payment'];
                             echo '<tr id="order-row-' . $row['order_id'] . '">';
                             echo "<td>" . $row['order_id'] . "</td>";
                             echo "<td>" . $row['customer_id'] . "</td>";
@@ -174,7 +176,7 @@
                             echo '<div class="button-class">';
                             echo '<select class="orderStatusSelect" onchange="updateOrderStatus(this.value, \'' . $row['order_id'] . '\')">';
                             include('../database/db_yeokart.php');
-                        
+
                             // Fetch ENUM values for order status from the database
                             $status_query = "SHOW COLUMNS FROM `orders` LIKE 'status'";
                             $status_result = mysqli_query($con, $status_query);
@@ -186,92 +188,111 @@
                             }
                             echo '</select>';
                             echo '</div>';
+                            if (!empty($proof_of_payment)) {
+                                echo '<img src="./item_images/' . $proof_of_payment . '" alt="Proof of Payment" width="50" height="50" onclick="openImagePopup(\'./item_images/' . $proof_of_payment . '\')">';
+                            }
                             echo "</td>";
                             echo "</tr>";
-                        }                                       
+                        }
                         ?>
                     </tbody>
                 </table>
             </div>
-
-        </main>
-
-            <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
+            <div id="imagePopup" class="popup-container" style="display: none;">
                 <div class="popup-content">
-                    <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>
-                    <p>Are you sure you want to logout?
-                    <p>
-                    <div class="logout-btns">
-                        <button onclick="confirmLogout()" class="confirm-logout-btn">Logout</button>
-                        <button onclick="closeLogoutPopup()" class="cancel-logout-btn">Cancel</button>
-                    </div>
+                    <span class="close-btn" onclick="closeImagePopup()">&times;</span>
+                    <img id="popupImage" src="" alt="Proof of Payment" style="max-width: 100%; max-height: 100%;">
                 </div>
             </div>
+        </main>
 
-    <script>
-        // Function to toggle the sidebar and update session variable
-        function toggleSidebar() {
-            var isChecked = document.getElementById('nav-toggle').checked;
-            var newState = isChecked ? 'true' : 'false';
+        <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
+            <div class="popup-content">
+                <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>
+                <p>Are you sure you want to logout?
+                <p>
+                <div class="logout-btns">
+                    <button onclick="confirmLogout()" class="confirm-logout-btn">Logout</button>
+                    <button onclick="closeLogoutPopup()" class="cancel-logout-btn">Cancel</button>
+                </div>
+            </div>
+        </div>
 
-            // Update session variable using AJAX
-            var xhttp = new XMLHttpRequest();
-            xhttp.open("POST", "", true);
-            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhttp.send("nav_toggle=" + newState);
-        }
+        <script>
+            // Function to toggle the sidebar and update session variable
+            function toggleSidebar() {
+                var isChecked = document.getElementById('nav-toggle').checked;
+                var newState = isChecked ? 'true' : 'false';
 
-        function updateOrderStatus(status, orderId) {
-        var xhttp = new XMLHttpRequest();
-        xhttp.open("POST", "update_order_status.php", true);
-        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                console.log("Order status updated successfully");
+                // Update session variable using AJAX
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("POST", "", true);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send("nav_toggle=" + newState);
             }
-        };
-        xhttp.send("order_id=" + orderId + "&status=" + status);
-    }
 
-    document.addEventListener('DOMContentLoaded', function() {
-    var orderRows = document.querySelectorAll('tr[id^="order-row-"]');
+            function updateOrderStatus(status, orderId) {
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("POST", "update_order_status.php", true);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        console.log("Order status updated successfully");
+                    }
+                };
+                xhttp.send("order_id=" + orderId + "&status=" + status);
+            }
 
-    orderRows.forEach(function(orderRow) {
-        var orderStatusSelect = orderRow.querySelector('.orderStatusSelect');
-        var orderId = orderRow.getAttribute('id').split('-')[2]; // Extract order ID from row ID
-        var selectedStatus = localStorage.getItem('selectedStatus_' + orderId) || 'Pending'; 
+            document.addEventListener('DOMContentLoaded', function() {
+                var orderRows = document.querySelectorAll('tr[id^="order-row-"]');
 
-        // Set initial border color based on the stored status
-        orderStatusSelect.style.border = getBorderStyle(selectedStatus);
+                orderRows.forEach(function(orderRow) {
+                    var orderStatusSelect = orderRow.querySelector('.orderStatusSelect');
+                    var orderId = orderRow.getAttribute('id').split('-')[2]; // Extract order ID from row ID
+                    var selectedStatus = localStorage.getItem('selectedStatus_' + orderId) || 'Pending';
 
-        // Add event listener to update border color on status change
-        orderStatusSelect.addEventListener('change', function() {
-            var selectedOption = this.options[this.selectedIndex];
-            var selectedValue = selectedOption.value;
-            this.style.border = getBorderStyle(selectedValue);
+                    // Set initial border color based on the stored status
+                    orderStatusSelect.style.border = getBorderStyle(selectedStatus);
 
-            // Store selected status in local storage
-            localStorage.setItem('selectedStatus_' + orderId, selectedValue);
-        });
-    });
+                    // Add event listener to update border color on status change
+                    orderStatusSelect.addEventListener('change', function() {
+                        var selectedOption = this.options[this.selectedIndex];
+                        var selectedValue = selectedOption.value;
+                        this.style.border = getBorderStyle(selectedValue);
 
-    // Function to get border style based on status
-    function getBorderStyle(status) {
-        switch (status) {
-            case 'Pending':
-                return '1px solid red';
-            case 'Processing':
-                return '1px solid blue';
-            case 'Shipped':
-                return '1px solid #FFD700';
-            case 'Delivered':
-                return '1px solid green';
-            default:
-                return ''; 
-        }
-    }
-});
-    </script>
+                        // Store selected status in local storage
+                        localStorage.setItem('selectedStatus_' + orderId, selectedValue);
+                    });
+                });
+
+                // Function to get border style based on status
+                function getBorderStyle(status) {
+                    switch (status) {
+                        case 'Pending':
+                            return '1px solid red';
+                        case 'Processing':
+                            return '1px solid blue';
+                        case 'Shipped':
+                            return '1px solid #FFD700';
+                        case 'Delivered':
+                            return '1px solid green';
+                        default:
+                            return '';
+                    }
+                }
+            });
+
+            function openImagePopup(imageUrl) {
+                var popup = document.getElementById('imagePopup');
+                var image = document.getElementById('popupImage');
+                image.src = imageUrl;
+                popup.style.display = 'flex';
+            }
+
+            function closeImagePopup() {
+                document.getElementById('imagePopup').style.display = 'none';
+            }
+        </script>
 </body>
 
 </html>
