@@ -20,6 +20,7 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
+    margin: 100px;
 }
 
 .left-column,

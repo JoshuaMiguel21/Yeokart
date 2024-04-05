@@ -10,6 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="../css/add&edit_item.css" rel="stylesheet" />
     <link rel="icon" type="image/png" href="../res/icon.png">
     <title>Add Item - Yeokart</title>
@@ -37,47 +38,50 @@
                 <label for="item_quantity" class="form-label">Quantity:</label>
                 <input type="number" name="item_quantity" id="item_quantity" class="form-control" placeholder="Enter item quantity" autocomplete="off" min="0" required>
             </div>
-            <div class="form-outline mb-3 w-50 mr-auto ml-auto">
-                <select name="product_artist" id="product_artist" class="form-select">
-                    <option value="">Select Artist</option>
-                    <?php
-                    include('../database/db_yeokart.php');
-                    $select_query_artist = "Select * from artists";
-                    $result_query_artist = mysqli_query($con, $select_query_artist);
-                    while ($row = mysqli_fetch_assoc($result_query_artist)) {
-                        $artist_name = $row['artist_name'];
-                        $artist_id = $row['artist_id'];
-                        echo "<option value='$artist_name'>$artist_name</option>";
-                    }
-                    ?>
-                </select>
-            </div>
-            <div class="form-outline mb-3 w-50 mr-auto ml-auto">
-                <select name="product_category" id="product_category" class="form-select">
-                    <option value="">Select item Category</option>
-                    <?php
-                    include('../database/db_yeokart.php');
-                    $select_query_category = "Select * from categories";
-                    $result_query_category = mysqli_query($con, $select_query_category);
-                    while ($row = mysqli_fetch_assoc($result_query_category)) {
-                        $category_name = $row['category_name'];
-                        $category_id = $row['category_id'];
-                        echo "<option value='$category_name'>$category_name</option>";
-                    }
-                    ?>
-                </select>
+            <div class="select-container">
+                <div class="form-outline mb-3 w-50 mr-auto ml-auto">
+                    <select name="product_artist" id="product_artist" class="form-select">
+                        <option value="">Select Artist</option>
+                        <?php
+                        include('../database/db_yeokart.php');
+                        $select_query_artist = "Select * from artists";
+                        $result_query_artist = mysqli_query($con, $select_query_artist);
+                        while ($row = mysqli_fetch_assoc($result_query_artist)) {
+                            $artist_name = $row['artist_name'];
+                            $artist_id = $row['artist_id'];
+                            echo "<option value='$artist_name'>$artist_name</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+                
+                <div class="form-outline mb-3 w-50 mr-auto ml-auto">
+                    <select name="product_category" id="product_category" class="form-select">
+                        <option value="">Select item Category</option>
+                        <?php
+                        include('../database/db_yeokart.php');
+                        $select_query_category = "Select * from categories";
+                        $result_query_category = mysqli_query($con, $select_query_category);
+                        while ($row = mysqli_fetch_assoc($result_query_category)) {
+                            $category_name = $row['category_name'];
+                            $category_id = $row['category_id'];
+                            echo "<option value='$category_name'>$category_name</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
             </div>
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <label for="item_image1" class="form-label">Item Image 1:</label>
-                <input type="file" name="item_image1" id="item_image1" accept="image/*" class="form-control form-outline w-100" required>
+                <input type="file" name="item_image1" id="item_image1" accept="image/*" class="image-input" required>
             </div>
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <label for="item_image2" class="form-label">Item Image 2:</label>
-                <input type="file" name="item_image2" id="item_image2" accept="image/*" class="form-control">
+                <input type="file" name="item_image2" id="item_image2" accept="image/*" class="image-input">
             </div>
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <label for="item_image3" class="form-label">Item Image 3:</label>
-                <input type="file" name="item_image3" id="item_image3" accept="image/*" class="form-control">
+                <input type="file" name="item_image3" id="item_image3" accept="image/*" class="image-input">
             </div>
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <input type="submit" name="insert_item" class="btn btn-info mb-3 px-3" value="Add Item">
@@ -138,7 +142,14 @@ if (isset($_POST['insert_item'])) {
     $result_select = mysqli_query($con, $select_query);
     $number = mysqli_num_rows($result_select);
     if ($number > 0) {
-        echo "<script>alert('This product already exists')</script>";
+        echo "<script>
+        Swal.fire({
+            title: 'Error!',
+            text: 'An item with this name already exists.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    </script>";
     } else {
         if ($item_name == '' or $item_price == '' or $item_description == '' or  $item_quantity == '' or  $product_artist == '' or $product_category == '') {
             echo "<script>alert('Please fill up all the fields')</script>";
@@ -151,15 +162,23 @@ if (isset($_POST['insert_item'])) {
             $insert_items = "INSERT INTO products (item_name,item_price,item_description,item_quantity,artist_name,category_name,item_image1,item_image2,item_image3) VALUES ('$item_name','$item_price','$item_description','$item_quantity', '$product_artist','$product_category','$item_image1','$item_image2','$item_image3')";
             $result_query_item = mysqli_query($con, $insert_items);
             if ($result_query_item) {
-                echo "<script>alert('Item successfully added')</script>";
-
-                // Calculate the total number of pages based on the number of items
+                
                 $total_items = mysqli_num_rows(mysqli_query($con, "SELECT * FROM products"));
                 $items_per_page = 10;
                 $total_pages = ceil($total_items / $items_per_page);
 
-                // Redirect to the last page
-                echo "<script>window.location.href = 'owner_item_homepage.php?page=$total_pages#item-$item_name';</script>";
+                echo "<script>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Item successfully added!',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = 'owner_item_homepage.php?page=$total_pages#item-$item_name';
+                        }
+                    });
+                </script>";
             }
         }
     }

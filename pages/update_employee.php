@@ -15,48 +15,89 @@
 </head>
 
 <body>
-    <?php
-    require('../database/db_yeokart.php');
+<?php
+require('../database/db_yeokart.php');
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // Validate the form data
-        $employeeId = $_POST['employeeId'];
-        $firstName = $_POST['firstname'];
-        $lastName = $_POST['lastname'];
-        $username = $_POST['username'];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $employeeId = $_POST['employeeId'];
+    $firstName = $_POST['firstname'];
+    $lastName = $_POST['lastname'];
+    $username = $_POST['username'];
 
-        // Perform the update query
-        $updateQuery = "UPDATE `employee_accounts` SET 
+    // Query to get the current username of the employee being updated
+    $currentUsernameQuery = "SELECT username FROM `employee_accounts` WHERE id = $employeeId";
+    $currentResult = $con->query($currentUsernameQuery);
+    $currentUsernameRow = $currentResult->fetch_assoc();
+    $currentUsername = $currentUsernameRow['username'];
+
+    // Only check if the username exists in other rows if it's being changed
+    if ($username !== $currentUsername) {
+        $checkUsernameQuery = "
+            (SELECT username FROM `user_accounts` WHERE `username`='$username' AND `is_verified`=1)
+            UNION
+            (SELECT username FROM `employee_accounts` WHERE `username`='$username' AND `is_employee`=1 AND id != $employeeId)
+        ";
+
+        $result = $con->query($checkUsernameQuery);
+
+        if ($result->num_rows > 0) {
+            echo "<script>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Username Exists',
+                    text: 'The username already exists with either a verified user or an active employee. Please choose a different username.',
+                }).then(function(){
+                    window.history.go(-1);
+                });
+            </script>";
+            $con->close();
+            exit;
+        }
+    }
+
+    $updateQuery = "UPDATE `employee_accounts` SET 
                     firstname = '$firstName',
                     lastname = '$lastName',
                     username = '$username'
                     WHERE id = $employeeId";
 
-        if ($con->query($updateQuery) === TRUE) {
-            // Update successful
-            echo "<script>
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Update Successful',
-                    text: 'Employee information has been updated successfully!',
-                    timer: 2000,
-                    showConfirmButton: true
-                }).then(function(){
-                    window.location.href = 'manage_employees.php'; 
-                });
-            </script>";
-        } else {
-            // Update failed
-            echo "Error updating employee: " . $con->error;
-        }
-
-        $con->close();
+    if ($con->query($updateQuery) === TRUE) {
+        echo "<script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Update Successful',
+                text: 'Employee information has been updated successfully!',
+                timer: 2000,
+                showConfirmButton: true
+            }).then(function(){
+                window.location.href = 'manage_employees.php'; 
+            });
+        </script>";
     } else {
-        // If the form is not submitted through POST method, redirect to an error page or home page
-        header("Location: error.php");
-        exit();
+        echo "<script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Error updating employee information.',
+            });
+        </script>";
     }
-    ?>
+
+    $con->close();
+} else {
+    echo "<script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Invalid request method.',
+        }).then(function(){
+            window.location.href = 'edit_employee.php';
+        });
+    </script>";
+}
+?>
+
+
 </body>
 
 </html>

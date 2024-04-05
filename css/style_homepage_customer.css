@@ -1429,7 +1429,7 @@ label {
     height: calc(100% - 118px); 
     background-color: var(--light-color);
     display: none;
-    animation: slideRight 4s linear forwards; 
+    animation: slideRight 3s linear forwards; 
 }
 
 .loading-overlay.loading {

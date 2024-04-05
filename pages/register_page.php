@@ -141,57 +141,135 @@
                         }
                     }
 
-                    $username = $_POST['username'];
-                    $email = $_POST['email'];
+                        $username = $_POST['username'];
+                        $email = $_POST['email'];
+                        $combined_query = "
+                            (SELECT username, email, is_verified as status, 'user' as type FROM `user_accounts` WHERE `username`='$username' OR `email`='$email')
+                            UNION
+                            (SELECT username, email, is_employee as status, 'employee' as type FROM `employee_accounts` WHERE `username`='$username' OR `email`='$email' AND `is_employee`=1)
+                        ";
 
-                    $user_exist_query = "SELECT * FROM `user_accounts` WHERE `username`='$username' OR `email`='$email'";
-                    $employee_exist_query = "SELECT * FROM `employee_accounts` WHERE `username`='$username' OR `email`='$email'";
+                        $result = mysqli_query($con, $combined_query);
 
-                    $user_result = mysqli_query($con, $user_exist_query);
-                    $employee_result = mysqli_query($con, $employee_exist_query);
+                        if ($result) {
+                            $num_rows = mysqli_num_rows($result);
 
-                    if ($user_result && $employee_result) {
-                        $user_rows = mysqli_num_rows($user_result);
-                        $employee_rows = mysqli_num_rows($employee_result);
-
-                        if ($user_rows > 0 || $employee_rows > 0) {
-                            $result_fetch = ($user_rows > 0) ? mysqli_fetch_assoc($user_result) : mysqli_fetch_assoc($employee_result);
-
-                            if ($result_fetch['username'] == $username && $result_fetch['is_verified'] == 1 && $result_fetch['is_employee'] == 1) {
-                                echo "<script>alert('$username - Username already taken');</script>";
-                            } elseif ($result_fetch['email'] == $email && $result_fetch['is_verified'] == 1 && $result_fetch['is_employee'] == 1) {
-                                echo "<script>alert('$email - E-mail already registered');</script>";
-                            } else {
-                                $user_query = "SELECT * FROM `user_accounts` WHERE `username`='$username' OR `email`='$email'";
-                                $user_check_result = mysqli_query($con, $user_query);
-                                $user_check_rows = mysqli_num_rows($user_check_result);
-
-                                if ($user_check_rows > 0) {
-                                    $user_data = mysqli_fetch_assoc($user_check_result);
-                                    if ($user_data['is_verified'] == 0) {
-                                        if (sendMail($_POST['email'], $user_data['verification_code'])) {
-                                            echo "<script>
-                                                    Swal.fire({
-                                                        icon: 'info',
-                                                        title: 'Email Sent!',
-                                                        text: 'Verification email has been sent again. Please check your email to proceed with the login.',
-                                                        confirmButtonText: 'OK'
-                                                    });
-                                                </script>";
+                            if ($num_rows > 0) {
+                                $result_fetch = mysqli_fetch_assoc($result);
+                                if ($result_fetch['type'] == 'user') {
+                                    if ($result_fetch['username'] == $username && $result_fetch['status'] == 1) {
+                                        echo "<script>
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Oops...',
+                                                text: '$username - Username already taken'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    window.location = 'register_page.php';
+                                                }
+                                            });
+                                        </script>";
+                                    } elseif ($result_fetch['email'] == $email && $result_fetch['status'] == 1) {
+                                        echo "<script>
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Oops...',
+                                                text: '$email - E-mail already registered'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    window.location = 'register_page.php';
+                                                }
+                                            });
+                                        </script>";
+                                    } elseif ($result_fetch['email'] == $email && $result_fetch['status'] == 0) {
+                                        // Sanitize and validate input before using it in your queries
+                                        $firstname = mysqli_real_escape_string($con, $_POST['firstname']);
+                                        $lastname = mysqli_real_escape_string($con, $_POST['lastname']);
+                                        $username = mysqli_real_escape_string($con, $_POST['username']);
+                                        // Hash the password securely
+                                        $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+                                        // Generate a new verification code
+                                        $v_code = bin2hex(random_bytes(16));
+                                        
+                                        // Prepare the update query
+                                        $update_query = "UPDATE `user_accounts` SET 
+                                                         `firstname`=?, `lastname`=?, `username`=?, `password`=?, `verification_code` = ?
+                                                         WHERE `email`=?";
+                                        $stmt = mysqli_prepare($con, $update_query);
+                                        mysqli_stmt_bind_param($stmt, 'ssssss', $firstname, $lastname, $username, $password, $v_code, $email);
+                                        
+                                        if (mysqli_stmt_execute($stmt)) {
+                                            // Re-fetch the user's data to get the updated verification code
+                                            $user_exist_query = "SELECT * FROM `user_accounts` WHERE `email`=?";
+                                            $user_stmt = mysqli_prepare($con, $user_exist_query);
+                                            mysqli_stmt_bind_param($user_stmt, 's', $email);
+                                            mysqli_stmt_execute($user_stmt);
+                                            $result = mysqli_stmt_get_result($user_stmt);
+                                            
+                                            if ($result && $row = mysqli_fetch_assoc($result)) {
+                                                if (sendMail($email, $row['verification_code'])) {
+                                                    echo "<script>
+                                                            Swal.fire({
+                                                                icon: 'info',
+                                                                title: 'Email Sent!',
+                                                                text: 'Verification email has been sent again. Please check your email to proceed with the login.',
+                                                                confirmButtonText: 'OK'
+                                                            }).then((result) => {
+                                                                if (result.isConfirmed) {
+                                                                    window.location = 'login_page.php';
+                                                                }
+                                                            });
+                                                          </script>";
+                                                } else {
+                                                    echo "<script>
+                                                            Swal.fire({
+                                                                title: 'Oops!',
+                                                                text: 'Failed to send email. Please try again later.',
+                                                                icon: 'error',
+                                                                confirmButtonText: 'OK'
+                                                            });
+                                                          </script>";
+                                                }
+                                            }
                                         } else {
                                             echo "<script>
                                                     Swal.fire({
                                                         title: 'Oops!',
-                                                        text: 'Failed to send email. Please try again later.',
+                                                        text: 'Could not update your information. Please try again later.',
                                                         icon: 'error',
                                                         confirmButtonText: 'OK'
                                                     });
-                                                </script>";
+                                                  </script>";
                                         }
                                     }
+                                } elseif ($result_fetch['type'] == 'employee') {
+                                    if ($result_fetch['username'] == $username && $result_fetch['status'] == 1) {
+                                        echo "<script>
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Oops...',
+                                                text: '$username - Username already taken'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    window.location = 'register_page.php';
+                                                }
+                                            });
+                                        </script>";
+                                    } elseif ($result_fetch['email'] == $email && $result_fetch['status'] == 1) {
+                                        echo "<script>
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Oops...',
+                                                text: '$email - E-mail already registered'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    window.location = 'register_page.php';
+                                                }
+                                            });
+                                        </script>";
+                                    }
                                 }
-                            }
-                        } else {
+                            } else {
                             $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
                             $v_code = bin2hex(random_bytes(16));
                             $query = "INSERT INTO `user_accounts` (`firstname`, `lastname`, `username`, `email`, `password`, `verification_code`, `is_verified`) VALUES ('$_POST[firstname]', '$_POST[lastname]', '$username', '$email', '$password', '$v_code', '0')";
@@ -214,7 +292,7 @@
                                     });
                                     </script>";   
                                 }
-                        }
+                            }
                     }
                     else{
                         echo "<script>alert('Cannot Run Query');</script>";

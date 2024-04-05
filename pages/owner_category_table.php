@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <title>Item Catalog - Yeokart</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="icon" type="image/png" href="../res/icon.png">
 </head>
 <script>
@@ -266,7 +267,14 @@ if (isset($_SESSION['lastname'])) {
                 $number = mysqli_num_rows($result_select);
 
                 if ($number > 0) {
-                    echo "<script>alert('This category already exists')</script>";
+                    echo "<script>Swal.fire({
+                        title: 'Error!',
+                        text: 'This category already exists',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                      }).then(function(){
+                        document.getElementById('addCategoryPopup').style.display = 'flex';
+                      });</script>";
                 } else {
                     if ($category_name == '') {
                         echo "<script>alert('Please fill up the field')</script>";
@@ -276,8 +284,14 @@ if (isset($_SESSION['lastname'])) {
                         $insert_category = "INSERT INTO categories (category_name) VALUES ('$category_name')";
                         $result_query_category = mysqli_query($con, $insert_category);
                         if ($result_query_category) {
-                            echo "<script>alert('Category successfully added')</script>";
-                            echo "<script>window.location.href = './owner_category_table.php';</script>";
+                            echo "<script>Swal.fire({
+                                title: 'Success!',
+                                text: 'Category successfully added',
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                              }).then(function(){
+                                window.location.href = './owner_category_table.php';
+                              });</script>";
                         }
                     }
                 }
@@ -298,7 +312,14 @@ if (isset($_SESSION['lastname'])) {
                 $number = mysqli_num_rows($result_select);
 
                 if ($number > 0) {
-                    echo "<script>alert('This category already exists')</script>";
+                    echo "<script>Swal.fire({
+                        title: 'Error!',
+                        text: 'This category already exists',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                      }).then(function(){
+                        openEditCategoryPopup('$category_id', '".addslashes($old_category_name)."');
+                      });</script>";
                 } else {
                     if ($category_name == '') {
                         echo "<script>alert('Please fill up the field')</script>";
@@ -311,8 +332,14 @@ if (isset($_SESSION['lastname'])) {
                         $result_query_products_category = mysqli_query($con, $update_products_category);
 
                         if ($result_query_category && $result_query_products_category) {
-                            echo "<script>alert('Category successfully updated')</script>";
-                            echo "<script>window.location.href = 'owner_category_table.php';</script>";
+                            echo "<script>Swal.fire({
+                                title: 'Success!',
+                                text: 'Category successfully updated',
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                              }).then(function(){
+                                window.location.href = 'owner_category_table.php';
+                              });</script>";
                         }
                     }
                 }

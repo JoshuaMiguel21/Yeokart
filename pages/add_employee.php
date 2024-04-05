@@ -98,7 +98,7 @@
             require("PHPMailer/src/SMTP.php");
             require("PHPMailer/src/Exception.php");
 
-
+            if (isset($_POST['submit'])) {
             function sendMail($email, $v_code)
             {
                 $mail = new PHPMailer(true);
@@ -133,32 +133,137 @@
                 }
             }
 
-            if (isset($_POST['submit'])) {
-                $employee_exist_query = "SELECT * FROM `employee_accounts` WHERE `username`=? OR `email`=?";
-                $employee_stmt = mysqli_prepare($con, $employee_exist_query);
-                mysqli_stmt_bind_param($employee_stmt, 'ss', $_POST['username'], $_POST['email']);
-                mysqli_stmt_execute($employee_stmt);
-                $employee_result = mysqli_stmt_get_result($employee_stmt);
+            $username = $_POST['username'];
+            $email = $_POST['email'];
+            $combined_query = "
+                (SELECT username, email, is_verified as status, 'user' as type FROM `user_accounts` WHERE `username`='$username' OR `email`='$email' AND `is_verified`=1)
+                UNION
+                (SELECT username, email, is_employee as status, 'employee' as type FROM `employee_accounts` WHERE `username`='$username' OR `email`='$email')
+            ";
 
-                $user_exist_query = "SELECT * FROM `user_accounts` WHERE `username`=? OR `email`=?";
-                $user_stmt = mysqli_prepare($con, $user_exist_query);
-                mysqli_stmt_bind_param($user_stmt, 'ss', $_POST['username'], $_POST['email']);
-                mysqli_stmt_execute($user_stmt);
-                $user_result = mysqli_stmt_get_result($user_stmt);
+            $result = mysqli_query($con, $combined_query);
 
-                if ($employee_result && $user_result) {
-                    $employee_rows = mysqli_num_rows($employee_result);
-                    $user_rows = mysqli_num_rows($user_result);
+            if ($result) {
+                $num_rows = mysqli_num_rows($result);
 
-                    if ($employee_rows > 0 || $user_rows > 0) {
-                        $result_fetch = ($employee_rows > 0) ? mysqli_fetch_assoc($employee_result) : mysqli_fetch_assoc($user_result);
-
-                        if ($result_fetch['username'] == $_POST['username']) {
-                            echo "<script>alert('$result_fetch[username] - Username already taken');</script>";
-                        } else {
-                            echo "<script>alert('$result_fetch[email] - E-mail already registered');</script>";
+                if ($num_rows > 0) {
+                    $result_fetch = mysqli_fetch_assoc($result);
+                    if ($result_fetch['type'] == 'employee') {
+                        if ($result_fetch['username'] == $username && $result_fetch['status'] == 1) {
+                            echo "<script>
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: '$username - Username already taken'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location = 'add_employee.php';
+                                    }
+                                });
+                            </script>";
+                        } elseif ($result_fetch['email'] == $email && $result_fetch['status'] == 1) {
+                            echo "<script>
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: '$email - E-mail already registered'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location = 'add_employee.php';
+                                    }
+                                });
+                            </script>";
+                        } elseif ($result_fetch['email'] == $email && $result_fetch['status'] == 0) {
+                            // Sanitize and validate input before using it in your queries
+                            $firstname = mysqli_real_escape_string($con, $_POST['firstname']);
+                            $lastname = mysqli_real_escape_string($con, $_POST['lastname']);
+                            $username = mysqli_real_escape_string($con, $_POST['username']);
+                            // Hash the password securely
+                            $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+                            // Generate a new verification code
+                            $v_code = bin2hex(random_bytes(16));
+                            
+                            // Prepare the update query
+                            $update_query = "UPDATE `employee_accounts` SET 
+                                             `firstname`=?, `lastname`=?, `username`=?, `password`=?, `verification_code` = ?
+                                             WHERE `email`=?";
+                            $stmt = mysqli_prepare($con, $update_query);
+                            mysqli_stmt_bind_param($stmt, 'ssssss', $firstname, $lastname, $username, $password, $v_code, $email);
+                            
+                            if (mysqli_stmt_execute($stmt)) {
+                                // Re-fetch the user's data to get the updated verification code
+                                $user_exist_query = "SELECT * FROM `employee_accounts` WHERE `email`=?";
+                                $user_stmt = mysqli_prepare($con, $user_exist_query);
+                                mysqli_stmt_bind_param($user_stmt, 's', $email);
+                                mysqli_stmt_execute($user_stmt);
+                                $result = mysqli_stmt_get_result($user_stmt);
+                                
+                                if ($result && $row = mysqli_fetch_assoc($result)) {
+                                    if (sendMail($email, $row['verification_code'])) {
+                                        echo "<script>
+                                                Swal.fire({
+                                                    icon: 'info',
+                                                    title: 'Email Sent!',
+                                                    text: 'Verification email has been sent again. Please check your email to proceed with the login.',
+                                                    confirmButtonText: 'OK'
+                                                }).then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        window.location = 'manage_employees.php';
+                                                    }
+                                                });
+                                              </script>";
+                                    } else {
+                                        echo "<script>
+                                                Swal.fire({
+                                                    title: 'Oops!',
+                                                    text: 'Failed to send email. Please try again later.',
+                                                    icon: 'error',
+                                                    confirmButtonText: 'OK'
+                                                });
+                                              </script>";
+                                    }
+                                }
+                            } else {
+                                echo "<script>
+                                        Swal.fire({
+                                            title: 'Oops!',
+                                            text: 'Could not update your information. Please try again later.',
+                                            icon: 'error',
+                                            confirmButtonText: 'OK'
+                                        });
+                                      </script>";
+                            }
                         }
-                    } else {
+                    } elseif ($result_fetch['type'] == 'user') {
+                        if ($result_fetch['username'] == $username && $result_fetch['status'] == 1) {
+                            echo "<script>
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: '$username - Username already taken'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location = 'add_employee.php';
+                                    }
+                                });
+                            </script>";
+                        } elseif ($result_fetch['email'] == $email && $result_fetch['status'] == 1) {
+                            echo "<script>
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: '$email - E-mail already registered'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location = 'add_employee.php';
+                                    }
+                                });
+                            </script>";
+                        }
+                    }
+                } 
+                
+                else {
                         $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
                         $v_code = bin2hex(random_bytes(16));
                         $query = "INSERT INTO `employee_accounts` (`firstname`, `lastname`, `username`, `email`, `password`, `verification_code`, `is_employee`) VALUES ('$_POST[firstname]', '$_POST[lastname]', '$_POST[username]', '$_POST[email]', '$password', '$v_code', '0')";
@@ -182,7 +287,9 @@
                             </script>";
                         }
                     }
-                } else {
+                } 
+                
+                else {
                     echo "<script>alert('Cannot Run Query');</script>";
                 }
             }

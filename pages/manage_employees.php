@@ -130,13 +130,12 @@ if (isset($_SESSION['lastname'])) {
                 <div class="left">
                     <h3>Manage Employee</h3>
                 </div>
-
-            </div>
-            <div class="head-buttons">
-                <a href="add_employee.php" class="btn-employee">
-                    <i class="las la-plus"></i>
-                    <span class="text">Add Employee</span>
-                </a>
+                <div class="head-buttons">
+                    <a href="add_employee.php" class="btn-employee">
+                        <i class="las la-plus"></i>
+                        <span class="text">Add Employee</span>
+                    </a>
+                </div>
             </div>
             <?php
             require('../database/db_yeokart.php');

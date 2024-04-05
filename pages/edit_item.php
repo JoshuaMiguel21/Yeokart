@@ -80,23 +80,23 @@
                 </div>
                 <div class="form-outline mb-4 w-50 m-auto">
                     <label for="item_image1" class="form-label">Item Image 1:</label>
-                    <input type="file" name="item_image1" id="item_image1" class="form-control">
+                    <input type="file" name="item_image1" id="item_image1" class="image-input">
                     <?php if ($row['item_image1']) : ?>
-                        <p>Current Image: <br></br><img src='./item_images/<?php echo $row['item_image1']; ?>' alt='Twice Album' height="200px" width="200px">
+                        <p style="margin-top: 20px;">Current Image: <br></br><img src='./item_images/<?php echo $row['item_image1']; ?>' alt='Twice Album' height="200px" width="200px">
                         <?php endif; ?>
                 </div>
                 <div class="form-outline mb-4 w-50 m-auto">
                     <label for="item_image2" class="form-label">Item Image 2:</label>
-                    <input type="file" name="item_image2" id="item_image2" class="form-control">
+                    <input type="file" name="item_image2" id="item_image2" class="image-input">
                     <?php if ($row['item_image2']) : ?>
-                        <p>Current Image: <br></br><img src='./item_images/<?php echo $row['item_image2']; ?>' alt='Twice Album' height="200px" width="200px">
-                        <?php endif; ?>
+                        <p style="margin-top: 20px;">Current Image: <br></br><img src='./item_images/<?php echo $row['item_image2']; ?>' alt='Twice Album' height="200px" width="200px">
+                    <?php endif; ?>
                 </div>
                 <div class="form-outline mb-4 w-50 m-auto">
                     <label for="item_image3" class="form-label">Item Image 3:</label>
-                    <input type="file" name="item_image3" id="item_image3" class="form-control">
+                    <input type="file" name="item_image3" id="item_image3" class="image-input">
                     <?php if ($row['item_image3']) : ?>
-                        <p>Current Image: <br></br><img src='./item_images/<?php echo $row['item_image3']; ?>' alt='Twice Album' height="200px" width="200px">
+                        <p style="margin-top: 20px;">Current Image: <br></br><img src='./item_images/<?php echo $row['item_image3']; ?>' alt='Twice Album' height="200px" width="200px">
                         <?php endif; ?>
                 </div>
                 <div class="form-outline mb-4 w-50 m-auto">
@@ -140,13 +140,13 @@
 <?php
 include('../database/db_yeokart.php');
 if (isset($_POST['update_item'])) {
-    $item_id = $_POST['item_id'];
-    $item_name = $_POST['item_name'];
-    $item_price = $_POST['item_price'];
+    $item_id = mysqli_real_escape_string($con, $_POST['item_id']);
+    $item_name = mysqli_real_escape_string($con, $_POST['item_name']);
+    $item_price = mysqli_real_escape_string($con, $_POST['item_price']);
     $item_description = mysqli_real_escape_string($con, $_POST['item_description']);
-    $item_quantity = $_POST['item_quantity'];
-    $product_artist = $_POST['product_artist'];
-    $product_category = $_POST['product_category'];
+    $item_quantity = mysqli_real_escape_string($con, $_POST['item_quantity']);
+    $product_artist = mysqli_real_escape_string($con, $_POST['product_artist']);
+    $product_category = mysqli_real_escape_string($con, $_POST['product_category']);
 
     $item_image1 = $_POST['current_image1'];
     $item_image2 = $_POST['current_image2'];
@@ -170,12 +170,32 @@ if (isset($_POST['update_item'])) {
         move_uploaded_file($_FILES['item_image3']['tmp_name'], $upload_dir . $item_image3);
     }
 
-    $update_query = "UPDATE products SET item_name='$item_name', item_price='$item_price', item_description='$item_description', item_quantity='$item_quantity', artist_name='$product_artist', category_name='$product_category', item_image1='$item_image1', item_image2='$item_image2', item_image3='$item_image3' WHERE item_id='$item_id'";
-    $result_query_item = mysqli_query($con, $update_query);
-    if ($result_query_item) {
-        echo "<script>alert('Item successfully updated')</script>";
-        $previous_page = $_POST['previous_page'];
-        echo "<script>document.location.href = '$previous_page';</script>";
+    $check_query = "SELECT * FROM products WHERE item_name='$item_name' AND item_id != '$item_id'";
+    $check_result = mysqli_query($con, $check_query);
+    if (mysqli_num_rows($check_result) > 0) {
+        echo "<script>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'An item with the same name already exists!',
+                });
+              </script>";
+    } else {
+        $update_query = "UPDATE products SET item_name='$item_name', item_price='$item_price', item_description='$item_description', item_quantity='$item_quantity', artist_name='$product_artist', category_name='$product_category', item_image1='$item_image1', item_image2='$item_image2', item_image3='$item_image3' WHERE item_id='$item_id'";
+        $result_query_item = mysqli_query($con, $update_query);
+        if ($result_query_item) {
+            echo "<script>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Updated!',
+                        text: 'Item successfully updated.'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '".$_POST['previous_page']."';
+                        }
+                    });
+                  </script>";
+        }
     }
 }
 ?>
