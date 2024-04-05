@@ -41,13 +41,13 @@
         // Set it to unchecked by default
         $_SESSION['nav_toggle'] = false;
     }
-    
+
     // Check if the nav-toggle checkbox has been toggled
     if (isset($_POST['nav_toggle'])) {
         // Update the session variable accordingly
         $_SESSION['nav_toggle'] = $_POST['nav_toggle'] === 'true' ? true : false;
     }
-    
+
     // Redirect to login page if session variables are not set
     if (!isset($_SESSION['firstname']) || !isset($_SESSION['lastname'])) {
         header("Location: login_page.php");
@@ -161,6 +161,40 @@
                     <button type="submit" name="search_button">Search</button>
                     <button type="button" name="clear_button" onclick="clearSearch()">Clear</button>
                 </form>
+                <form method="POST">
+                    <select name="category">
+                        <option value="" disabled selected>Select a category</option>
+                        <?php
+                        include('../database/db_yeokart.php');
+                        $category_query = "SELECT * FROM categories";
+                        $result_category = mysqli_query($con, $category_query);
+                        while ($category_row = mysqli_fetch_assoc($result_category)) {
+                            $category_id = $category_row['category_id'];
+                            $category_name = $category_row['category_name'];
+                            $selected = isset($_POST['category']) && $_POST['category'] == $category_name ? 'selected' : '';
+                            echo "<option value='$category_name' $selected>$category_name</option>";
+                        }
+                        ?>
+                    </select>
+                    <button type="submit" name="filter_button">Filter</button>
+                </form>
+                <form method="POST">
+                    <select name="artist">
+                        <option value="" disabled selected>Select an artist</option>
+                        <?php
+                        include('../database/db_yeokart.php');
+                        $artist_query = "SELECT * FROM artists";
+                        $result_artist = mysqli_query($con, $artist_query);
+                        while ($artist_row = mysqli_fetch_assoc($result_artist)) {
+                            $artist_id = $artist_row['artist_id'];
+                            $artist_name = $artist_row['artist_name'];
+                            $selected = isset($_POST['artist']) && $_POST['artist'] == $artist_name ? 'selected' : '';
+                            echo "<option value='$artist_name' $selected>$artist_name</option>";
+                        }
+                        ?>
+                    </select>
+                    <button type="submit" name="filter_button">Filter</button>
+                </form>
             </div>
 
             <div class="table">
@@ -213,9 +247,25 @@
                         if (isset($_POST['search_button'])) {
                             $search = $_POST['search'];
                             $select_query = "SELECT * FROM products WHERE item_name LIKE '%$search%'";
+                        } elseif (isset($_POST['filter_button'])) {
+                            $category_name = isset($_POST['category']) ? $_POST['category'] : '';
+                            $artist_name = isset($_POST['artist']) ? $_POST['artist'] : '';
+
+                            if (!empty($category_name)) {
+                                // Filter by category
+                                $select_query = "SELECT * FROM products WHERE category_name = '$category_name'";
+                            } elseif (!empty($artist_name)) {
+                                // Filter by artist
+                                $select_query = "SELECT * FROM products WHERE artist_name = '$artist_name'";
+                            } else {
+                                // No filter applied
+                                $select_query = "SELECT * FROM products";
+                            }
                         } else {
+                            // Default query without any filters
                             $select_query = "SELECT * FROM products";
                         }
+
                         $result_query = mysqli_query($con, $select_query);
                         while ($row = mysqli_fetch_assoc($result_query)) {
                             $item_id = $row['item_id'];
@@ -278,23 +328,23 @@
             Back
         </a>
     </div> -->
-    
-    <script>
-        // Function to toggle the sidebar and update session variable
-        function toggleSidebar() {
-            var isChecked = document.getElementById('nav-toggle').checked;
-            var newState = isChecked ? 'true' : 'false';
 
-            // Update session variable using AJAX
-            var xhttp = new XMLHttpRequest();
-            xhttp.open("POST", "", true);
-            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhttp.send("nav_toggle=" + newState);
-        }
+            <script>
+                // Function to toggle the sidebar and update session variable
+                function toggleSidebar() {
+                    var isChecked = document.getElementById('nav-toggle').checked;
+                    var newState = isChecked ? 'true' : 'false';
 
-        // Add event listener to checkbox change
-        document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
-    </script>
+                    // Update session variable using AJAX
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.open("POST", "", true);
+                    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    xhttp.send("nav_toggle=" + newState);
+                }
+
+                // Add event listener to checkbox change
+                document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
+            </script>
 </body>
 
 </html>
