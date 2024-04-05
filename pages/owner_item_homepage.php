@@ -52,22 +52,22 @@
         <?php
         session_start();
 
-        if (!isset($_SESSION['nav_toggle'])) {
-            // Set it to unchecked by default
-            $_SESSION['nav_toggle'] = false;
-        }
-        
-        // Check if the nav-toggle checkbox has been toggled
-        if (isset($_POST['nav_toggle'])) {
-            // Update the session variable accordingly
-            $_SESSION['nav_toggle'] = $_POST['nav_toggle'] === 'true' ? true : false;
-        }
-        
-        // Redirect to login page if session variables are not set
-        if (!isset($_SESSION['firstname']) || !isset($_SESSION['lastname'])) {
-            header("Location: login_page.php");
-            exit();
-        }
+    if (!isset($_SESSION['nav_toggle'])) {
+        // Set it to unchecked by default
+        $_SESSION['nav_toggle'] = false;
+    }
+    
+    // Check if the nav-toggle checkbox has been toggled
+    if (isset($_POST['nav_toggle'])) {
+        // Update the session variable accordingly
+        $_SESSION['nav_toggle'] = $_POST['nav_toggle'] === 'true' ? true : false;
+    }
+    
+    // Redirect to login page if session variables are not set
+    if (!isset($_SESSION['firstname']) || !isset($_SESSION['lastname'])) {
+        header("Location: login_page.php");
+        exit();
+    }
 
         if (isset($_SESSION['firstname'])) {
             $firstname = $_SESSION['firstname'];
@@ -146,37 +146,37 @@
                 </div>
             </header>
 
-            <main>
-                <div class="head-title">
-                    <div class="left">
-                        <h3>Item Catalog</h3>
-                    </div>
+        <main>
+            <div class="head-title">
+                <div class="left">
+                    <h3>Item Catalog</h3>
                 </div>
-                <div class="head-buttons">
-                    <a href="owner_artist_table.php" class="btn-employee">
-                        <i class="las la-user"></i>
-                        <span class="text">View Artist Table</span>
-                    </a>
-                    <a href="owner_item_homepage.php" class="btn-employee">
-                        <i class="las la-archive"></i>
-                        <span class="text">View Item Catalog</span>
-                    </a>
-                    <a href="owner_category_table.php" class="btn-employee">
-                        <i class="las la-list"></i>
-                        <span class="text">View Categories Table</span>
-                    </a>
-                    <a href="owner_item.php" class="btn-employee">
-                        <i class="las la-plus"></i>
-                        <span class="text">Add Item</span>
-                    </a>
-                </div>
-                <div class="head-search">
-                    <form method="POST" id="searchForm">
-                        <input type="text" name="search" placeholder="Search items..." id="searchInput" value="<?php echo isset($_POST['search']) ? $_POST['search'] : ''; ?>">
-                        <button type="submit" name="search_button">Search</button>
-                        <button type="button" name="clear_button" onclick="clearSearch()">Clear</button>
-                    </form>
-                </div>
+            </div>
+            <div class="head-buttons">
+                <a href="owner_artist_table.php" class="btn-employee">
+                    <i class="las la-user"></i>
+                    <span class="text">View Artist Table</span>
+                </a>
+                <a href="owner_item_homepage.php" class="btn-employee">
+                    <i class="las la-archive"></i>
+                    <span class="text">View Item Catalog</span>
+                </a>
+                <a href="owner_category_table.php" class="btn-employee">
+                    <i class="las la-list"></i>
+                    <span class="text">View Categories Table</span>
+                </a>
+                <a href="owner_item.php" class="btn-employee">
+                    <i class="las la-plus"></i>
+                    <span class="text">Add Item</span>
+                </a>
+            </div>
+            <div class="head-search">
+                <form method="POST" id="searchForm">
+                    <input type="text" name="search" placeholder="Search items..." id="searchInput" value="<?php echo isset($_POST['search']) ? $_POST['search'] : ''; ?>">
+                    <button type="submit" name="search_button">Search</button>
+                    <button type="button" name="clear_button" onclick="clearSearch()">Clear</button>
+                </form>
+            </div>
 
                 <div class="table">
                     <table class="table">
@@ -247,36 +247,36 @@
                                 $stmt->close();
                             }
 
-                            if (isset($_POST['search_button'])) {
-                                $search = $_POST['search'];
-                                $select_query = "SELECT * FROM products WHERE item_name LIKE '%$search%'";
-                            } else {
-                                $select_query = "SELECT * FROM products";
+                        if (isset($_POST['search_button'])) {
+                            $search = $_POST['search'];
+                            $select_query = "SELECT * FROM products WHERE item_name LIKE '%$search%'";
+                        } else {
+                            $select_query = "SELECT * FROM products";
+                        }
+                        $result_query = mysqli_query($con, $select_query);
+                        while ($row = mysqli_fetch_assoc($result_query)) {
+                            $item_id = $row['item_id'];
+                            $item_name = $row['item_name'];
+                            $item_price = $row['item_price'];
+                            $item_description = $row['item_description'];
+                            $item_quantity = $row['item_quantity'];
+                            $artist_name = $row['artist_name'];
+                            $category_name = $row['category_name'];
+                            $item_image1 = $row['item_image1'];
+                            $item_image2 = $row['item_image2'];
+                            $item_image3 = $row['item_image3'];
+                            echo "<tr>";
+                            echo "<td>" . $row['item_name'] . "</td>";
+                            echo "<td> ₱" . $row['item_price'] . "</td>";
+                            echo "<td style='max-width: 350px;'>" . $row['item_description'] . "</td>";
+                            echo "<td>" . $row['item_quantity'] . "</td>";
+                            echo "<td>" . $row['artist_name'] . "</td>";
+                            echo "<td>" . $row['category_name'] . "</td>";
+                            echo "<td>";
+                            echo "<img src='./item_images/$item_image1' alt='' width='50' height='50'>&nbsp;";
+                            if (!empty($item_image2)) {
+                                echo "<img src='./item_images/$item_image2' alt='' width='50' height='50'>&nbsp;";
                             }
-                            $result_query = mysqli_query($con, $select_query);
-                            while ($row = mysqli_fetch_assoc($result_query)) {
-                                $item_id = $row['item_id'];
-                                $item_name = $row['item_name'];
-                                $item_price = $row['item_price'];
-                                $item_description = $row['item_description'];
-                                $item_quantity = $row['item_quantity'];
-                                $artist_name = $row['artist_name'];
-                                $category_name = $row['category_name'];
-                                $item_image1 = $row['item_image1'];
-                                $item_image2 = $row['item_image2'];
-                                $item_image3 = $row['item_image3'];
-                                echo "<tr>";
-                                echo "<td>" . $row['item_name'] . "</td>";
-                                echo "<td> ₱" . $row['item_price'] . "</td>";
-                                echo "<td style='max-width: 350px;'>" . $row['item_description'] . "</td>";
-                                echo "<td>" . $row['item_quantity'] . "</td>";
-                                echo "<td>" . $row['artist_name'] . "</td>";
-                                echo "<td>" . $row['category_name'] . "</td>";
-                                echo "<td>";
-                                echo "<img src='./item_images/$item_image1' alt='' width='50' height='50'>&nbsp;";
-                                if (!empty($item_image2)) {
-                                    echo "<img src='./item_images/$item_image2' alt='' width='50' height='50'>&nbsp;";
-                                }
 
                                 if (!empty($item_image3)) {
                                     echo "<img src='./item_images/$item_image3' alt='' width='50' height='50'>&nbsp;";
@@ -324,28 +324,28 @@
                     </div>
                 </div>
 
-                <!-- <div class="form-outline mb-4 mt-5">
-            <a href="./owner_dashboard.php" class="btn btn-danger mb-3 px-3 mx-auto">
-                Back
-            </a>
-        </div> -->
-        
-        <script>
-            // Function to toggle the sidebar and update session variable
-            function toggleSidebar() {
-                var isChecked = document.getElementById('nav-toggle').checked;
-                var newState = isChecked ? 'true' : 'false';
+            <!-- <div class="form-outline mb-4 mt-5">
+        <a href="./owner_dashboard.php" class="btn btn-danger mb-3 px-3 mx-auto">
+            Back
+        </a>
+    </div> -->
+    
+    <script>
+        // Function to toggle the sidebar and update session variable
+        function toggleSidebar() {
+            var isChecked = document.getElementById('nav-toggle').checked;
+            var newState = isChecked ? 'true' : 'false';
 
-                // Update session variable using AJAX
-                var xhttp = new XMLHttpRequest();
-                xhttp.open("POST", "", true);
-                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhttp.send("nav_toggle=" + newState);
-            }
+            // Update session variable using AJAX
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "", true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send("nav_toggle=" + newState);
+        }
 
-            // Add event listener to checkbox change
-            document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
-        </script>
-    </body>
+        // Add event listener to checkbox change
+        document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
+    </script>
+</body>
 
     </html>
