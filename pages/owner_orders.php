@@ -189,13 +189,11 @@
                         echo '</select>';
                         echo '</div>';
                         echo "</td>";
-                        echo "<td><center>";
                         if (!empty($proof_of_payment)) {
-                            echo '<td><img src="./item_images/' . $proof_of_payment . '" alt="Proof of Payment" width="50" height="50" onclick="openImagePopup(\'./item_images/' . $proof_of_payment . '\')"></td>';
+                            echo '<td><center><img src="./item_images/' . $proof_of_payment . '" alt="Proof of Payment" width="50" height="50" onclick="openImagePopup(\'./item_images/' . $proof_of_payment . '\')"></center></td>';
                             } else {
                                 echo '<td>Not yet paid</td>';
                         }
-                        echo "</center></td>";
                         echo "</tr>";
                     }
                     ?>

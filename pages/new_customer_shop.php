@@ -76,7 +76,7 @@ $result_artists = mysqli_query($con, $select_artists);
 
 <body>
     <input type="checkbox" id="click">
-    <header class="header">
+    <header class="header" style="box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
         <div class="header-1">
             <a href="customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>
             <div class="icons">

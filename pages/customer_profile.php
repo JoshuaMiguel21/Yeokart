@@ -9,8 +9,20 @@
     <link rel="icon" type="image/png" href="../res/icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="../css/style_homepage_customer.css">
 </head>
+<style>
+    .swal2-custom-popup {
+        font-size: 16px;
+        width: 500px;
+    }
+
+    .swal2-custom-title {
+        font-size: 20px;
+    }
+</style>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const searchForm = document.querySelector('.search-form');
@@ -125,6 +137,61 @@ if ($phoneResult->num_rows > 0) {
 $con->close();
 ?>
 
+<?php
+require('../database/db_yeokart.php');
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $firstname = trim($_POST['firstname']);
+    $lastname = trim($_POST['lastname']);
+    $username = trim($_POST['username']);
+    $sessionUsername = $_SESSION['username'];
+
+    $checkExistingUser = "SELECT username FROM user_accounts WHERE username = ? UNION SELECT username FROM employee_accounts WHERE username = ?";
+    
+    if ($checkStmt = $con->prepare($checkExistingUser)) {
+        $checkStmt->bind_param("ss", $param_username, $param_username);
+        $param_username = $username;
+        $checkStmt->execute();
+        $checkStmt->store_result();
+
+        if ($checkStmt->num_rows > 0) {
+            echo "<script>alert('Username already exists. Please choose a different username.');</script>";
+            echo "<script>window.location.href = 'customer_profile.php';</script>";
+            exit();
+        }
+
+        $checkStmt->close();
+    }
+
+    // Proceed with the update query
+    $sql = "UPDATE user_accounts SET firstname = ?, lastname = ?, username = ? WHERE username = ?";
+    
+    if ($stmt = $con->prepare($sql)) {
+        $stmt->bind_param("ssss", $param_firstname, $param_lastname, $param_username, $param_sessionUsername);
+
+        $param_firstname = $firstname;
+        $param_lastname = $lastname;
+        $param_username = $username;
+        $param_sessionUsername = $sessionUsername;
+
+        if ($stmt->execute()) {
+            $_SESSION['firstname'] = $firstname;
+            $_SESSION['lastname'] = $lastname;
+            $_SESSION['username'] = $username;
+
+            header("Location: customer_profile.php");
+            exit();
+        } else {
+            echo "Something went wrong. Please try again later.";
+        }
+
+        $stmt->close();
+    }
+}
+
+$con->close();
+?>
+
 <body>
     <input type="checkbox" id="click">
     <header class="header" style="box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
@@ -161,7 +228,7 @@ $con->close();
             <div class="popup-content">
                 <span class="close-btn" onclick="closePopup()">&times;</span>
                 <h3>Edit Profile</h3>
-                <form id="editProfileForm" action="update_profile.php" method="POST">
+                <form id="editProfileForm" action="customer_profile.php" method="POST">
                     <div class="form-group">
                         <label for="editFirstname">First Name</label>
                         <input type="text" id="editFirstname" name="firstname" value="<?php echo htmlspecialchars($firstname); ?>" required>
@@ -233,17 +300,21 @@ $con->close();
 
                     while ($row = $result->fetch_assoc()) {
                         $order_id = $row['order_id'];
+                        $status = strtoupper($row['status']);
                         echo '<tr class="order-row">';
                         echo '<td>' . $row['order_id'] . '</td>';
                         echo '<td>' . $row['date_of_purchase'] . '</td>';
                         echo '<td>' . strtoupper($row['status']) . '</td>';
-                        echo '<td><center><a href="#" class="upload-proof-cell" data-order-id="' . $order_id . '" data-proof="' . $row['proof_of_payment'] . '">Upload Proof of Payment</a></center></td>';
+                        if ($status == "PENDING") {
+                            echo '<td><center><a href="#" class="upload-proof-cell" data-order-id="' . $order_id . '" data-proof="' . $row['proof_of_payment'] . '">Upload Proof of Payment</a></center></td>';
+                            
+                        } else {
+                            echo '<td><center><button class="payment-done" disabled>Payment Done <i class="fas fa-check"></i></button></center></td>';
+                        }
                         echo '</tr>';
                         echo '<tr class="hidden-row">';
                         echo '<td colspan="4">';
                         echo '<div class="order-details-card">';
-
-                        $status = strtoupper($row['status']);
                         echo '<div class="alert';
                         switch ($status) {
                             case "DELIVERED":
@@ -361,33 +432,41 @@ $con->close();
             <div class="popup-content">
                 <span class="close-btn" onclick="closeUploadProofPopup()">&times;</span>
                 <h3>Upload Proof of Payment</h3>
-                <form class="add-artist-form" method="post" enctype="multipart/form-data">
-                    <br></br>
-                    <?php
-                    require('../database/db_yeokart.php');
+                <?php
+                require('../database/db_yeokart.php');
 
-                    // SQL query to retrieve contacts_description from contacts table where icon_link is <i class='fa-solid fa-peso-sign'></i>
-                    $sql = "SELECT contacts_description FROM contacts WHERE icon_link = '<i class=\'fa-solid fa-peso-sign\'></i>'";
-                    $result = $con->query($sql);
+                // SQL query to retrieve contacts_description from contacts table where icon_link matches
+                $sql = "SELECT contacts_description FROM contacts WHERE icon_link = '<i class=\'fa-solid fa-peso-sign\'></i>'";
+                $result = $con->query($sql);
 
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<p>" . $row["contacts_description"] . "</p>";
-                        }
-                    } else {
-                        echo "No data found";
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<div class='gcash_info'><strong>GCash:&nbsp;</strong>" . $row["contacts_description"] . "</div>";
                     }
+                } else {
+                    echo "<p>No additional payment instructions found.</p>";
+                }
 
-                    $con->close();
-                    ?>
-                    <br></br>
-                    <input type="file" name="proof_of_payment" id="proof_of_payment" accept="image/*">
+                $con->close();
+                ?>
+                <form class="add-artist-form" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="proof_of_payment" class="form-label">Select Image for Proof of Payment:</label>
+                        <input type="file" name="proof_of_payment" id="proof_of_payment" accept="image/jpeg, image/png, image/gif" style="display:none;">
+                        <div class="file_upload">
+                            <button type="button" class="file-upload-btn" onclick="document.getElementById('proof_of_payment').click();">Choose File</button>
+                            <span id="file-chosen">No file chosen</span>
+                        </div>
+                    </div>
                     <input type="hidden" name="order_id" id="order_id" value="">
-                    <img src="" alt="Proof of Payment" id="proof_of_payment_image" style="max-width: 100%; height: 100px;; display: none;">
-                    <button type="submit" name="upload_proof" class="upload-btn">Upload</button>
+                    <div class="proof_image" id="proof_image">
+                        <center><img src="" alt="Proof of Payment" id="proof_of_payment_image"></center>
+                        <button type="submit" name="upload_proof" class="upload-btn">Upload</button>
+                    </div>
                 </form>
             </div>
         </div>
+
         <?php
         require('../database/db_yeokart.php');
 
@@ -396,21 +475,80 @@ $con->close();
             if (isset($_FILES['proof_of_payment']['name']) && !empty($_FILES['proof_of_payment']['name'])) {
                 $upload_proof = $_FILES['proof_of_payment']['name'];
                 $temp_proof = $_FILES['proof_of_payment']['tmp_name'];
-
+        
                 if (move_uploaded_file($temp_proof, "./item_images/$upload_proof")) {
                     $stmt = $con->prepare("UPDATE orders SET proof_of_payment = ? WHERE order_id = ?");
                     $stmt->bind_param("ss", $upload_proof, $order_id);
                     $stmt->execute();
                     $stmt->close();
+        
+                    // SweetAlert message for successful upload with redirection
+                    echo "<script>
+                        Swal.fire({
+                            icon: 'success', 
+                            title: 'Success!',
+                            text: 'Proof of payment uploaded successfully.',
+                            confirmButtonText: 'OK',
+                            customClass: {
+                                popup: 'swal2-custom-popup',
+                                title: 'swal2-custom-title',
+                                content: 'swal2-custom-text'
+                            },
+                            backdrop: true, 
+                            allowOutsideClick: false 
+                        }).then((result) => {
+                            if (result.value) {
+                                window.location.href = 'customer_profile.php';
+                            }
+                        });
+                    </script>";
 
-                    echo "Proof of payment uploaded successfully.";
                 } else {
-                    echo "Failed to move uploaded file.";
+                    // SweetAlert message for failed file move with redirection
+                    echo "<script>
+                        Swal.fire({
+                            icon: 'error', 
+                            title: 'Failed!',
+                            text: 'Failed to move uploaded file.',
+                            confirmButtonText: 'OK',
+                            customClass: {
+                                popup: 'swal2-custom-popup',
+                                title: 'swal2-custom-title',
+                                content: 'swal2-custom-text'
+                            },
+                            backdrop: true, 
+                            allowOutsideClick: false 
+                        }).then((result) => {
+                            if (result.value) {
+                                window.location.href = 'customer_profile.php';
+                            }
+                        });
+                    </script>";
                 }
             } else {
-                echo "No file uploaded.";
+                // SweetAlert message for no file uploaded with redirection
+                echo "<script>
+                    Swal.fire({
+                        icon: 'info', 
+                        title: 'Notice!',
+                        text: 'No file uploaded.',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            popup: 'swal2-custom-popup',
+                            title: 'swal2-custom-title',
+                            content: 'swal2-custom-text'
+                        },
+                        backdrop: true, 
+                        allowOutsideClick: false 
+                    }).then((result) => {
+                        if (result.value) {
+                            window.location.href = 'customer_profile.php';
+                        }
+                    });
+                </script>";
             }
         }
+        
 
         $con->close();
         ?>
@@ -463,6 +601,12 @@ $con->close();
             // Hide the image when closing the popup
             document.getElementById('proof_of_payment_image').style.display = 'none';
         }
+
+        document.getElementById('proof_of_payment').addEventListener('change', function() {
+            var fileName = document.getElementById('proof_of_payment').files[0].name;
+            document.getElementById('file-chosen').textContent = fileName;
+        });
+
     </script>
 </body>
 

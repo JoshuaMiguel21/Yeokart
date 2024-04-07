@@ -134,10 +134,9 @@ if (mysqli_num_rows($result_query) > 0) {
         <hr>
         <div class="container">
             <div class="left-column">
-                <p id="info">MY CART
-                <p>
-                    <hr class="gradient">
-                </p>
+                <p id="info">MY CART</p>
+                <hr class="gradient">
+                
                 <div class="project">
                     <div class="shop">
                         <?php

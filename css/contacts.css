@@ -17,7 +17,7 @@
     box-sizing: border-box;
     outline: none;
     border: none;
-    text-transform: capitalize;
+    text-transform: none;
     transition: all .2s linear;
     transition: width none;
 }
@@ -44,6 +44,7 @@ section{
     margin-bottom: 2rem;
     position: relative;
 }
+
 .heading:before{
     content: '';
     position: absolute;
@@ -62,6 +63,10 @@ section{
     background: #fff;
     border: var(--border);
 }
+.header{
+    padding: 0 14rem;
+}
+
 .header .header-1{
     background: white;
     padding: 1.5rem 9%;
@@ -73,6 +78,7 @@ section{
 .header .header-1 .logo{
     width: 150px;
 }
+
 .header .header-1 .search-form, 
 .header .header-1 .search-form1{
     width: 50rem;
@@ -108,7 +114,7 @@ section{
 }
 
 .header .header-1 .icons a {
-    font-size: 1.8rem;
+    font-size: 2.1rem;
     margin-left: 1.5rem;
     color: var(--black);
     cursor: pointer;

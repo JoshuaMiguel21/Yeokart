@@ -16,18 +16,13 @@
     <link rel="icon" type="image/png" href="../res/icon.png">
 </head>
 <style>
-    .swal2-custom-popup {
-        font-size: 20px;
-        width: 600px;
+.swal2-custom-popup {
+        font-size: 16px;
+        width: 500px;
     }
 
     .swal2-custom-title {
-        font-size: 24px;
-    }
-
-    .swal2-custom-text {
-        font-size: 18px;
-        text-transform: none;
+        font-size: 20px;
     }
 </style>
 
