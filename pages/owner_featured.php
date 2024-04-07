@@ -61,7 +61,7 @@ if (isset($_SESSION['lastname'])) {
 <body>
 
     <input type="checkbox" id="nav-toggle" <?php echo $_SESSION['nav_toggle'] ? 'checked' : ''; ?>>
-     <div class="sidebar <?php echo $_SESSION['nav_toggle'] ? 'open' : ''; ?>">
+    <div class="sidebar <?php echo $_SESSION['nav_toggle'] ? 'open' : ''; ?>">
         <div class="sidebar-brand">
             <h2><span>Yeokart</span></h2>
         </div>
@@ -221,9 +221,14 @@ if (isset($_SESSION['lastname'])) {
                             echo "<td>" . $row['artist_name'] . "</td>";
                             echo "<td>" . $row['category_name'] . "</td>";
                             echo "<td>";
-                            echo "<img src='./item_images/$item_image1' alt='Twice Album' width='50' height='50'>&nbsp;";
-                            echo "<img src='./item_images/$item_image2' alt='Twice Album' width='50' height='50'>&nbsp;";
-                            echo "<img src='./item_images/$item_image3' alt='Twice Album' width='50' height='50'>&nbsp;";
+                            echo "<img src='./item_images/$item_image1' alt='' width='50' height='50'>&nbsp;";
+                            if (!empty($item_image2)) {
+                                echo "<img src='./item_images/$item_image2' alt='' width='50' height='50'>&nbsp;";
+                            }
+
+                            if (!empty($item_image3)) {
+                                echo "<img src='./item_images/$item_image3' alt='' width='50' height='50'>&nbsp;";
+                            }
                             echo "</td>";
                             echo "<td>";
                             echo "<div class='button-class'>";
@@ -258,23 +263,23 @@ if (isset($_SESSION['lastname'])) {
             Back
         </a>
     </div> -->
-    
-    <script>
-        // Function to toggle the sidebar and update session variable
-        function toggleSidebar() {
-            var isChecked = document.getElementById('nav-toggle').checked;
-            var newState = isChecked ? 'true' : 'false';
 
-            // Update session variable using AJAX
-            var xhttp = new XMLHttpRequest();
-            xhttp.open("POST", "", true);
-            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhttp.send("nav_toggle=" + newState);
-        }
+            <script>
+                // Function to toggle the sidebar and update session variable
+                function toggleSidebar() {
+                    var isChecked = document.getElementById('nav-toggle').checked;
+                    var newState = isChecked ? 'true' : 'false';
 
-        // Add event listener to checkbox change
-        document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
-    </script>
+                    // Update session variable using AJAX
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.open("POST", "", true);
+                    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    xhttp.send("nav_toggle=" + newState);
+                }
+
+                // Add event listener to checkbox change
+                document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
+            </script>
 
 </body>
 

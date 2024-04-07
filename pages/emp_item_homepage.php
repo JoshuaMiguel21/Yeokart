@@ -129,12 +129,13 @@
                 </a>
             </div>
             <div class="head-search">
-                <form method="POST" id="searchForm">
-                    <input type="text" name="search" placeholder="Search items..." id="searchInput" value="<?php echo isset($_POST['search']) ? $_POST['search'] : ''; ?>">
+                <form method="GET" id="searchForm">
+                    <input type="text" name="search" placeholder="Search items..." id="searchInput" value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>">
                     <button type="submit" name="search_button">Search</button>
                     <button type="button" name="clear_button" onclick="clearSearch()">Clear</button>
                 </form>
-                <form method="POST">
+
+                <form method="GET">
                     <select name="category">
                         <option value="" disabled selected>Select a category</option>
                         <?php
@@ -144,14 +145,14 @@
                         while ($category_row = mysqli_fetch_assoc($result_category)) {
                             $category_id = $category_row['category_id'];
                             $category_name = $category_row['category_name'];
-                            $selected = isset($_POST['category']) && $_POST['category'] == $category_name ? 'selected' : '';
+                            $selected = isset($_GET['category']) && $_GET['category'] == $category_name ? 'selected' : '';
                             echo "<option value='$category_name' $selected>$category_name</option>";
                         }
                         ?>
                     </select>
                     <button type="submit" name="filter_button">Filter</button>
                 </form>
-                <form method="POST">
+                <form method="GET">
                     <select name="artist">
                         <option value="" disabled selected>Select an artist</option>
                         <?php
@@ -161,7 +162,7 @@
                         while ($artist_row = mysqli_fetch_assoc($result_artist)) {
                             $artist_id = $artist_row['artist_id'];
                             $artist_name = $artist_row['artist_name'];
-                            $selected = isset($_POST['artist']) && $_POST['artist'] == $artist_name ? 'selected' : '';
+                            $selected = isset($_GET['artist']) && $_GET['artist'] == $artist_name ? 'selected' : '';
                             echo "<option value='$artist_name' $selected>$artist_name</option>";
                         }
                         ?>
@@ -191,39 +192,82 @@
                         include('../database/db_yeokart.php');
                         if (isset($_POST['delete_item'])) {
                             $item_id = $_POST['item_id'];
-                            // Perform deletion query
-                            $delete_query = "DELETE FROM products WHERE item_id='$item_id'";
-                            $result_query = mysqli_query($con, $delete_query);
-                            if ($result_query) {
-                                echo "<script>alert('Item deleted successfully')</script>";
-                                echo "<script>window.location.href = 'owner_item_homepage.php';</script>";
+                            $stmt = $con->prepare("DELETE FROM products WHERE item_id = ?");
+                            $stmt->bind_param("i", $item_id);
+
+                            if ($stmt->execute()) {
+                                echo "<script>
+                                            Swal.fire({
+                                                title: 'Success!',
+                                                text: 'Item deleted successfully',
+                                                icon: 'success',
+                                                confirmButtonText: 'OK'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    window.location.href = 'emp_item_homepage.php';
+                                                }
+                                            });
+                                          </script>";
                             } else {
-                                echo "<script>alert('Failed to delete item')</script>";
-                                echo "<script>window.location.href = 'owner_item_homepage.php';</script>";
+                                echo "<script>
+                                            Swal.fire({
+                                                title: 'Error!',
+                                                text: 'Failed to delete item',
+                                                icon: 'error',
+                                                confirmButtonText: 'OK'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    window.location.href = 'emp_item_homepage.php';
+                                                }
+                                            });
+                                          </script>";
                             }
+
+                            $stmt->close();
                         }
 
-                        if (isset($_POST['search_button'])) {
-                            $search = $_POST['search'];
-                            $select_query = "SELECT * FROM products WHERE item_name LIKE '%$search%'";
-                        } elseif (isset($_POST['filter_button'])) {
-                            $category_name = isset($_POST['category']) ? $_POST['category'] : '';
-                            $artist_name = isset($_POST['artist']) ? $_POST['artist'] : '';
+                        $itemsPerPage = 3;
 
-                            if (!empty($category_name)) {
-                                // Filter by category
-                                $select_query = "SELECT * FROM products WHERE category_name = '$category_name'";
-                            } elseif (!empty($artist_name)) {
-                                // Filter by artist
-                                $select_query = "SELECT * FROM products WHERE artist_name = '$artist_name'";
-                            } else {
-                                // No filter applied
-                                $select_query = "SELECT * FROM products";
-                            }
-                        } else {
+                        // Default page number
+                        $pageNumber = 1;
+
+                        if (isset($_GET['page']) && is_numeric($_GET['page'])) {
+                            $pageNumber = $_GET['page'];
+                        }
+
+                        // Calculate the offset
+                        $offset = ($pageNumber - 1) * $itemsPerPage;
+
+                        if (!isset($_GET['search_button']) && !isset($_GET['filter_button'])) {
                             // Default query without any filters
                             $select_query = "SELECT * FROM products";
+                        } else {
+                            // Check for search or filter
+                            if (isset($_GET['search_button'])) {
+                                $search = $_GET['search'];
+                                $select_query = "SELECT * FROM products WHERE item_name LIKE '%$search%'";
+                            } elseif (isset($_GET['filter_button'])) {
+                                $category_name = isset($_GET['category']) ? $_GET['category'] : '';
+                                $artist_name = isset($_GET['artist']) ? $_GET['artist'] : '';
+
+                                if (!empty($category_name)) {
+                                    // Filter by category
+                                    $select_query = "SELECT * FROM products WHERE category_name = '$category_name'";
+                                } elseif (!empty($artist_name)) {
+                                    // Filter by artist
+                                    $select_query = "SELECT * FROM products WHERE artist_name = '$artist_name'";
+                                } else {
+                                    // No filter applied
+                                    $select_query = "SELECT * FROM products";
+                                }
+                            }
                         }
+                        // Get total count of items
+                        $result = mysqli_query($con, $select_query);
+                        $totalItems = mysqli_num_rows($result);
+
+                        // Add LIMIT and OFFSET to the query
+                        $select_query .= " LIMIT $itemsPerPage OFFSET $offset";
 
                         $result_query = mysqli_query($con, $select_query);
                         while ($row = mysqli_fetch_assoc($result_query)) {
@@ -254,17 +298,39 @@
                                 echo "<img src='./item_images/$item_image3' alt='' width='50' height='50'>&nbsp;";
                             }
                             echo "</td>";
+                            // Inside your while loop
                             echo "<td>";
                             echo "<div class='button-class'>";
-                            echo "<a href='edit_item.php?item_id=$item_id' class='edit-button'>Edit</a> 
-                          <form method='post' onsubmit='return confirmDelete()'>
-                          <input type='hidden' name='item_id' value='$item_id'>
-                          <button type='submit' name='delete_item' class='delete-button'>Delete</button>
-                          </form>";
-                            echo "<div class='button-class'>";
+                            echo "<a href='edit_item.php?item_id=$item_id' class='edit-button'>Edit</a>";
+                            echo "<button type='button' onclick='openDeletePopup(\"$item_id\", \"" . htmlspecialchars($item_name, ENT_QUOTES) . "\")' class='delete-button'>Delete</button>";
+                            echo "<form id='deleteItemForm" . $item_id . "' method='post' style='display:none;'>
+                                        <input type='hidden' name='item_id' value='" . $item_id . "'>
+                                        <input type='hidden' name='delete_item' value='true'> <!-- Ensure this input is included -->
+                                        <button type='submit' name='delete_item_button'>Delete</button>
+                                    </form>";
+                            echo "</div>";
                             echo "</td>";
                             echo "</tr>";
                         }
+                        echo "<div class='pagination'>";
+                        $pageQuery = '';
+                        if (isset($_GET['search_button'])) {
+                            $pageQuery .= 'search_button&search=' . urlencode($_GET['search']);
+                        } elseif (isset($_GET['filter_button'])) {
+                            if (isset($_GET['category'])) {
+                                $pageQuery .= 'filter_button&category=' . urlencode($_GET['category']);
+                            } elseif (isset($_GET['artist'])) {
+                                $pageQuery .= 'filter_button&artist=' . urlencode($_GET['artist']);
+                            }
+                        }
+                        for ($i = 1; $i <= ceil($totalItems / $itemsPerPage); $i++) {
+                            $url = 'emp_item_homepage.php?page=' . $i;
+                            if (!empty($pageQuery)) {
+                                $url .= '&' . $pageQuery;
+                            }
+                            echo "<a href='$url'>$i</a>";
+                        }
+                        echo "</div>";
                         ?>
                     </tbody>
                 </table>
