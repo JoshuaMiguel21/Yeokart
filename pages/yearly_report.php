@@ -60,7 +60,7 @@
                         <span>Items</span></a>
                 </li>
                 <li>
-                    <a href=""><span class="las la-shopping-bag"></span>
+                    <a href="owner_orders.php"><span class="las la-shopping-bag"></span>
                         <span>Orders</span></a>
                 </li>
                 <li>
@@ -90,7 +90,7 @@
                     <span class="las la-bars"></span>
                 </label>
 
-                Manage Items
+                Reports Page
             </h3>
 
             <div class="user-wrapper">
@@ -107,7 +107,7 @@
 
         <div class="head-title">
             <div class="left">
-                <h3>Item Catalog</h3>
+                <h3>Yearly Report</h3>
             </div>
         </div>
 
