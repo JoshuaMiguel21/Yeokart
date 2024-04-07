@@ -106,11 +106,32 @@ $result_artists = mysqli_query($con, $select_artists);
         </div>
         <div class="header-2">
             <nav class="navbar">
-                <a href="#home">Home</a>
-                <a href="#best">Best Sellers</a>
-                <a href="#featured">Featured</a>
-                <i class="fa-solid fa-filter" onclick="toggleFilterPopup()"></i>
-            </nav>
+                <!-- Filter Content -->
+                <div class="filter-section">
+                    <div class="filter-category">
+                        <h4>Filter by Category</h4>
+                        <select name="category_filter">
+                            <option value="">Select Category</option>
+                            <?php
+                            while ($row_category = mysqli_fetch_assoc($result_categories)) {
+                                echo '<option value="' . $row_category['category_id'] . '">' . $row_category['category_name'] . '</option>';
+                            }
+                            ?>
+                        </select>
+                    </div>
+
+                    <div class="filter-category">
+                        <h4>Filter by Artist</h4>
+                        <select name="artist_filter">
+                            <option value="">Select Artist</option>
+                            <?php
+                            while ($row_artist = mysqli_fetch_assoc($result_artists)) {
+                                echo '<option value="' . $row_artist['artist_id'] . '">' . $row_artist['artist_name'] . '</option>';
+                            }
+                            ?>
+                        </select>
+                    </div>
+                </div>
         </div>
     </header>
     <nav class="bottom-navbar">
@@ -158,39 +179,9 @@ $result_artists = mysqli_query($con, $select_artists);
         </div>
     </section>
 
-    <!-- Popup Container -->
-    <div class="popup-overlay" id="filterPopup">
-        <div class="popup-content" id="popup-filter">
-            <!-- Filter Content -->
-            <div class="filter-section">
-                <span class="close-button" onclick="toggleFilterPopup()">&times;</span>
 
-                <h4>Filter by Category</h4>
-                <div class="filter-category">
-                    <?php
-                    while ($row_category = mysqli_fetch_assoc($result_categories)) {
-                        echo '<input type="checkbox" name="category[]" value="' . $row_category['category_id'] . '"> ' . $row_category['category_name'] . '<br>';
-                    }
-                    ?>
-                </div>
 
-                <h4>Filter by Artist</h4>
-                <div class="filter-category">
-                    <?php
-                    while ($row_artist = mysqli_fetch_assoc($result_artists)) {
-                        echo '<input type="checkbox" name="artist[]" value="' . $row_artist['artist_id'] . '"> ' . $row_artist['artist_name'] . '<br>';
-                    }
-                    ?>
-                </div>
 
-                <button type="button" onclick="resetFilter()">Reset</button>
-                <button type="button" onclick="applyFilter()">Apply</button>
-
-            </div>
-
-        </div>
-    </div>
-    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const searchForm = document.querySelector('.search-form');
@@ -246,13 +237,8 @@ $result_artists = mysqli_query($con, $select_artists);
         });
     </script>
 
-    <script>
-        // Function to toggle the visibility of the filter popup
-        function toggleFilterPopup() {
-            var popup = document.getElementById('filterPopup');
-            popup.style.display = (popup.style.display === 'none') ? 'block' : 'none';
-        }
-    </script>
+    
+
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
