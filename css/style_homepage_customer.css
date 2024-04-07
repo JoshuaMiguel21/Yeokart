@@ -38,7 +38,6 @@ section{
     padding: 5rem 9%;
 }
 
-
 .heading{
     text-align: center;
     margin-bottom: 2rem;
@@ -869,6 +868,9 @@ section{
     transform: translateX(5px);
     color: var(--pink);
 }
+
+
+
   
 .container {
     display: flex;
@@ -1509,12 +1511,12 @@ label {
 }
 
 .right .order-summary{
-    position: fixed;
+    position: absolute;
     background-color: #eee;
     border-radius: 10px;
     padding: 20px;
     box-shadow: var(--box-shadow);
-    width: 640px;
+    width: 40%;
 }
 
 .right .order-summary h3{
@@ -1528,6 +1530,7 @@ label {
 }
 
 .my-cart {
+
   margin-top: 20px;
 }
 
@@ -1853,6 +1856,14 @@ label {
     .wrapper {
         grid-template-columns: repeat(4, 1fr);
     }
+
+    .left{
+        flex-direction: column;
+    }
+
+    .order-summary{
+        flex-direction: column;
+    }
     
 }
 
@@ -1866,7 +1877,16 @@ label {
     .wrapper {
         grid-template-columns: repeat(4, 1fr);
     }
+
+    .my-cart .cart-item {
+        flex-direction: column;
+        margin-bottom: 25px;
+        min-height: 100px;
+    }
     
+    .my-cart .cart-item p {
+        margin-top: 7px;
+    }
 }
 @media (max-width:991px){
     html{
