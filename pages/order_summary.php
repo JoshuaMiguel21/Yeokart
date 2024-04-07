@@ -295,9 +295,25 @@
             </div>
             <p><strong class="name">Mode of Payment</strong></p>
             <p><strong>GCash</strong></p>
-            <ul>
-                <li style="margin-left: 20px;">Rachel Falcis (0912-345-6789)</li>
-            </ul>
+            <?php
+            require('../database/db_yeokart.php');
+
+            // SQL query to retrieve contacts_description from contacts table where icon_link is <i class='fa-solid fa-peso-sign'></i>
+            $sql = "SELECT contacts_description FROM contacts WHERE icon_link = '<i class=\'fa-solid fa-peso-sign\'></i>'";
+            $result = $con->query($sql);
+
+            if ($result->num_rows > 0) {
+                echo "<ul>";
+                while ($row = $result->fetch_assoc()) {
+                    echo "<li><span class=\"larger-font\">" . $row["contacts_description"] . "</span></li>";
+                }
+                echo "</ul>";
+            } else {
+                echo "No data found";
+            }
+
+            $con->close();
+            ?>
             <p>After Placing your order, you may now proceed to pay through GCash and please <strong>don't forget to provide us the proof of payment by uploading the screenshot of the transaction</strong> in your account profile.</p>
             <p style="margin-top: 20px;"><strong class="name">Mode of Delivery</strong></p>
             <p>We will arrange the delivery through a courier service, but the customer will be responsible for the delivery fee.
@@ -307,13 +323,13 @@
             <p><strong>These are the rates for the Shipping fee.</strong></p>
             <p>Small to Medium Items (Up to 2 albums)</p>
             <ul>
-                <li style="margin-left: 20px;">Metro Manila - <strong>₱ 100</strong></li>
-                <li style="margin-left: 20px;">Provinces - <strong>₱ 180</strong></li>
+                <li>Metro Manila - <strong>₱ 100</strong></li>
+                <li>Provinces - <strong>₱ 180</strong></li>
             </ul>
             <p>Large Items (More than 3 albums)</p>
             <ul>
-                <li style="margin-left: 20px;">Metro Manila - <strong>₱ 120</strong></li>
-                <li style="margin-left: 20px;">Provinces - <strong>₱ 220</strong></li>
+                <li>Metro Manila - <strong>₱ 120</strong></li>
+                <li>Provinces - <strong>₱ 220</strong></li>
             </ul>
 
         </div>

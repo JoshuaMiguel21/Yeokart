@@ -27,7 +27,7 @@
             </div>
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <label for="item_price" class="form-label">Price:</label>
-                <input type="number" name="item_price" id="item_price" class="form-control" placeholder="Enter item price" autocomplete="off" required>
+                <input type="number" name="item_price" id="item_price" class="form-control" placeholder="Enter item price" autocomplete="off" required required step="0.01">
             </div>
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <label for="item_description" class="form-label">Description:</label>
@@ -54,7 +54,7 @@
                         ?>
                     </select>
                 </div>
-                
+
                 <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                     <select name="product_category" id="product_category" class="form-select">
                         <option value="">Select item Category</option>
@@ -162,7 +162,7 @@ if (isset($_POST['insert_item'])) {
             $insert_items = "INSERT INTO products (item_name,item_price,item_description,item_quantity,artist_name,category_name,item_image1,item_image2,item_image3) VALUES ('$item_name','$item_price','$item_description','$item_quantity', '$product_artist','$product_category','$item_image1','$item_image2','$item_image3')";
             $result_query_item = mysqli_query($con, $insert_items);
             if ($result_query_item) {
-                
+
                 $total_items = mysqli_num_rows(mysqli_query($con, "SELECT * FROM products"));
                 $items_per_page = 10;
                 $total_pages = ceil($total_items / $items_per_page);

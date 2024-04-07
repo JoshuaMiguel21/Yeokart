@@ -363,7 +363,23 @@ $con->close();
                 <h3>Upload Proof of Payment</h3>
                 <form class="add-artist-form" method="post" enctype="multipart/form-data">
                     <br></br>
-                    <p>GCash Account: <strong>Rachel Falcis (0912-345-6789)</strong></p>
+                    <?php
+                    require('../database/db_yeokart.php');
+
+                    // SQL query to retrieve contacts_description from contacts table where icon_link is <i class='fa-solid fa-peso-sign'></i>
+                    $sql = "SELECT contacts_description FROM contacts WHERE icon_link = '<i class=\'fa-solid fa-peso-sign\'></i>'";
+                    $result = $con->query($sql);
+
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<p>" . $row["contacts_description"] . "</p>";
+                        }
+                    } else {
+                        echo "No data found";
+                    }
+
+                    $con->close();
+                    ?>
                     <br></br>
                     <input type="file" name="proof_of_payment" id="proof_of_payment" accept="image/*">
                     <input type="hidden" name="order_id" id="order_id" value="">

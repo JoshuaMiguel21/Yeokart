@@ -7,6 +7,7 @@
     <title>Manage Content - Yeokart</title>
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="icon" type="image/png" href="../res/icon.png">
 </head>
@@ -66,7 +67,7 @@ if (isset($_SESSION['lastname'])) {
 <body>
 
     <input type="checkbox" id="nav-toggle" <?php echo $_SESSION['nav_toggle'] ? 'checked' : ''; ?>>
-     <div class="sidebar <?php echo $_SESSION['nav_toggle'] ? 'open' : ''; ?>">
+    <div class="sidebar <?php echo $_SESSION['nav_toggle'] ? 'open' : ''; ?>">
         <div class="sidebar-brand">
             <h2><span>Yeokart</span></h2>
         </div>
@@ -89,7 +90,7 @@ if (isset($_SESSION['lastname'])) {
                         <span>Orders</span></a>
                 </li>
                 <li>
-                    <a href=""><span class="las la-chart-line"></span>
+                    <a href="monthly_report.php"><span class="las la-chart-line"></span>
                         <span>Report</span></a>
                 </li>
                 <li>
@@ -216,22 +217,23 @@ if (isset($_SESSION['lastname'])) {
         </a>
     </div> -->
 
-    <script>
-        // Function to toggle the sidebar and update session variable
-        function toggleSidebar() {
-            var isChecked = document.getElementById('nav-toggle').checked;
-            var newState = isChecked ? 'true' : 'false';
+            <script>
+                // Function to toggle the sidebar and update session variable
+                function toggleSidebar() {
+                    var isChecked = document.getElementById('nav-toggle').checked;
+                    var newState = isChecked ? 'true' : 'false';
 
-            // Update session variable using AJAX
-            var xhttp = new XMLHttpRequest();
-            xhttp.open("POST", "", true);
-            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhttp.send("nav_toggle=" + newState);
-        }
+                    // Update session variable using AJAX
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.open("POST", "", true);
+                    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    xhttp.send("nav_toggle=" + newState);
+                }
 
-        // Add event listener to checkbox change
-        document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
-    </script>
+                // Add event listener to checkbox change
+                document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
+            </script>
+            <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
 </body>
 
 </html>
