@@ -1904,6 +1904,11 @@ label {
     html{
         scroll-padding-top: 0;
     }
+
+    .container{
+        flex-direction: column;
+    }
+    
     body{
         padding-bottom: 6rem;
     }
