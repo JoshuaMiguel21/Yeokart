@@ -221,7 +221,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p id="info">YOUR ADDRESSES<p>
             <hr class="gradient">
         </div>
-        <div class="address-list">
+        <div class="address-list" id="cart">
         <?php
         require('../database/db_yeokart.php');
 
@@ -531,6 +531,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+                const checkbox = document.getElementById('click');
+                const cartToHide = document.getElementById('cart');
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        cartToHide.style.display = 'none';
+                    } else {
+                        cartToHide.style.display = 'block';
+                    }
+            });
+        });
+    </script>
 </body>
 
 </html>

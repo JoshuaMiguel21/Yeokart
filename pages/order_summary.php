@@ -145,7 +145,7 @@
     }
     $shippingFee = 0;
     $overallTotal = 0;
-
+    
     // Calculate total quantity of items with category "Albums"
     $totalAlbumsQuantity = array_reduce($cartItems, function ($acc, $item) {
         if ($item['category'] === 'Albums') {
@@ -153,94 +153,34 @@
         }
         return $acc;
     }, 0);
-
+    
     // Determine the province based on the selected address or default to Metro Manila
     $province = $province === 'Metro Manila' ? 'Metro Manila' : $province;
-
-    // Calculate shipping fee based on quantity and province
-    if ($totalAlbumsQuantity < 3) {
-        $shippingFee = $province === 'Metro Manila' ? 100 : 180;
+    
+    // Check if province is empty and set shippingFee to 0
+    if ($province === '') {
+        $shippingFee = 0;
     } else {
-        $shippingFee = $province === 'Metro Manila' ? 120 : 220;
+        // Calculate shipping fee based on quantity and province
+        if ($totalAlbumsQuantity < 3) {
+            $shippingFee = $province === 'Metro Manila' ? 100 : 180;
+        } else {
+            $shippingFee = $province === 'Metro Manila' ? 120 : 220;
+        }
     }
-
+    
     // Update overall total
     $overallTotal = $cartTotal + $shippingFee;
+    
 
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_order'])) {
-        $items_ordered = array_column($cartItems, 'item_name');
-        $items_ordered_str = implode(", ", $items_ordered);
-        $date_of_purchase = date("Y-m-d");
-        $order_id = uniqid();
-
-        $item_quantities = array_column($cartItems, 'quantity');
-        $item_quantities_str = implode(", ", $item_quantities);
-
-        $insert_query = $con->prepare("INSERT INTO orders (order_id, customer_id, firstname, lastname, address, items_ordered, item_quantity, total, shipping_fee, overall_total, date_of_purchase) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $insert_query->bind_param("sisssssssss", $order_id, $customer_id, $firstname, $lastname, $fullAddress, $items_ordered_str, $item_quantities_str, $cartTotal, $shippingFee, $overallTotal, $date_of_purchase);
-
-        if ($insert_query->execute()) {
-
-            $clear_cart_query = "DELETE FROM cart WHERE customer_id = ?";
-            $clear_cart_stmt = $con->prepare($clear_cart_query);
-            $clear_cart_stmt->bind_param("i", $customer_id);
-            $clear_cart_stmt->execute();
-
-            foreach ($cartItems as $item) {
-                $item_name = $item['item_name'];
-                $quantity_purchased = $item['quantity'];
-
-                $product_query = $con->prepare("SELECT `item_quantity`, `times_sold` FROM `products` WHERE `item_name` = ?");
-                $product_query->bind_param("s", $item_name);
-                $product_query->execute();
-                $product_result = $product_query->get_result();
-
-                if ($product_result->num_rows > 0) {
-                    $product_row = $product_result->fetch_assoc();
-                    $current_stock = $product_row['item_quantity'];
-                    $current_times_sold = $product_row['times_sold'];
-
-                    $new_stock = $current_stock - $quantity_purchased;
-                    $new_times_sold = $current_times_sold + $quantity_purchased;
-
-                    $update_query = $con->prepare("UPDATE `products` SET `item_quantity` = ?, `times_sold` = ? WHERE `item_name` = ?");
-                    $update_query->bind_param("iis", $new_stock, $new_times_sold, $item_name);
-
-                    if (!$update_query->execute()) {
-                        echo "Error updating product stock and sales data for item: " . $item_name;
-                    }
-                } else {
-                    echo "Product not found for item: " . $item_name;
-                }
-            }
-
-            unset($_SESSION['selectedAddressId']);
-
-            echo "<script>
-                Swal.fire({
-                    icon: 'success', 
-                    title: 'Order Placed Successfully!',
-                    text: 'Proceed with the payment and send the proof of payment to verify your order.',
-                    confirmButtonText: 'OK',
-                    customClass: {
-                        popup: 'swal2-custom-popup',
-                        title: 'swal2-custom-title',
-                        content: 'swal2-custom-text'
-                    },
-                    backdrop: true, 
-                    allowOutsideClick: false 
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = 'customer_profile.php'; 
-                    }
-                });
-              </script>";
-        } else {
+        if ($fullAddress === "No default address found") {
+            // Trigger SweetAlert error message due to lack of a default address
             echo "<script>
                 Swal.fire({
                     icon: 'error', 
-                    title: 'Error!',
-                    text: 'There was an error placing your order. Please try again later.',
+                    title: 'No Address!',
+                    text: 'There is no default address yet. Please update your address information before placing the order.',
                     confirmButtonText: 'OK',
                     customClass: {
                         popup: 'swal2-custom-popup',
@@ -250,7 +190,94 @@
                     backdrop: true, 
                     allowOutsideClick: false 
                 });
-              </script>";
+            </script>";
+        } else {
+            // Your existing order processing code starts here since a default address exists
+            $items_ordered = array_column($cartItems, 'item_name');
+            $items_ordered_str = implode(", ", $items_ordered);
+            $date_of_purchase = date("Y-m-d");
+            $order_id = uniqid();
+    
+            $item_quantities = array_column($cartItems, 'quantity');
+            $item_quantities_str = implode(", ", $item_quantities);
+    
+            $insert_query = $con->prepare("INSERT INTO orders (order_id, customer_id, firstname, lastname, address, items_ordered, item_quantity, total, shipping_fee, overall_total, date_of_purchase) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $insert_query->bind_param("sisssssssss", $order_id, $customer_id, $firstname, $lastname, $fullAddress, $items_ordered_str, $item_quantities_str, $cartTotal, $shippingFee, $overallTotal, $date_of_purchase);
+    
+            if ($insert_query->execute()) {
+    
+                $clear_cart_query = "DELETE FROM cart WHERE customer_id = ?";
+                $clear_cart_stmt = $con->prepare($clear_cart_query);
+                $clear_cart_stmt->bind_param("i", $customer_id);
+                $clear_cart_stmt->execute();
+    
+                foreach ($cartItems as $item) {
+                    $item_name = $item['item_name'];
+                    $quantity_purchased = $item['quantity'];
+    
+                    $product_query = $con->prepare("SELECT `item_quantity`, `times_sold` FROM `products` WHERE `item_name` = ?");
+                    $product_query->bind_param("s", $item_name);
+                    $product_query->execute();
+                    $product_result = $product_query->get_result();
+    
+                    if ($product_result->num_rows > 0) {
+                        $product_row = $product_result->fetch_assoc();
+                        $current_stock = $product_row['item_quantity'];
+                        $current_times_sold = $product_row['times_sold'];
+    
+                        $new_stock = $current_stock - $quantity_purchased;
+                        $new_times_sold = $current_times_sold + $quantity_purchased;
+    
+                        $update_query = $con->prepare("UPDATE `products` SET `item_quantity` = ?, `times_sold` = ? WHERE `item_name` = ?");
+                        $update_query->bind_param("iis", $new_stock, $new_times_sold, $item_name);
+    
+                        if (!$update_query->execute()) {
+                            echo "Error updating product stock and sales data for item: " . $item_name;
+                        }
+                    } else {
+                        echo "Product not found for item: " . $item_name;
+                    }
+                }
+    
+                unset($_SESSION['selectedAddressId']);
+    
+                echo "<script>
+                    Swal.fire({
+                        icon: 'success', 
+                        title: 'Order Placed Successfully!',
+                        text: 'Proceed with the payment and send the proof of payment to verify your order.',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            popup: 'swal2-custom-popup',
+                            title: 'swal2-custom-title',
+                            content: 'swal2-custom-text'
+                        },
+                        backdrop: true, 
+                        allowOutsideClick: false 
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = 'customer_profile.php'; 
+                        }
+                    });
+                  </script>";
+            } else {
+                echo "<script>
+                    Swal.fire({
+                        icon: 'error', 
+                        title: 'Error!',
+                        text: 'There was an error placing your order. Please try again later.',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            popup: 'swal2-custom-popup',
+                            title: 'swal2-custom-title',
+                            content: 'swal2-custom-text'
+                        },
+                        backdrop: true, 
+                        allowOutsideClick: false 
+                    });
+                  </script>";
+            }
+            // Your existing order processing code ends here
         }
     }
 
@@ -269,24 +296,24 @@
             <p><strong class="name">Mode of Payment</strong></p>
             <p><strong>GCash</strong></p>
             <ul>
-                <li>Rachel Falcis (0912-345-6789)</li>
+                <li style="margin-left: 20px;">Rachel Falcis (0912-345-6789)</li>
             </ul>
             <p>After Placing your order, you may now proceed to pay through GCash and please <strong>don't forget to provide us the proof of payment by uploading the screenshot of the transaction</strong> in your account profile.</p>
-            <p><strong class="name">Mode of Delivery</strong></p>
+            <p style="margin-top: 20px;"><strong class="name">Mode of Delivery</strong></p>
             <p>We will arrange the delivery through a courier service, but the customer will be responsible for the delivery fee.
                 The shipping rates will be provided below.</p>
             <p>The customer can choose if they want to pay the shipping fee through GCash or Cash on Delivery.</p>
-            <p><strong class="name">Shipping Fee</strong></p>
+            <p style="margin-top: 20px;"><strong class="name">Shipping Fee</strong></p>
             <p><strong>These are the rates for the Shipping fee.</strong></p>
             <p>Small to Medium Items (Up to 2 albums)</p>
             <ul>
-                <li>Metro Manila - <strong>₱ 100</strong></li>
-                <li>Provinces - <strong>₱ 180</strong></li>
+                <li style="margin-left: 20px;">Metro Manila - <strong>₱ 100</strong></li>
+                <li style="margin-left: 20px;">Provinces - <strong>₱ 180</strong></li>
             </ul>
             <p>Large Items (More than 3 albums)</p>
             <ul>
-                <li>Metro Manila - <strong>₱ 120</strong></li>
-                <li>Provinces - <strong>₱ 220</strong></li>
+                <li style="margin-left: 20px;">Metro Manila - <strong>₱ 120</strong></li>
+                <li style="margin-left: 20px;">Provinces - <strong>₱ 220</strong></li>
             </ul>
 
         </div>

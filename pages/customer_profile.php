@@ -226,7 +226,7 @@ $con->close();
                     echo '<th>Order ID</th>';
                     echo '<th>Date</th>';
                     echo '<th>Status</th>';
-                    echo '<th>Proof of Payment</th>';
+                    echo '<th><center>Proof of Payment</center></th>';
                     echo '</tr>';
                     echo '</thead>';
                     echo '<tbody>';
@@ -237,7 +237,7 @@ $con->close();
                         echo '<td>' . $row['order_id'] . '</td>';
                         echo '<td>' . $row['date_of_purchase'] . '</td>';
                         echo '<td>' . strtoupper($row['status']) . '</td>';
-                        echo '<td class="upload-proof-cell" data-order-id="' . $order_id . '" data-proof="' . $row['proof_of_payment'] . '"><a href="#">Upload Proof of Payment</a></td>';
+                        echo '<td><center><a href="#" class="upload-proof-cell" data-order-id="' . $order_id . '" data-proof="' . $row['proof_of_payment'] . '">Upload Proof of Payment</a></center></td>';
                         echo '</tr>';
                         echo '<tr class="hidden-row">';
                         echo '<td colspan="4">';
@@ -360,14 +360,14 @@ $con->close();
         <div id="uploadProofPopup" class="popup-container" style="display: none;">
             <div class="popup-content">
                 <span class="close-btn" onclick="closeUploadProofPopup()">&times;</span>
-                <h2>Upload Proof of Payment</h2>
+                <h3>Upload Proof of Payment</h3>
                 <form class="add-artist-form" method="post" enctype="multipart/form-data">
                     <br></br>
                     <p>GCash Account: <strong>Rachel Falcis (0912-345-6789)</strong></p>
                     <br></br>
                     <input type="file" name="proof_of_payment" id="proof_of_payment" accept="image/*">
                     <input type="hidden" name="order_id" id="order_id" value="">
-                    <img src="" alt="Proof of Payment" id="proof_of_payment_image" style="max-width: 100%; display: none;">
+                    <img src="" alt="Proof of Payment" id="proof_of_payment_image" style="max-width: 100%; height: 100px;; display: none;">
                     <button type="submit" name="upload_proof" class="upload-btn">Upload</button>
                 </form>
             </div>

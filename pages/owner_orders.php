@@ -137,71 +137,72 @@
             </div>
 
             <div class="table">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Customer ID</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Address</th>
-                            <th>Items Ordered</th>
-                            <th>Item Quantity</th>
-                            <th>Total</th>
-                            <th>Date of Purchase</th>
-                            <th>Status</th>
-                            <th>Proof of Payment</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Address</th>
+                        <th>Items Ordered</th>
+                        <th>Item Quantity</th>
+                        <th>Total</th>
+                        <th>Date of Purchase</th>
+                        <th>Status</th>
+                        <th>Proof of Payment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    include('../database/db_yeokart.php');
+
+                    $select_query = "SELECT `order_id`, `customer_id`, `firstname`, `lastname`, `address`, `items_ordered`, `item_quantity`, `total`, `date_of_purchase`, `status`, `proof_of_payment` FROM `orders` WHERE 1";
+                    $result_query = mysqli_query($con, $select_query);
+
+                    while ($row = mysqli_fetch_assoc($result_query)) {
+                        $proof_of_payment = $row['proof_of_payment'];
+                        echo '<tr id="order-row-' . $row['order_id'] . '">';
+                        echo "<td>" . $row['order_id'] . "</td>";
+                        echo "<td>" . $row['customer_id'] . "</td>";
+                        echo "<td>" . $row['firstname'] . "</td>";
+                        echo "<td>" . $row['lastname'] . "</td>";
+                        echo "<td>" . $row['address'] . "</td>";
+                        echo "<td>" . $row['items_ordered'] . "</td>";
+                        echo "<td>" . $row['item_quantity'] . "</td>";
+                        echo "<td>₱" . $row['total'] . "</td>";
+                        echo "<td>" . $row['date_of_purchase'] . "</td>";
+                        echo "<td>";
+                        echo '<div class="button-class">';
+                        echo '<select class="orderStatusSelect" onchange="updateOrderStatus(this.value, \'' . $row['order_id'] . '\')">';
                         include('../database/db_yeokart.php');
 
-                        $select_query = "SELECT `order_id`, `customer_id`, `firstname`, `lastname`, `address`, `items_ordered`, `item_quantity`, `total`, `date_of_purchase`, `status`, `proof_of_payment` FROM `orders` WHERE 1";
-                        $result_query = mysqli_query($con, $select_query);
-
-                        while ($row = mysqli_fetch_assoc($result_query)) {
-                            $proof_of_payment = $row['proof_of_payment'];
-                            echo '<tr id="order-row-' . $row['order_id'] . '">';
-                            echo "<td>" . $row['order_id'] . "</td>";
-                            echo "<td>" . $row['customer_id'] . "</td>";
-                            echo "<td>" . $row['firstname'] . "</td>";
-                            echo "<td>" . $row['lastname'] . "</td>";
-                            echo "<td>" . $row['address'] . "</td>";
-                            echo "<td>" . $row['items_ordered'] . "</td>";
-                            echo "<td>" . $row['item_quantity'] . "</td>";
-                            echo "<td>₱" . $row['total'] . "</td>";
-                            echo "<td>" . $row['date_of_purchase'] . "</td>";
-                            echo "<td>";
-                            echo '<div class="button-class">';
-                            echo '<select class="orderStatusSelect" onchange="updateOrderStatus(this.value, \'' . $row['order_id'] . '\')">';
-                            include('../database/db_yeokart.php');
-
-                            // Fetch ENUM values for order status from the database
-                            $status_query = "SHOW COLUMNS FROM `orders` LIKE 'status'";
-                            $status_result = mysqli_query($con, $status_query);
-                            $status_row = mysqli_fetch_assoc($status_result);
-                            preg_match("/^enum\(\'(.*)\'\)$/", $status_row['Type'], $matches);
-                            $status_enum_values = explode("','", $matches[1]);
-                            foreach ($status_enum_values as $value) {
-                                echo '<option value="' . $value . '" ' . ($row['status'] == $value ? 'selected' : '') . '>' . $value . '</option>';
-                            }
-                            echo '</select>';
-                            echo '</div>';
-                            if (!empty($proof_of_payment)) {
-                                echo '<img src="./item_images/' . $proof_of_payment . '" alt="Proof of Payment" width="50" height="50" onclick="openImagePopup(\'./item_images/' . $proof_of_payment . '\')">';
-                            }
-                            echo "</td>";
-                            echo "</tr>";
+                        // Fetch ENUM values for order status from the database
+                        $status_query = "SHOW COLUMNS FROM `orders` LIKE 'status'";
+                        $status_result = mysqli_query($con, $status_query);
+                        $status_row = mysqli_fetch_assoc($status_result);
+                        preg_match("/^enum\(\'(.*)\'\)$/", $status_row['Type'], $matches);
+                        $status_enum_values = explode("','", $matches[1]);
+                        foreach ($status_enum_values as $value) {
+                            echo '<option value="' . $value . '" ' . ($row['status'] == $value ? 'selected' : '') . '>' . $value . '</option>';
                         }
-                        ?>
-                    </tbody>
-                </table>
+                        echo '</select>';
+                        echo '</div>';
+                        echo "</td>";
+                        echo "<td><center>";
+                        if (!empty($proof_of_payment)) {
+                            echo '<img src="./item_images/' . $proof_of_payment . '" alt="Proof of Payment" width="50" height="50" onclick="openImagePopup(\'./item_images/' . $proof_of_payment . '\')">';
+                        }
+                        echo "</center></td>";
+                        echo "</tr>";
+                    }
+                    ?>
+                </tbody>
+            </table>
             </div>
-            <div id="imagePopup" class="popup-container" style="display: none;">
-                <div class="popup-content">
-                    <span class="close-btn" onclick="closeImagePopup()">&times;</span>
-                    <img id="popupImage" src="" alt="Proof of Payment" style="max-width: 100%; max-height: 100%;">
+            <div id="imagePopup" class="popup-image" style="display: none; padding-top: 100px;">
+                <div class="image-content">
+                    <img id="popupImage" src="" alt="Proof of Payment" style="width: 300px; height: 550px;">
                 </div>
             </div>
         </main>
@@ -290,9 +291,16 @@
             popup.style.display = 'flex';
         }
 
-        function closeImagePopup() {
-            document.getElementById('imagePopup').style.display = 'none';
-        }
+        document.addEventListener('DOMContentLoaded', function() {
+            var popup = document.getElementById('imagePopup');
+
+            popup.addEventListener('click', function(event) {
+                // Check if the click was on the popup-background itself, not its children
+                if (event.target === popup) {
+                    popup.style.display = 'none';
+                }
+            });
+        });
     </script>
 </body>
 
