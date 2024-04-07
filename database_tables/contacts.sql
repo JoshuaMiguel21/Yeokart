@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 07, 2024 at 07:40 AM
+-- Generation Time: Apr 07, 2024 at 10:57 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -42,8 +42,9 @@ INSERT INTO `contacts` (`contacts_id`, `contacts_name`, `icon_link`, `contacts_d
 (1, 'Facebook', '<i class=\'bx bxl-facebook-circle\'></i>', 'https://www.facebook.com/joshuamiguel.embestro.3'),
 (2, 'Instagram', '<i class=\'bx bxl-instagram-alt\'></i>', 'https://www.instagram.com/joshua_miguel21/'),
 (3, 'Email', '<i class=\'bx bxl-gmail\'></i>', 'joshuamiguel.embestro.cics@ust.edu.ph'),
-(4, 'Phone', '<i class=\'bx bxs-phone\'></i>', '(0956) 449 9196, (0912) 345 6789'),
-(5, 'Address', '<i class=\'bx bx-current-location\'></i>', 'Oro Vista Royale Mayamot, Antipolo City');
+(4, 'Phone', '<i class=\'bx bxs-phone\'></i>', '(0956) 449 9196'),
+(5, 'Address', '<i class=\'bx bx-current-location\'></i>', 'Oro Vista Royale Mayamot, Antipolo City'),
+(12, 'GCash', '<i class=\'fa-solid fa-peso-sign\'></i>', 'Rachel Falcis (0912-345-6789)');
 
 --
 -- Indexes for dumped tables
@@ -63,7 +64,7 @@ ALTER TABLE `contacts`
 -- AUTO_INCREMENT for table `contacts`
 --
 ALTER TABLE `contacts`
-  MODIFY `contacts_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `contacts_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

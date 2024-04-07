@@ -44,7 +44,8 @@ INSERT INTO `contacts_icons` (`icon_id`, `icon_name`, `icon_link`) VALUES
 (4, 'Phone', '<i class=''bx bxs-phone''></i>'),
 (5, 'Address', '<i class=''bx bx-current-location''></i>'),
 (6, 'Twitter', '<i class=''bx bxl-twitter''></i>'),
-(7, 'Tiktok', '<i class=''bx bxl-tiktok''></i>');
+(7, 'Tiktok', '<i class=''bx bxl-tiktok''></i>'),
+(8, 'GCash', '<i class=''fa-solid fa-peso-sign''></i>');
 
 --
 -- Indexes for dumped tables

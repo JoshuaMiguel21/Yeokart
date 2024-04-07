@@ -8,6 +8,7 @@
     <link rel="icon" type="image/png" href="../res/icon.png">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <script>
@@ -105,6 +106,10 @@ if (isset($_SESSION['firstname'])) {
                     <i class="las la-edit"></i>
                     <span class="text">Edit Featured Section</span>
                 </a>
+                <a href="add_contacts.php" class="btn-employee">
+                    <i class="las la-plus"></i>
+                    <span class="text">Add Contacts</span>
+                </a>
             </div>
 
             <div class="table">
@@ -174,12 +179,7 @@ if (isset($_SESSION['firstname'])) {
                 </div>
             </div>
 
-            <!-- <div class="form-outline mb-4 mt-5">
-        <a href="./owner_dashboard.php" class="btn btn-danger mb-3 px-3 mx-auto">
-            Back
-        </a>
-    </div> -->
-
+            <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
 </body>
 
 </html>
