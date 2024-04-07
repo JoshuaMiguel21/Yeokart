@@ -276,7 +276,7 @@
                             $stmt->close();
                         }
 
-                        $itemsPerPage = 3;
+                        $itemsPerPage = 10;
 
                         // Default page number
                         $pageNumber = 1;

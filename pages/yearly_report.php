@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link href="../css/monthlyreport.css" rel="stylesheet" />
+    <link rel="icon" type="image/png" href="../res/icon.png">
     <title>Yeokart</title>
 </head>
 <script>
@@ -39,6 +41,117 @@
         exit();
     }
 
+    ?>
+    <?php
+    require('../database/db_yeokart.php');
+
+    $orderCount = 0; // Initialize the variable
+    $totalItemsSold = 0;
+    $totalRevenue = 0;
+    $totalIncome = 0;
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['filter'])) {
+        $selectedYear = $_POST['year'];
+        $startDate = date("$selectedYear-01-01");
+        $endDate = date("$selectedYear-12-31");
+
+        $sql = "SELECT COUNT(*) AS order_count FROM orders WHERE date_of_purchase BETWEEN '$startDate' AND '$endDate' AND (status = 'shipped' OR status = 'delivered') AND proof_of_payment <> ''";
+        $result = $con->query($sql);
+
+        if ($result) {
+            $row = $result->fetch_assoc();
+            $orderCount = $row['order_count'];
+        } else {
+            echo "Error: " . $sql . "<br>" . $con->error;
+        }
+
+        $sql = "SELECT item_quantity FROM orders WHERE date_of_purchase BETWEEN '$startDate' AND '$endDate' AND (status = 'shipped' OR status = 'delivered') AND proof_of_payment <> ''";
+        $result = $con->query($sql);
+
+        if ($result) {
+
+            while ($row = $result->fetch_assoc()) {
+                $quantities = explode(',', $row['item_quantity']);
+                foreach ($quantities as $quantity) {
+                    $totalItemsSold += (int)$quantity;
+                }
+            }
+        } else {
+            echo "Error: " . $sql . "<br>" . $con->error;
+        }
+
+        $sql = "SELECT SUM(total) AS total_revenue FROM orders WHERE date_of_purchase BETWEEN '$startDate' AND '$endDate' AND (status = 'shipped' OR status = 'delivered') AND proof_of_payment <> ''";
+        $result = $con->query($sql);
+
+        if ($result) {
+            $row = $result->fetch_assoc();
+            $totalRevenue = number_format($row['total_revenue'], 2);
+        } else {
+            echo "Error: " . $sql . "<br>" . $con->error;
+        }
+
+        $sql = "SELECT SUM(overall_total) AS total_income FROM orders WHERE date_of_purchase BETWEEN '$startDate' AND '$endDate' AND (status = 'shipped' OR status = 'delivered') AND proof_of_payment <> ''";
+        $result = $con->query($sql);
+
+        if ($result) {
+            $row = $result->fetch_assoc();
+            $totalIncome = number_format($row['total_income'], 2);
+        } else {
+            echo "Error: " . $sql . "<br>" . $con->error;
+        }
+    } else {
+        // Default to current year
+        $selectedYear = date("Y");
+
+        $startDate = date("$selectedYear-01-01");
+        $endDate = date("$selectedYear-12-31");
+
+        // Retrieve data for current year
+        $sql = "SELECT COUNT(*) AS order_count FROM orders WHERE date_of_purchase BETWEEN '$startDate' AND '$endDate' AND (status = 'shipped' OR status = 'delivered') AND proof_of_payment <> ''";
+        $result = $con->query($sql);
+
+        if ($result) {
+            $row = $result->fetch_assoc();
+            $orderCount = $row['order_count'];
+        } else {
+            echo "Error: " . $sql . "<br>" . $con->error;
+        }
+
+        $sql = "SELECT item_quantity FROM orders WHERE date_of_purchase BETWEEN '$startDate' AND '$endDate' AND (status = 'shipped' OR status = 'delivered') AND proof_of_payment <> ''";
+        $result = $con->query($sql);
+
+        if ($result) {
+
+            while ($row = $result->fetch_assoc()) {
+                $quantities = explode(',', $row['item_quantity']);
+                foreach ($quantities as $quantity) {
+                    $totalItemsSold += (int)$quantity;
+                }
+            }
+        } else {
+            echo "Error: " . $sql . "<br>" . $con->error;
+        }
+
+        $sql = "SELECT SUM(total) AS total_revenue FROM orders WHERE date_of_purchase BETWEEN '$startDate' AND '$endDate' AND (status = 'shipped' OR status = 'delivered') AND proof_of_payment <> ''";
+        $result = $con->query($sql);
+
+        if ($result) {
+            $row = $result->fetch_assoc();
+            $totalRevenue = number_format($row['total_revenue'], 2);
+        } else {
+            echo "Error: " . $sql . "<br>" . $con->error;
+        }
+
+        $sql = "SELECT SUM(overall_total) AS total_income FROM orders WHERE date_of_purchase BETWEEN '$startDate' AND '$endDate' AND (status = 'shipped' OR status = 'delivered') AND proof_of_payment <> ''";
+        $result = $con->query($sql);
+
+        if ($result) {
+            $row = $result->fetch_assoc();
+            $totalIncome = number_format($row['total_income'], 2);
+        } else {
+            echo "Error: " . $sql . "<br>" . $con->error;
+        }
+    }
     ?>
     <input type="checkbox" id="nav-toggle">
     <div class="sidebar">
@@ -103,64 +216,88 @@
             </div>
         </header>
 
-    <main>
+        <main>
 
-        <div class="head-title">
-            <div class="left">
-                <h3>Yearly Report</h3>
+            <div class="head-title">
+                <div class="left">
+                    <h3>Yearly Report</h3>
+                </div>
             </div>
-        </div>
 
-        <div class="head-buttons">
+            <div class="head-buttons">
                 <a href="monthly_report.php" class="btn-employee">
                     <i class="las la-archive"></i>
                     <span class="text">View Monthly Report</span>
                 </a>
-        </div>
+                <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+                    <label for="year">Select Year:</label>
+                    <select id="year" name="year">
+                        <?php
+                        $currentYear = date("Y");
+                        for ($i = $currentYear; $i >= 2000; $i--) {
+                            $selected = ($i == $selectedYear) ? 'selected' : '';
+                            echo "<option value='$i' $selected>$i</option>";
+                        }
+                        ?>
+                    </select>
+                    <input type="submit" value="Filter" name="filter">
+                </form>
+            </div>
 
-    &nbsp;&nbsp;&nbsp;&nbsp;
-    <table>
-        <tr>
-          <th>Item</th>  
-          <th>ItemID</th>
-          <th>Artist</th>
-          <th>Category</th>
-          <th>Quantity</th> 
-          <th>Price</th> 
-          <th>Subtotal</th> 
-        </tr>
-        <tr>
-          <td>Item Name 1</td>
-          <td>ItemID001</td>
-          <td>Artist1</td>
-          <td>Category1</td>
-          <td>5</td>
-          <td>500</td>
-          <td>2500</td>
-        </tr>
-        <tr>
-            <td>Item Name 2</td>
-            <td>ItemID002</td>
-            <td>Artist2</td>
-            <td>Category2</td>
-            <td>3</td>
-            <td>300</td>
-            <td>900</td>
-        </tr>
-        <tr>
-            <td>Item Name 3</td>
-            <td>ItemID003</td>
-            <td>Artist3</td>
-            <td>Category1</td>
-            <td>8</td>
-            <td>250</td>
-            <td>2000</td>
-        </tr>
-    </table>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <div class="cards">
+                <div class="card-single">
+                    <div>
+                        <h1><?php echo $orderCount; ?></h1>
+                        <span>Orders Recieved</span>
+                    </div>
+                    <div>
+                        <span class="las la-shopping-bag"></span>
+                    </div>
+                </div>
 
-    <div>
-        <h3 style="margin-top: 50px;"><b><center>Total: 5,400</center></b></h3>
-    </div>
-    
+                <div class="card-single">
+                    <div>
+                        <h1><?php echo $totalItemsSold; ?></h1>
+                        <span>Items Sold</span>
+                    </div>
+                    <div>
+                        <span class="las la-shopping-basket"></span>
+                    </div>
+                </div>
+
+                <div class="card-single">
+                    <div>
+                        <h1><?php echo '₱ ' . $totalRevenue; ?></h1>
+                        <span>Sales Revenue</span>
+                    </div>
+                    <div>
+                        <span class="las la-hand-holding-usd"></span>
+                    </div>
+                </div>
+
+                <div class="card-single">
+                    <div>
+                        <h1><?php echo '₱ ' . $totalIncome; ?></h1>
+                        <span>Total Income</span>
+                    </div>
+                    <div>
+                        <span class="las la-donate"></span>
+                    </div>
+                </div>
+            </div>
+            <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
+                <div class="popup-content">
+                    <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>
+                    <p>Are you sure you want to logout?
+                    <p>
+                    <div class="logout-btns">
+                        <button onclick="confirmLogout()" class="confirm-logout-btn">Logout</button>
+                        <button onclick="closeLogoutPopup()" class="cancel-logout-btn">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
 </body>
+
 </html>
