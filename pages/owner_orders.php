@@ -202,7 +202,7 @@
             </div>
             <div id="imagePopup" class="popup-image" style="display: none; padding-top: 100px;">
                 <div class="image-content">
-                    <img id="popupImage" src="" alt="Proof of Payment" style="width: 300px; height: 550px;">
+                    <img id="popupImage" src="" alt="Proof of Payment" style="width: auto; height: 550px;">
                 </div>
             </div>
         </main>
@@ -295,7 +295,6 @@
             var popup = document.getElementById('imagePopup');
 
             popup.addEventListener('click', function(event) {
-                // Check if the click was on the popup-background itself, not its children
                 if (event.target === popup) {
                     popup.style.display = 'none';
                 }

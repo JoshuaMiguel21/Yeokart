@@ -339,13 +339,13 @@
                             echo "<td>" . $row['artist_name'] . "</td>";
                             echo "<td>" . $row['category_name'] . "</td>";
                             echo "<td>";
-                            echo "<img src='./item_images/$item_image1' alt='' width='50' height='50'>&nbsp;";
+                            echo "<img src='./item_images/$item_image1' alt='' style='cursor: pointer;' width='50' height='50' onclick='openImagePopup(\"./item_images/" . $item_image1 . "\")'>&nbsp;";
                             if (!empty($item_image2)) {
-                                echo "<img src='./item_images/$item_image2' alt='' width='50' height='50'>&nbsp;";
+                                echo "<img src='./item_images/$item_image2' alt='' style='cursor: pointer;' width='50' height='50' onclick='openImagePopup(\"./item_images/" . $item_image2 . "\")'>&nbsp;";
                             }
 
                             if (!empty($item_image3)) {
-                                echo "<img src='./item_images/$item_image3' alt='' width='50' height='50'>&nbsp;";
+                                echo "<img src='./item_images/$item_image3' alt='' style='cursor: pointer;' width='50' height='50' onclick='openImagePopup(\"./item_images/" . $item_image3 . "\")'>&nbsp;";
                             }
                             echo "</td>";
                             // Inside your while loop
@@ -398,6 +398,12 @@
                 </div>
             </div>
 
+            <div id="imagePopup" class="popup-image" style="display: none; padding-top: 100px;">
+                <div class="image-content">
+                    <img id="popupImage" src="" alt="Proof of Payment" style="width: auto; height: 550px;">
+                </div>
+            </div>
+
             <div id="deleteConfirmationPopup" class="popup-container" style="display: none;">
                 <div class="popup-content">
                     <span class="close-btn" onclick="closeDeletePopup()">&times;</span>
@@ -430,6 +436,23 @@
 
                 // Add event listener to checkbox change
                 document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
+
+                function openImagePopup(imageUrl) {
+                    var popup = document.getElementById('imagePopup');
+                    var image = document.getElementById('popupImage');
+                    image.src = imageUrl;
+                    popup.style.display = 'flex';
+                }
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    var popup = document.getElementById('imagePopup');
+
+                    popup.addEventListener('click', function(event) {
+                        if (event.target === popup) {
+                            popup.style.display = 'none';
+                        }
+                    });
+                });
             </script>
 </body>
 
