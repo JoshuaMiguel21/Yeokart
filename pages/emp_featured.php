@@ -179,7 +179,22 @@ if (isset($_SESSION['firstname'])) {
                             exit();
                         }
 
-                        $select_query = "SELECT * FROM products ORDER BY is_featured DESC";
+                        $featuresPerPage = 10;
+                        $pageNumber = 1;
+                        
+                        if (isset($_GET['page']) && is_numeric($_GET['page'])) {
+                            $pageNumber = $_GET['page'];
+                        }
+                        
+                        $offset = ($pageNumber - 1) * $featuresPerPage;
+                        
+                        $totalFeaturesQuery = "SELECT COUNT(*) AS total_features FROM products";
+                        $totalFeaturesResult = mysqli_query($con, $totalFeaturesQuery);
+                        $totalFeaturesRow = mysqli_fetch_assoc($totalFeaturesResult);
+                        $totalFeatures = $totalFeaturesRow['total_features'];
+                        
+                        
+                        $select_query = "SELECT * FROM products ORDER BY is_featured DESC LIMIT $featuresPerPage OFFSET $offset";
                         $result_query = mysqli_query($con, $select_query);
                         while ($row = mysqli_fetch_assoc($result_query)) {
                             $item_id = $row['item_id'];
@@ -227,6 +242,49 @@ if (isset($_SESSION['firstname'])) {
 
                     </tbody>
                 </table>
+                <?php
+                    $baseUrl = 'owner_featured.php?';
+
+                    $pageQuery = '';
+                    if (isset($_GET['search_button'])) {
+                        $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
+                    } elseif (isset($_GET['filter_button'])) {
+                        if (isset($_GET['category'])) {
+                            $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
+                        } elseif (isset($_GET['artist'])) {
+                            $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
+                        }
+                    }
+
+                    $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+                    $totalPages = ceil($totalFeatures / $featuresPerPage);
+
+                    $startPage = max(1, $pageNumber - 1);
+                    $endPage = min($totalPages, $pageNumber + 1);
+
+                    if ($pageNumber == 1) {
+                        $startPage = 1;
+                        $endPage = min(3, $totalPages);
+                    } elseif ($pageNumber == $totalPages) {
+                        $startPage = max(1, $totalPages - 2);
+                        $endPage = $totalPages;
+                    }
+
+                    echo "<div class='pagination'>";
+
+                    $prevPage = max(1, $pageNumber - 1);
+                    echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
+
+                    for ($i = $startPage; $i <= $endPage; $i++) {
+                        $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
+                        echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
+                    }
+
+                    $nextPage = min($totalPages, $pageNumber + 1);
+                    echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
+
+                    echo "</div>";
+                ?>
             </div>
             <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
                 <div class="popup-content">

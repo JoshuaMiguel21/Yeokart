@@ -247,7 +247,7 @@
                             $stmt->close();
                         }
 
-                        $itemsPerPage = 3;
+                        $itemsPerPage = 10;
 
                         // Default page number
                         $pageNumber = 1;
@@ -289,8 +289,8 @@
 
                         // Add LIMIT and OFFSET to the query
                         $select_query .= " LIMIT $itemsPerPage OFFSET $offset";
-
                         $result_query = mysqli_query($con, $select_query);
+
                         while ($row = mysqli_fetch_assoc($result_query)) {
                             $item_id = $row['item_id'];
                             $item_name = $row['item_name'];
@@ -333,28 +333,52 @@
                             echo "</td>";
                             echo "</tr>";
                         }
-                        echo "<div class='pagination'>";
-                        $pageQuery = '';
-                        if (isset($_GET['search_button'])) {
-                            $pageQuery .= 'search_button&search=' . urlencode($_GET['search']);
-                        } elseif (isset($_GET['filter_button'])) {
-                            if (isset($_GET['category'])) {
-                                $pageQuery .= 'filter_button&category=' . urlencode($_GET['category']);
-                            } elseif (isset($_GET['artist'])) {
-                                $pageQuery .= 'filter_button&artist=' . urlencode($_GET['artist']);
-                            }
-                        }
-                        for ($i = 1; $i <= ceil($totalItems / $itemsPerPage); $i++) {
-                            $url = 'emp_item_homepage.php?page=' . $i;
-                            if (!empty($pageQuery)) {
-                                $url .= '&' . $pageQuery;
-                            }
-                            echo "<a href='$url'>$i</a>";
-                        }
-                        echo "</div>";
                         ?>
                     </tbody>
                 </table>
+                <?php
+                    $baseUrl = 'owner_item_homepage.php?';
+
+                    $pageQuery = '';
+                    if (isset($_GET['search_button'])) {
+                        $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
+                    } elseif (isset($_GET['filter_button'])) {
+                        if (isset($_GET['category'])) {
+                            $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
+                        } elseif (isset($_GET['artist'])) {
+                            $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
+                        }
+                    }
+
+                    $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+                    $totalPages = ceil($totalItems / $itemsPerPage);
+
+                    $startPage = max(1, $pageNumber - 1);
+                    $endPage = min($totalPages, $pageNumber + 1);
+
+                    if ($pageNumber == 1) {
+                        $startPage = 1;
+                        $endPage = min(3, $totalPages);
+                    } elseif ($pageNumber == $totalPages) {
+                        $startPage = max(1, $totalPages - 2);
+                        $endPage = $totalPages;
+                    }
+
+                    echo "<div class='pagination'>";
+
+                    $prevPage = max(1, $pageNumber - 1);
+                    echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
+
+                    for ($i = $startPage; $i <= $endPage; $i++) {
+                        $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
+                        echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
+                    }
+
+                    $nextPage = min($totalPages, $pageNumber + 1);
+                    echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
+
+                    echo "</div>";
+                ?>
             </div>
 
         </main>

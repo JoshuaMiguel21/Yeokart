@@ -11,6 +11,47 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="../css/dashboard.css">
 </head>
+
+<style>
+    .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    padding: 10px;
+}
+
+.pagination-link {
+    padding: 8px 16px;
+    border: 1px solid var(--main-color);
+    background-color: #fff;
+    text-decoration: none;
+    color: var(--main-color);
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.pagination-link:hover {
+    background-color: var(--main-color);
+    color: #fff;
+    box-shadow: 0 2px 5px rgba(221, 47, 110, 0.5);
+}
+
+.current-page {
+    font-weight: bold;
+    color: #fff;
+    background-color: var(--main-color);
+    border-color: var(--dark-color);
+}
+
+.current-page:hover {
+    background-color: var(--main-color);
+    color: #fff;
+    border-color: var(--dark-color);
+    box-shadow: 0 2px 5px rgba(209, 28, 73, 0.5);
+}
+</style>
 <script>
     function confirmDelete() {
         return confirm("Are you sure you want to delete this contact?");
@@ -151,7 +192,22 @@ if (isset($_SESSION['firstname'])) {
                                 echo "<script>window.location.href = 'emp_content_details.php';</script>";
                             }
                         }
-                        $select_query = "SELECT * FROM contacts";
+
+                        $contactsPerPage = 10;
+                        $pageNumber = 1;
+
+                        if (isset($_GET['page']) && is_numeric($_GET['page'])) {
+                            $pageNumber = $_GET['page'];
+                        }
+
+                        $offset = ($pageNumber - 1) * $contactsPerPage;
+
+                        $totalContactsQuery = "SELECT COUNT(*) AS total_contacts FROM contacts";
+                        $totalContactsResult = mysqli_query($con, $totalContactsQuery);
+                        $totalContactsRow = mysqli_fetch_assoc($totalContactsResult);
+                        $totalContacts = $totalContactsRow['total_contacts'];
+                        
+                        $select_query = "SELECT * FROM contacts LIMIT $contactsPerPage OFFSET $offset";
                         $result_query = mysqli_query($con, $select_query);
                         while ($row = mysqli_fetch_assoc($result_query)) {
                             $contacts_id = $row['contacts_id'];
@@ -176,6 +232,49 @@ if (isset($_SESSION['firstname'])) {
                         ?>
                     </tbody>
                 </table>
+                <?php
+                    $baseUrl = 'owner_content_details.php?';
+
+                    $pageQuery = '';
+                    if (isset($_GET['search_button'])) {
+                        $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
+                    } elseif (isset($_GET['filter_button'])) {
+                        if (isset($_GET['category'])) {
+                            $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
+                        } elseif (isset($_GET['artist'])) {
+                            $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
+                        }
+                    }
+
+                    $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+                    $totalPages = ceil($totalContacts / $contactsPerPage);
+
+                    $startPage = max(1, $pageNumber - 1);
+                    $endPage = min($totalPages, $pageNumber + 1);
+
+                    if ($pageNumber == 1) {
+                        $startPage = 1;
+                        $endPage = min(3, $totalPages);
+                    } elseif ($pageNumber == $totalPages) {
+                        $startPage = max(1, $totalPages - 2);
+                        $endPage = $totalPages;
+                    }
+
+                    echo "<div class='pagination'>";
+
+                    $prevPage = max(1, $pageNumber - 1);
+                    echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
+
+                    for ($i = $startPage; $i <= $endPage; $i++) {
+                        $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
+                        echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
+                    }
+
+                    $nextPage = min($totalPages, $pageNumber + 1);
+                    echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
+
+                    echo "</div>";
+                ?>
             </div>
 
             <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
