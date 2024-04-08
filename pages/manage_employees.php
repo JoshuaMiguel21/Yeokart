@@ -164,7 +164,7 @@ if (isset($_SESSION['lastname'])) {
             if ($result->num_rows > 0) {
                 // Output data of each row
                 echo "<form method='post' action='#'>
-                            <table border='1'>
+                            <table border='0'>
                                 <tr>
                                     <th>Employee Number</th>
                                     <th>Firstname</th>
@@ -199,7 +199,7 @@ if (isset($_SESSION['lastname'])) {
                 echo "</table></form>";
             } else {
                 echo "<form method='post' action='#'>
-                            <table border='1'>
+                            <table border='0'>
                                 <tr>
                                     <th>Employee Number</th>
                                     <th>Firstname</th>
