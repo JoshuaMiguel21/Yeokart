@@ -315,6 +315,25 @@ section{
 
 }
 
+/* Button Styles */
+#applyFilterCategory, #applyFilterArtist {
+    padding: 5px 10px; /* Padding around text inside button */
+    font-size: 12px; /* Font size of button text */
+    background-color: white; /* Background color of button */
+    color: var(--dark-color); /* Text color of button */
+    border: none; /* Remove default button border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Show pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth transition for background color change */
+    font-weight: bold;
+}
+
+/* Hover effect */
+#applyFilterCategory:hover, #applyFilterArtist:hover {
+    background-color: var(--dark-color); /* Darker background color on hover */
+    color: white; /* Text color on hover */
+}
+
 
 
 .featured .featured-slider .box,
