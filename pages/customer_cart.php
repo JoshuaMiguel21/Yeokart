@@ -51,7 +51,7 @@ if (isset($_SESSION['email'])) {
 }
 
 if (isset($_SESSION['selectedAddressId'])) {
-    unset($_SESSION['selectedAddressId']); 
+    unset($_SESSION['selectedAddressId']);
 }
 
 
@@ -102,9 +102,9 @@ if (mysqli_num_rows($result_query) > 0) {
         <div class="header-1">
             <a href="customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>
             <div class="icons">
-                <form action="" class="search-form">
-                    <input type="search" name="" placeholder="Search here..." id="search-box">
-                    <label for="search-box" class="fas fa-search"></label>
+                <form action="new_customer_shop.php" method="GET" class="search-form">
+                    <input type="search" name="search" placeholder="Search here..." id="search-box">
+                    <button type="submit"><i class="fas fa-search"></i></button>
                 </form>
                 <label for="click" class="menu-btn">
                     <i class="fas fa-bars"></i>
@@ -113,9 +113,9 @@ if (mysqli_num_rows($result_query) > 0) {
             <div class="icons">
                 <ul>
                     <li class="search-ul">
-                        <form action="" class="search-form1">
-                            <input type="search" name="" placeholder="Search here..." id="search-box">
-                            <label for="search-box" class="fas fa-search"></label>
+                        <form action="new_customer_shop.php" method="GET" class="search-form">
+                            <input type="search" name="search" placeholder="Search here..." id="search-box">
+                            <button type="submit"><i class="fas fa-search"></i></button>
                         </form>
                     </li>
                     <li class="home-class"><a href="customer_homepage.php" id="home-nav">Home</a></li>
@@ -136,7 +136,7 @@ if (mysqli_num_rows($result_query) > 0) {
             <div class="left-column">
                 <p id="info">MY CART</p>
                 <hr class="gradient">
-                
+
                 <div class="project">
                     <div class="shop">
                         <?php
@@ -216,7 +216,6 @@ if (mysqli_num_rows($result_query) > 0) {
         </div>
     </div>
     <script>
-
         function openDeletePopup(cartId) {
             document.getElementById("deletePopup").style.display = "block";
             document.getElementById("deletePopup").setAttribute("data-cartId", cartId);
@@ -271,7 +270,7 @@ if (mysqli_num_rows($result_query) > 0) {
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "<?php echo $_SERVER['PHP_SELF']; ?>", true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            
+
             xhr.onload = function() {
                 if (xhr.status === 200) {
                     updateSubtotal(cartId, quantity, price);
@@ -313,14 +312,14 @@ if (mysqli_num_rows($result_query) > 0) {
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-                const checkbox = document.getElementById('click');
-                const cartToHide = document.getElementById('cart');
-                checkbox.addEventListener('change', function() {
-                    if (this.checked) {
-                        cartToHide.style.display = 'none';
-                    } else {
-                        cartToHide.style.display = 'block';
-                    }
+            const checkbox = document.getElementById('click');
+            const cartToHide = document.getElementById('cart');
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    cartToHide.style.display = 'none';
+                } else {
+                    cartToHide.style.display = 'block';
+                }
             });
         });
 
@@ -344,7 +343,6 @@ if (mysqli_num_rows($result_query) > 0) {
                 // If no items exceed available stock, allow form to submit naturally
             });
         });
-
     </script>
     <iframe name="update_frame" style="display:none;"></iframe>
 </body>
