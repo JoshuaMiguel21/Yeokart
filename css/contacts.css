@@ -101,15 +101,16 @@ section{
     color:var(--black);
 }
 
-.header .header-1 .search-form label, 
-.header .header-1 .search-form1 label{
+.header .header-1 .search-form button, 
+.header .header-1 .search-form1 button{
     font-size: 2.5rem;
     padding-right: 1.5rem;
     color: var(--black);
     cursor: pointer;
+    background-color: #fff;
 }
 
-.header .header-1 .search-form label:hover{
+.header .header-1 .search-form button:hover{
     color: var(--pink);
 }
 

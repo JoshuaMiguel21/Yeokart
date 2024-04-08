@@ -136,9 +136,9 @@ if (isset($_POST['add-to-cart-btn'])) {
         <div class="header-1">
             <a href="customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>
             <div class="icons">
-                <form action="" class="search-form">
-                    <input type="search" name="" placeholder="Search here..." id="search-box">
-                    <label for="search-box" class="fas fa-search"></label>
+                <form action="new_customer_shop.php" method="GET" class="search-form">
+                    <input type="search" name="search" placeholder="Search here..." id="search-box">
+                    <button type="submit"><i class="fas fa-search"></i></button>
                 </form>
                 <label for="click" class="menu-btn">
                     <i class="fas fa-bars"></i>
@@ -147,9 +147,9 @@ if (isset($_POST['add-to-cart-btn'])) {
             <div class="icons">
                 <ul>
                     <li class="search-ul">
-                        <form action="" class="search-form1">
-                            <input type="search" name="" placeholder="Search here..." id="search-box">
-                            <label for="search-box" class="fas fa-search"></label>
+                        <form action="new_customer_shop.php" method="GET" class="search-form">
+                            <input type="search" name="search" placeholder="Search here..." id="search-box">
+                            <button type="submit"><i class="fas fa-search"></i></button>
                         </form>
                     </li>
                     <li class="home-class"><a href="customer_homepage.php" id="home-nav">Home</a></li>

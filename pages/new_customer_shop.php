@@ -84,9 +84,9 @@
             <div class="header-1">
                 <a href="customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>
                 <div class="icons">
-                    <form action="" class="search-form">
-                        <input type="search" name="" placeholder="Search here..." id="search-box">
-                        <label for="search-box" class="fas fa-search"></label>
+                    <form action="new_customer_shop.php" method="GET" class="search-form">
+                        <input type="search" name="search" placeholder="Search here..." id="search-box">
+                        <button type="submit"><i class="fas fa-search"></i></button>
                     </form>
                     <label for="click" class="menu-btn">
                         <i class="fas fa-bars"></i>
@@ -95,9 +95,9 @@
                 <div class="icons">
                     <ul>
                         <li class="search-ul">
-                            <form action="" class="search-form1">
-                                <input type="search" name="" placeholder="Search here..." id="search-box">
-                                <label for="search-box" class="fas fa-search"></label>
+                            <form action="new_customer_shop.php" method="GET" class="search-form">
+                                <input type="search" name="search" placeholder="Search here..." id="search-box">
+                                <button type="submit"><i class="fas fa-search"></i></button>
                             </form>
                         </li>
                         <li class="home-class"><a href="customer_homepage.php" id="home-nav">Home</a></li>
@@ -112,32 +112,43 @@
                 <nav class="navbar">
                     <!-- Filter Content -->
                     <div class="filter-section">
-                        <div class="filter-category">
-                            <h4>Filter by Category</h4>
-                            <select name="category_filter">
-                                <option value="">Select Category</option>
+                        <form method="GET">
+                            <select name="category">
+                                <option value="" disabled selected>Select a category</option>
                                 <?php
-                                while ($row_category = mysqli_fetch_assoc($result_categories)) {
-                                    echo '<option value="' . $row_category['category_name'] . '">' . $row_category['category_name'] . '</option>';
+                                include('../database/db_yeokart.php');
+                                $category_query = "SELECT * FROM categories";
+                                $result_category = mysqli_query($con, $category_query);
+                                while ($category_row = mysqli_fetch_assoc($result_category)) {
+                                    $category_id = $category_row['category_id'];
+                                    $category_name = $category_row['category_name'];
+                                    $selected = isset($_GET['category']) && $_GET['category'] == $category_name ? 'selected' : '';
+                                    echo "<option value='$category_name' $selected>$category_name</option>";
                                 }
                                 ?>
                             </select>
-                        </div>
-                        <button type="button" id="applyFilterCategory">Apply Filter</button>
-
-                        <div class="filter-category">
-                            <h4>Filter by Artist</h4>
-                            <select name="artist_filter">
-                                <option value="">Select Artist</option>
+                            <button type="submit" name="filter_button">Filter</button>
+                        </form>
+                        <form method="GET">
+                            <select name="artist">
+                                <option value="" disabled selected>Select an artist</option>
                                 <?php
-                                while ($row_artist = mysqli_fetch_assoc($result_artists)) {
-                                    echo '<option value="' . $row_artist['artist_name'] . '">' . $row_artist['artist_name'] . '</option>';
+                                include('../database/db_yeokart.php');
+                                $artist_query = "SELECT * FROM artists";
+                                $result_artist = mysqli_query($con, $artist_query);
+                                while ($artist_row = mysqli_fetch_assoc($result_artist)) {
+                                    $artist_id = $artist_row['artist_id'];
+                                    $artist_name = $artist_row['artist_name'];
+                                    $selected = isset($_GET['artist']) && $_GET['artist'] == $artist_name ? 'selected' : '';
+                                    echo "<option value='$artist_name' $selected>$artist_name</option>";
                                 }
                                 ?>
                             </select>
-                        </div>
-                        <!-- Add Button Here -->
-                        <button type="button" id="applyFilterArtist">Apply Filter</button>
+                            <button type="submit" name="filter_button">Filter</button>
+                        </form>
+                        <form method="GET" id="clear">
+                            <button type="button" name="clear_button" onclick="clearSearch()">Clear</button>
+                        </form>
                     </div>
                 </nav>
             </div>
@@ -151,8 +162,36 @@
                     <div class="wrapper">
                         <?php
                         include('../database/db_yeokart.php');
+                        $itemsPerPage = 12;
+                        $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1;
+                        $offset = ($pageNumber - 1) * $itemsPerPage;
+
+                        // Base query
                         $select_query = "SELECT * FROM products";
+
+                        // Apply search filter if search term is provided
+                        if (isset($_GET['search']) && !empty($_GET['search'])) {
+                            $searchTerm = mysqli_real_escape_string($con, $_GET['search']);
+                            $select_query .= " WHERE item_name LIKE '%$searchTerm%'";
+                        }
+
+                        // Apply category filter if selected
+                        if (isset($_GET['category']) && !empty($_GET['category'])) {
+                            $category = mysqli_real_escape_string($con, $_GET['category']);
+                            $select_query .= " WHERE category_name = '$category'";
+                        }
+
+                        // Apply artist filter if selected
+                        if (isset($_GET['artist']) && !empty($_GET['artist'])) {
+                            $artist = mysqli_real_escape_string($con, $_GET['artist']);
+                            $select_query .= isset($_GET['category']) && !empty($_GET['category']) ? " AND artist_name = '$artist'" : " WHERE artist_name = '$artist'";
+                        }
+
+                        // Add limit and offset
+                        $select_query .= " LIMIT $itemsPerPage OFFSET $offset";
+
                         $result_query = mysqli_query($con, $select_query);
+
                         while ($row = mysqli_fetch_assoc($result_query)) {
                             $item_id = $row['item_id'];
                             $item_name = $row['item_name'];
@@ -184,12 +223,30 @@
                         <?php } ?>
                     </div>
                 </div>
+                <div class="pagination">
+                    <?php
+                    $totalItemsQuery = "SELECT COUNT(*) AS totalItems FROM products";
+                    $totalItemsResult = mysqli_query($con, $totalItemsQuery);
+                    $totalItemsRow = mysqli_fetch_assoc($totalItemsResult);
+                    $totalItems = $totalItemsRow['totalItems'];
+                    $totalPages = ceil($totalItems / $itemsPerPage);
+
+                    for ($i = 1; $i <= $totalPages; $i++) {
+                        $activeClass = $i == $pageNumber ? 'active' : '';
+                        echo "<a href='new_customer_shop.php?page=$i' class='$activeClass'>$i</a>";
+                    }
+                    ?>
+                </div>
             </section>
 
 
 
-
             <script>
+                function clearSearch() {
+                    document.getElementsByName('category')[0].selectedIndex = 0;
+                    document.getElementsByName('artist')[0].selectedIndex = 0;
+                    window.location.href = 'new_customer_shop.php'; // Reload the page
+                }
                 document.addEventListener('DOMContentLoaded', function() {
                     const searchForm = document.querySelector('.search-form');
                     const searchBtn = document.querySelector('#search-btn');
