@@ -74,7 +74,6 @@ if (isset($_GET['contacts_id'])) {
         if ($result_update) {
             $update_contacts_query = "UPDATE contacts SET contacts_description='$new_contacts_description' WHERE contacts_description='$contacts_description'";
             $result_update_contacts = mysqli_query($con, $update_contacts_query);
-            //TITE NI JOSHUA DI PA AYOS   
             echo "<script>
                 Swal.fire({
                     icon: 'success',
@@ -89,14 +88,29 @@ if (isset($_GET['contacts_id'])) {
             </script>";
 
             if ($result_update_contacts) {
+                echo "<script>
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Contact successfully updated',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = 'owner_content_details.php';
+                            }
+                        });
+                      </script>";
             } else {
-                echo "<script>alert('Failed to update contact')</script>";
+                echo "<script>
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Failed to update contact',
+                            confirmButtonText: 'Ok'
+                        });
+                      </script>";
             }
-            $previous_page = $_POST['previous_page'];
-            echo "<script>document.location.href = '$previous_page';</script>";
-        } else {
-            echo "<script>alert('Failed to update contact')</script>";
-        }
+        } 
     }
 }
 ?>

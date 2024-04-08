@@ -55,7 +55,7 @@
           </div>
 
           <div class="button-container">
-            <button type="submit" id="submit" class="btn btn-custom btn-lg" name="submit">Update</button>
+            <button type="submit" id="submit" class="btn btn-info mb-3 px-3" name="submit">Update</button>
           </div>
           <br></br>
           <div class="button-container">

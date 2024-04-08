@@ -9,13 +9,26 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="../css/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="icon" type="image/png" href="../res/icon.png">
 </head>
 <script>
-    function confirmDelete() {
-        return confirm("Are you sure you want to delete this contact?");
+    function openDeletePopup(contacts_id) {
+        document.getElementById('deleteConfirmationPopup').style.display = 'flex';
+        document.getElementById('deleteForm_' + contacts_id).contacts_id.value = contacts_id;
     }
 
+    function closeDeletePopup() {
+        document.getElementById('deleteConfirmationPopup').style.display = 'none';
+    }
+
+    function confirmDelete(contacts_id) {
+        // Get the form associated with the delete action
+        var deleteForm = document.getElementById('deleteForm_' + contacts_id);
+        // Submit the form
+        deleteForm.submit();
+    }
+    
     function openLogoutPopup() {
         document.getElementById('logoutConfirmationPopup').style.display = 'flex';
     }
@@ -159,17 +172,37 @@ if (isset($_SESSION['lastname'])) {
                     <tbody>
                         <?php
                         include('../database/db_yeokart.php');
-                        if (isset($_POST['delete_contacts'])) {
+                        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_contacts'])) {
                             $contacts_id = $_POST['contacts_id'];
                             // Perform deletion query
                             $delete_query = "DELETE FROM contacts WHERE contacts_id='$contacts_id'";
                             $result_query = mysqli_query($con, $delete_query);
                             if ($result_query) {
-                                echo "<script>alert('Contact deleted successfully')</script>";
-                                echo "<script>window.location.href = 'owner_content_details.php';</script>";
+                                echo "<script>
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Success',
+                                        text: 'Contact deleted successfully',
+                                        confirmButtonText: 'Ok'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            window.location.href = 'owner_content_details.php';
+                                        }
+                                    });
+                                </script>";
                             } else {
-                                echo "<script>alert('Failed to delete item')</script>";
-                                echo "<script>window.location.href = 'owner_content_details.php';</script>";
+                                echo "<script>
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'Failed to delete item',
+                                        confirmButtonText: 'Ok'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            window.location.href = 'owner_content_details.php';
+                                        }
+                                    });
+                                </script>";
                             }
                         }
                         $select_query = "SELECT * FROM contacts";
@@ -185,12 +218,13 @@ if (isset($_SESSION['lastname'])) {
                             echo "<td style='max-width: 350px;'>" . $row['contacts_description'] . "</td>";
                             echo "<td>";
                             echo "<div class='button-class'>";
-                            echo "<a href='edit_contacts.php?contacts_id=$contacts_id' class='edit-button'>Edit</a> 
-                          <form method='post' onsubmit='return confirmDelete()'>
-                          <input type='hidden' name='contacts_id' value='$contacts_id'>
-                          <button type='submit' name='delete_contacts' class='delete-button'>Delete</button>
-                          </form>";
-                            echo "<div class='button-class'>";
+                            echo "<a href='edit_contacts.php?contacts_id=$contacts_id' class='edit-button'>Edit</a>";
+                            echo "<button type='button' onclick='openDeletePopup(" . $contacts_id . ")' class='delete-button'>Delete</button>";
+                            echo "<form id='deleteForm_$contacts_id' method='post'>";
+                            echo "<input type='hidden' name='contacts_id' value='$contacts_id'>";
+                            echo "<input type='hidden' name='delete_contacts' value='true'>";
+                            echo "</form>";
+                            echo "</div>";
                             echo "</td>";
                             echo "</tr>";
                         }
@@ -202,11 +236,21 @@ if (isset($_SESSION['lastname'])) {
             <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
                 <div class="popup-content">
                     <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>
-                    <p>Are you sure you want to logout?
-                    <p>
+                    <p>Are you sure you want to logout?</p>
                     <div class="logout-btns">
                         <button onclick="confirmLogout()" class="confirm-logout-btn">Logout</button>
                         <button onclick="closeLogoutPopup()" class="cancel-logout-btn">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="deleteConfirmationPopup" class="popup-container" style="display: none;">
+                <div class="popup-content">
+                    <span class="close-btn" onclick="closeDeletePopup()">&times;</span>
+                    <p>Are you sure you want to delete this contact?</p>
+                    <div class="logout-btns">
+                        <button onclick="confirmDelete(<?php echo $contacts_id; ?>)" class="confirm-logout-btn">Delete</button>
+                        <button onclick="closeDeletePopup()" class="cancel-logout-btn">Cancel</button>
                     </div>
                 </div>
             </div>
