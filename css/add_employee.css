@@ -51,21 +51,3 @@ form{
     bottom: -30px;
     font-size: 0.8rem;
 }
-
-#submit{
-    background-color: #3498db;  
-    color: #ffffff;
-    padding: 12px 24px;
-    border: 2px solid #2980b9;  
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 600;
-    margin-top: 15px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-#submit:hover {
-    background-color: #2980b9;
-    color: #ffffff;
-}

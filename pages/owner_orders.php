@@ -46,12 +46,6 @@
         $_SESSION['nav_toggle'] = $_POST['nav_toggle'] === 'true' ? true : false;
     }
 
-    // Redirect to login page if session variables are not set
-    if (!isset($_SESSION['firstname']) || !isset($_SESSION['lastname'])) {
-        header("Location: login_page.php");
-        exit();
-    }
-
     if (isset($_SESSION['firstname'])) {
         $firstname = $_SESSION['firstname'];
     } else {
@@ -271,6 +265,8 @@
             function getBorderStyle(status) {
                 switch (status) {
                     case 'Pending':
+                        return '1px solid red';
+                    case 'Invalid':
                         return '1px solid red';
                     case 'Processing':
                         return '1px solid blue';

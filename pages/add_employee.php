@@ -12,6 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="../css/add_employee.css" rel="stylesheet" />
 </head>
 <script>
@@ -119,12 +120,14 @@
 
                     //Content
                     $mail->isHTML(true);                                        //Set email format to HTML
-                    $mail->Subject = 'Employee Invitation from Yeokart';
+                    $mail->Subject = 'Yeokart - Employee Invitation';
                     $mail->Body    = "  <p>Dear Employee,</p>
-                                <p>We hope this email finds you well. You have been invited to verify your email address in order to complete the 
-                                registration process for our employee portal. This step is essential to ensure the security and integrity of our platform.</p>
-                                <p>To verify your email address, please click on the following link: </p>
-                                <p><a href='http://localhost/Yeokart/pages/verify_employee.php?email=$email&v_code=$v_code'>Verify Your Email</a></p>";
+                                            <p>We hope this email finds you well. You have been invited to verify your email address in order to complete the 
+                                            registration process for our employee portal. This step is essential to ensure the security and integrity of our platform.</p>
+                                            <p>To verify your email address, please click on the following link: </p>
+                                            <p><a href='http://localhost/Yeokart/pages/verify_employee.php?email=$email&v_code=$v_code'>Verify Your Email</a></p>;
+                                            <p>Thank you for using Yeokart WebApp!</p>
+                                            <p>Best regards,<br>Your Company Name Support Team</p>";
                     $mail->send();
                     return true;
                 } catch (Exception $e) {
@@ -328,7 +331,7 @@
             </div>
 
             <div class="button-container">
-                <button type="submit" id="submit" class="btn btn-custom btn-lg" name="submit">Submit</button>
+                <button type="submit" id="submit" class="btn btn-info mb-3 px-3" name="submit">Submit</button>
             </div>
             <br></br>
             <div class="button-container">

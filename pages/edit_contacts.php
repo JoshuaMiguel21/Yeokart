@@ -10,6 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="../css/add&edit_item.css" rel="stylesheet" />
     <title>Edit Contacts - Yeokart</title>
     <link rel="icon" type="image/png" href="../res/icon.png">
@@ -71,20 +72,45 @@ if (isset($_GET['contacts_id'])) {
         $result_update = mysqli_query($con, $update_query);
 
         if ($result_update) {
-            echo "<script>alert('Contact successfully updated')</script>";
-
             $update_contacts_query = "UPDATE contacts SET contacts_description='$new_contacts_description' WHERE contacts_description='$contacts_description'";
             $result_update_contacts = mysqli_query($con, $update_contacts_query);
+            echo "<script>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Contact successfully updated',
+                    confirmButtonText: 'Ok'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = 'owner_contact_details.php';
+                    }
+                });
+            </script>";
 
             if ($result_update_contacts) {
+                echo "<script>
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Contact successfully updated',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = 'owner_content_details.php';
+                            }
+                        });
+                      </script>";
             } else {
-                echo "<script>alert('Failed to update contact')</script>";
+                echo "<script>
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Failed to update contact',
+                            confirmButtonText: 'Ok'
+                        });
+                      </script>";
             }
-            $previous_page = $_POST['previous_page'];
-            echo "<script>document.location.href = '$previous_page';</script>";
-        } else {
-            echo "<script>alert('Failed to update contact')</script>";
-        }
+        } 
     }
 }
 ?>
