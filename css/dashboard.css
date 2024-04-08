@@ -68,30 +68,30 @@
     padding-right: 1rem;
 }
 
-#nav-toggle:not(:checked) + .sidebar {
+#nav-toggle:checked + .sidebar{
     width: 70px;
 }
 
-#nav-toggle:not(:checked) + .sidebar .sidebar-brand,
-#nav-toggle:not(:checked) + .sidebar li {
+#nav-toggle:checked + .sidebar .sidebar-brand,
+#nav-toggle:checked + .sidebar li{
     padding-left: 1rem;
     text-align: center;
 }
 
-#nav-toggle:not(:checked) + .sidebar li a {
+#nav-toggle:checked + .sidebar li a{
     padding-left: 0rem;
 }
 
-#nav-toggle:not(:checked) + .sidebar .sidebar-brand h2 span:last-child,
-#nav-toggle:not(:checked) + .sidebar li a span:last-child {
+#nav-toggle:checked + .sidebar .sidebar-brand h2 span:last-child,
+#nav-toggle:checked + .sidebar li a span:last-child {
     display: none;
 }
 
-#nav-toggle:not(:checked) ~ .main-content {
+#nav-toggle:checked ~ .main-content{
     margin-left: 70px;
 }
 
-#nav-toggle:not(:checked) ~ .main-content header {
+#nav-toggle:checked ~ .main-content header{
     width: calc(100% - 70px);
     left: 70px;
 }
@@ -565,6 +565,7 @@ option:hover {
     }
 
     .sidebar {
+        left: -100%; /* Start off-screen */
         transition: left 300ms ease-in-out;
     }
 

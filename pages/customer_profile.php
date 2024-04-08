@@ -249,7 +249,7 @@ $con->close();
                         echo '<td>' . $row['order_id'] . '</td>';
                         echo '<td>' . $row['date_of_purchase'] . '</td>';
                         echo '<td>' . strtoupper($row['status']) . '</td>';
-                        if ($status == "PENDING") {
+                        if ($status == "PENDING" || $status == "INVALID") {
                             echo '<td><center><a href="#" class="upload-proof-cell" data-order-id="' . $order_id . '" data-proof="' . $row['proof_of_payment'] . '">Upload Proof of Payment</a></center></td>';
                             
                         } else {
@@ -270,6 +270,9 @@ $con->close();
                             case "PENDING":
                                 echo ' alert-danger';
                                 break;
+                            case "INVALID":
+                                echo ' alert-danger';
+                                break;
                             case "SHIPPED":
                                 echo ' alert-warning';
                                 break;
@@ -287,9 +290,12 @@ $con->close();
                             echo 'Your order is pending. We are waiting for payment confirmation.';
                         } elseif ($status == "SHIPPED") {
                             echo 'Your order has been shipped. You will receive it soon.';
+                        } elseif ($status == "INVALID") {
+                            echo 'The image sent as proof of payment is invalid. Please provide valid proof of payment.';
                         } else {
                             echo 'Your order status is ' . $status . '. For more information, please contact customer support.';
                         }
+
 
                         echo '</div>'; // Close alert div
 

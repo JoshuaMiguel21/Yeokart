@@ -10,6 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="../css/add&edit_item.css" rel="stylesheet" />
 
     <title>Add Contacts - Yeokart</title>
@@ -93,7 +94,14 @@ if (isset($_POST['insert_contacts'])) {
     $result_select = mysqli_query($con, $select_query);
     $number = mysqli_num_rows($result_select);
     if ($number > 0) {
-        echo "<script>alert('This contact already exists')</script>";
+        echo "<script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'This contact already exists',
+                confirmButtonText: 'Ok'
+            });
+        </script>";
     } else {
         if ($contacts_name == '' or $contacts_description == '' or  $contacts_icon == '') {
             echo "<script>alert('Please fill up all the fields')</script>";
@@ -105,9 +113,18 @@ if (isset($_POST['insert_contacts'])) {
             $insert_contacts = "INSERT INTO contacts (contacts_name, contacts_description, icon_link) VALUES ('$contacts_name', '$contacts_description','$contacts_icon_escaped')";
             $result_query_contact = mysqli_query($con, $insert_contacts);
             if ($result_query_contact) {
-                echo "<script>alert('Item successfully added')</script>";
-                $previous_page = $_POST['previous_page'];
-                echo "<script>document.location.href = '$previous_page';</script>";
+                echo "<script>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Content for contacts successfully added!',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = 'owner_content_details.php';
+                        }
+                    });
+                </script>";
             }
         }
     }
