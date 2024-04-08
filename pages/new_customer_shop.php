@@ -120,6 +120,8 @@ $result_artists = mysqli_query($con, $select_artists);
                         </select>
                     </div>
 
+                    <button type="button" id="applyFilterCategory">Apply Filter</button>
+
                     <div class="filter-category">
                         <h4>Filter by Artist</h4>
                         <select name="artist_filter">
@@ -133,7 +135,7 @@ $result_artists = mysqli_query($con, $select_artists);
                     </div>
 
                     <!-- Add Button Here -->
-                    <button type="button" id="applyFilters">Apply Filters</button>
+                    <button type="button" id="applyFilterArtist">Apply Filter</button>
                 </div>
             </nav>
         </div>
