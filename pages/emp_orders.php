@@ -35,7 +35,7 @@
 <body>
     <?php
     session_start();
-
+    
     if (isset($_SESSION['firstname'])) {
         $firstname = $_SESSION['firstname'];
     } else {
@@ -162,7 +162,9 @@
                             echo '</select>';
                             echo '</div>';
                             if (!empty($proof_of_payment)) {
-                                echo '<img src="./item_images/' . $proof_of_payment . '" alt="Proof of Payment" width="50" height="50" onclick="openImagePopup(\'./item_images/' . $proof_of_payment . '\')">';
+                                echo '<td><center><img src="./item_images/' . $proof_of_payment . '" alt="Proof of Payment" width="50" height="50" onclick="openImagePopup(\'./item_images/' . $proof_of_payment . '\')"></center></td>';
+                                } else {
+                                    echo '<td>Not yet paid</td>';
                             }
                             echo "</td>";
                             echo "</tr>";
@@ -171,10 +173,9 @@
                     </tbody>
                 </table>
             </div>
-            <div id="imagePopup" class="popup-container" style="display: none;">
-                <div class="popup-content">
-                    <span class="close-btn" onclick="closeImagePopup()">&times;</span>
-                    <img id="popupImage" src="" alt="Proof of Payment" style="max-width: 100%; max-height: 100%;">
+            <div id="imagePopup" class="popup-image" style="display: none; padding-top: 100px;">
+                <div class="image-content">
+                    <img id="popupImage" src="" alt="Proof of Payment" style="width: auto; height: 550px;">
                 </div>
             </div>
         </main>
@@ -262,9 +263,29 @@
             popup.style.display = 'flex';
         }
 
-        function closeImagePopup() {
-            document.getElementById('imagePopup').style.display = 'none';
+        document.addEventListener('DOMContentLoaded', function() {
+            var popup = document.getElementById('imagePopup');
+
+            popup.addEventListener('click', function(event) {
+                if (event.target === popup) {
+                    popup.style.display = 'none';
+                }
+            });
+        });
+        // Function to toggle the sidebar and update session variable
+        function toggleSidebar() {
+            var isChecked = document.getElementById('nav-toggle').checked;
+            var newState = isChecked ? 'true' : 'false';
+
+            // Update session variable using AJAX
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "", true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send("nav_toggle=" + newState);
         }
+
+        // Add event listener to checkbox change
+        document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
     </script>
 </body>
 
