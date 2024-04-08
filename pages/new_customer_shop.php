@@ -131,119 +131,123 @@ $result_artists = mysqli_query($con, $select_artists);
                             ?>
                         </select>
                     </div>
+
+                    <!-- Add Button Here -->
+                    <button type="button" id="applyFilters">Apply Filters</button>
                 </div>
+            </nav>
         </div>
-    </header>
-    <nav class="bottom-navbar">
-        <a href="#home" class="fas fa-home"></a>
-        <a href="#best" class="fas fa-thumbs-up"></a>
-        <a href="#featured" class="fas fa-list"></a>
-    </nav>
-    <section class="best" id="best">
-        <div class="best-slider">
-            <div class="wrapper">
-                <?php
-                include('../database/db_yeokart.php');
-                $select_query = "SELECT * FROM products";
-                $result_query = mysqli_query($con, $select_query);
-                while ($row = mysqli_fetch_assoc($result_query)) {
-                    $item_id = $row['item_id'];
-                    $item_name = $row['item_name'];
-                    $item_price = $row['item_price'];
-                    $item_description = $row['item_description'];
-                    $item_quantity = $row['item_quantity'];
-                    $category_name = $row['category_name'];
-                    $item_image1 = $row['item_image1'];
-                    $artist_name = $row['artist_name'];
-                ?>
-                    <div class='box'>
-                        <div class='icons'>
-                            <a href='#' class='fas fa-eye' onclick='handleImageClick(<?php echo $item_id; ?>)'></a>
+
+        <nav class="bottom-navbar">
+            <a href="#home" class="fas fa-home"></a>
+            <a href="#best" class="fas fa-thumbs-up"></a>
+            <a href="#featured" class="fas fa-list"></a>
+        </nav>
+        <section class="best" id="best">
+            <div class="best-slider">
+                <div class="wrapper">
+                    <?php
+                    include('../database/db_yeokart.php');
+                    $select_query = "SELECT * FROM products";
+                    $result_query = mysqli_query($con, $select_query);
+                    while ($row = mysqli_fetch_assoc($result_query)) {
+                        $item_id = $row['item_id'];
+                        $item_name = $row['item_name'];
+                        $item_price = $row['item_price'];
+                        $item_description = $row['item_description'];
+                        $item_quantity = $row['item_quantity'];
+                        $category_name = $row['category_name'];
+                        $item_image1 = $row['item_image1'];
+                        $artist_name = $row['artist_name'];
+                    ?>
+                        <div class='box'>
+                            <div class='icons'>
+                                <a href='#' class='fas fa-eye' onclick='handleImageClick(<?php echo $item_id; ?>)'></a>
+                            </div>
+                            <div class='image'>
+                                <img src='item_images/<?php echo $item_image1; ?>' alt='' onclick='handleImageClick(<?php echo $item_id; ?>)'>
+                            </div>
+                            <div class='content'>
+                                <h3 class='artist'><?php echo $artist_name; ?></h3>
+                                <h3 class='marquee'><?php echo $item_name; ?></h3>
+                                <div class='price'>₱ <?php echo $item_price; ?></div>
+                                <?php if ($item_quantity > 0) { ?>
+                                    <a href='product_details.php?item_id=<?php echo $item_id; ?>' class='btn'><i class='fa-solid fa-cart-plus'></i> Add to Cart</a>
+                                <?php } else { ?>
+                                    <button class='btn' disabled style="cursor: not-allowed; background-color: gray; border-radius: 3px;"><i class='fa-solid fa-cart-plus'></i> Out of Stock</button>
+                                <?php } ?>
+                            </div>
                         </div>
-                        <div class='image'>
-                            <img src='item_images/<?php echo $item_image1; ?>' alt='' onclick='handleImageClick(<?php echo $item_id; ?>)'>
-                        </div>
-                        <div class='content'>
-                            <h3 class='artist'><?php echo $artist_name; ?></h3>
-                            <h3 class='marquee'><?php echo $item_name; ?></h3>
-                            <div class='price'>₱ <?php echo $item_price; ?></div>
-                            <?php if ($item_quantity > 0) { ?>
-                                <a href='product_details.php?item_id=<?php echo $item_id; ?>' class='btn'><i class='fa-solid fa-cart-plus'></i> Add to Cart</a>
-                            <?php } else { ?>
-                                <button class='btn' disabled style="cursor: not-allowed; background-color: gray; border-radius: 3px;"><i class='fa-solid fa-cart-plus'></i> Out of Stock</button>
-                            <?php } ?>
-                        </div>
-                    </div>
-                <?php } ?>
+                    <?php } ?>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
 
 
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchForm = document.querySelector('.search-form');
-            const searchBtn = document.querySelector('#search-btn');
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const searchForm = document.querySelector('.search-form');
+                const searchBtn = document.querySelector('#search-btn');
 
-            searchBtn.addEventListener('click', function() {
-                searchForm.classList.toggle('active');
-            });
+                searchBtn.addEventListener('click', function() {
+                    searchForm.classList.toggle('active');
+                });
 
-            window.addEventListener('scroll', function() {
-                searchForm.classList.remove('active');
-                const header2 = document.querySelector('.header .header-2');
+                window.addEventListener('scroll', function() {
+                    searchForm.classList.remove('active');
+                    const header2 = document.querySelector('.header .header-2');
+                    if (window.scrollY > 80) {
+                        header2.classList.add('active');
+                    } else {
+                        header2.classList.remove('active');
+                    }
+                });
+
                 if (window.scrollY > 80) {
-                    header2.classList.add('active');
-                } else {
-                    header2.classList.remove('active');
+                    document.querySelector('.header .header-2').classList.add('active');
                 }
             });
+            document.addEventListener('DOMContentLoaded', function() {
+                const itemNames = document.querySelectorAll('.marquee');
 
-            if (window.scrollY > 80) {
-                document.querySelector('.header .header-2').classList.add('active');
+                itemNames.forEach(itemName => {
+                    if (itemName.scrollWidth > itemName.clientWidth) {
+                        itemName.classList.add('marquee');
+                    } else {
+                        itemName.classList.remove('marquee');
+                    }
+                });
+            });
+
+            function handleImageClick(itemId) {
+                // Construct the URL for the product details page
+                var url = "product_details.php?item_id=" + itemId;
+                // Redirect the user to the product details page
+                window.location.href = url;
             }
-        });
-        document.addEventListener('DOMContentLoaded', function() {
-            const itemNames = document.querySelectorAll('.marquee');
 
-            itemNames.forEach(itemName => {
-                if (itemName.scrollWidth > itemName.clientWidth) {
-                    itemName.classList.add('marquee');
-                } else {
-                    itemName.classList.remove('marquee');
-                }
+            document.addEventListener('DOMContentLoaded', function() {
+                const checkbox = document.getElementById('click');
+                const bestToHide = document.getElementById('best');
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        bestToHide.style.display = 'none';
+                    } else {
+                        bestToHide.style.display = 'block';
+                    }
+                });
             });
-        });
-
-        function handleImageClick(itemId) {
-            // Construct the URL for the product details page
-            var url = "product_details.php?item_id=" + itemId;
-            // Redirect the user to the product details page
-            window.location.href = url;
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const checkbox = document.getElementById('click');
-            const bestToHide = document.getElementById('best');
-            checkbox.addEventListener('change', function() {
-                if (this.checked) {
-                    bestToHide.style.display = 'none';
-                } else {
-                    bestToHide.style.display = 'block';
-                }
-            });
-        });
-    </script>
-
-    
+        </script>
 
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
+
+
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
 
 </body>
 
