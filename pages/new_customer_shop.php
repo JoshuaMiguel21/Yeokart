@@ -153,9 +153,9 @@
                         <form method="GET">
                             <h3>Sort By Price</h3>
                             <select name="price_order">
-                                <option value="default">Sort By</option>
-                                <option value="low_to_high">Price: Low to High</option>
-                                <option value="high_to_low">Price: High to Low</option>
+                                <option value="default" <?php if (isset($_GET['price_order']) && $_GET['price_order'] == 'default') echo 'selected'; ?>>Sort By</option>
+                                <option value="low_to_high" <?php if (isset($_GET['price_order']) && $_GET['price_order'] == 'low_to_high') echo 'selected'; ?>>Price: Low to High</option>
+                                <option value="high_to_low" <?php if (isset($_GET['price_order']) && $_GET['price_order'] == 'high_to_low') echo 'selected'; ?>>Price: High to Low</option>
                             </select>
                             <button type="submit" name="filter_button">Sort</button>
                         </form>
@@ -270,18 +270,14 @@
                             $artist = mysqli_real_escape_string($con, $_GET['artist']);
                             $select_query .= isset($_GET['search']) && !empty($_GET['search']) || isset($_GET['category']) && !empty($_GET['category']) ? " AND artist_name = '$artist'" : " WHERE artist_name = '$artist'";
                         }
-//
+                        //
                         // Check if the form is submitted
-                        if (isset($_GET['filter_button'])) {
-                            // Retrieve the selected sorting option
+                        if (isset($_GET['price_order'])) {
                             $price_order = $_GET['price_order'];
-
-                            // Modify the SQL query based on the selected option
-                            $select_query .= " ORDER BY ";
-                            if ($price_order == 'low_to_high') {
-                                $select_query .= "item_price ASC";
-                            } elseif ($price_order == 'high_to_low') {
-                                $select_query .= "item_price DESC";
+                            if ($price_order === 'low_to_high') {
+                                $select_query .= " ORDER BY item_price ASC";
+                            } elseif ($price_order === 'high_to_low') {
+                                $select_query .= " ORDER BY item_price DESC";
                             }
                         }
 
