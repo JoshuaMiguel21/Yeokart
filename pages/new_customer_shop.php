@@ -269,7 +269,7 @@
                             $artist = mysqli_real_escape_string($con, $_GET['artist']);
                             $select_query .= isset($_GET['search']) && !empty($_GET['search']) || isset($_GET['category']) && !empty($_GET['category']) ? " AND artist_name = '$artist'" : " WHERE artist_name = '$artist'";
                         }
-
+//
                         // Check if the form is submitted
                         if (isset($_GET['filter_button'])) {
                             // Retrieve the selected sorting option
