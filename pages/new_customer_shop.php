@@ -75,11 +75,8 @@
     ?>
 
 
-
-
-
     <body>
-        <!-- Overlay for translucent background -->
+        <!-- Overlay for translucent background of popup -->
         <div class="filter-overlay" id="filter-overlay"></div>
 
         <input type="checkbox" id="click">
@@ -152,15 +149,25 @@
                             <button type="submit" name="filter_button">Filter</button>
                         </form>
 
+                        <form method="GET">
+                            <h3>Sort By Price</h3>
+                            <select name="price_order">
+                                <option value="default">Sort By</option>
+                                <option value="low_to_high">Price: Low to High</option>
+                                <option value="high_to_low">Price: High to Low</option>
+                            </select>
+                            <button type="submit" name="filter_button">Sort</button>
+                        </form>
+
+
                         <form method="GET" id="clear">
                             <button type="button" name="clear_button" onclick="clearSearch()">Clear</button>
                         </form>
                     </div>
                 </nav>
             </div>
-            <!---->
-            <nav class="bottom-navbar">
 
+            <nav class="bottom-navbar">
                 <!-- Filter Popup Button -->
                 <button id="filterPopupBtn">
                     <h3>Filter & Sort</h3>
@@ -169,7 +176,6 @@
 
                 <!-- Filter Popup Content -->
                 <div class="filter-popup" id="filterPopup">
-
                     <div class="popup-filter-section">
                         <form method="GET">
                             <h2>Filter By Category</h2>
@@ -207,7 +213,20 @@
                             </select>
                             <button type="submit" name="filter_button">Filter</button>
                         </form>
+
+                        <form method="GET">
+                            <h2>Sort By Price</h2>
+                            <select name="price_order">
+                                <option value="default">Sort By</option>
+                                <option value="low_to_high">Price: Low to High</option>
+                                <option value="high_to_low">Price: High to Low</option>
+                            </select>
+                            <button type="submit" name="filter_button">Sort</button>
+                        </form>
+
+
                     </div>
+
 
                     <form method="GET" id="clear">
                         <button type="button" name="clear_button" onclick="clearSearch()">Clear</button>
@@ -250,6 +269,33 @@
                             $artist = mysqli_real_escape_string($con, $_GET['artist']);
                             $select_query .= isset($_GET['search']) && !empty($_GET['search']) || isset($_GET['category']) && !empty($_GET['category']) ? " AND artist_name = '$artist'" : " WHERE artist_name = '$artist'";
                         }
+
+                        // Check if the form is submitted
+                        if (isset($_GET['filter_button'])) {
+                            // Retrieve the selected sorting option
+                            $price_order = $_GET['price_order'];
+
+                            // Modify the SQL query based on the selected option
+                            $select_query .= " ORDER BY ";
+                            if ($price_order == 'low_to_high') {
+                                $select_query .= "item_price ASC";
+                            } elseif ($price_order == 'high_to_low') {
+                                $select_query .= "item_price DESC";
+                            }
+                        }
+
+                        // Execute the modified query
+                        $result_query = mysqli_query($con, $select_query);
+
+                        // Display the sorted products
+                        if (mysqli_num_rows($result_query) == 0) {
+                            echo "<div class='no-results'>0 results found</div>";
+                        } else {
+                            while ($row = mysqli_fetch_assoc($result_query)) {
+                                // Display each product as before
+                            }
+                        }
+
 
                         // Add limit and offset
                         $select_query .= " LIMIT $itemsPerPage OFFSET $offset";
@@ -411,6 +457,11 @@
                     filterPopupBtn.addEventListener("click", function() {
                         filterPopup.classList.toggle("show");
                         overlay.style.display = filterPopup.classList.contains("show") ? "block" : "none";
+                    });
+
+                    cancelBtn.addEventListener("click", function() {
+                        filterPopup.classList.remove("show");
+                        overlay.style.display = "none";
                     });
                 });
 
