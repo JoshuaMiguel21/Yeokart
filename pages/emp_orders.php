@@ -171,7 +171,8 @@
                             preg_match("/^enum\(\'(.*)\'\)$/", $status_row['Type'], $matches);
                             $status_enum_values = explode("','", $matches[1]);
                             foreach ($status_enum_values as $value) {
-                                echo '<option value="' . $value . '" ' . ($row['status'] == $value ? 'selected' : '') . '>' . $value . '</option>';
+                                $disabled = (in_array($value, ['Processing', 'Shipped', 'Delivered']) && empty($proof_of_payment)) ? 'disabled' : '';
+                                echo '<option value="' . $value . '" ' . ($row['status'] == $value ? 'selected' : '') . ' ' . $disabled . '>' . $value . '</option>';
                             }
                             echo '</select>';
                             echo '</div>';
