@@ -14,7 +14,7 @@
 </head>
 
 <style>
-.swal2-custom-popup {
+    .swal2-custom-popup {
         font-size: 16px;
         width: 500px;
     }
@@ -124,7 +124,6 @@ if (isset($_POST['add-to-cart-btn'])) {
             text: "You cannot add more than the available stock."
             });
         </script>';
-        
     } else {
         // Check if the item already exists in the cart for the same customer ID
         $select_cart_query = "SELECT * FROM cart WHERE customer_id = '$customer_id' AND item_name = '$item_name'";
@@ -143,6 +142,21 @@ if (isset($_POST['add-to-cart-btn'])) {
             $insert_cart_query = "INSERT INTO cart (customer_id, item_name, price, item_image1, quantity, category) 
                      VALUES ('$customer_id', '$item_name', '$price', '$item_image', '$quantity', '$category')";
             mysqli_query($con, $insert_cart_query);
+        }
+
+        // Fetch the updated cart count
+        $sql = "SELECT COUNT(*) AS cart_count FROM cart WHERE customer_id = $customer_id";
+        $result = $con->query($sql);
+
+        if ($result) {
+            $row = $result->fetch_assoc();
+            $cartCount = $row['cart_count'];
+            // Return the updated cart count along with the response
+            echo '<script>
+                    document.getElementById("cart-num").innerText = "' . $cartCount . '";
+                </script>';
+        } else {
+            echo "Error: " . $sql . "<br>" . $con->error;
         }
     }
 }
@@ -375,10 +389,10 @@ if (isset($_POST['add-to-cart-btn'])) {
                     text: 'You cannot add more than the available stock.',
                     confirmButtonText: 'OK',
                     customClass: {
-                            popup: 'swal2-custom-popup',
-                            title: 'swal2-custom-title',
-                            content: 'swal2-custom-text'
-                        }
+                        popup: 'swal2-custom-popup',
+                        title: 'swal2-custom-title',
+                        content: 'swal2-custom-text'
+                    }
                 });
                 return false;
             }
