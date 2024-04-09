@@ -221,8 +221,7 @@ if (isset($_SESSION['lastname'])) {
             <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
                 <div class="popup-content">
                     <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>
-                    <p>Are you sure you want to logout?
-                    <p>
+                    <p>Are you sure you want to logout?</p>
                     <div class="logout-btns">
                         <button onclick="confirmLogout()" class="confirm-logout-btn">Logout</button>
                         <button onclick="closeLogoutPopup()" class="cancel-logout-btn">Cancel</button>

@@ -140,7 +140,22 @@ if (isset($_SESSION['lastname'])) {
             <?php
             require('../database/db_yeokart.php');
 
-            $sql = "SELECT id, firstname, lastname, username, email FROM `employee_accounts` WHERE is_employee = 1";
+            $employeesPerPage = 10;
+            $pageNumber = 1;
+
+            if (isset($_GET['page']) && is_numeric($_GET['page'])) {
+                $pageNumber = $_GET['page'];
+            }
+
+            $offset = ($pageNumber - 1) * $employeesPerPage;
+
+            $totalEmployeesQuery = "SELECT COUNT(*) AS total_employees FROM `employee_accounts` WHERE is_employee = 1";
+            $totalEmployeesResult = mysqli_query($con, $totalEmployeesQuery);
+            $totalEmployeesRow = mysqli_fetch_assoc($totalEmployeesResult);
+            $totalEmployees = $totalEmployeesRow['total_employees'];
+            
+            // Fetch employees with pagination
+            $sql = "SELECT id, firstname, lastname, username, email FROM `employee_accounts` WHERE is_employee = 1 LIMIT $employeesPerPage OFFSET $offset";
             $result = $con->query($sql);
 
 
@@ -164,7 +179,7 @@ if (isset($_SESSION['lastname'])) {
             if ($result->num_rows > 0) {
                 // Output data of each row
                 echo "<form method='post' action='#'>
-                            <table border='1'>
+                            <table border='0'>
                                 <tr>
                                     <th>Employee Number</th>
                                     <th>Firstname</th>
@@ -199,7 +214,7 @@ if (isset($_SESSION['lastname'])) {
                 echo "</table></form>";
             } else {
                 echo "<form method='post' action='#'>
-                            <table border='1'>
+                            <table border='0'>
                                 <tr>
                                     <th>Employee Number</th>
                                     <th>Firstname</th>
@@ -215,6 +230,36 @@ if (isset($_SESSION['lastname'])) {
                         </form>";
             }
 
+                $baseUrl = 'manage_employees.php?';
+
+                // Adjust the query parameters as needed for your employee management context
+                $pageQuery = '';
+                if (isset($_GET['search'])) {
+                    $pageQuery = 'search=' . urlencode($_GET['search']);
+                    // Add any other parameters you need to maintain during pagination
+                }
+
+                $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+                $totalPages = ceil($totalEmployees / $employeesPerPage);
+
+                $startPage = max(1, $pageNumber - 2);
+                $endPage = min($totalPages, $pageNumber + 2);
+
+                echo "<div class='pagination'>";
+
+                $prevPage = max(1, $pageNumber - 1);
+                echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link'" . ($pageNumber <= 1 ? " style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
+
+                for ($i = $startPage; $i <= $endPage; $i++) {
+                    $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
+                    echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
+                }
+
+                $nextPage = min($totalPages, $pageNumber + 1);
+                echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link'" . ($pageNumber >= $totalPages ? " style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
+
+                echo "</div>";
+                
             // Close connection
             $con->close();
             ?>

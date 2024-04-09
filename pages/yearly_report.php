@@ -27,6 +27,16 @@
     <?php
     session_start();
 
+    if (!isset($_SESSION['nav_toggle'])) {
+        $_SESSION['nav_toggle'] = false;
+    }
+
+    // Check if the nav-toggle checkbox has been toggled
+    if (isset($_POST['nav_toggle'])) {
+        // Update the session variable accordingly
+        $_SESSION['nav_toggle'] = $_POST['nav_toggle'] === 'true' ? true : false;
+    }
+
     if (isset($_SESSION['firstname'])) {
         $firstname = $_SESSION['firstname'];
     } else {
@@ -153,8 +163,8 @@
         }
     }
     ?>
-    <input type="checkbox" id="nav-toggle">
-    <div class="sidebar">
+    <input type="checkbox" id="nav-toggle" <?php echo $_SESSION['nav_toggle'] ? 'checked' : ''; ?>>
+    <div class="sidebar <?php echo $_SESSION['nav_toggle'] ? 'open' : ''; ?>">
         <div class="sidebar-brand">
             <h2><span>Yeokart</span></h2>
         </div>
@@ -297,7 +307,21 @@
                     </div>
                 </div>
             </div>
+            <script>
+                function toggleSidebar() {
+                    var isChecked = document.getElementById('nav-toggle').checked;
+                    var newState = isChecked ? 'true' : 'false';
 
+                    // Update session variable using AJAX
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.open("POST", "", true);
+                    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    xhttp.send("nav_toggle=" + newState);
+                }
+
+                // Add event listener to checkbox change
+                document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
+            </script>
 </body>
 
 </html>

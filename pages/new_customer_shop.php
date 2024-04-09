@@ -75,6 +75,9 @@
     ?>
 
 
+
+
+
     <body>
         <!-- Overlay for translucent background -->
         <div class="filter-overlay" id="filter-overlay"></div>
@@ -218,6 +221,12 @@
                         $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1;
                         $offset = ($pageNumber - 1) * $itemsPerPage;
 
+                        $totalItemsQuery = "SELECT COUNT(*) AS totalItems FROM products";
+                        $totalItemsResult = mysqli_query($con, $totalItemsQuery);
+                        $totalItemsRow = mysqli_fetch_assoc($totalItemsResult);
+                        $totalItems = $totalItemsRow['totalItems'];
+                        $totalPages = ceil($totalItems / $itemsPerPage);
+
                         // Base query
                         $select_query = "SELECT * FROM products";
 
@@ -243,7 +252,6 @@
                         $select_query .= " LIMIT $itemsPerPage OFFSET $offset";
 
                         $result_query = mysqli_query($con, $select_query);
-
                         while ($row = mysqli_fetch_assoc($result_query)) {
                             $item_id = $row['item_id'];
                             $item_name = $row['item_name'];
@@ -275,20 +283,49 @@
                         <?php } ?>
                     </div>
                 </div>
-                <div class="pagination">
-                    <?php
-                    $totalItemsQuery = "SELECT COUNT(*) AS totalItems FROM products";
-                    $totalItemsResult = mysqli_query($con, $totalItemsQuery);
-                    $totalItemsRow = mysqli_fetch_assoc($totalItemsResult);
-                    $totalItems = $totalItemsRow['totalItems'];
+                <?php
+                    $baseUrl = 'new_customer_shop.php?';
+
+                    $pageQuery = '';
+                    if (isset($_GET['search_button'])) {
+                        $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
+                    } elseif (isset($_GET['filter_button'])) {
+                        if (isset($_GET['category'])) {
+                            $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
+                        } elseif (isset($_GET['artist'])) {
+                            $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
+                        }
+                    }
+
+                    $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
                     $totalPages = ceil($totalItems / $itemsPerPage);
 
-                    for ($i = 1; $i <= $totalPages; $i++) {
-                        $activeClass = $i == $pageNumber ? 'active' : '';
-                        echo "<a href='new_customer_shop.php?page=$i' class='$activeClass'>$i</a>";
+                    $startPage = max(1, $pageNumber - 1);
+                    $endPage = min($totalPages, $pageNumber + 1);
+
+                    if ($pageNumber == 1) {
+                        $startPage = 1;
+                        $endPage = min(3, $totalPages);
+                    } elseif ($pageNumber == $totalPages) {
+                        $startPage = max(1, $totalPages - 2);
+                        $endPage = $totalPages;
                     }
-                    ?>
-                </div>
+
+                    echo "<div class='pagination'>";
+
+                    $prevPage = max(1, $pageNumber - 1);
+                    echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
+
+                    for ($i = $startPage; $i <= $endPage; $i++) {
+                        $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
+                        echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
+                    }
+
+                    $nextPage = min($totalPages, $pageNumber + 1);
+                    echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
+
+                    echo "</div>";
+                ?>
             </section>
 
 

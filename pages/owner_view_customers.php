@@ -128,14 +128,28 @@ if (isset($_SESSION['lastname'])) {
             </div>
             <?php
             require('../database/db_yeokart.php');
+            
+            $usersPerPage = 10;
+            $pageNumber = 1;
 
-            $sql = "SELECT id, firstname, lastname, username, email FROM `user_accounts` WHERE is_verified = 1";
+            if (isset($_GET['page']) && is_numeric($_GET['page'])) {
+                $pageNumber = $_GET['page'];
+            }
+
+            $offset = ($pageNumber - 1) * $usersPerPage;
+
+            $totalUsersQuery = "SELECT COUNT(*) AS total_users FROM `user_accounts` WHERE is_verified = 1";
+            $totalUsersResult = mysqli_query($con, $totalUsersQuery);
+            $totalUsersRow = mysqli_fetch_assoc($totalUsersResult);
+            $totalUsers = $totalUsersRow['total_users'];
+
+            $sql = "SELECT id, firstname, lastname, username, email FROM `user_accounts` WHERE is_verified = 1 LIMIT $usersPerPage OFFSET $offset";
             $result = $con->query($sql);
 
             if ($result->num_rows > 0) {
 
                 echo "<form method='post' action='#'>
-                            <table border='1'>
+                            <table border='0'>
                                 <tr>
                                     <th>Customer Number</th>
                                     <th>Firstname</th>
@@ -161,7 +175,7 @@ if (isset($_SESSION['lastname'])) {
                 echo "</table></form>";
             } else {
                 echo "<form method='post' action='#'>
-                            <table border='1'>
+                            <table border='0'>
                                 <tr>
                                     <th>Customer Number</th>
                                     <th>Firstname</th>
@@ -176,6 +190,35 @@ if (isset($_SESSION['lastname'])) {
                         </form>";
             }
 
+                $baseUrl = 'owner_view_customers.php?';
+
+                // Adjust the query parameters as needed for your employee management context
+                $pageQuery = '';
+                if (isset($_GET['search'])) {
+                    $pageQuery = 'search=' . urlencode($_GET['search']);
+                    // Add any other parameters you need to maintain during pagination
+                }
+
+                $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+                $totalPages = ceil($totalUsers / $usersPerPage);
+
+                $startPage = max(1, $pageNumber - 2);
+                $endPage = min($totalPages, $pageNumber + 2);
+
+                echo "<div class='pagination'>";
+
+                $prevPage = max(1, $pageNumber - 1);
+                echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link'" . ($pageNumber <= 1 ? " style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
+
+                for ($i = $startPage; $i <= $endPage; $i++) {
+                    $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
+                    echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
+                }
+
+                $nextPage = min($totalPages, $pageNumber + 1);
+                echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link'" . ($pageNumber >= $totalPages ? " style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
+
+                echo "</div>";
             $con->close();
             ?>
         </main>

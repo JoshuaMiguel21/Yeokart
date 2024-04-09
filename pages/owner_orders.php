@@ -46,12 +46,6 @@
         $_SESSION['nav_toggle'] = $_POST['nav_toggle'] === 'true' ? true : false;
     }
 
-    // Redirect to login page if session variables are not set
-    if (!isset($_SESSION['firstname']) || !isset($_SESSION['lastname'])) {
-        header("Location: login_page.php");
-        exit();
-    }
-
     if (isset($_SESSION['firstname'])) {
         $firstname = $_SESSION['firstname'];
     } else {
@@ -154,10 +148,24 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
+                <?php
                     include('../database/db_yeokart.php');
 
-                    $select_query = "SELECT `order_id`, `customer_id`, `firstname`, `lastname`, `address`, `items_ordered`, `item_quantity`, `total`, `date_of_purchase`, `status`, `proof_of_payment` FROM `orders` WHERE 1";
+                    $ordersPerPage = 10;
+                    $pageNumber = 1;
+
+                    if (isset($_GET['page']) && is_numeric($_GET['page'])) {
+                        $pageNumber = $_GET['page'];
+                    }
+
+                    $offset = ($pageNumber - 1) * $ordersPerPage;
+
+                    $totalOrdersQuery = "SELECT COUNT(*) AS total_orders FROM orders";
+                    $totalOrdersResult = mysqli_query($con, $totalOrdersQuery);
+                    $totalOrdersRow = mysqli_fetch_assoc($totalOrdersResult);
+                    $totalOrders = $totalOrdersRow['total_orders'];
+
+                    $select_query = "SELECT * FROM orders LIMIT $ordersPerPage OFFSET $offset";
                     $result_query = mysqli_query($con, $select_query);
 
                     while ($row = mysqli_fetch_assoc($result_query)) {
@@ -175,9 +183,7 @@
                         echo "<td>";
                         echo '<div class="button-class">';
                         echo '<select class="orderStatusSelect" onchange="updateOrderStatus(this.value, \'' . $row['order_id'] . '\')">';
-                        include('../database/db_yeokart.php');
 
-                        // Fetch ENUM values for order status from the database
                         $status_query = "SHOW COLUMNS FROM `orders` LIKE 'status'";
                         $status_result = mysqli_query($con, $status_query);
                         $status_row = mysqli_fetch_assoc($status_result);
@@ -191,14 +197,57 @@
                         echo "</td>";
                         if (!empty($proof_of_payment)) {
                             echo '<td><center><img src="./item_images/' . $proof_of_payment . '" alt="Proof of Payment" width="50" height="50" onclick="openImagePopup(\'./item_images/' . $proof_of_payment . '\')"></center></td>';
-                            } else {
-                                echo '<td>Not yet paid</td>';
+                        } else {
+                            echo '<td>Not yet paid</td>';
                         }
                         echo "</tr>";
                     }
                     ?>
                 </tbody>
             </table>
+                <?php
+                    $baseUrl = 'owner_orders.php?';
+
+                    $pageQuery = '';
+                    if (isset($_GET['search_button'])) {
+                        $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
+                    } elseif (isset($_GET['filter_button'])) {
+                        if (isset($_GET['category'])) {
+                            $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
+                        } elseif (isset($_GET['artist'])) {
+                            $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
+                        }
+                    }
+
+                    $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+                    $totalPages = ceil($totalOrders / $ordersPerPage);
+
+                    $startPage = max(1, $pageNumber - 1);
+                    $endPage = min($totalPages, $pageNumber + 1);
+
+                    if ($pageNumber == 1) {
+                        $startPage = 1;
+                        $endPage = min(3, $totalPages);
+                    } elseif ($pageNumber == $totalPages) {
+                        $startPage = max(1, $totalPages - 2);
+                        $endPage = $totalPages;
+                    }
+
+                    echo "<div class='pagination'>";
+
+                    $prevPage = max(1, $pageNumber - 1);
+                    echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
+
+                    for ($i = $startPage; $i <= $endPage; $i++) {
+                        $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
+                        echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
+                    }
+
+                    $nextPage = min($totalPages, $pageNumber + 1);
+                    echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
+
+                    echo "</div>";
+                ?>
             </div>
             <div id="imagePopup" class="popup-image" style="display: none; padding-top: 100px;">
                 <div class="image-content">
@@ -271,6 +320,8 @@
             function getBorderStyle(status) {
                 switch (status) {
                     case 'Pending':
+                        return '1px solid red';
+                    case 'Invalid':
                         return '1px solid red';
                     case 'Processing':
                         return '1px solid blue';

@@ -127,13 +127,14 @@
 
                             //Content
                             $mail->isHTML(true);                                        //Set email format to HTML
-                            $mail->Subject = 'Email Verification for the Creation of your Yeokart Account';
+                            $mail->Subject = 'Yeokart - Email Verification for Account Creation';
                             $mail->Body    = "<p>Dear User,</p>
-                                            <p>Thank you for registering with <b>Yeokart</b>. To ensure the security of your account 
-                                            and to activate your membership, we need to verify your email address.</p>
-                                            <p>Please click the link below to complete the email verification process:</p>
-                                            <p><a href='http://localhost/Yeokart/pages/verify_email.php?email=$email&v_code=$v_code'>Verify Your Email</a></p>";
-
+                                                <p>Thank you for registering with <b>Yeokart</b>. To ensure the security of your account 
+                                                and to activate your membership, we need to verify your email address.</p>
+                                                <p>Please click the link below to complete the email verification process:</p>
+                                                <p><a href='http://localhost/Yeokart/pages/verify_email.php?email=$email&v_code=$v_code'>Verify Your Email</a></p>;
+                                                <p>Thank you for using Yeokart WebApp!</p>
+                                                <p>Best regards,<br>Your Company Name Support Team</p>";
                             $mail->send();
                             return true;
                         } catch (Exception $e) {

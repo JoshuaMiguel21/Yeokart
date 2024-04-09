@@ -29,6 +29,16 @@
     <?php
     session_start();
 
+    if (!isset($_SESSION['nav_toggle'])) {
+        $_SESSION['nav_toggle'] = false;
+    }
+
+    // Check if the nav-toggle checkbox has been toggled
+    if (isset($_POST['nav_toggle'])) {
+        // Update the session variable accordingly
+        $_SESSION['nav_toggle'] = $_POST['nav_toggle'] === 'true' ? true : false;
+    }
+
     if (isset($_SESSION['firstname'])) {
         $firstname = $_SESSION['firstname'];
     } else {
@@ -157,8 +167,8 @@
         }
     }
     ?>
-    <input type="checkbox" id="nav-toggle">
-    <div class="sidebar">
+    <input type="checkbox" id="nav-toggle" <?php echo $_SESSION['nav_toggle'] ? 'checked' : ''; ?>>
+    <div class="sidebar <?php echo $_SESSION['nav_toggle'] ? 'open' : ''; ?>">
         <div class="sidebar-brand">
             <h2><span>Yeokart</span></h2>
         </div>
@@ -255,6 +265,20 @@
                     </select>
                     <input type="submit" value="Filter" name="filter">
                 </form>
+                <form id="reportForm" method="post" action="generate_monthly_report.php" target="_blank">
+                    <input type="hidden" name="pdf_creater" value="PDF">
+                    <input type="hidden" name="selected_month" value="<?php echo $selectedMonth; ?>">
+                    <input type="hidden" name="selected_year" value="<?php echo $selectedYear; ?>">
+                    <input type="hidden" name="order_count" value="<?php echo $orderCount; ?>">
+                    <input type="hidden" name="item_quantity" value="<?php echo  $totalItemsSold; ?>">
+                    <input type="hidden" name="total_revenue" value="<?php echo  $totalRevenue; ?>">
+                    <input type="hidden" name="total_income" value="<?php echo  $totalIncome; ?>"> <!-- Add this line -->
+                </form>
+
+                <a href="#" class="btn-employee" onclick="document.getElementById('reportForm').submit(); return false;">
+                    <i class="las la-download"></i>
+                    <span class="text">Generate Report</span>
+                </a>
             </div>
 
             &nbsp;&nbsp;&nbsp;&nbsp;
@@ -262,7 +286,7 @@
                 <div class="card-single">
                     <div>
                         <h1><?php echo $orderCount; ?></h1>
-                        <span>Orders Recieved</span>
+                        <span>Orders Received</span>
                     </div>
                     <div>
                         <span class="las la-shopping-bag"></span>
@@ -299,6 +323,53 @@
                     </div>
                 </div>
             </div>
+            <br></br>
+            <div class="head-title">
+                <div class="left">
+                    <h3>10 Best Seller Items</h3>
+                </div>
+            </div>
+            <div class="table">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                <center>Item Name</center>
+                            </th>
+                            <th>
+                                <center>Category</center>
+                            </th>
+                            <th>
+                                <center>Artist</center>
+                            </th>
+                            <th>
+                                <center>Sold this Month</center>
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        include('../database/db_yeokart.php');
+                        $select_query = "SELECT * FROM products ORDER BY times_sold DESC LIMIT 10";
+                        $result_query = mysqli_query($con, $select_query);
+                        while ($row = mysqli_fetch_assoc($result_query)) {
+                            $item_name = $row['item_name'];
+                            $category_name = $row['category_name'];
+                            $artist_name = $row['artist_name'];
+                            $times_sold = $row['times_sold'];
+                            echo "<tr>";
+                            echo "<td>" . $row['item_name'] . "</td>";
+                            echo "<td style='text-align: center;'>" . $row['category_name'] . "</td>";
+                            echo "<td style='text-align: center;'>" . $row['artist_name'] . "</td>";
+                            echo "<td style='text-align: center;'>" . $row['times_sold'] . "</td>";
+                            echo "</tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+
 
             <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
                 <div class="popup-content">
@@ -313,7 +384,21 @@
             </div>
 
             <!-- <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script> -->
+            <script>
+                function toggleSidebar() {
+                    var isChecked = document.getElementById('nav-toggle').checked;
+                    var newState = isChecked ? 'true' : 'false';
 
+                    // Update session variable using AJAX
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.open("POST", "", true);
+                    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    xhttp.send("nav_toggle=" + newState);
+                }
+
+                // Add event listener to checkbox change
+                document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
+            </script>
 </body>
 
 </html>
