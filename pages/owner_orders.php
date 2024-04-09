@@ -165,7 +165,16 @@
                         $totalOrdersRow = mysqli_fetch_assoc($totalOrdersResult);
                         $totalOrders = $totalOrdersRow['total_orders'];
 
-                        $select_query = "SELECT * FROM orders LIMIT $ordersPerPage OFFSET $offset";
+                        $select_query = "SELECT * FROM orders 
+                            ORDER BY CASE `status` 
+                                WHEN 'INVALID' THEN 1
+                                WHEN 'PENDING' THEN 2
+                                WHEN 'PROCESSING' THEN 3
+                                WHEN 'SHIPPED' THEN 4
+                                WHEN 'DELIVERED' THEN 5
+                                ELSE 6
+                            END ASC, date_of_purchase ASC 
+                            LIMIT $ordersPerPage OFFSET $offset";
                         $result_query = mysqli_query($con, $select_query);
 
                         while ($row = mysqli_fetch_assoc($result_query)) {

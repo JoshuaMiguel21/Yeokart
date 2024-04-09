@@ -893,15 +893,35 @@ margin-top: 23px;
     display: inline-block;
     padding: 10px 20px;
     text-decoration: none;
-    margin-left: 30px;
+    margin-right: 30px;
     background-color: var(--pink); 
     color: #fff; 
     border-radius: 5px; 
     transition: background-color 0.3s ease-in-out, transform 0.3s ease;
     font-size: 1.5rem;
 }
+
+.logout-btn{
+    padding: 10px 20px;
+    display: inline-block;
+    background-color: #fff;
+    border: 1px solid var(--black);
+    color: var(--black);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+    display: inline-block;
+    vertical-align: middle;
+    text-decoration: none;
+    border-radius: 5px; 
+    font-size: 1.5rem;
+}
+
+.logout-btn:hover{
+    background-color: #f2f2f2;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
     
-.logout-link i {
+.logout-btn i {
     margin-left: 5px;
     transition: transform 0.3s ease;
 }
@@ -910,8 +930,73 @@ margin-top: 23px;
     background-color: var(--dark-color);
 }
     
-.logout-link:hover i {
+.logout-btn:hover i {
     transform: translateX(5px);
+}
+
+.toggle-row .archive-icon {
+    float: right;
+    cursor: pointer;
+    margin-left: 5px;
+    padding: 6px 0;
+    color: var(--black);
+    position: relative;
+}
+
+.toggle-row .archive-icon:hover::after {
+    content: "Archive";
+    position: absolute;
+    text-transform: none; 
+    top: -25px; 
+    left: -16px;
+    background-color: #f0f0f0;
+    padding: 5px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    font-family: 'Poppins', 'sans-serif';
+}
+
+.toggle-row .archive-icon:hover {
+    color: var(--black);
+}
+
+.toggle-row .fa-chevron-down, .toggle-icon .fa-chevron-up{
+    float: left;
+    cursor: pointer;
+    margin-left: 5px;
+    color: var(--black);
+    padding: 6px;
+    position: relative;
+}
+
+.toggle-row .fa-chevron-down:not(.active):hover::after {
+    content: "Expand";
+    position: absolute;
+    text-transform: none;
+    top: -25px;
+    left: -15px;
+    background-color: #f0f0f0;
+    padding: 5px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    font-family: 'Poppins', 'sans-serif';
+}
+
+.toggle-row .fa-chevron-down.active:hover::after {
+    content: "Collapse";
+    position: absolute;
+    text-transform: none;
+    top: 25px;
+    left: -20px;
+    background-color: #f0f0f0;
+    padding: 5px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    font-family: 'Poppins', 'sans-serif';
+    transform: rotate(180deg);
 }
 
 .address{
@@ -939,9 +1024,15 @@ margin-top: 23px;
     color: var(--pink);
 }
 
+.toggle-icon {
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
 
+.hidden-row-visible .toggle-icon {
+    transform: rotate(180deg);
+}
 
-  
 .container {
     display: flex;
     flex-wrap: wrap;
@@ -974,6 +1065,7 @@ margin-top: 23px;
     background: #fff;
     flex: 2; 
     padding: 20px 0px;
+    margin-top: 10px;
 }
 
 #info
@@ -1086,6 +1178,7 @@ hr.gradient {
     background-color: rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
+    z-index: 1000;
 }
 
 .popup-content {
@@ -1183,6 +1276,7 @@ hr.gradient {
     background-color: rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
+    z-index: 1000;
 }
 
 .popup-add-content {

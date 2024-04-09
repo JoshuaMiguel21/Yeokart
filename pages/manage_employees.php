@@ -7,6 +7,7 @@
     <title>Manage Employees - Yeokart</title>
     <link rel="icon" type="image/png" href="../res/icon.png">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <script>
@@ -164,12 +165,18 @@ if (isset($_SESSION['lastname'])) {
                 $deleteSql = "DELETE FROM `employee_accounts` WHERE id = $employeeIdToDelete";
 
                 if ($con->query($deleteSql) === TRUE) {
-                    echo "
-                                <script>
-                                    alert('Employee Deleted Successfully');
-                                </script>
-                            ";
-                    echo "<script>window.location.href = './manage_employees.php';</script>";
+                    echo "<script>
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Employee Deleted Successfully',
+                        }).then((result) => {
+                            if (result.isConfirmed || result.isDismissed) {
+                                window.location.href = './manage_employees.php';
+                            }
+                        });
+                    </script>";
+            
                 } else {
                     echo "Error";
                 }
