@@ -131,122 +131,122 @@
             </div>
 
             <div class="table">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Customer ID</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Address</th>
-                        <th>Items Ordered</th>
-                        <th>Item Quantity</th>
-                        <th>Total</th>
-                        <th>Date of Purchase</th>
-                        <th>Status</th>
-                        <th>Proof of Payment</th>
-                    </tr>
-                </thead>
-                <tbody>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Address</th>
+                            <th>Items Ordered</th>
+                            <th>Item Quantity</th>
+                            <th>Total</th>
+                            <th>Date of Purchase</th>
+                            <th>Status</th>
+                            <th>Proof of Payment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        include('../database/db_yeokart.php');
+
+                        $ordersPerPage = 10;
+                        $pageNumber = 1;
+
+                        if (isset($_GET['page']) && is_numeric($_GET['page'])) {
+                            $pageNumber = $_GET['page'];
+                        }
+
+                        $offset = ($pageNumber - 1) * $ordersPerPage;
+
+                        $totalOrdersQuery = "SELECT COUNT(*) AS total_orders FROM orders";
+                        $totalOrdersResult = mysqli_query($con, $totalOrdersQuery);
+                        $totalOrdersRow = mysqli_fetch_assoc($totalOrdersResult);
+                        $totalOrders = $totalOrdersRow['total_orders'];
+
+                        $select_query = "SELECT * FROM orders LIMIT $ordersPerPage OFFSET $offset";
+                        $result_query = mysqli_query($con, $select_query);
+
+                        while ($row = mysqli_fetch_assoc($result_query)) {
+                            $proof_of_payment = $row['proof_of_payment'];
+                            echo '<tr id="order-row-' . $row['order_id'] . '">';
+                            echo "<td>" . $row['order_id'] . "</td>";
+                            echo "<td>" . $row['customer_id'] . "</td>";
+                            echo "<td>" . $row['firstname'] . "</td>";
+                            echo "<td>" . $row['lastname'] . "</td>";
+                            echo "<td>" . $row['address'] . "</td>";
+                            echo "<td>" . $row['items_ordered'] . "</td>";
+                            echo "<td>" . $row['item_quantity'] . "</td>";
+                            echo "<td>₱" . $row['total'] . "</td>";
+                            echo "<td>" . $row['date_of_purchase'] . "</td>";
+                            echo "<td>";
+                            echo '<div class="button-class">';
+                            echo '<select class="orderStatusSelect" onchange="updateOrderStatus(this.value, \'' . $row['order_id'] . '\')">';
+
+                            $status_query = "SHOW COLUMNS FROM `orders` LIKE 'status'";
+                            $status_result = mysqli_query($con, $status_query);
+                            $status_row = mysqli_fetch_assoc($status_result);
+                            preg_match("/^enum\(\'(.*)\'\)$/", $status_row['Type'], $matches);
+                            $status_enum_values = explode("','", $matches[1]);
+                            foreach ($status_enum_values as $value) {
+                                echo '<option value="' . $value . '" ' . ($row['status'] == $value ? 'selected' : '') . '>' . $value . '</option>';
+                            }
+                            echo '</select>';
+                            echo '</div>';
+                            echo "</td>";
+                            if (!empty($proof_of_payment)) {
+                                echo '<td><center><img src="./item_images/' . $proof_of_payment . '" alt="Proof of Payment" width="auto" height="50" onclick="openImagePopup(\'./item_images/' . $proof_of_payment . '\')"></center></td>';
+                            } else {
+                                echo '<td>Not yet paid</td>';
+                            }
+                            echo "</tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
                 <?php
-                    include('../database/db_yeokart.php');
+                $baseUrl = 'owner_orders.php?';
 
-                    $ordersPerPage = 10;
-                    $pageNumber = 1;
-
-                    if (isset($_GET['page']) && is_numeric($_GET['page'])) {
-                        $pageNumber = $_GET['page'];
+                $pageQuery = '';
+                if (isset($_GET['search_button'])) {
+                    $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
+                } elseif (isset($_GET['filter_button'])) {
+                    if (isset($_GET['category'])) {
+                        $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
+                    } elseif (isset($_GET['artist'])) {
+                        $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
                     }
+                }
 
-                    $offset = ($pageNumber - 1) * $ordersPerPage;
+                $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+                $totalPages = ceil($totalOrders / $ordersPerPage);
 
-                    $totalOrdersQuery = "SELECT COUNT(*) AS total_orders FROM orders";
-                    $totalOrdersResult = mysqli_query($con, $totalOrdersQuery);
-                    $totalOrdersRow = mysqli_fetch_assoc($totalOrdersResult);
-                    $totalOrders = $totalOrdersRow['total_orders'];
+                $startPage = max(1, $pageNumber - 1);
+                $endPage = min($totalPages, $pageNumber + 1);
 
-                    $select_query = "SELECT * FROM orders LIMIT $ordersPerPage OFFSET $offset";
-                    $result_query = mysqli_query($con, $select_query);
+                if ($pageNumber == 1) {
+                    $startPage = 1;
+                    $endPage = min(3, $totalPages);
+                } elseif ($pageNumber == $totalPages) {
+                    $startPage = max(1, $totalPages - 2);
+                    $endPage = $totalPages;
+                }
 
-                    while ($row = mysqli_fetch_assoc($result_query)) {
-                        $proof_of_payment = $row['proof_of_payment'];
-                        echo '<tr id="order-row-' . $row['order_id'] . '">';
-                        echo "<td>" . $row['order_id'] . "</td>";
-                        echo "<td>" . $row['customer_id'] . "</td>";
-                        echo "<td>" . $row['firstname'] . "</td>";
-                        echo "<td>" . $row['lastname'] . "</td>";
-                        echo "<td>" . $row['address'] . "</td>";
-                        echo "<td>" . $row['items_ordered'] . "</td>";
-                        echo "<td>" . $row['item_quantity'] . "</td>";
-                        echo "<td>₱" . $row['total'] . "</td>";
-                        echo "<td>" . $row['date_of_purchase'] . "</td>";
-                        echo "<td>";
-                        echo '<div class="button-class">';
-                        echo '<select class="orderStatusSelect" onchange="updateOrderStatus(this.value, \'' . $row['order_id'] . '\')">';
+                echo "<div class='pagination'>";
 
-                        $status_query = "SHOW COLUMNS FROM `orders` LIKE 'status'";
-                        $status_result = mysqli_query($con, $status_query);
-                        $status_row = mysqli_fetch_assoc($status_result);
-                        preg_match("/^enum\(\'(.*)\'\)$/", $status_row['Type'], $matches);
-                        $status_enum_values = explode("','", $matches[1]);
-                        foreach ($status_enum_values as $value) {
-                            echo '<option value="' . $value . '" ' . ($row['status'] == $value ? 'selected' : '') . '>' . $value . '</option>';
-                        }
-                        echo '</select>';
-                        echo '</div>';
-                        echo "</td>";
-                        if (!empty($proof_of_payment)) {
-                            echo '<td><center><img src="./item_images/' . $proof_of_payment . '" alt="Proof of Payment" width="50" height="50" onclick="openImagePopup(\'./item_images/' . $proof_of_payment . '\')"></center></td>';
-                        } else {
-                            echo '<td>Not yet paid</td>';
-                        }
-                        echo "</tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
-                <?php
-                    $baseUrl = 'owner_orders.php?';
+                $prevPage = max(1, $pageNumber - 1);
+                echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
 
-                    $pageQuery = '';
-                    if (isset($_GET['search_button'])) {
-                        $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
-                    } elseif (isset($_GET['filter_button'])) {
-                        if (isset($_GET['category'])) {
-                            $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
-                        } elseif (isset($_GET['artist'])) {
-                            $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
-                        }
-                    }
+                for ($i = $startPage; $i <= $endPage; $i++) {
+                    $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
+                    echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
+                }
 
-                    $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-                    $totalPages = ceil($totalOrders / $ordersPerPage);
+                $nextPage = min($totalPages, $pageNumber + 1);
+                echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
 
-                    $startPage = max(1, $pageNumber - 1);
-                    $endPage = min($totalPages, $pageNumber + 1);
-
-                    if ($pageNumber == 1) {
-                        $startPage = 1;
-                        $endPage = min(3, $totalPages);
-                    } elseif ($pageNumber == $totalPages) {
-                        $startPage = max(1, $totalPages - 2);
-                        $endPage = $totalPages;
-                    }
-
-                    echo "<div class='pagination'>";
-
-                    $prevPage = max(1, $pageNumber - 1);
-                    echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
-
-                    for ($i = $startPage; $i <= $endPage; $i++) {
-                        $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
-                        echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
-                    }
-
-                    $nextPage = min($totalPages, $pageNumber + 1);
-                    echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
-
-                    echo "</div>";
+                echo "</div>";
                 ?>
             </div>
             <div id="imagePopup" class="popup-image" style="display: none; padding-top: 100px;">

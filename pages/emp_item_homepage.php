@@ -53,7 +53,7 @@
         // Set it to unchecked by default
         $_SESSION['nav_toggle'] = false;
     }
-    
+
     // Check if the nav-toggle checkbox has been toggled
     if (isset($_POST['nav_toggle'])) {
         // Update the session variable accordingly
@@ -310,13 +310,13 @@
                             echo "<td>" . $row['artist_name'] . "</td>";
                             echo "<td>" . $row['category_name'] . "</td>";
                             echo "<td>";
-                            echo "<img src='./item_images/$item_image1' alt='' width='50' height='50'>&nbsp;";
+                            echo "<img src='./item_images/$item_image1' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image1 . "\")'>&nbsp;";
                             if (!empty($item_image2)) {
-                                echo "<img src='./item_images/$item_image2' alt='' width='50' height='50'>&nbsp;";
+                                echo "<img src='./item_images/$item_image2' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image2 . "\")'>&nbsp;";
                             }
 
                             if (!empty($item_image3)) {
-                                echo "<img src='./item_images/$item_image3' alt='' width='50' height='50'>&nbsp;";
+                                echo "<img src='./item_images/$item_image3' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image3 . "\")'>&nbsp;";
                             }
                             echo "</td>";
                             // Inside your while loop
@@ -337,95 +337,117 @@
                     </tbody>
                 </table>
                 <?php
-                    $baseUrl = 'owner_item_homepage.php?';
+                $baseUrl = 'owner_item_homepage.php?';
 
-                    $pageQuery = '';
-                    if (isset($_GET['search_button'])) {
-                        $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
-                    } elseif (isset($_GET['filter_button'])) {
-                        if (isset($_GET['category'])) {
-                            $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
-                        } elseif (isset($_GET['artist'])) {
-                            $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
-                        }
+                $pageQuery = '';
+                if (isset($_GET['search_button'])) {
+                    $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
+                } elseif (isset($_GET['filter_button'])) {
+                    if (isset($_GET['category'])) {
+                        $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
+                    } elseif (isset($_GET['artist'])) {
+                        $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
                     }
+                }
 
-                    $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-                    $totalPages = ceil($totalItems / $itemsPerPage);
+                $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+                $totalPages = ceil($totalItems / $itemsPerPage);
 
-                    $startPage = max(1, $pageNumber - 1);
-                    $endPage = min($totalPages, $pageNumber + 1);
+                $startPage = max(1, $pageNumber - 1);
+                $endPage = min($totalPages, $pageNumber + 1);
 
-                    if ($pageNumber == 1) {
-                        $startPage = 1;
-                        $endPage = min(3, $totalPages);
-                    } elseif ($pageNumber == $totalPages) {
-                        $startPage = max(1, $totalPages - 2);
-                        $endPage = $totalPages;
-                    }
+                if ($pageNumber == 1) {
+                    $startPage = 1;
+                    $endPage = min(3, $totalPages);
+                } elseif ($pageNumber == $totalPages) {
+                    $startPage = max(1, $totalPages - 2);
+                    $endPage = $totalPages;
+                }
 
-                    echo "<div class='pagination'>";
+                echo "<div class='pagination'>";
 
-                    $prevPage = max(1, $pageNumber - 1);
-                    echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
+                $prevPage = max(1, $pageNumber - 1);
+                echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
 
-                    for ($i = $startPage; $i <= $endPage; $i++) {
-                        $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
-                        echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
-                    }
+                for ($i = $startPage; $i <= $endPage; $i++) {
+                    $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
+                    echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
+                }
 
-                    $nextPage = min($totalPages, $pageNumber + 1);
-                    echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
+                $nextPage = min($totalPages, $pageNumber + 1);
+                echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
 
-                    echo "</div>";
+                echo "</div>";
                 ?>
             </div>
 
         </main>
-            <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
-                <div class="popup-content">
-                    <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>
-                    <p>Are you sure you want to logout?
-                    <p>
-                    <div class="logout-btns">
-                        <button onclick="confirmLogout()" class="confirm-logout-btn">Logout</button>
-                        <button onclick="closeLogoutPopup()" class="cancel-logout-btn">Cancel</button>
-                    </div>
+        <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
+            <div class="popup-content">
+                <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>
+                <p>Are you sure you want to logout?
+                <p>
+                <div class="logout-btns">
+                    <button onclick="confirmLogout()" class="confirm-logout-btn">Logout</button>
+                    <button onclick="closeLogoutPopup()" class="cancel-logout-btn">Cancel</button>
                 </div>
             </div>
+        </div>
+        <div id="imagePopup" class="popup-image" style="display: none; padding-top: 100px;">
+            <div class="image-content">
+                <img id="popupImage" src="" alt="Proof of Payment" style="width: auto; height: 550px;">
+            </div>
+        </div>
 
-            <div id="deleteConfirmationPopup" class="popup-container" style="display: none;">
-                <div class="popup-content">
-                    <span class="close-btn" onclick="closeDeletePopup()">&times;</span>
-                    <p>Are you sure you want to delete this item "<span id="deleteItemName"></span>"?</p>
-                    <div class="logout-btns">
-                        <button onclick="confirmDeleteItem()" class="confirm-logout-btn">Delete</button>
-                        <button onclick="closeDeletePopup()" class="cancel-logout-btn">Cancel</button>
-                    </div>
+        <div id="deleteConfirmationPopup" class="popup-container" style="display: none;">
+            <div class="popup-content">
+                <span class="close-btn" onclick="closeDeletePopup()">&times;</span>
+                <p>Are you sure you want to delete this item "<span id="deleteItemName"></span>"?</p>
+                <div class="logout-btns">
+                    <button onclick="confirmDeleteItem()" class="confirm-logout-btn">Delete</button>
+                    <button onclick="closeDeletePopup()" class="cancel-logout-btn">Cancel</button>
                 </div>
             </div>
-            <!-- <div class="form-outline mb-4 mt-5">
+        </div>
+        <!-- <div class="form-outline mb-4 mt-5">
         <a href="./owner_dashboard.php" class="btn btn-danger mb-3 px-3 mx-auto">
             Back
         </a>
     </div> -->
-    
-    <script>
-        // Function to toggle the sidebar and update session variable
-        function toggleSidebar() {
-            var isChecked = document.getElementById('nav-toggle').checked;
-            var newState = isChecked ? 'true' : 'false';
 
-            // Update session variable using AJAX
-            var xhttp = new XMLHttpRequest();
-            xhttp.open("POST", "", true);
-            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhttp.send("nav_toggle=" + newState);
-        }
+        <script>
+            // Function to toggle the sidebar and update session variable
+            function toggleSidebar() {
+                var isChecked = document.getElementById('nav-toggle').checked;
+                var newState = isChecked ? 'true' : 'false';
 
-        // Add event listener to checkbox change
-        document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
-    </script>
+                // Update session variable using AJAX
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("POST", "", true);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send("nav_toggle=" + newState);
+            }
+
+            // Add event listener to checkbox change
+            document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
+
+            function openImagePopup(imageUrl) {
+                var popup = document.getElementById('imagePopup');
+                var image = document.getElementById('popupImage');
+                image.src = imageUrl;
+                popup.style.display = 'flex';
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var popup = document.getElementById('imagePopup');
+
+                popup.addEventListener('click', function(event) {
+                    if (event.target === popup) {
+                        popup.style.display = 'none';
+                    }
+                });
+            });
+        </script>
 </body>
 
 </html>
