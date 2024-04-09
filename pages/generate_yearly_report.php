@@ -128,15 +128,14 @@ $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8',
 // set document information
 $pdf->SetCreator(PDF_CREATOR);
 $pdf->SetAuthor('Nicola Asuni');
-$pdf->SetTitle('Monthly Report - Yeokart');
+$pdf->SetTitle('Yearly Report - Yeokart');
 $pdf->SetSubject('TCPDF Tutorial');
 $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
 
-$selectedMonth = DateTime::createFromFormat('m', $_POST['selected_month'])->format('F');
 $selectedYear = $_POST['selected_year'];
 
 // set default header data
-$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, 'Monthly Report (' . $selectedMonth . ', ' . $selectedYear . ')', PDF_HEADER_STRING);
+$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, 'Yearly Report (' . $selectedYear . ')', PDF_HEADER_STRING);
 // set header and footer fonts
 $pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
 $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
@@ -200,7 +199,7 @@ $pdf->ColoredTable('Best Seller Items', $header, $data, $orderCount, $totalItems
 // ---------------------------------------------------------
 
 // close and output PDF document
-$pdf->Output('' . $selectedMonth . '_' . $selectedYear . '_yeokart_monthly_report.pdf', 'I');
+$pdf->Output('' . $selectedYear . '_yeokart_yearly_report.pdf', 'I');
 
 //============================================================+
 // END OF FILE
