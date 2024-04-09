@@ -80,21 +80,21 @@
                 </div>
                 <div class="form-outline mb-4 w-50 m-auto">
                     <label for="item_image1" class="form-label">Item Image 1:</label>
-                    <input type="file" name="item_image1" id="item_image1" class="image-input">
+                    <input type="file" name="item_image1" id="item_image1" accept="image/*" class="image-input">
                     <?php if ($row['item_image1']) : ?>
                         <p style="margin-top: 20px;">Current Image: <br></br><img src='./item_images/<?php echo $row['item_image1']; ?>' alt='Twice Album' height="200px" width="200px">
                         <?php endif; ?>
                 </div>
                 <div class="form-outline mb-4 w-50 m-auto">
                     <label for="item_image2" class="form-label">Item Image 2:</label>
-                    <input type="file" name="item_image2" id="item_image2" class="image-input">
+                    <input type="file" name="item_image2" id="item_image2" accept="image/*" class="image-input">
                     <?php if ($row['item_image2']) : ?>
                         <p style="margin-top: 20px;">Current Image: <br></br><img src='./item_images/<?php echo $row['item_image2']; ?>' alt='Twice Album' height="200px" width="200px">
-                    <?php endif; ?>
+                        <?php endif; ?>
                 </div>
                 <div class="form-outline mb-4 w-50 m-auto">
                     <label for="item_image3" class="form-label">Item Image 3:</label>
-                    <input type="file" name="item_image3" id="item_image3" class="image-input">
+                    <input type="file" name="item_image3" id="item_image3" accept="image/*" class="image-input">
                     <?php if ($row['item_image3']) : ?>
                         <p style="margin-top: 20px;">Current Image: <br></br><img src='./item_images/<?php echo $row['item_image3']; ?>' alt='Twice Album' height="200px" width="200px">
                         <?php endif; ?>
@@ -191,7 +191,7 @@ if (isset($_POST['update_item'])) {
                         text: 'Item successfully updated.'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = '".$_POST['previous_page']."';
+                            window.location.href = '" . $_POST['previous_page'] . "';
                         }
                     });
                   </script>";
