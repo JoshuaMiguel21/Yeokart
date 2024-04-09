@@ -146,6 +146,26 @@
     flex-wrap: wrap;
 }
 
+.head-search button[type="submit"],
+.head-search button[type="button"] {
+    padding: 2px 10px; /* Padding around text inside button */
+    font-size: 12px; /* Font size of button text */
+    background-color: var(--main-color); /* Background color of button */
+    color: white; /* Text color of button */
+    border: none; /* Remove default button border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Show pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth transition for background color change */
+    font-weight: bold;
+}
+
+.head-search button[type="submit"]:hover,
+.head-search button[type="button"]:hover{
+    background-color: white; /* Darker background color on hover */
+    color: var(--main-color); /* Text color on hover */
+}
+
+
 header{
     background-color: #fff;
     display: flex;
