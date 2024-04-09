@@ -14,7 +14,7 @@
 </head>
 
 <style>
-.swal2-custom-popup {
+    .swal2-custom-popup {
         font-size: 16px;
         width: 500px;
     }
@@ -124,7 +124,6 @@ if (isset($_POST['add-to-cart-btn'])) {
             text: "You cannot add more than the available stock."
             });
         </script>';
-        
     } else {
         // Check if the item already exists in the cart for the same customer ID
         $select_cart_query = "SELECT * FROM cart WHERE customer_id = '$customer_id' AND item_name = '$item_name'";
@@ -180,6 +179,12 @@ if (isset($_POST['add-to-cart-btn'])) {
             </div>
         </div>
     </header>
+        <div class="btn-return">
+            <a href="new_customer_shop.php" class="btn-prod">
+                <i class="fas fa-arrow-left"></i>
+                <span class="text">RETURN TO SHOP</span>
+            </a>
+        </div>
     <section class="product-details" id="product-details">
         <div class="product-details-left">
             <?php if (!empty($fetch_item['item_image1']) || !empty($fetch_item['item_image2']) || !empty($fetch_item['item_image3'])) : ?>
@@ -375,10 +380,10 @@ if (isset($_POST['add-to-cart-btn'])) {
                     text: 'You cannot add more than the available stock.',
                     confirmButtonText: 'OK',
                     customClass: {
-                            popup: 'swal2-custom-popup',
-                            title: 'swal2-custom-title',
-                            content: 'swal2-custom-text'
-                        }
+                        popup: 'swal2-custom-popup',
+                        title: 'swal2-custom-title',
+                        content: 'swal2-custom-text'
+                    }
                 });
                 return false;
             }
