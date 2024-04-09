@@ -74,7 +74,14 @@
 
     ?>
 
+
+
+
+
     <body>
+        <!-- Overlay for translucent background -->
+        <div class="filter-overlay" id="filter-overlay"></div>
+
         <input type="checkbox" id="click">
         <header class="header" style="box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
             <div class="header-1">
@@ -106,9 +113,10 @@
             </div>
             <div class="header-2">
                 <nav class="navbar">
-                    <!-- Filter Content -->
+
                     <div class="filter-section">
                         <form method="GET">
+                            <h3>Filter By Category</h3>
                             <select name="category">
                                 <option value="" disabled selected>Select a category</option>
                                 <?php
@@ -126,6 +134,7 @@
                             <button type="submit" name="filter_button">Filter</button>
                         </form>
                         <form method="GET">
+                            <h3>Filter By Artist</h3>
                             <select name="artist">
                                 <option value="" disabled selected>Select an artist</option>
                                 <?php
@@ -142,16 +151,66 @@
                             </select>
                             <button type="submit" name="filter_button">Filter</button>
                         </form>
-                        <form method="GET" id="clear">
-                            <button type="button" name="clear_button" onclick="clearSearch()">Clear</button>
-                        </form>
+                        
+                    <form method="GET" id="clear">
+                        <button type="button" name="clear_button" onclick="clearSearch()">Clear</button>
+                    </form>
                     </div>
                 </nav>
             </div>
+<!---->
             <nav class="bottom-navbar">
-                <a href="#home" class="fas fa-home"></a>
-                <a href="#best" class="fas fa-thumbs-up"></a>
-                <a href="#featured" class="fas fa-list"></a>
+                <h3>Filter & Sort</h3>
+                <!-- Filter Popup Button -->
+                <button id="filterPopupBtn" class="fas fa-filter"></button>
+
+                <!-- Filter Popup Content -->
+                <div class="filter-popup" id="filterPopup">
+                    
+                    <div class="popup-filter-section">
+                        <form method="GET">
+                            <h2>Filter By Category</h2>
+                            <select name="category">
+                                <option value="" disabled selected>Select a category</option>
+                                <?php
+                                include('../database/db_yeokart.php');
+                                $category_query = "SELECT * FROM categories";
+                                $result_category = mysqli_query($con, $category_query);
+                                while ($category_row = mysqli_fetch_assoc($result_category)) {
+                                    $category_id = $category_row['category_id'];
+                                    $category_name = $category_row['category_name'];
+                                    $selected = isset($_GET['category']) && $_GET['category'] == $category_name ? 'selected' : '';
+                                    echo "<option value='$category_name' $selected>$category_name</option>";
+                                }
+                                ?>
+                            </select>
+                            <button type="submit" name="filter_button">Filter</button>
+                        </form>
+                        <form method="GET">
+                            <h2>Filter By Artist</h2>
+                            <select name="artist">
+                                <option value="" disabled selected>Select an artist</option>
+                                <?php
+                                include('../database/db_yeokart.php');
+                                $artist_query = "SELECT * FROM artists";
+                                $result_artist = mysqli_query($con, $artist_query);
+                                while ($artist_row = mysqli_fetch_assoc($result_artist)) {
+                                    $artist_id = $artist_row['artist_id'];
+                                    $artist_name = $artist_row['artist_name'];
+                                    $selected = isset($_GET['artist']) && $_GET['artist'] == $artist_name ? 'selected' : '';
+                                    echo "<option value='$artist_name' $selected>$artist_name</option>";
+                                }
+                                ?>
+                            </select>
+                            <button type="submit" name="filter_button">Filter</button>
+                        </form>
+                    </div>
+
+                    <form method="GET" id="clear">
+                        <button type="button" name="clear_button" onclick="clearSearch()">Clear</button>
+                    </form>
+
+                </div>
             </nav>
             <section class="best" id="best">
                 <div class="best-slider">
@@ -331,6 +390,20 @@
                 });
             </script>
 
+
+            <script>
+                // JavaScript to toggle the popup and overlay
+                document.addEventListener("DOMContentLoaded", function() {
+                    var filterPopup = document.getElementById("filterPopup");
+                    var filterPopupBtn = document.getElementById("filterPopupBtn");
+                    var overlay = document.getElementById("filter-overlay");
+
+                    filterPopupBtn.addEventListener("click", function() {
+                        filterPopup.classList.toggle("show");
+                        overlay.style.display = filterPopup.classList.contains("show") ? "block" : "none";
+                    });
+                });
+            </script>
 
 
 
