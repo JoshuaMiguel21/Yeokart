@@ -84,28 +84,43 @@
                                     });
                                 </script>";
                 } else {
-                    echo "
-                            <script>
-                                alert('Server Down! Try again later');
+                    echo "<script>
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Server Down! Try again later',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
                                 window.location.href='login_page.php';
-                            </script>
-                            ";
+                            }
+                        });
+                    </script>";
                 }
             } else {
-                echo "
-                    <script>
-                        alert('Email not found');
-                        window.location.href='login_page.php';
-                    </script>
-                    ";
+                echo "<script>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Email not found',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href='forgot_email.php';
+                        }
+                    });
+                </script>";
             }
         } else {
-            echo "
-                    <script>
-                        alert('Cannot Run Query');
+            echo "<script>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Cannot Run Query',
+                }).then((result) => {
+                    if (result.isConfirmed) {
                         window.location.href='login_page.php';
-                    </script>
-                    ";
+                    }
+                });
+            </script>";
         }
     }
     ?>

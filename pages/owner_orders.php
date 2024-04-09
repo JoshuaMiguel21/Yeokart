@@ -165,7 +165,16 @@
                         $totalOrdersRow = mysqli_fetch_assoc($totalOrdersResult);
                         $totalOrders = $totalOrdersRow['total_orders'];
 
-                        $select_query = "SELECT * FROM orders LIMIT $ordersPerPage OFFSET $offset";
+                        $select_query = "SELECT * FROM orders 
+                            ORDER BY CASE `status` 
+                                WHEN 'INVALID' THEN 1
+                                WHEN 'PENDING' THEN 2
+                                WHEN 'PROCESSING' THEN 3
+                                WHEN 'SHIPPED' THEN 4
+                                WHEN 'DELIVERED' THEN 5
+                                ELSE 6
+                            END ASC, date_of_purchase ASC 
+                            LIMIT $ordersPerPage OFFSET $offset";
                         $result_query = mysqli_query($con, $select_query);
 
                         while ($row = mysqli_fetch_assoc($result_query)) {
@@ -189,8 +198,10 @@
                             $status_row = mysqli_fetch_assoc($status_result);
                             preg_match("/^enum\(\'(.*)\'\)$/", $status_row['Type'], $matches);
                             $status_enum_values = explode("','", $matches[1]);
+
                             foreach ($status_enum_values as $value) {
-                                echo '<option value="' . $value . '" ' . ($row['status'] == $value ? 'selected' : '') . '>' . $value . '</option>';
+                                $disabled = (in_array($value, ['Processing', 'Shipped', 'Delivered']) && empty($proof_of_payment)) ? 'disabled' : '';
+                                echo '<option value="' . $value . '" ' . ($row['status'] == $value ? 'selected' : '') . ' ' . $disabled . '>' . $value . '</option>';
                             }
                             echo '</select>';
                             echo '</div>';

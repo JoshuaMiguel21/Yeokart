@@ -143,6 +143,21 @@ if (isset($_POST['add-to-cart-btn'])) {
                      VALUES ('$customer_id', '$item_name', '$price', '$item_image', '$quantity', '$category')";
             mysqli_query($con, $insert_cart_query);
         }
+
+        // Fetch the updated cart count
+        $sql = "SELECT COUNT(*) AS cart_count FROM cart WHERE customer_id = $customer_id";
+        $result = $con->query($sql);
+
+        if ($result) {
+            $row = $result->fetch_assoc();
+            $cartCount = $row['cart_count'];
+            // Return the updated cart count along with the response
+            echo '<script>
+                    document.getElementById("cart-num").innerText = "' . $cartCount . '";
+                </script>';
+        } else {
+            echo "Error: " . $sql . "<br>" . $con->error;
+        }
     }
 }
 

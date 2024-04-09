@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="../css/style_homepage_customer.css">
 </head>
@@ -207,7 +208,7 @@ $con->close();
             <h1>My Account</h1>
             <div class="nav-user">
                 <a href="#" onclick="openPopup(); return false;" class="logout-link">EDIT PROFILE</a>
-                <a href="#" onclick="openLogoutPopup(); return false;" class="logout-link">LOG OUT<i class="fas fa-chevron-right"></i></a>
+                <a href="#" onclick="openLogoutPopup(); return false;" class="logout-btn">LOG OUT<i class="fas fa-chevron-right"></i></a>
             </div>
         </div>
         <hr>
@@ -226,8 +227,33 @@ $con->close();
                     exit();
                 }
 
-                // Query to fetch orders
-                $sql = "SELECT `order_id`, `customer_id`, `firstname`, `lastname`, `address`, `items_ordered`, `total`, `shipping_fee`, `overall_total`, `date_of_purchase`, `item_quantity`, `status`, `proof_of_payment`  FROM `orders` WHERE `customer_id` = $customer_id";
+                $ordersPerPage = 10;
+                $pageNumber = 1;
+
+                if (isset($_GET['page']) && is_numeric($_GET['page'])) {
+                    $pageNumber = $_GET['page'];
+                }
+
+                $offset = ($pageNumber - 1) * $ordersPerPage;
+
+                $totalOrdersQuery = "SELECT COUNT(*) AS total_orders FROM orders WHERE `customer_id` = $customer_id AND is_archive = 0";
+                $totalOrdersResult = mysqli_query($con, $totalOrdersQuery);
+                $totalOrdersRow = mysqli_fetch_assoc($totalOrdersResult);
+                $totalOrders = $totalOrdersRow['total_orders'];
+
+                $sql = "SELECT `order_id`, `customer_id`, `firstname`, `lastname`, `address`, `items_ordered`, `total`, `shipping_fee`, `overall_total`, `date_of_purchase`, `item_quantity`, `status`, `proof_of_payment`, 
+                CASE `status`
+                    WHEN 'INVALID' THEN 1
+                    WHEN 'PENDING' THEN 2
+                    WHEN 'PROCESSING' THEN 3
+                    WHEN 'SHIPPED' THEN 4
+                    WHEN 'DELIVERED' THEN 5
+                    ELSE 6
+                END AS status_order
+                FROM `orders`
+                WHERE `customer_id` = $customer_id AND is_archive = 0
+                ORDER BY status_order ASC
+                LIMIT $ordersPerPage OFFSET $offset";
 
                 $result = $con->query($sql);
 
@@ -239,6 +265,7 @@ $con->close();
                     echo '<th>Date</th>';
                     echo '<th>Status</th>';
                     echo '<th><center>Proof of Payment</center></th>';
+                    echo '<th></th>';
                     echo '</tr>';
                     echo '</thead>';
                     echo '<tbody>';
@@ -255,9 +282,15 @@ $con->close();
                         } else {
                             echo '<td><center><button class="payment-done" disabled>Payment Done <i class="fas fa-check"></i></button></center></td>';
                         }
+                        echo '<td class="toggle-row">';
+                        echo '<i class="fas fa-chevron-down toggle-icon"></i>';
+                        if ($status == "DELIVERED") {
+                            echo '<i class="fas fa-archive archive-icon" data-order-id="' . $order_id . '"></i>';
+                        }
+                        echo '</td>';   
                         echo '</tr>';
                         echo '<tr class="hidden-row">';
-                        echo '<td colspan="4">';
+                        echo '<td colspan="5">';
                         echo '<div class="order-details-card">';
                         echo '<div class="alert';
                         switch ($status) {
@@ -358,6 +391,50 @@ $con->close();
                     echo '</table>';
                 }         
                 $con->close();
+                ?>
+
+                <?php
+                    $baseUrl = 'customer_profile.php?';
+
+                    $pageQuery = '';
+                    if (isset($_GET['search_button'])) {
+                        $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
+                    } elseif (isset($_GET['filter_button'])) {
+                        if (isset($_GET['category'])) {
+                            $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
+                        } elseif (isset($_GET['artist'])) {
+                            $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
+                        }
+                    }
+
+                    $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+                    $totalPages = ceil($totalOrders / $ordersPerPage);
+
+                    $startPage = max(1, $pageNumber - 1);
+                    $endPage = min($totalPages, $pageNumber + 1);
+
+                    if ($pageNumber == 1) {
+                        $startPage = 1;
+                        $endPage = min(3, $totalPages);
+                    } elseif ($pageNumber == $totalPages) {
+                        $startPage = max(1, $totalPages - 2);
+                        $endPage = $totalPages;
+                    }
+
+                    echo "<div class='pagination'>";
+
+                    $prevPage = max(1, $pageNumber - 1);
+                    echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
+
+                    for ($i = $startPage; $i <= $endPage; $i++) {
+                        $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
+                        echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
+                    }
+
+                    $nextPage = min($totalPages, $pageNumber + 1);
+                    echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
+
+                    echo "</div>";
                 ?>
             </div>
 
@@ -511,24 +588,41 @@ $con->close();
                 </script>";
             }
         }
-
-
         $con->close();
         ?>
     </section>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const orderRows = document.querySelectorAll('.order-row');
+            const toggleIcons = document.querySelectorAll('.fa-chevron-down');
 
             let currentlyOpenRow = null;
 
-            orderRows.forEach(function(row) {
-                row.addEventListener('click', function() {
+            toggleIcons.forEach(function(icon) {
+                icon.style.transition = 'transform 0.3s ease';
+                
+                icon.addEventListener('click', function(event) {
+                    event.stopPropagation();
+
+                    const row = icon.closest('.order-row');
                     const hiddenRow = row.nextElementSibling;
+                    
+                    hiddenRow.classList.toggle('hidden-row-visible');
+                    icon.classList.toggle('active'); 
+
+                    if (hiddenRow.classList.contains('hidden-row-visible')) {
+                        icon.style.transform = 'rotate(180deg)';
+                    } else {
+                        icon.style.transform = 'rotate(0deg)';
+                        icon.classList.remove('active'); 
+                    }
+
                     if (currentlyOpenRow && currentlyOpenRow !== hiddenRow) {
                         currentlyOpenRow.classList.remove('hidden-row-visible');
+                        const previousRowIcon = currentlyOpenRow.previousElementSibling.querySelector('.fa-chevron-down');
+                        previousRowIcon.style.transform = 'rotate(0deg)';
+                        previousRowIcon.classList.remove('active'); 
                     }
-                    hiddenRow.classList.toggle('hidden-row-visible');
+
                     currentlyOpenRow = hiddenRow.classList.contains('hidden-row-visible') ? hiddenRow : null;
                 });
             });
@@ -576,6 +670,46 @@ $con->close();
                 return false;
             }
             return true;
+        }
+
+        document.addEventListener('click', function(e) {
+            if(e.target.classList.contains('archive-icon')) {
+                const orderId = e.target.getAttribute('data-order-id');
+                archiveOrder(orderId);
+            }
+        });
+
+        function archiveOrder(orderId) {
+            const archiveIcon = document.querySelector(`.archive-icon[data-order-id="${orderId}"]`);
+            const originalClassList = archiveIcon.className;
+            const originalStyle = archiveIcon.style.cssText;
+            archiveIcon.className = 'fas fa-spinner fa-spin';
+            archiveIcon.style.cssText = originalStyle + '; float: right; ';
+
+            setTimeout(() => {
+                fetch('archive_order.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `orderId=${orderId}`,
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.success) {
+                        location.reload();
+                    } else {
+                        archiveIcon.className = originalClassList;
+                        archiveIcon.style.cssText = originalStyle;
+                        alert('Failed to archive the order. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    archiveIcon.className = originalClassList;
+                    archiveIcon.style.cssText = originalStyle;
+                    alert('Failed to archive the order. Please try again.');
+                });
+            }, 1000); // Delay of 2 seconds
         }
     </script>
 </body>
