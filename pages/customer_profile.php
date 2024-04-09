@@ -136,15 +136,16 @@ if ($phoneResult->num_rows > 0) {
 // Close the database connection
 $con->close();
 ?>
+
 <body>
     <input type="checkbox" id="click">
     <header class="header" style="box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
         <div class="header-1">
             <a href="customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>
             <div class="icons">
-                <form action="" class="search-form">
-                    <input type="search" name="" placeholder="Search here..." id="search-box">
-                    <label for="search-box" class="fas fa-search"></label>
+                <form action="new_customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
+                    <input type="search" name="search" placeholder="Search here..." id="search-box">
+                    <button type="submit"><i class="fas fa-search"></i></button>
                 </form>
                 <label for="click" class="menu-btn">
                     <i class="fas fa-bars"></i>
@@ -153,9 +154,9 @@ $con->close();
             <div class="icons">
                 <ul>
                     <li class="search-ul">
-                        <form action="" class="search-form1">
-                            <input type="search" name="" placeholder="Search here..." id="search-box">
-                            <label for="search-box" class="fas fa-search"></label>
+                        <form action="new_customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
+                            <input type="search" name="search" placeholder="Search here..." id="search-box">
+                            <button type="submit"><i class="fas fa-search"></i></button>
                         </form>
                     </li>
                     <li class="home-class"><a href="customer_homepage.php" id="home-nav">Home</a></li>
@@ -251,7 +252,6 @@ $con->close();
                         echo '<td>' . strtoupper($row['status']) . '</td>';
                         if ($status == "PENDING" || $status == "INVALID") {
                             echo '<td><center><a href="#" class="upload-proof-cell" data-order-id="' . $order_id . '" data-proof="' . $row['proof_of_payment'] . '">Upload Proof of Payment</a></center></td>';
-                            
                         } else {
                             echo '<td><center><button class="payment-done" disabled>Payment Done <i class="fas fa-check"></i></button></center></td>';
                         }
@@ -425,13 +425,13 @@ $con->close();
             if (isset($_FILES['proof_of_payment']['name']) && !empty($_FILES['proof_of_payment']['name'])) {
                 $upload_proof = $_FILES['proof_of_payment']['name'];
                 $temp_proof = $_FILES['proof_of_payment']['tmp_name'];
-        
+
                 if (move_uploaded_file($temp_proof, "./item_images/$upload_proof")) {
                     $stmt = $con->prepare("UPDATE orders SET proof_of_payment = ? WHERE order_id = ?");
                     $stmt->bind_param("ss", $upload_proof, $order_id);
                     $stmt->execute();
                     $stmt->close();
-        
+
                     // SweetAlert message for successful upload with redirection
                     echo "<script>
                         Swal.fire({
@@ -452,7 +452,6 @@ $con->close();
                             }
                         });
                     </script>";
-
                 } else {
                     // SweetAlert message for failed file move with redirection
                     echo "<script>
@@ -498,14 +497,12 @@ $con->close();
                 </script>";
             }
         }
-        
+
 
         $con->close();
         ?>
     </section>
     <script>
-
-
         document.addEventListener('DOMContentLoaded', function() {
             const orderRows = document.querySelectorAll('.order-row');
 
@@ -559,6 +556,13 @@ $con->close();
             document.getElementById('file-chosen').textContent = fileName;
         });
 
+        function validateSearch() {
+            var searchBox = document.getElementById('search-box');
+            if (searchBox.value.trim() === '') {
+                return false;
+            }
+            return true;
+        }
     </script>
 </body>
 

@@ -68,7 +68,7 @@ if ($result) {
         <div class="header-1">
             <a href="customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>
             <div class="icons">
-                <form action="new_customer_shop.php" method="GET" class="search-form">
+                <form action="new_customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
                     <input type="search" name="search" placeholder="Search here..." id="search-box">
                     <button type="submit"><i class="fas fa-search"></i></button>
                 </form>
@@ -79,7 +79,7 @@ if ($result) {
             <div class="icons">
                 <ul>
                     <li class="search-ul">
-                        <form action="new_customer_shop.php" method="GET" class="search-form">
+                        <form action="new_customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
                             <input type="search" name="search" placeholder="Search here..." id="search-box">
                             <button type="submit"><i class="fas fa-search"></i></button>
                         </form>
@@ -163,6 +163,14 @@ if ($result) {
                 }
             });
         });
+
+        function validateSearch() {
+            var searchBox = document.getElementById('search-box');
+            if (searchBox.value.trim() === '') {
+                return false;
+            }
+            return true;
+        }
     </script>
 </body>
 

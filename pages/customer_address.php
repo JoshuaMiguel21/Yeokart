@@ -174,9 +174,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="header-1">
             <a href="customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>
             <div class="icons">
-                <form action="" class="search-form">
-                    <input type="search" name="" placeholder="Search here..." id="search-box">
-                    <label for="search-box" class="fas fa-search"></label>
+                <form action="new_customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
+                    <input type="search" name="search" placeholder="Search here..." id="search-box">
+                    <button type="submit"><i class="fas fa-search"></i></button>
                 </form>
                 <label for="click" class="menu-btn">
                     <i class="fas fa-bars"></i>
@@ -185,9 +185,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="icons">
                 <ul>
                     <li class="search-ul">
-                        <form action="" class="search-form1">
-                            <input type="search" name="" placeholder="Search here..." id="search-box">
-                            <label for="search-box" class="fas fa-search"></label>
+                        <form action="new_customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
+                            <input type="search" name="search" placeholder="Search here..." id="search-box">
+                            <button type="submit"><i class="fas fa-search"></i></button>
                         </form>
                     </li>
                     <li class="home-class"><a href="customer_homepage.php" id="home-nav">Home</a></li>
@@ -199,71 +199,72 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
     </header>
-  <section class="user-profile">
-      <div class="header-3">
-        <h1>My Account</h1>
-        <div class="nav-user">
-            <a href="#" class="btn-address" onclick="openPopup()">
-                <i class="fas fa-plus"></i>
-                <span class="text">ADD A NEW ADDRESS</span>
-            </a>
+    <section class="user-profile">
+        <div class="header-3">
+            <h1>My Account</h1>
+            <div class="nav-user">
+                <a href="#" class="btn-address" onclick="openPopup()">
+                    <i class="fas fa-plus"></i>
+                    <span class="text">ADD A NEW ADDRESS</span>
+                </a>
+            </div>
         </div>
-      </div>
-      <hr>
-    <div class="address">
-        <div class="btn-return">
-            <a href="customer_profile.php" class="btn-address">
-                <i class="fas fa-arrow-left"></i>
-                <span class="text">RETURN TO PROFILE</span>
-            </a>
-        </div>
-        <div class="address-info">
-            <p id="info">YOUR ADDRESSES<p>
-            <hr class="gradient">
-        </div>
-        <div class="address-list" id="cart">
-        <?php
-        require('../database/db_yeokart.php');
+        <hr>
+        <div class="address">
+            <div class="btn-return">
+                <a href="customer_profile.php" class="btn-address">
+                    <i class="fas fa-arrow-left"></i>
+                    <span class="text">RETURN TO PROFILE</span>
+                </a>
+            </div>
+            <div class="address-info">
+                <p id="info">YOUR ADDRESSES
+                <p>
+                    <hr class="gradient">
+            </div>
+            <div class="address-list" id="cart">
+                <?php
+                require('../database/db_yeokart.php');
 
-        $sql = "SELECT * FROM addresses WHERE customer_id = ? ORDER BY is_default DESC";
-        $stmt = $con->prepare($sql);
-        $stmt->bind_param("i", $_SESSION['id']);
-        $stmt->execute();
-        $result = $stmt->get_result();
+                $sql = "SELECT * FROM addresses WHERE customer_id = ? ORDER BY is_default DESC";
+                $stmt = $con->prepare($sql);
+                $stmt->bind_param("i", $_SESSION['id']);
+                $stmt->execute();
+                $result = $stmt->get_result();
 
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                if ($row['is_default'] == 1) {
-                    echo "<div class='address-item default-address'>";
-                    echo "<h3>(Default)</h3>";
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        if ($row['is_default'] == 1) {
+                            echo "<div class='address-item default-address'>";
+                            echo "<h3>(Default)</h3>";
+                        } else {
+                            echo "<div class='address-item'>";
+                        }
+
+                        echo "<p><strong>Address:</strong> " . htmlspecialchars($row['address']) . "</p>";
+                        echo "<p><strong>Street:</strong> " . htmlspecialchars($row['street']) . "</p>";
+                        echo "<p><strong>City:</strong> " . htmlspecialchars($row['city']) . "</p>";
+                        echo "<p><strong>Province:</strong> " . htmlspecialchars($row['province']) . "</p>";
+                        echo "<p><strong>Zip Code:</strong> " . htmlspecialchars($row['zipCode']) . "</p>";
+                        echo "<p><strong>Phone Number:</strong> " . htmlspecialchars($row['phoneNumber']) . "</p>";
+                        echo "<div class='buttons-container'>";
+                        echo "<button class='edit-btn' onclick='openEditPopup(" . $row['address_id'] . ")'>Edit</button>";
+                        echo "<button class='delete-btn' onclick='openDeletePopup(" . $row['address_id'] . ")'>Delete</button>";
+                        echo "</div>";
+                        echo "</div>";
+                    }
                 } else {
-                    echo "<div class='address-item'>";
+                    echo "<p id='info1'>No addresses found.</p>";
                 }
 
-                echo "<p><strong>Address:</strong> " . htmlspecialchars($row['address']) . "</p>";
-                echo "<p><strong>Street:</strong> " . htmlspecialchars($row['street']) . "</p>";
-                echo "<p><strong>City:</strong> " . htmlspecialchars($row['city']) . "</p>";
-                echo "<p><strong>Province:</strong> " . htmlspecialchars($row['province']) . "</p>";
-                echo "<p><strong>Zip Code:</strong> " . htmlspecialchars($row['zipCode']) . "</p>";
-                echo "<p><strong>Phone Number:</strong> " . htmlspecialchars($row['phoneNumber']) . "</p>";
-                echo "<div class='buttons-container'>";
-                echo "<button class='edit-btn' onclick='openEditPopup(" . $row['address_id'] . ")'>Edit</button>";
-                echo "<button class='delete-btn' onclick='openDeletePopup(" . $row['address_id'] . ")'>Delete</button>";
-                echo "</div>";
-                echo "</div>";
-            }
-        } else {
-            echo "<p id='info1'>No addresses found.</p>";
-        }
+                $stmt->close();
+                $con->close();
+                ?>
 
-        $stmt->close();
-        $con->close();
-        ?>
 
-            
+            </div>
         </div>
-    </div>
-  </section>
+    </section>
 
     <div id="deletePopup" class="popup-del" style="display: none;">
         <div class="popup-del-content">
@@ -534,16 +535,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-                const checkbox = document.getElementById('click');
-                const cartToHide = document.getElementById('cart');
-                checkbox.addEventListener('change', function() {
-                    if (this.checked) {
-                        cartToHide.style.display = 'none';
-                    } else {
-                        cartToHide.style.display = 'block';
-                    }
+            const checkbox = document.getElementById('click');
+            const cartToHide = document.getElementById('cart');
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    cartToHide.style.display = 'none';
+                } else {
+                    cartToHide.style.display = 'block';
+                }
             });
         });
+
+        function validateSearch() {
+            var searchBox = document.getElementById('search-box');
+            if (searchBox.value.trim() === '') {
+                return false;
+            }
+            return true;
+        }
     </script>
 </body>
 

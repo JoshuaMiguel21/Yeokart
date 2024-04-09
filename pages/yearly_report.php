@@ -252,6 +252,20 @@
                     </select>
                     <input type="submit" value="Filter" name="filter">
                 </form>
+                <form id="reportForm" method="post" action="generate_yearly_report.php" target="_blank">
+                    <input type="hidden" name="pdf_creater" value="PDF">
+                    <input type="hidden" name="selected_year" value="<?php echo $selectedYear; ?>">
+                    <input type="hidden" name="startDate" value="<?php echo $startDate; ?>">
+                    <input type="hidden" name="endDate" value="<?php echo $endDate; ?>">
+                    <input type="hidden" name="order_count" value="<?php echo $orderCount; ?>">
+                    <input type="hidden" name="item_quantity" value="<?php echo  $totalItemsSold; ?>">
+                    <input type="hidden" name="total_revenue" value="<?php echo  $totalRevenue; ?>">
+                    <input type="hidden" name="total_income" value="<?php echo  $totalIncome; ?>"> <!-- Add this line -->
+                </form>
+                <a href="#" class="btn-employee" onclick="document.getElementById('reportForm').submit(); return false;">
+                    <i class="las la-download"></i>
+                    <span class="text">Generate Report</span>
+                </a>
             </div>
 
             &nbsp;&nbsp;&nbsp;&nbsp;
@@ -295,6 +309,79 @@
                         <span class="las la-donate"></span>
                     </div>
                 </div>
+            </div>
+            <br></br>
+            <div class="head-title">
+                <div class="left">
+                    <h3>Best Seller Items</h3>
+                </div>
+            </div>
+            <div class="table">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                <center>Item Name</center>
+                            </th>
+                            <th>
+                                <center>Category</center>
+                            </th>
+                            <th>
+                                <center>Artist</center>
+                            </th>
+                            <th>
+                                <center>Sold this Month</center>
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        include('../database/db_yeokart.php');
+
+                        // Query to get the top 10 best-selling items with category and artist name
+                        $select_query = "
+                            SELECT
+                                o.item_name,
+                                p.category_name,
+                                p.artist_name,
+                                SUM(o.item_quantity) AS total_sold
+                            FROM (
+                                SELECT
+                                    TRIM(LEADING ',' FROM SUBSTRING_INDEX(SUBSTRING_INDEX(items_ordered, ', ', n.digit+1), ', ', -1)) AS item_name,
+                                    TRIM(LEADING ',' FROM SUBSTRING_INDEX(SUBSTRING_INDEX(item_quantity, ', ', n.digit+1), ', ', -1)) AS item_quantity
+                                FROM orders
+                                JOIN (
+                                    SELECT 0 AS digit UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL
+                                    SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9
+                                ) AS n
+                                WHERE n.digit < LENGTH(items_ordered) - LENGTH(REPLACE(items_ordered, ',', '')) + 1
+                                    AND date_of_purchase BETWEEN '$startDate' AND '$endDate'
+                                    AND (status = 'shipped' OR status = 'delivered')
+                                    AND proof_of_payment <> ''
+                            ) AS o
+                            INNER JOIN products AS p ON o.item_name = p.item_name
+                            GROUP BY o.item_name
+                            ORDER BY total_sold DESC
+                            LIMIT 10";
+
+                        $result_query = mysqli_query($con, $select_query);
+                        while ($row = mysqli_fetch_assoc($result_query)) {
+                            $item_name = $row['item_name'];
+                            $category_name = $row['category_name'];
+                            $artist_name = $row['artist_name'];
+                            $total_sold = $row['total_sold'];
+                            echo "<tr>";
+                            echo "<td>" . $item_name . "</td>";
+                            echo "<td style='text-align: center;'>" . $category_name . "</td>";
+                            echo "<td style='text-align: center;'>" . $artist_name . "</td>";
+                            echo "<td style='text-align: center;'>" . $total_sold . "</td>";
+                            echo "</tr>";
+                        }
+                        ?>
+
+                    </tbody>
+                </table>
             </div>
             <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
                 <div class="popup-content">

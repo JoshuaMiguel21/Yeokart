@@ -74,13 +74,20 @@
 
     ?>
 
+
+
+
+
     <body>
+        <!-- Overlay for translucent background -->
+        <div class="filter-overlay" id="filter-overlay"></div>
+
         <input type="checkbox" id="click">
         <header class="header" style="box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
             <div class="header-1">
                 <a href="customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>
                 <div class="icons">
-                    <form action="new_customer_shop.php" method="GET" class="search-form">
+                    <form action="new_customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
                         <input type="search" name="search" placeholder="Search here..." id="search-box">
                         <button type="submit"><i class="fas fa-search"></i></button>
                     </form>
@@ -91,7 +98,7 @@
                 <div class="icons">
                     <ul>
                         <li class="search-ul">
-                            <form action="new_customer_shop.php" method="GET" class="search-form">
+                            <form action="new_customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
                                 <input type="search" name="search" placeholder="Search here..." id="search-box">
                                 <button type="submit"><i class="fas fa-search"></i></button>
                             </form>
@@ -106,9 +113,10 @@
             </div>
             <div class="header-2">
                 <nav class="navbar">
-                    <!-- Filter Content -->
+
                     <div class="filter-section">
                         <form method="GET">
+                            <h3>Filter By Category</h3>
                             <select name="category">
                                 <option value="" disabled selected>Select a category</option>
                                 <?php
@@ -126,6 +134,7 @@
                             <button type="submit" name="filter_button">Filter</button>
                         </form>
                         <form method="GET">
+                            <h3>Filter By Artist</h3>
                             <select name="artist">
                                 <option value="" disabled selected>Select an artist</option>
                                 <?php
@@ -142,16 +151,69 @@
                             </select>
                             <button type="submit" name="filter_button">Filter</button>
                         </form>
+
                         <form method="GET" id="clear">
                             <button type="button" name="clear_button" onclick="clearSearch()">Clear</button>
                         </form>
                     </div>
                 </nav>
             </div>
+            <!---->
             <nav class="bottom-navbar">
-                <a href="#home" class="fas fa-home"></a>
-                <a href="#best" class="fas fa-thumbs-up"></a>
-                <a href="#featured" class="fas fa-list"></a>
+
+                <!-- Filter Popup Button -->
+                <button id="filterPopupBtn">
+                    <h3>Filter & Sort</h3>
+                    <i class="fas fa-filter"></i>
+                </button>
+
+                <!-- Filter Popup Content -->
+                <div class="filter-popup" id="filterPopup">
+
+                    <div class="popup-filter-section">
+                        <form method="GET">
+                            <h2>Filter By Category</h2>
+                            <select name="category">
+                                <option value="" disabled selected>Select a category</option>
+                                <?php
+                                include('../database/db_yeokart.php');
+                                $category_query = "SELECT * FROM categories";
+                                $result_category = mysqli_query($con, $category_query);
+                                while ($category_row = mysqli_fetch_assoc($result_category)) {
+                                    $category_id = $category_row['category_id'];
+                                    $category_name = $category_row['category_name'];
+                                    $selected = isset($_GET['category']) && $_GET['category'] == $category_name ? 'selected' : '';
+                                    echo "<option value='$category_name' $selected>$category_name</option>";
+                                }
+                                ?>
+                            </select>
+                            <button type="submit" name="filter_button">Filter</button>
+                        </form>
+                        <form method="GET">
+                            <h2>Filter By Artist</h2>
+                            <select name="artist">
+                                <option value="" disabled selected>Select an artist</option>
+                                <?php
+                                include('../database/db_yeokart.php');
+                                $artist_query = "SELECT * FROM artists";
+                                $result_artist = mysqli_query($con, $artist_query);
+                                while ($artist_row = mysqli_fetch_assoc($result_artist)) {
+                                    $artist_id = $artist_row['artist_id'];
+                                    $artist_name = $artist_row['artist_name'];
+                                    $selected = isset($_GET['artist']) && $_GET['artist'] == $artist_name ? 'selected' : '';
+                                    echo "<option value='$artist_name' $selected>$artist_name</option>";
+                                }
+                                ?>
+                            </select>
+                            <button type="submit" name="filter_button">Filter</button>
+                        </form>
+                    </div>
+
+                    <form method="GET" id="clear">
+                        <button type="button" name="clear_button" onclick="clearSearch()">Clear</button>
+                    </form>
+
+                </div>
             </nav>
             <section class="best" id="best">
                 <div class="best-slider">
@@ -180,92 +242,99 @@
                         // Apply category filter if selected
                         if (isset($_GET['category']) && !empty($_GET['category'])) {
                             $category = mysqli_real_escape_string($con, $_GET['category']);
-                            $select_query .= " WHERE category_name = '$category'";
+                            $select_query .= isset($_GET['search']) && !empty($_GET['search']) ? " AND category_name = '$category'" : " WHERE category_name = '$category'";
                         }
 
                         // Apply artist filter if selected
                         if (isset($_GET['artist']) && !empty($_GET['artist'])) {
                             $artist = mysqli_real_escape_string($con, $_GET['artist']);
-                            $select_query .= isset($_GET['category']) && !empty($_GET['category']) ? " AND artist_name = '$artist'" : " WHERE artist_name = '$artist'";
+                            $select_query .= isset($_GET['search']) && !empty($_GET['search']) || isset($_GET['category']) && !empty($_GET['category']) ? " AND artist_name = '$artist'" : " WHERE artist_name = '$artist'";
                         }
 
                         // Add limit and offset
                         $select_query .= " LIMIT $itemsPerPage OFFSET $offset";
 
                         $result_query = mysqli_query($con, $select_query);
-                        while ($row = mysqli_fetch_assoc($result_query)) {
-                            $item_id = $row['item_id'];
-                            $item_name = $row['item_name'];
-                            $item_price = $row['item_price'];
-                            $item_description = $row['item_description'];
-                            $item_quantity = $row['item_quantity'];
-                            $category_name = $row['category_name'];
-                            $item_image1 = $row['item_image1'];
-                            $artist_name = $row['artist_name'];
+
+                        if (mysqli_num_rows($result_query) == 0) {
+                            echo "<div class='no-results'>0 results found</div>";
+                        } else {
+                            while ($row = mysqli_fetch_assoc($result_query)) {
+                                $item_id = $row['item_id'];
+                                $item_name = $row['item_name'];
+                                $item_price = $row['item_price'];
+                                $item_description = $row['item_description'];
+                                $item_quantity = $row['item_quantity'];
+                                $category_name = $row['category_name'];
+                                $item_image1 = $row['item_image1'];
+                                $artist_name = $row['artist_name'];
                         ?>
-                            <div class='box'>
-                                <div class='icons'>
-                                    <a href='#' class='fas fa-eye' onclick='handleImageClick(<?php echo $item_id; ?>)'></a>
+                                <div class='box'>
+                                    <div class='icons'>
+                                        <a href='#' class='fas fa-eye' onclick='handleImageClick(<?php echo $item_id; ?>)'></a>
+                                    </div>
+                                    <div class='image'>
+                                        <img src='item_images/<?php echo $item_image1; ?>' alt='' onclick='handleImageClick(<?php echo $item_id; ?>)'>
+                                    </div>
+                                    <div class='content'>
+                                        <h3 class='artist'><?php echo $artist_name; ?></h3>
+                                        <h3 class='marquee'><?php echo $item_name; ?></h3>
+                                        <div class='price'>₱ <?php echo $item_price; ?></div>
+                                        <?php if ($item_quantity > 0) { ?>
+                                            <a href='product_details.php?item_id=<?php echo $item_id; ?>' class='btn'><i class='fa-solid fa-cart-plus'></i> Add to Cart</a>
+                                        <?php } else { ?>
+                                            <button class='btn' disabled style="cursor: not-allowed; background-color: gray; border-radius: 3px;"><i class='fa-solid fa-cart-plus'></i> Out of Stock</button>
+                                        <?php } ?>
+                                    </div>
                                 </div>
-                                <div class='image'>
-                                    <img src='item_images/<?php echo $item_image1; ?>' alt='' onclick='handleImageClick(<?php echo $item_id; ?>)'>
-                                </div>
-                                <div class='content'>
-                                    <h3 class='artist'><?php echo $artist_name; ?></h3>
-                                    <h3 class='marquee'><?php echo $item_name; ?></h3>
-                                    <div class='price'>₱ <?php echo $item_price; ?></div>
-                                    <?php if ($item_quantity > 0) { ?>
-                                        <a href='product_details.php?item_id=<?php echo $item_id; ?>' class='btn'><i class='fa-solid fa-cart-plus'></i> Add to Cart</a>
-                                    <?php } else { ?>
-                                        <button class='btn' disabled style="cursor: not-allowed; background-color: gray; border-radius: 3px;"><i class='fa-solid fa-cart-plus'></i> Out of Stock</button>
-                                    <?php } ?>
-                                </div>
-                            </div>
-                        <?php } ?>
+                        <?php
+                            }
+                        }
+                        ?>
                     </div>
                 </div>
                 <?php
-                    $baseUrl = 'new_customer_shop.php?';
+                $baseUrl = 'new_customer_shop.php?';
 
-                    $pageQuery = '';
-                    if (isset($_GET['search_button'])) {
-                        $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
-                    } elseif (isset($_GET['filter_button'])) {
-                        if (isset($_GET['category'])) {
-                            $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
-                        } elseif (isset($_GET['artist'])) {
-                            $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
-                        }
+                $pageQuery = '';
+                if (isset($_GET['search_button'])) {
+                    $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
+                } elseif (isset($_GET['filter_button'])) {
+                    if (isset($_GET['category'])) {
+                        $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
+                    } elseif (isset($_GET['artist'])) {
+                        $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
                     }
+                }
 
-                    $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-                    $totalPages = ceil($totalItems / $itemsPerPage);
+                $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+                $totalPages = ceil($totalItems / $itemsPerPage);
 
-                    $startPage = max(1, $pageNumber - 1);
-                    $endPage = min($totalPages, $pageNumber + 1);
+                $startPage = max(1, $pageNumber - 1);
+                $endPage = min($totalPages, $pageNumber + 1);
 
-                    if ($pageNumber == 1) {
-                        $startPage = 1;
-                        $endPage = min(3, $totalPages);
-                    } elseif ($pageNumber == $totalPages) {
-                        $startPage = max(1, $totalPages - 2);
-                        $endPage = $totalPages;
-                    }
+                if ($pageNumber == 1) {
+                    $startPage = 1;
+                    $endPage = min(3, $totalPages);
+                } elseif ($pageNumber == $totalPages) {
+                    $startPage = max(1, $totalPages - 2);
+                    $endPage = $totalPages;
+                }
 
-                    echo "<div class='pagination'>";
+                echo "<div class='pagination'>";
 
-                    $prevPage = max(1, $pageNumber - 1);
-                    echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
+                $prevPage = max(1, $pageNumber - 1);
+                echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
 
-                    for ($i = $startPage; $i <= $endPage; $i++) {
-                        $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
-                        echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
-                    }
+                for ($i = $startPage; $i <= $endPage; $i++) {
+                    $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
+                    echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
+                }
 
-                    $nextPage = min($totalPages, $pageNumber + 1);
-                    echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
+                $nextPage = min($totalPages, $pageNumber + 1);
+                echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
 
-                    echo "</div>";
+                echo "</div>";
                 ?>
             </section>
 
@@ -331,6 +400,28 @@
                 });
             </script>
 
+
+            <script>
+                // JavaScript to toggle the popup and overlay
+                document.addEventListener("DOMContentLoaded", function() {
+                    var filterPopup = document.getElementById("filterPopup");
+                    var filterPopupBtn = document.getElementById("filterPopupBtn");
+                    var overlay = document.getElementById("filter-overlay");
+
+                    filterPopupBtn.addEventListener("click", function() {
+                        filterPopup.classList.toggle("show");
+                        overlay.style.display = filterPopup.classList.contains("show") ? "block" : "none";
+                    });
+                });
+
+                function validateSearch() {
+                    var searchBox = document.getElementById('search-box');
+                    if (searchBox.value.trim() === '') {
+                        return false;
+                    }
+                    return true;
+                }
+            </script>
 
 
 
