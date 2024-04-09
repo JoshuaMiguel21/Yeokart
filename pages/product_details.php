@@ -8,9 +8,21 @@
     <title>Yeokart</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="../css/style_homepage_customer.css">
     <link rel="icon" type="image/png" href="../res/icon.png">
 </head>
+
+<style>
+.swal2-custom-popup {
+        font-size: 16px;
+        width: 500px;
+    }
+
+    .swal2-custom-title {
+        font-size: 20px;
+    }
+</style>
 <?php
 require('../database/db_yeokart.php');
 session_start();
@@ -105,7 +117,14 @@ if (isset($_POST['add-to-cart-btn'])) {
 
     // Check if the quantity exceeds the stock
     if ($quantity > $item_stock) {
-        echo '<script>alert("You cannot add more than the available stock.")</script>';
+        echo '<script>
+            Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "You cannot add more than the available stock."
+            });
+        </script>';
+        
     } else {
         // Check if the item already exists in the cart for the same customer ID
         $select_cart_query = "SELECT * FROM cart WHERE customer_id = '$customer_id' AND item_name = '$item_name'";
@@ -350,7 +369,17 @@ if (isset($_POST['add-to-cart-btn'])) {
         function checkStock(stock) {
             var quantity = document.getElementById('quantity').value;
             if (parseInt(quantity) > parseInt(stock)) {
-                alert("You cannot add more than the available stock.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'You cannot add more than the available stock.',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                            popup: 'swal2-custom-popup',
+                            title: 'swal2-custom-title',
+                            content: 'swal2-custom-text'
+                        }
+                });
                 return false;
             }
             return true;

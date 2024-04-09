@@ -818,7 +818,7 @@ margin-top: 23px;
 .cart .left-column .box img{
     width: 300px;
     height: 200px;
-    object-fit:contain;
+    object-fit: contain;
 }
 
 .cart .left-column .box .content{
@@ -2106,11 +2106,6 @@ label {
     .left{
         flex-direction: column;
     }
-
-    .order-summary{
-        flex-direction: column;
-    }
-    
 }
 
 @media (max-width:1024px){
@@ -2123,20 +2118,10 @@ label {
     .wrapper {
         grid-template-columns: repeat(4, 1fr);
     }
-
-    .my-cart .cart-item {
-        flex-direction: column;
-        margin-bottom: 25px;
-        min-height: 100px;
-    }
-    
-    .my-cart .cart-item p {
-        margin-top: 7px;
-    }
 }
 @media (max-width:991px){
     html{
-        font-size: 55%;
+        font-size: 70%;
     }
     .header .header-1{
         padding: 2rem;
@@ -2238,11 +2223,26 @@ label {
     .left-column {
         margin-right: 0;
     }
+
+    .right, .left{
+        width: 100%;
+    }
+
+    .right{
+        padding-left: 0;
+        margin-left: 0;
+    }
+
+    .right .order-summary{
+        position: relative;
+        margin-top: 20px;
+        width: 100%;
+    }
 }
 
 @media (max-width:450px){
     html{
-        font-size: 43%;
+        font-size: 55%;
     }
     .wrapper {
         grid-template-columns: repeat(2, 1fr);
@@ -2285,6 +2285,15 @@ label {
     .cart-notification a{
         font-size: 12px;
     }
+
+    .my-cart .cart-item {
+        flex-direction: column;
+        min-height: 100px;
+    }
+    
+    .my-cart .cart-item p {
+        margin-top: 7px;
+    }
 }
 
 @media (max-width:376px){
@@ -2306,5 +2315,10 @@ label {
         border-radius: 5px;
         padding: 10px 20px;
         transition: all 0.3s ease;
+    }
+
+    .logo1{
+        height: 60px;
+        width: 150px;
     }
 }

@@ -322,7 +322,7 @@
                     case 'Pending':
                         return '1px solid red';
                     case 'Invalid':
-                        return '1px solid red';
+                        return '2px solid red';
                     case 'Processing':
                         return '1px solid blue';
                     case 'Shipped':

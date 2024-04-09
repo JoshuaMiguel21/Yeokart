@@ -287,7 +287,7 @@ $con->close();
                         } elseif ($status == "PROCESSING") {
                             echo 'Your order is currently being processed. Please wait for further updates.';
                         } elseif ($status == "PENDING") {
-                            echo 'Your order is pending. We are waiting for payment confirmation.';
+                            echo 'Your order is pending. We are waiting for your payment.';
                         } elseif ($status == "SHIPPED") {
                             echo 'Your order has been shipped. You will receive it soon.';
                         } elseif ($status == "INVALID") {
@@ -341,8 +341,22 @@ $con->close();
                     echo '</tbody>';
                     echo '</table>';
                 } else {
-                    echo "0 results";
-                }
+                    echo '<table class="order-table">';
+                    echo '<thead>';
+                    echo '<tr>';
+                    echo '<th>Order ID</th>';
+                    echo '<th>Date</th>';
+                    echo '<th>Status</th>';
+                    echo '<th><center>Proof of Payment</center></th>';
+                    echo '</tr>';
+                    echo '</thead>';
+                    echo '<tbody>';
+                    echo '<tr>';
+                    echo '<td colspan="4" style="text-align:center;">No orders made yet.</td>';
+                    echo '</tr>';
+                    echo '</tbody>';
+                    echo '</table>';
+                }         
                 $con->close();
                 ?>
             </div>

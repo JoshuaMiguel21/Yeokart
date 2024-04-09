@@ -337,7 +337,7 @@
                     </tbody>
                 </table>
                 <?php
-                $baseUrl = 'owner_item_homepage.php?';
+                $baseUrl = 'emp_item_homepage.php?';
 
                 $pageQuery = '';
                 if (isset($_GET['search_button'])) {

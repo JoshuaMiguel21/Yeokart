@@ -300,11 +300,11 @@
             if ($result->num_rows > 0) {
                 echo "<ul>";
                 while ($row = $result->fetch_assoc()) {
-                    echo "<li><span class=\"larger-font\">" . $row["contacts_description"] . "</span></li>";
+                    echo "<li style='margin-left: 20px;'><span class=\"larger-font\">" . $row["contacts_description"] . "</span></li>";
                 }
                 echo "</ul>";
             } else {
-                echo "No data found";
+                echo "<span style='margin-left: 20px;'> No Data Found</span>";
             }
 
             $con->close();
@@ -318,13 +318,13 @@
             <p><strong>These are the rates for the Shipping fee.</strong></p>
             <p>Small to Medium Items (Up to 2 albums)</p>
             <ul>
-                <li>Metro Manila - <strong>₱ 100</strong></li>
-                <li>Provinces - <strong>₱ 180</strong></li>
+                <li style="margin-left: 20px;">Metro Manila - <strong>₱ 100</strong></li>
+                <li style="margin-left: 20px;">Provinces - <strong>₱ 180</strong></li>
             </ul>
             <p>Large Items (More than 3 albums)</p>
             <ul>
-                <li>Metro Manila - <strong>₱ 120</strong></li>
-                <li>Provinces - <strong>₱ 220</strong></li>
+                <li style="margin-left: 20px;">Metro Manila - <strong>₱ 120</strong></li>
+                <li style="margin-left: 20px;">Provinces - <strong>₱ 220</strong></li>
             </ul>
 
         </div>

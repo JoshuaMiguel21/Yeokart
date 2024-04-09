@@ -8,6 +8,7 @@
     <link rel="icon" type="image/png" href="../res/icon.png">
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head>
 <script>
@@ -207,7 +208,17 @@
                 $number = mysqli_num_rows($result_select);
 
                 if ($number > 0) {
-                    echo "<script>alert('This artist already exists')</script>";
+                    echo "<script>
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'This artist already exists',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    }).then(function(){
+                        // Calling the function to reopen the edit popup with the original artist name
+                        openEditArtistPopup('$artist_id', '".addslashes($row_old_artist['artist_name'])."');
+                    });
+                </script>";
                 } else {
                     if ($artist_name == '') {
                         echo "<script>alert('Please fill up the field')</script>";
@@ -220,8 +231,16 @@
                         $result_query_products_artist = mysqli_query($con, $update_products_artist);
 
                         if ($result_query_artist && $result_query_products_artist) {
-                            echo "<script>alert('Artist successfully updated')</script>";
-                            echo "<script>window.location.href = 'emp_artist_table.php';</script>";
+                            echo "<script>Swal.fire({
+                                title: 'Success!',
+                                text: 'Artist successfully updated',
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                              }).then((result) => {
+                                if (result.isConfirmed) {
+                                  window.location.href = 'emp_artist_table.php';
+                                }
+                              })</script>";
                         }
                     }
                 }

@@ -9,8 +9,20 @@
     <link rel="icon" type="image/png" href="../res/icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="../css/customer_cart.css">
 </head>
+
+<style>
+.swal2-custom-popup {
+        font-size: 16px;
+        width: 500px;
+    }
+
+    .swal2-custom-title {
+        font-size: 20px;
+    }
+</style>
 <?php
 require('../database/db_yeokart.php');
 session_start();
@@ -326,23 +338,59 @@ if (mysqli_num_rows($result_query) > 0) {
         document.addEventListener('DOMContentLoaded', function() {
             const checkoutForm = document.getElementById('checkoutForm');
             checkoutForm.addEventListener('submit', function(event) {
-                let hasExceededQuantity = false;
-                const cartItems = document.querySelectorAll('.box'); // Assuming each cart item is within a .box div
+                let exceededItems = [];
+                let zeroQuantityItems = [];
+                const cartItems = document.querySelectorAll('.box');
 
                 cartItems.forEach(function(item) {
+                    const itemName = item.querySelector('.content h3').textContent;
                     const quantityInput = item.querySelector('input[type=number]');
-                    const maxQuantity = quantityInput.getAttribute('data-max-quantity'); // Assuming data-max-quantity contains the item's available stock
+                    const maxQuantity = quantityInput.getAttribute('data-max-quantity');
 
                     if (parseInt(quantityInput.value) > parseInt(maxQuantity)) {
-                        hasExceededQuantity = true;
-                        alert('One or more items exceed the available stock. Please adjust your quantities before checking out.');
-                        event.preventDefault(); // Prevent form submission only if quantities are invalid
-                        return;
+                        exceededItems.push(itemName);
+                    }
+
+                    if (parseInt(quantityInput.value) === 0) {
+                        zeroQuantityItems.push(itemName);
                     }
                 });
-                // If no items exceed available stock, allow form to submit naturally
+
+                if (exceededItems.length > 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Stock Limit Exceeded',
+                        text: `Adjust quantities for: ${exceededItems.join(", ")}.`,
+                        customClass: {
+                            popup: 'swal2-custom-popup',
+                            title: 'swal2-custom-title',
+                            content: 'swal2-custom-text'
+                        }
+                    });
+
+                    event.preventDefault();
+                    return false;
+                }
+
+                if (zeroQuantityItems.length > 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Found Zero Quantities',
+                        text: `Set quantities above 0 for: ${zeroQuantityItems.join(", ")}.`,
+                        customClass: {
+                            popup: 'swal2-custom-popup',
+                            title: 'swal2-custom-title',
+                            content: 'swal2-custom-text'
+                        }
+                    });
+
+                    event.preventDefault();
+                    return false;
+                }
             });
         });
+
+
     </script>
     <iframe name="update_frame" style="display:none;"></iframe>
 </body>

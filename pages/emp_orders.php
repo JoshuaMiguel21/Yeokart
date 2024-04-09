@@ -187,7 +187,7 @@
                     </tbody>
                 </table>
                 <?php
-                $baseUrl = 'owner_orders.php?';
+                $baseUrl = 'emp_orders.php?';
 
                 $pageQuery = '';
                 if (isset($_GET['search_button'])) {
@@ -301,6 +301,8 @@
                 switch (status) {
                     case 'Pending':
                         return '1px solid red';
+                    case 'Invalid':
+                        return '2px solid red';
                     case 'Processing':
                         return '1px solid blue';
                     case 'Shipped':

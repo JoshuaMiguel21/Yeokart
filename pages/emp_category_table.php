@@ -8,6 +8,7 @@
     <link rel="icon" type="image/png" href="../res/icon.png">
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Yeokart Item Catalog Page</title>
 </head>
 <script>
@@ -208,7 +209,14 @@
                 $number = mysqli_num_rows($result_select);
 
                 if ($number > 0) {
-                    echo "<script>alert('This category already exists')</script>";
+                    echo "<script>Swal.fire({
+                        title: 'Error!',
+                        text: 'This category already exists',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                      }).then(function(){
+                        openEditCategoryPopup('$category_id', '".addslashes($old_category_name)."');
+                      });</script>";
                 } else {
                     if ($category_name == '') {
                         echo "<script>alert('Please fill up the field')</script>";
@@ -221,8 +229,14 @@
                         $result_query_products_category = mysqli_query($con, $update_products_category);
 
                         if ($result_query_category && $result_query_products_category) {
-                            echo "<script>alert('Category successfully updated')</script>";
-                            echo "<script>window.location.href = 'emp_category_table.php';</script>";
+                            echo "<script>Swal.fire({
+                                title: 'Success!',
+                                text: 'Category successfully updated',
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                              }).then(function(){
+                                window.location.href = 'emp_category_table.php';
+                              });</script>";
                         }
                     }
                 }
