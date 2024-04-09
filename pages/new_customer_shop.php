@@ -158,7 +158,7 @@
                     </div>
                 </nav>
             </div>
-
+<!---->
             <nav class="bottom-navbar">
                 <h3>Filter & Sort</h3>
                 <!-- Filter Popup Button -->
