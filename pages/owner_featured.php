@@ -201,19 +201,19 @@ if (isset($_SESSION['lastname'])) {
 
                         $featuresPerPage = 10;
                         $pageNumber = 1;
-                        
+
                         if (isset($_GET['page']) && is_numeric($_GET['page'])) {
                             $pageNumber = $_GET['page'];
                         }
-                        
+
                         $offset = ($pageNumber - 1) * $featuresPerPage;
-                        
+
                         $totalFeaturesQuery = "SELECT COUNT(*) AS total_features FROM products";
                         $totalFeaturesResult = mysqli_query($con, $totalFeaturesQuery);
                         $totalFeaturesRow = mysqli_fetch_assoc($totalFeaturesResult);
                         $totalFeatures = $totalFeaturesRow['total_features'];
-                        
-                        
+
+
                         $select_query = "SELECT * FROM products ORDER BY is_featured DESC LIMIT $featuresPerPage OFFSET $offset";
                         $result_query = mysqli_query($con, $select_query);
                         while ($row = mysqli_fetch_assoc($result_query)) {
@@ -236,13 +236,13 @@ if (isset($_SESSION['lastname'])) {
                             echo "<td>" . $row['artist_name'] . "</td>";
                             echo "<td>" . $row['category_name'] . "</td>";
                             echo "<td>";
-                            echo "<img src='./item_images/$item_image1' alt='' width='50' height='50'>&nbsp;";
+                            echo "<img src='./item_images/$item_image1' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image1 . "\")'>&nbsp;";
                             if (!empty($item_image2)) {
-                                echo "<img src='./item_images/$item_image2' alt='' width='50' height='50'>&nbsp;";
+                                echo "<img src='./item_images/$item_image2' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image2 . "\")'>&nbsp;";
                             }
 
                             if (!empty($item_image3)) {
-                                echo "<img src='./item_images/$item_image3' alt='' width='50' height='50'>&nbsp;";
+                                echo "<img src='./item_images/$item_image3' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image3 . "\")'>&nbsp;";
                             }
                             echo "</td>";
                             echo "<td>";
@@ -262,47 +262,47 @@ if (isset($_SESSION['lastname'])) {
                     </tbody>
                 </table>
                 <?php
-                    $baseUrl = 'owner_featured.php?';
+                $baseUrl = 'owner_featured.php?';
 
-                    $pageQuery = '';
-                    if (isset($_GET['search_button'])) {
-                        $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
-                    } elseif (isset($_GET['filter_button'])) {
-                        if (isset($_GET['category'])) {
-                            $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
-                        } elseif (isset($_GET['artist'])) {
-                            $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
-                        }
+                $pageQuery = '';
+                if (isset($_GET['search_button'])) {
+                    $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
+                } elseif (isset($_GET['filter_button'])) {
+                    if (isset($_GET['category'])) {
+                        $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
+                    } elseif (isset($_GET['artist'])) {
+                        $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
                     }
+                }
 
-                    $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-                    $totalPages = ceil($totalFeatures / $featuresPerPage);
+                $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+                $totalPages = ceil($totalFeatures / $featuresPerPage);
 
-                    $startPage = max(1, $pageNumber - 1);
-                    $endPage = min($totalPages, $pageNumber + 1);
+                $startPage = max(1, $pageNumber - 1);
+                $endPage = min($totalPages, $pageNumber + 1);
 
-                    if ($pageNumber == 1) {
-                        $startPage = 1;
-                        $endPage = min(3, $totalPages);
-                    } elseif ($pageNumber == $totalPages) {
-                        $startPage = max(1, $totalPages - 2);
-                        $endPage = $totalPages;
-                    }
+                if ($pageNumber == 1) {
+                    $startPage = 1;
+                    $endPage = min(3, $totalPages);
+                } elseif ($pageNumber == $totalPages) {
+                    $startPage = max(1, $totalPages - 2);
+                    $endPage = $totalPages;
+                }
 
-                    echo "<div class='pagination'>";
+                echo "<div class='pagination'>";
 
-                    $prevPage = max(1, $pageNumber - 1);
-                    echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
+                $prevPage = max(1, $pageNumber - 1);
+                echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
 
-                    for ($i = $startPage; $i <= $endPage; $i++) {
-                        $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
-                        echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
-                    }
+                for ($i = $startPage; $i <= $endPage; $i++) {
+                    $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
+                    echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
+                }
 
-                    $nextPage = min($totalPages, $pageNumber + 1);
-                    echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
+                $nextPage = min($totalPages, $pageNumber + 1);
+                echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
 
-                    echo "</div>";
+                echo "</div>";
                 ?>
             </div>
             <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
@@ -314,6 +314,11 @@ if (isset($_SESSION['lastname'])) {
                         <button onclick="confirmLogout()" class="confirm-logout-btn">Logout</button>
                         <button onclick="closeLogoutPopup()" class="cancel-logout-btn">Cancel</button>
                     </div>
+                </div>
+            </div>
+            <div id="imagePopup" class="popup-image" style="display: none; padding-top: 100px;">
+                <div class="image-content">
+                    <img id="popupImage" src="" alt="Proof of Payment" style="width: auto; height: 550px;">
                 </div>
             </div>
             <!-- <div class="form-outline mb-4 mt-5">
@@ -337,6 +342,23 @@ if (isset($_SESSION['lastname'])) {
 
                 // Add event listener to checkbox change
                 document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
+
+                function openImagePopup(imageUrl) {
+                    var popup = document.getElementById('imagePopup');
+                    var image = document.getElementById('popupImage');
+                    image.src = imageUrl;
+                    popup.style.display = 'flex';
+                }
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    var popup = document.getElementById('imagePopup');
+
+                    popup.addEventListener('click', function(event) {
+                        if (event.target === popup) {
+                            popup.style.display = 'none';
+                        }
+                    });
+                });
             </script>
 
 </body>

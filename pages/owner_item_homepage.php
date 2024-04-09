@@ -339,13 +339,13 @@
                             echo "<td>" . $row['artist_name'] . "</td>";
                             echo "<td>" . $row['category_name'] . "</td>";
                             echo "<td>";
-                            echo "<img src='./item_images/$item_image1' alt='' style='cursor: pointer;' width='50' height='50' onclick='openImagePopup(\"./item_images/" . $item_image1 . "\")'>&nbsp;";
+                            echo "<img src='./item_images/$item_image1' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image1 . "\")'>&nbsp;";
                             if (!empty($item_image2)) {
-                                echo "<img src='./item_images/$item_image2' alt='' style='cursor: pointer;' width='50' height='50' onclick='openImagePopup(\"./item_images/" . $item_image2 . "\")'>&nbsp;";
+                                echo "<img src='./item_images/$item_image2' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image2 . "\")'>&nbsp;";
                             }
 
                             if (!empty($item_image3)) {
-                                echo "<img src='./item_images/$item_image3' alt='' style='cursor: pointer;' width='50' height='50' onclick='openImagePopup(\"./item_images/" . $item_image3 . "\")'>&nbsp;";
+                                echo "<img src='./item_images/$item_image3' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image3 . "\")'>&nbsp;";
                             }
                             echo "</td>";
                             // Inside your while loop
@@ -366,47 +366,47 @@
                     </tbody>
                 </table>
                 <?php
-                    $baseUrl = 'owner_item_homepage.php?';
+                $baseUrl = 'owner_item_homepage.php?';
 
-                    $pageQuery = '';
-                    if (isset($_GET['search_button'])) {
-                        $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
-                    } elseif (isset($_GET['filter_button'])) {
-                        if (isset($_GET['category'])) {
-                            $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
-                        } elseif (isset($_GET['artist'])) {
-                            $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
-                        }
+                $pageQuery = '';
+                if (isset($_GET['search_button'])) {
+                    $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
+                } elseif (isset($_GET['filter_button'])) {
+                    if (isset($_GET['category'])) {
+                        $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
+                    } elseif (isset($_GET['artist'])) {
+                        $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
                     }
+                }
 
-                    $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-                    $totalPages = ceil($totalItems / $itemsPerPage);
+                $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+                $totalPages = ceil($totalItems / $itemsPerPage);
 
-                    $startPage = max(1, $pageNumber - 1);
-                    $endPage = min($totalPages, $pageNumber + 1);
+                $startPage = max(1, $pageNumber - 1);
+                $endPage = min($totalPages, $pageNumber + 1);
 
-                    if ($pageNumber == 1) {
-                        $startPage = 1;
-                        $endPage = min(3, $totalPages);
-                    } elseif ($pageNumber == $totalPages) {
-                        $startPage = max(1, $totalPages - 2);
-                        $endPage = $totalPages;
-                    }
+                if ($pageNumber == 1) {
+                    $startPage = 1;
+                    $endPage = min(3, $totalPages);
+                } elseif ($pageNumber == $totalPages) {
+                    $startPage = max(1, $totalPages - 2);
+                    $endPage = $totalPages;
+                }
 
-                    echo "<div class='pagination'>";
+                echo "<div class='pagination'>";
 
-                    $prevPage = max(1, $pageNumber - 1);
-                    echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
+                $prevPage = max(1, $pageNumber - 1);
+                echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
 
-                    for ($i = $startPage; $i <= $endPage; $i++) {
-                        $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
-                        echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
-                    }
+                for ($i = $startPage; $i <= $endPage; $i++) {
+                    $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
+                    echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
+                }
 
-                    $nextPage = min($totalPages, $pageNumber + 1);
-                    echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
+                $nextPage = min($totalPages, $pageNumber + 1);
+                echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
 
-                    echo "</div>";
+                echo "</div>";
                 ?>
 
             </div>
