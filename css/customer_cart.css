@@ -749,8 +749,8 @@ section{
 }
 
 .cart .left-column .box img{
-    width: 300px;
-    height: 200px;
+    width: 340px;
+    height: 267px;
     object-fit: contain;
 }
 
@@ -773,6 +773,7 @@ section{
 }
 
 .btn-area{
+    margin-top: 10px;
     margin-left: auto;
     max-width: 130px;
     display: flex; 
@@ -801,6 +802,7 @@ section{
     background: #eee;
     box-shadow: var(--box-shadow);
 }
+
 .center-btn {
     display: flex;
     justify-content: center;
@@ -1846,9 +1848,6 @@ label {
 }
 
 @media (max-width:1250px){
-    .container {
-        flex-direction: column;
-    }
     
     .project{
         width: 90%;
@@ -1856,19 +1855,15 @@ label {
 
     .left-column{
         width: 90%;
-    }
-
-    .right-column{
-        margin-top: 0;
-        margin-bottom: 0;
-        margin-left: auto;
-        margin-right: auto;
-        width: 85%;
-    }
+    }   
 
 }
 
 @media (max-width:1024px){
+    .container{
+        flex-direction: column;
+    }
+
     html{
         font-size: 55%;
     }
@@ -1877,6 +1872,19 @@ label {
     }
     .wrapper {
         grid-template-columns: repeat(4, 1fr);
+    }
+
+    .cart .right-column{
+        margin-top: 0px;
+    }
+
+    .cart .right-column .account{
+        margin: 0;
+        padding: 20px;
+        width: 50%;
+        height: 250px;
+        margin-left: auto;
+        margin-right: auto;
     }
     
 }
@@ -1892,27 +1900,24 @@ label {
     }
 }
 
-@media (max-width:797px){
+@media (max-width:812px){
     header{
         width: 100%;
     }
 
-    .project{
-        width: 100%;
+    .container .left-column .project{
+        margin-left: auto;
+        margin-right: auto;
     }
-
     
-    div.shop{
-        width: 100%;
-    }
-
-    div.shop div.box{
+    .cart .left-column div.box{
         flex-direction: column;
-        width: 90%;
-        min-height: 450px;
+        max-width: 350px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
-    div.shop div.box img{
+    .shop .box img{
         margin-left: auto;
         margin-right: auto;
     }
@@ -1921,6 +1926,12 @@ label {
         margin-top: 20px;
         margin-left: auto;
         margin-right: auto;
+    }
+
+    .cart .right-column .account{
+        padding: 20px;
+        width: 75%;
+        height: 250px;
     }
     
 }
@@ -2061,10 +2072,15 @@ label {
         font-size: 12px;
     }
 
-    div.shop div.box{
+    .cart .left-column .box{
         flex-direction: column;
         width: 95%;
         min-height: 450px;
+    }
+
+    div.project div.shop div.box img{
+        width: 250px;
+        height: 167px;
     }
 
     p.btn-area{

@@ -442,12 +442,10 @@ margin-top: 23px;
 /* Hover effect */
 .popup-filter-section button[type="submit"]:hover,
 .popup-filter-section button[type="button"]:hover,
-.filter-popup button[type="button"]:hover  {
+.filter-popup button[type="button"]:hover {
     background-color: white; /* Darker background color on hover */
     color: var(--dark-color); /* Text color on hover */
 }
-
-
 
 .featured .featured-slider .box,
 .best .best-slider .box{

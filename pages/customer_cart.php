@@ -171,7 +171,7 @@ if (mysqli_num_rows($result_query) > 0) {
                                 echo "<div class='select-quantity'>";
                                 echo "<form method='POST' action='{$_SERVER['PHP_SELF']}'>";
                                 echo "<span>Edit Quantity:</span>";
-                                echo "<button type='button' onclick='decrement({$row['cart_id']}, {$row['price']})'>-</button>";
+                                echo "<br/><button type='button' onclick='decrement({$row['cart_id']}, {$row['price']})'>-</button>";
                                 echo "<input type='number' id='quantity{$row['cart_id']}' name='quantity' min='1' max='{$row['item_quantity']}' data-max-quantity='{$row['item_quantity']}' value='{$row['quantity']}' onchange='updateTotal()' oninput='updateQuantity({$row['cart_id']}, this.value, {$row['price']}, $item_quantity)'>";
                                 $disableAdd = $row['quantity'] >= $item_quantity ? "disabled" : "";
                                 echo "<button type='button' onclick='increment({$row['cart_id']}, {$row['price']}, $item_quantity)' $disableAdd>+</button>";
