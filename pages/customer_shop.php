@@ -85,7 +85,7 @@
             <div class="header-1">
                 <a href="customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>
                 <div class="icons">
-                    <form action="new_customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
+                    <form action="customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
                         <input type="search" name="search" placeholder="Search here..." id="search-box">
                         <button type="submit"><i class="fas fa-search"></i></button>
                     </form>
@@ -96,13 +96,13 @@
                 <div class="icons">
                     <ul>
                         <li class="search-ul">
-                            <form action="new_customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
+                            <form action="customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
                                 <input type="search" name="search" placeholder="Search here..." id="search-box">
                                 <button type="submit"><i class="fas fa-search"></i></button>
                             </form>
                         </li>
                         <li class="home-class"><a href="customer_homepage.php" id="home-nav">Home</a></li>
-                        <li><a href="new_customer_shop.php" class="active">Shop</a></li>
+                        <li><a href="customer_shop.php" class="active">Shop</a></li>
                         <li><a href="contact_page.php">Contact Us</a></li>
                         <li><a href="customer_cart.php"><i class="fas fa-shopping-cart"><span id="cart-num"><?php echo $cartCount; ?></span></i></a></li>
                         <li><a href="customer_profile.php" id="user-btn"><i class="fas fa-user"></i></a></li>
@@ -337,7 +337,7 @@
                     </div>
                 </div>
                 <?php
-                $baseUrl = 'new_customer_shop.php?';
+                $baseUrl = 'customer_shop.php?';
 
                 $pageQuery = '';
                 if (isset($_GET['search_button'])) {
@@ -387,7 +387,7 @@
                 function clearSearch() {
                     document.getElementsByName('category')[0].selectedIndex = 0;
                     document.getElementsByName('artist')[0].selectedIndex = 0;
-                    window.location.href = 'new_customer_shop.php'; // Reload the page
+                    window.location.href = 'customer_shop.php'; // Reload the page
                 }
                 document.addEventListener('DOMContentLoaded', function() {
                     const searchForm = document.querySelector('.search-form');

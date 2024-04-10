@@ -8,7 +8,7 @@
     <link href="../css/monthlyreport.css" rel="stylesheet" />
     <link rel="icon" type="image/png" href="../res/icon.png">
 
-    <title>Yeokart</title>
+    <title>Monthly Report - Yeokart</title>
 </head>
 
 <script>

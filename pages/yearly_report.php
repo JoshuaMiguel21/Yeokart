@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link href="../css/monthlyreport.css" rel="stylesheet" />
     <link rel="icon" type="image/png" href="../res/icon.png">
-    <title>Yeokart</title>
+    <title>Yearly Report - Yeokart</title>
 </head>
 <script>
     function openLogoutPopup() {
