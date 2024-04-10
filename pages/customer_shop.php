@@ -258,6 +258,7 @@
 
                 if (!empty($selectedFilters)) {
                     echo "<h3>Showing results for " . implode(", ", $selectedFilters) . "</h3>";
+                    echo "<br></br>";
                 }
                 ?>
                 <div class="best-slider">
@@ -305,18 +306,6 @@
                             }
                         }
 
-                        // Execute the modified query
-                        $result_query = mysqli_query($con, $select_query);
-
-                        // Display the sorted products
-                        if (mysqli_num_rows($result_query) == 0) {
-                            echo "";
-                        } else {
-                            while ($row = mysqli_fetch_assoc($result_query)) {
-                                // Display each product as before
-                            }
-                        }
-
 
                         // Add limit and offset
                         $select_query .= " LIMIT $itemsPerPage OFFSET $offset";
@@ -324,7 +313,7 @@
                         $result_query = mysqli_query($con, $select_query);
 
                         if (mysqli_num_rows($result_query) == 0) {
-                            echo "";
+                            echo "<div class='no-results'>0 results found</div>";
                         } else {
                             while ($row = mysqli_fetch_assoc($result_query)) {
                                 $item_id = $row['item_id'];

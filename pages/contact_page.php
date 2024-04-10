@@ -109,19 +109,21 @@ if ($result) {
                     $icon_link = $row['icon_link'];
                     $contacts_description = $row['contacts_description'];
 
-                    if (filter_var($contacts_description, FILTER_VALIDATE_URL)) {
-                        $contacts_link = "<a href='$contacts_description' target='_blank'>$contacts_description</a>";
-                    } else {
-                        $contacts_link = $contacts_description;
-                    }
+                    if ($icon_link !== "<i class='fa-solid fa-peso-sign'></i>") {
+                        if (filter_var($contacts_description, FILTER_VALIDATE_URL)) {
+                            $contacts_link = "<a href='$contacts_description' target='_blank'>$contacts_description</a>";
+                        } else {
+                            $contacts_link = $contacts_description;
+                        }
 
-                    echo "<div class='box'>
-            <div class='iconbox'>
-                $icon_link
-            </div>
-            <h3>$contacts_name</h3>
-            <p>$contacts_link</p>
-          </div>";
+                        echo "<div class='box'>
+                        <div class='iconbox'>
+                            $icon_link
+                        </div>
+                        <h3>$contacts_name</h3>
+                        <p>$contacts_link</p>
+                        </div>";
+                    }
                 }
                 ?>
             </div>

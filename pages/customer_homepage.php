@@ -135,22 +135,26 @@ if ($result) {
                     $item_image1 = $row['item_image1'];
                     $artist_name = $row['artist_name'];
                     $times_sold = $row['times_sold'];
-                    echo "<div class='swiper-slide box'>
-            <div class='icons'>
-                <a href='#' class='fas fa-eye' onclick='handleImageClick(\"$item_id\")'></a>
-            </div>
-            <div class='image'>
-                <img src='item_images/$item_image1' alt='' onclick='handleImageClick(\"$item_id\")'>
-            </div>
-            <div class='content'>
-                <h3 class='artist'>$artist_name</h3>
-                <h3 class='marquee'>$item_name</h3>
-                <div class='price'>₱ $item_price</div>
-                <a href='product_details.php?item_id=$item_id' class='btn'><i class='fa-solid fa-cart-plus'></i> Add to Cart</a>
-            </div>
-        </div>";
-                }
                 ?>
+                    <div class='swiper-slide box'>
+                        <div class='icons'>
+                            <a href='#' class='fas fa-eye' onclick='handleImageClick("<?php echo $item_id; ?>")'></a>
+                        </div>
+                        <div class='image'>
+                            <img src='item_images/<?php echo $item_image1; ?>' alt='' onclick='handleImageClick("<?php echo $item_id; ?>")'>
+                        </div>
+                        <div class='content'>
+                            <h3 class='artist'><?php echo $artist_name; ?></h3>
+                            <h3 class='marquee'><?php echo $item_name; ?></h3>
+                            <div class='price'>₱ <?php echo $item_price; ?></div>
+                            <?php if ($item_quantity > 0) { ?>
+                                <a href='product_details.php?item_id=<?php echo $item_id; ?>' class='btn'><i class='fa-solid fa-cart-plus'></i> Add to Cart</a>
+                            <?php } else { ?>
+                                <button class='btn' disabled style='cursor: not-allowed; background-color: gray; border-radius: 3px;'><i class='fa-solid fa-cart-plus'></i> Out of Stock</button>
+                            <?php } ?>
+                        </div>
+                    </div>
+                <?php } ?>
             </div>
             <div class="swiper-button-next"></div>
             <div class="swiper-button-prev"></div>
@@ -173,22 +177,27 @@ if ($result) {
                     $category_name = $row['category_name'];
                     $item_image1 = $row['item_image1'];
                     $artist_name = $row['artist_name'];
-                    echo "<div class='swiper-slide box'>
-                    <div class='icons'>
-                        <a href='#' class='fas fa-eye'onclick='handleImageClick(\"$item_id\")'></a>
-                    </div>
-                    <div class='image'>
-                <img src='item_images/$item_image1' alt='' onclick='handleImageClick(\"$item_id\")'>
-            </div>
-                    <div class='content'>
-                    <h3 class='artist'>$artist_name</h3>
-                    <h3 class='marquee'>$item_name</h3>
-                    <div class='price'>₱ $item_price</div>
-                    <a href='product_details.php?item_id=$item_id' class='btn'><i class='fa-solid fa-cart-plus'></i> Add to Cart</a>
-                    </div>
-                </div>";
-                }
+                    $times_sold = $row['times_sold'];
                 ?>
+                    <div class='swiper-slide box'>
+                        <div class='icons'>
+                            <a href='#' class='fas fa-eye' onclick='handleImageClick("<?php echo $item_id; ?>")'></a>
+                        </div>
+                        <div class='image'>
+                            <img src='item_images/<?php echo $item_image1; ?>' alt='' onclick='handleImageClick("<?php echo $item_id; ?>")'>
+                        </div>
+                        <div class='content'>
+                            <h3 class='artist'><?php echo $artist_name; ?></h3>
+                            <h3 class='marquee'><?php echo $item_name; ?></h3>
+                            <div class='price'>₱ <?php echo $item_price; ?></div>
+                            <?php if ($item_quantity > 0) { ?>
+                                <a href='product_details.php?item_id=<?php echo $item_id; ?>' class='btn'><i class='fa-solid fa-cart-plus'></i> Add to Cart</a>
+                            <?php } else { ?>
+                                <button class='btn' disabled style='cursor: not-allowed; background-color: gray; border-radius: 3px;'><i class='fa-solid fa-cart-plus'></i> Out of Stock</button>
+                            <?php } ?>
+                        </div>
+                    </div>
+                <?php } ?>
             </div>
             <div class="swiper-button-next"></div>
             <div class="swiper-button-prev"></div>
