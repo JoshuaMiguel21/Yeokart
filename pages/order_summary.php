@@ -373,7 +373,11 @@
                 <p><strong>Overall Total: </strong>₱ <?php echo number_format($overallTotal, 2); ?></p>
                 <p><strong>Date of Purchase: </strong><?php echo date("F j, Y"); ?></p>
                 <div class="button-order">
-                    <button type="submit" class="btn-confirm" name="confirm_order"><i class='fa fa-cart-arrow-down'></i>Place Order</button>
+                <button type="submit" class="btn-confirm" name="confirm_order" id="placeOrderButton">
+                    <input type="hidden" name="confirm_order" value="1">
+                    <i class='fa fa-cart-arrow-down'></i>
+                    <i class='fas fa-spinner fa-spin' style='display: none;' id='loadingIcon'></i> Place Order
+                </button>
                 </div>
             </div>
         </div>
@@ -397,6 +401,7 @@
 
 
     <script>
+
         function closePopup() {
             document.getElementById("chooseAddressPopup").style.display = "none";
         }
@@ -404,6 +409,24 @@
         function showPopup() {
             document.getElementById('chooseAddressPopup').style.display = 'block';
         }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            var placeOrderButton = document.getElementById("placeOrderButton");
+            var loadingIcon = document.getElementById('loadingIcon');
+            var cartIcon = document.querySelector('.btn-confirm i.fa-cart-arrow-down');
+
+            placeOrderButton.addEventListener("click", function(event) {
+                event.preventDefault();
+
+                loadingIcon.style.display = 'inline-block';
+                cartIcon.style.display = 'none';
+
+                setTimeout(function() {
+                    // Make sure you are targeting the correct form, especially if there are multiple forms on the page.
+                    document.querySelector('form').submit();
+                }, 1000);
+            });
+        });
     </script>
 </body>
 

@@ -63,9 +63,6 @@ section{
     background: #fff;
     border: var(--border);
 }
-.header{
-    padding: 0 14rem;
-}
 
 .header .header-1{
     background: white;
@@ -77,6 +74,7 @@ section{
 
 .header .header-1 .logo{
     width: 150px;
+    margin-left: 14rem;
 }
 
 .header .header-1 .search-form, 
@@ -112,6 +110,10 @@ section{
 
 .header .header-1 .search-form button:hover{
     color: var(--pink);
+}
+
+.header .header-1 .icons{
+    margin-right: 14rem;
 }
 
 .header .header-1 .icons a {
@@ -339,6 +341,7 @@ section{
         display: block;
         text-align: center;
         transition: all 0.3s ease;
+        z-index: 1000;
     }
 
     #click:checked ~ .header .header-1 .icons ul {
@@ -418,6 +421,11 @@ section{
         justify-content: center;
         align-items: center;
         margin: 0px 30px;
+
+    }
+
+    .header .header-1 .logo{
+        margin-left: auto;
     }
 
     .header .header-2{

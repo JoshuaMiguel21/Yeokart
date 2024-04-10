@@ -39,12 +39,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST['username']);
     $sessionUsername = $_SESSION['username'];
 
-    // Validate if the username already exists in user_accounts or employee_accounts
-    $checkExistingUser = "SELECT username FROM user_accounts WHERE username = ? UNION SELECT username FROM employee_accounts WHERE username = ?";
+    // Modify the query to exclude the current session's username
+    $checkExistingUser = "SELECT username FROM user_accounts WHERE username = ? AND username != ? UNION SELECT username FROM employee_accounts WHERE username = ? AND username != ?";
     
     if ($checkStmt = $con->prepare($checkExistingUser)) {
-        $checkStmt->bind_param("ss", $param_username, $param_username);
+        // Adjust the bind_param and provide the session's username as an exclusion parameter
+        $checkStmt->bind_param("ssss", $param_username, $param_sessionUsername, $param_username, $param_sessionUsername);
         $param_username = $username;
+        $param_sessionUsername = $sessionUsername;
         $checkStmt->execute();
         $checkStmt->store_result();
 
@@ -103,6 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 $con->close();
 ?>
+
 
 </body>
 </html>

@@ -96,7 +96,7 @@
                 <div class="icons">
                     <ul>
                         <li class="search-ul">
-                            <form action="customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
+                            <form action="customer_shop.php" method="GET" class="search-form1">
                                 <input type="search" name="search" placeholder="Search here..." id="search-box">
                                 <button type="submit"><i class="fas fa-search"></i></button>
                             </form>
@@ -310,7 +310,7 @@
 
                         // Display the sorted products
                         if (mysqli_num_rows($result_query) == 0) {
-                            echo "<div class='no-results'>0 results found</div>";
+                            echo "";
                         } else {
                             while ($row = mysqli_fetch_assoc($result_query)) {
                                 // Display each product as before
@@ -324,7 +324,7 @@
                         $result_query = mysqli_query($con, $select_query);
 
                         if (mysqli_num_rows($result_query) == 0) {
-                            echo "<div class='no-results'>0 results found</div>";
+                            echo "";
                         } else {
                             while ($row = mysqli_fetch_assoc($result_query)) {
                                 $item_id = $row['item_id'];
@@ -453,18 +453,6 @@
                     // Redirect the user to the product details page
                     window.location.href = url;
                 }
-
-                document.addEventListener('DOMContentLoaded', function() {
-                    const checkbox = document.getElementById('click');
-                    const bestToHide = document.getElementById('best');
-                    checkbox.addEventListener('change', function() {
-                        if (this.checked) {
-                            bestToHide.style.display = 'none';
-                        } else {
-                            bestToHide.style.display = 'block';
-                        }
-                    });
-                });
             </script>
 
 

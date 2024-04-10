@@ -64,7 +64,7 @@ if ($result) {
 
 <body>
     <input type="checkbox" id="click">
-    <header class="header">
+    <header class="header" style="box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
         <div class="header-1">
             <a href="customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>
             <div class="icons">
@@ -79,7 +79,7 @@ if ($result) {
             <div class="icons">
                 <ul>
                     <li class="search-ul">
-                        <form action="customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
+                        <form action="customer_shop.php" method="GET" class="search-form1">
                             <input type="search" name="search" placeholder="Search here..." id="search-box">
                             <button type="submit"><i class="fas fa-search"></i></button>
                         </form>
@@ -149,19 +149,6 @@ if ($result) {
             if (window.scrollY > 80) {
                 document.querySelector('.header .header-2').classList.add('active');
             }
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const checkbox = document.getElementById('click');
-            const contactsToHide = document.getElementById('contacts'); // Change 'home' to the ID of the section you want to hide/show
-
-            checkbox.addEventListener('change', function() {
-                if (this.checked) {
-                    contactsToHide.style.display = 'none';
-                } else {
-                    contactsToHide.style.display = 'block';
-                }
-            });
         });
 
         function validateSearch() {
