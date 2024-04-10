@@ -50,6 +50,7 @@
 <body>
     <?php
     session_start();
+    require('../database/db_yeokart.php');
 
     if (!isset($_SESSION['nav_toggle'])) {
         // Set it to unchecked by default
@@ -75,6 +76,38 @@
         header("Location: login_page.php");
         exit();
     }
+    $totalItems = 0;
+    $itemsPerPage = 10;
+
+    $products_count_query = "SELECT COUNT(*) as total FROM products";
+    $products_count_result = mysqli_query($con, $products_count_query);
+    $products_count_data = mysqli_fetch_assoc($products_count_result);
+    $products_count = $products_count_data['total'];
+
+    // Check if there are no search results
+    $search_query = isset($_GET['search']) ? $_GET['search'] : '';
+    $filter_category = isset($_GET['category']) ? $_GET['category'] : '';
+    $filter_artist = isset($_GET['artist']) ? $_GET['artist'] : '';
+
+    $filter_query = "";
+    if (!empty($search_query) || !empty($filter_category) || !empty($filter_artist)) {
+        $filter_query = "WHERE ";
+        if (!empty($search_query)) {
+            $filter_query .= "item_name LIKE '%$search_query%'";
+        }
+        if (!empty($filter_category)) {
+            $filter_query .= (!empty($search_query) ? " AND " : "") . "category_name = '$filter_category'";
+        }
+        if (!empty($filter_artist)) {
+            $filter_query .= (!empty($search_query) || !empty($filter_category) ? " AND " : "") . "artist_name = '$filter_artist'";
+        }
+    }
+
+    $check_query = "SELECT COUNT(*) as total FROM products $filter_query";
+    $check_result = mysqli_query($con, $check_query);
+    $check_data = mysqli_fetch_assoc($check_result);
+    $no_results = $check_data['total'] == 0;
+
     ?>
     <input type="checkbox" id="nav-toggle" <?php echo $_SESSION['nav_toggle'] ? 'checked' : ''; ?>>
     <div class="sidebar <?php echo $_SESSION['nav_toggle'] ? 'open' : ''; ?>">
@@ -207,45 +240,84 @@
             </div>
 
             <div class="table">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>
-                                <center>Item Name</center>
-                            </th>
-                            <th>
-                                <center>Price</center>
-                            </th>
-                            <th>
-                                <center>Description</center>
-                            </th>
-                            <th>
-                                <center>Quantity</center>
-                            </th>
-                            <th>
-                                <center>Artist</center>
-                            </th>
-                            <th>
-                                <center>Category</center>
-                            </th>
-                            <th>
-                                <center>Images</center>
-                            </th>
-                            <th>
-                                <center>Action</center>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        include('../database/db_yeokart.php');
-                        if (isset($_POST['delete_item'])) {
-                            $item_id = $_POST['item_id'];
-                            $stmt = $con->prepare("DELETE FROM products WHERE item_id = ?");
-                            $stmt->bind_param("i", $item_id);
+                <?php if ($products_count == 0 || $no_results) : ?>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <center>Item Name</center>
+                                </th>
+                                <th>
+                                    <center>Price</center>
+                                </th>
+                                <th>
+                                    <center>Description</center>
+                                </th>
+                                <th>
+                                    <center>Quantity</center>
+                                </th>
+                                <th>
+                                    <center>Artist</center>
+                                </th>
+                                <th>
+                                    <center>Category</center>
+                                </th>
+                                <th>
+                                    <center>Images</center>
+                                </th>
+                                <th>
+                                    <center>Action</center>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan='8'>
+                                    <center><b>No item/s found</b></center>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                <?php else : ?>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <center>Item Name</center>
+                                </th>
+                                <th>
+                                    <center>Price</center>
+                                </th>
+                                <th>
+                                    <center>Description</center>
+                                </th>
+                                <th>
+                                    <center>Quantity</center>
+                                </th>
+                                <th>
+                                    <center>Artist</center>
+                                </th>
+                                <th>
+                                    <center>Category</center>
+                                </th>
+                                <th>
+                                    <center>Images</center>
+                                </th>
+                                <th>
+                                    <center>Action</center>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            include('../database/db_yeokart.php');
+                            if (isset($_POST['delete_item'])) {
+                                $item_id = $_POST['item_id'];
+                                $stmt = $con->prepare("DELETE FROM products WHERE item_id = ?");
+                                $stmt->bind_param("i", $item_id);
 
-                            if ($stmt->execute()) {
-                                echo "<script>
+                                if ($stmt->execute()) {
+                                    echo "<script>
                                             Swal.fire({
                                                 title: 'Success!',
                                                 text: 'Item deleted successfully',
@@ -257,8 +329,8 @@
                                                 }
                                             });
                                           </script>";
-                            } else {
-                                echo "<script>
+                                } else {
+                                    echo "<script>
                                             Swal.fire({
                                                 title: 'Error!',
                                                 text: 'Failed to delete item',
@@ -270,100 +342,101 @@
                                                 }
                                             });
                                           </script>";
+                                }
+
+                                $stmt->close();
                             }
 
-                            $stmt->close();
-                        }
+                            $itemsPerPage = 10;
 
-                        $itemsPerPage = 10;
+                            // Default page number
+                            $pageNumber = 1;
 
-                        // Default page number
-                        $pageNumber = 1;
+                            if (isset($_GET['page']) && is_numeric($_GET['page'])) {
+                                $pageNumber = $_GET['page'];
+                            }
 
-                        if (isset($_GET['page']) && is_numeric($_GET['page'])) {
-                            $pageNumber = $_GET['page'];
-                        }
+                            // Calculate the offset
+                            $offset = ($pageNumber - 1) * $itemsPerPage;
 
-                        // Calculate the offset
-                        $offset = ($pageNumber - 1) * $itemsPerPage;
+                            if (!isset($_GET['search_button']) && !isset($_GET['filter_button'])) {
+                                // Default query without any filters
+                                $select_query = "SELECT * FROM products";
+                            } else {
+                                // Check for search or filter
+                                if (isset($_GET['search_button'])) {
+                                    $search = $_GET['search'];
+                                    $select_query = "SELECT * FROM products WHERE item_name LIKE '%$search%'";
+                                } elseif (isset($_GET['filter_button'])) {
+                                    $category_name = isset($_GET['category']) ? $_GET['category'] : '';
+                                    $artist_name = isset($_GET['artist']) ? $_GET['artist'] : '';
 
-                        if (!isset($_GET['search_button']) && !isset($_GET['filter_button'])) {
-                            // Default query without any filters
-                            $select_query = "SELECT * FROM products";
-                        } else {
-                            // Check for search or filter
-                            if (isset($_GET['search_button'])) {
-                                $search = $_GET['search'];
-                                $select_query = "SELECT * FROM products WHERE item_name LIKE '%$search%'";
-                            } elseif (isset($_GET['filter_button'])) {
-                                $category_name = isset($_GET['category']) ? $_GET['category'] : '';
-                                $artist_name = isset($_GET['artist']) ? $_GET['artist'] : '';
-
-                                if (!empty($category_name)) {
-                                    // Filter by category
-                                    $select_query = "SELECT * FROM products WHERE category_name = '$category_name'";
-                                } elseif (!empty($artist_name)) {
-                                    // Filter by artist
-                                    $select_query = "SELECT * FROM products WHERE artist_name = '$artist_name'";
-                                } else {
-                                    // No filter applied
-                                    $select_query = "SELECT * FROM products";
+                                    if (!empty($category_name)) {
+                                        // Filter by category
+                                        $select_query = "SELECT * FROM products WHERE category_name = '$category_name'";
+                                    } elseif (!empty($artist_name)) {
+                                        // Filter by artist
+                                        $select_query = "SELECT * FROM products WHERE artist_name = '$artist_name'";
+                                    } else {
+                                        // No filter applied
+                                        $select_query = "SELECT * FROM products";
+                                    }
                                 }
                             }
-                        }
-                        // Get total count of items
-                        $result = mysqli_query($con, $select_query);
-                        $totalItems = mysqli_num_rows($result);
+                            // Get total count of items
+                            $result = mysqli_query($con, $select_query);
+                            $totalItems = mysqli_num_rows($result);
 
-                        // Add LIMIT and OFFSET to the query
-                        $select_query .= " LIMIT $itemsPerPage OFFSET $offset";
-                        $result_query = mysqli_query($con, $select_query);
+                            // Add LIMIT and OFFSET to the query
+                            $select_query .= " LIMIT $itemsPerPage OFFSET $offset";
+                            $result_query = mysqli_query($con, $select_query);
 
-                        while ($row = mysqli_fetch_assoc($result_query)) {
-                            $item_id = $row['item_id'];
-                            $item_name = $row['item_name'];
-                            $item_price = $row['item_price'];
-                            $item_description = $row['item_description'];
-                            $item_quantity = $row['item_quantity'];
-                            $artist_name = $row['artist_name'];
-                            $category_name = $row['category_name'];
-                            $item_image1 = $row['item_image1'];
-                            $item_image2 = $row['item_image2'];
-                            $item_image3 = $row['item_image3'];
-                            echo "<tr>";
-                            echo "<td>" . $row['item_name'] . "</td>";
-                            echo "<td> ₱" . $row['item_price'] . "</td>";
-                            echo "<td style='max-width: 350px;'>" . $row['item_description'] . "</td>";
-                            echo "<td>" . $row['item_quantity'] . "</td>";
-                            echo "<td>" . $row['artist_name'] . "</td>";
-                            echo "<td>" . $row['category_name'] . "</td>";
-                            echo "<td>";
-                            echo "<img src='./item_images/$item_image1' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image1 . "\")'>&nbsp;";
-                            if (!empty($item_image2)) {
-                                echo "<img src='./item_images/$item_image2' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image2 . "\")'>&nbsp;";
-                            }
+                            while ($row = mysqli_fetch_assoc($result_query)) {
+                                $item_id = $row['item_id'];
+                                $item_name = $row['item_name'];
+                                $item_price = $row['item_price'];
+                                $item_description = $row['item_description'];
+                                $item_quantity = $row['item_quantity'];
+                                $artist_name = $row['artist_name'];
+                                $category_name = $row['category_name'];
+                                $item_image1 = $row['item_image1'];
+                                $item_image2 = $row['item_image2'];
+                                $item_image3 = $row['item_image3'];
+                                echo "<tr>";
+                                echo "<td>" . $row['item_name'] . "</td>";
+                                echo "<td> ₱" . $row['item_price'] . "</td>";
+                                echo "<td style='max-width: 350px;'>" . $row['item_description'] . "</td>";
+                                echo "<td>" . $row['item_quantity'] . "</td>";
+                                echo "<td>" . $row['artist_name'] . "</td>";
+                                echo "<td>" . $row['category_name'] . "</td>";
+                                echo "<td>";
+                                echo "<img src='./item_images/$item_image1' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image1 . "\")'>&nbsp;";
+                                if (!empty($item_image2)) {
+                                    echo "<img src='./item_images/$item_image2' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image2 . "\")'>&nbsp;";
+                                }
 
-                            if (!empty($item_image3)) {
-                                echo "<img src='./item_images/$item_image3' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image3 . "\")'>&nbsp;";
-                            }
-                            echo "</td>";
-                            // Inside your while loop
-                            echo "<td>";
-                            echo "<div class='button-class'>";
-                            echo "<a href='edit_item.php?item_id=$item_id' class='edit-button'><i class='las la-edit'></i></a>";
-                            echo "<button type='button' onclick='openDeletePopup(\"$item_id\", \"" . htmlspecialchars($item_name, ENT_QUOTES) . "\")' class='delete-button'><i class='las la-trash'></i></button>";
-                            echo "<form id='deleteItemForm" . $item_id . "' method='post' style='display:none;'>
+                                if (!empty($item_image3)) {
+                                    echo "<img src='./item_images/$item_image3' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image3 . "\")'>&nbsp;";
+                                }
+                                echo "</td>";
+                                // Inside your while loop
+                                echo "<td>";
+                                echo "<div class='button-class'>";
+                                echo "<a href='edit_item.php?item_id=$item_id' class='edit-button'><i class='las la-edit'></i></a>";
+                                echo "<button type='button' onclick='openDeletePopup(\"$item_id\", \"" . htmlspecialchars($item_name, ENT_QUOTES) . "\")' class='delete-button'><i class='las la-trash'></i></button>";
+                                echo "<form id='deleteItemForm" . $item_id . "' method='post' style='display:none;'>
                                         <input type='hidden' name='item_id' value='" . $item_id . "'>
                                         <input type='hidden' name='delete_item' value='true'> <!-- Ensure this input is included -->
                                         <button type='submit' name='delete_item_button'>Delete</button>
                                     </form>";
-                            echo "</div>";
-                            echo "</td>";
-                            echo "</tr>";
-                        }
-                        ?>
-                    </tbody>
-                </table>
+                                echo "</div>";
+                                echo "</td>";
+                                echo "</tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                <?php endif; ?>
                 <?php
                 $baseUrl = 'owner_item_homepage.php?';
 
@@ -407,7 +480,6 @@
 
                 echo "</div>";
                 ?>
-
             </div>
 
             <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">

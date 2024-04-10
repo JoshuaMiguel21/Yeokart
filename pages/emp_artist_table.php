@@ -183,16 +183,20 @@
                         // Add LIMIT and OFFSET to the query
                         $select_query .= " LIMIT $itemsPerPage OFFSET $offset";
                         $result_query = mysqli_query($con, $select_query);
-                        while ($row = mysqli_fetch_assoc($result_query)) {
-                            $artist_id = $row['artist_id'];
-                            $artist_name = $row['artist_name'];
-                            echo "<tr>";
-                            echo "<td>" . $row['artist_name'] . "</td>";
-                            echo "<td>";
-                            echo "<div class='button-class'>";
-                            echo '<a href="#" onclick="openEditArtistPopup(' . $artist_id . ', \'' . $artist_name . '\')" class="edit-button"><i class="las la-edit"></i></a>';
-                            echo "</td>";
-                            echo "</tr>";
+                        if (mysqli_num_rows($result_query) == 0) {
+                            echo "<tr><td colspan='11'><center><b>No artist found</b></center></td></tr>";
+                        } else {
+                            while ($row = mysqli_fetch_assoc($result_query)) {
+                                $artist_id = $row['artist_id'];
+                                $artist_name = $row['artist_name'];
+                                echo "<tr>";
+                                echo "<td>" . $row['artist_name'] . "</td>";
+                                echo "<td>";
+                                echo "<div class='button-class'>";
+                                echo '<a href="#" onclick="openEditArtistPopup(' . $artist_id . ', \'' . $artist_name . '\')" class="edit-button"><i class="las la-edit"></i></a>';
+                                echo "</td>";
+                                echo "</tr>";
+                            }
                         }
                         ?>
                     </tbody>

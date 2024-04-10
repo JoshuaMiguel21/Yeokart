@@ -216,48 +216,53 @@ if (isset($_SESSION['lastname'])) {
 
                         $select_query = "SELECT * FROM products ORDER BY is_featured DESC LIMIT $featuresPerPage OFFSET $offset";
                         $result_query = mysqli_query($con, $select_query);
-                        while ($row = mysqli_fetch_assoc($result_query)) {
-                            $item_id = $row['item_id'];
-                            $item_name = $row['item_name'];
-                            $item_price = $row['item_price'];
-                            $item_description = $row['item_description'];
-                            $item_quantity = $row['item_quantity'];
-                            $artist_name = $row['artist_name'];
-                            $category_name = $row['category_name'];
-                            $item_image1 = $row['item_image1'];
-                            $item_image2 = $row['item_image2'];
-                            $item_image3 = $row['item_image3'];
-                            $is_featured = $row['is_featured'];
-                            echo "<tr>";
-                            echo "<td>" . $row['item_name'] . "</td>";
-                            echo "<td> ₱" . $row['item_price'] . "</td>";
-                            echo "<td style='max-width: 2000px;'>" . $row['item_description'] . "</td>";
-                            echo "<td>" . $row['item_quantity'] . "</td>";
-                            echo "<td>" . $row['artist_name'] . "</td>";
-                            echo "<td>" . $row['category_name'] . "</td>";
-                            echo "<td>";
-                            echo "<img src='./item_images/$item_image1' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image1 . "\")'>&nbsp;";
-                            if (!empty($item_image2)) {
-                                echo "<img src='./item_images/$item_image2' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image2 . "\")'>&nbsp;";
-                            }
+                        if (mysqli_num_rows($result_query) == 0) {
+                            echo "<tr><td colspan='11'><center><b>No orders at the moment</b></center></td></tr>";
+                        } else {
+                            while ($row = mysqli_fetch_assoc($result_query)) {
+                                $item_id = $row['item_id'];
+                                $item_name = $row['item_name'];
+                                $item_price = $row['item_price'];
+                                $item_description = $row['item_description'];
+                                $item_quantity = $row['item_quantity'];
+                                $artist_name = $row['artist_name'];
+                                $category_name = $row['category_name'];
+                                $item_image1 = $row['item_image1'];
+                                $item_image2 = $row['item_image2'];
+                                $item_image3 = $row['item_image3'];
+                                $is_featured = $row['is_featured'];
+                                echo "<tr>";
+                                echo "<td>" . $row['item_name'] . "</td>";
+                                echo "<td> ₱" . $row['item_price'] . "</td>";
+                                echo "<td style='max-width: 2000px;'>" . $row['item_description'] . "</td>";
+                                echo "<td>" . $row['item_quantity'] . "</td>";
+                                echo "<td>" . $row['artist_name'] . "</td>";
+                                echo "<td>" . $row['category_name'] . "</td>";
+                                echo "<td>";
+                                echo "<img src='./item_images/$item_image1' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image1 . "\")'>&nbsp;";
+                                if (!empty($item_image2)) {
+                                    echo "<img src='./item_images/$item_image2' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image2 . "\")'>&nbsp;";
+                                }
 
-                            if (!empty($item_image3)) {
-                                echo "<img src='./item_images/$item_image3' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image3 . "\")'>&nbsp;";
+                                if (!empty($item_image3)) {
+                                    echo "<img src='./item_images/$item_image3' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image3 . "\")'>&nbsp;";
+                                }
+                                echo "</td>";
+                                echo "<td>";
+                                echo "<div class='button-class'>";
+                                echo "<form method='post'>";
+                                echo "<input type='hidden' name='item_id' value='$item_id'>";
+                                if ($is_featured == 1) {
+                                    echo "<button type='submit' name='add_featured' class='edit-button featured'><i class='las la-check'></i></button>";
+                                } else {
+                                    echo "<button type='submit' name='add_featured' class='edit-button'><i class='las la-plus'></i></button>";
+                                }
+                                echo "</form>";
+                                echo "</td>";
+                                echo "</tr>";
                             }
-                            echo "</td>";
-                            echo "<td>";
-                            echo "<div class='button-class'>";
-                            echo "<form method='post'>";
-                            echo "<input type='hidden' name='item_id' value='$item_id'>";
-                            if ($is_featured == 1) {
-                                echo "<button type='submit' name='add_featured' class='edit-button featured'><i class='las la-check'></i></button>";
-                            } else {
-                                echo "<button type='submit' name='add_featured' class='edit-button'><i class='las la-plus'></i></button>";
-                            }
-                            echo "</form>";
-                            echo "</td>";
-                            echo "</tr>";
                         }
+
                         ?>
                     </tbody>
                 </table>

@@ -222,27 +222,32 @@ if (isset($_SESSION['lastname'])) {
 
                         $select_query = "SELECT * FROM contacts LIMIT $contactsPerPage OFFSET $offset";
                         $result_query = mysqli_query($con, $select_query);
-                        while ($row = mysqli_fetch_assoc($result_query)) {
-                            $contacts_id = $row['contacts_id'];
-                            $contacts_name = $row['contacts_name'];
-                            $icon_link = $row['icon_link'];
-                            $contacts_description = $row['contacts_description'];
-                            echo "<tr>";
-                            echo "<td>" . $row['contacts_name'] . "</td>";
-                            echo "<td><div class='iconbox'>" . $row['icon_link'] . "</div></td>";
-                            echo "<td style='max-width: 350px;'>" . $row['contacts_description'] . "</td>";
-                            echo "<td>";
-                            echo "<div class='button-class'>";
-                            echo "<a href='edit_contacts.php?contacts_id=$contacts_id' class='edit-button'><i class='las la-edit'></i></a>";
-                            echo "<button type='button' onclick='openDeletePopup(" . $contacts_id . ")' class='delete-button'><i class='las la-trash'></i></button>";
-                            echo "<form id='deleteForm_$contacts_id' method='post'>";
-                            echo "<input type='hidden' name='contacts_id' value='$contacts_id'>";
-                            echo "<input type='hidden' name='delete_contacts' value='true'>";
-                            echo "</form>";
-                            echo "</div>";
-                            echo "</td>";
-                            echo "</tr>";
+                        if (mysqli_num_rows($result_query) == 0) {
+                            echo "<tr><td colspan='11'><center><b>No orders at the moment</b></center></td></tr>";
+                        } else {
+                            while ($row = mysqli_fetch_assoc($result_query)) {
+                                $contacts_id = $row['contacts_id'];
+                                $contacts_name = $row['contacts_name'];
+                                $icon_link = $row['icon_link'];
+                                $contacts_description = $row['contacts_description'];
+                                echo "<tr>";
+                                echo "<td>" . $row['contacts_name'] . "</td>";
+                                echo "<td><div class='iconbox'>" . $row['icon_link'] . "</div></td>";
+                                echo "<td style='max-width: 350px;'>" . $row['contacts_description'] . "</td>";
+                                echo "<td>";
+                                echo "<div class='button-class'>";
+                                echo "<a href='edit_contacts.php?contacts_id=$contacts_id' class='edit-button'><i class='las la-edit'></i></a>";
+                                echo "<button type='button' onclick='openDeletePopup(" . $contacts_id . ")' class='delete-button'><i class='las la-trash'></i></button>";
+                                echo "<form id='deleteForm_$contacts_id' method='post'>";
+                                echo "<input type='hidden' name='contacts_id' value='$contacts_id'>";
+                                echo "<input type='hidden' name='delete_contacts' value='true'>";
+                                echo "</form>";
+                                echo "</div>";
+                                echo "</td>";
+                                echo "</tr>";
+                            }
                         }
+
                         ?>
                     </tbody>
                 </table>

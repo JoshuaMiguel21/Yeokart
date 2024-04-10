@@ -165,54 +165,58 @@
                         $totalOrdersRow = mysqli_fetch_assoc($totalOrdersResult);
                         $totalOrders = $totalOrdersRow['total_orders'];
 
-                        $select_query = "SELECT orders.*, user_accounts.firstname, user_accounts.lastname FROM orders 
-                                        INNER JOIN user_accounts ON orders.customer_id = user_accounts.id 
-                                        ORDER BY CASE `status` 
-                                            WHEN 'INVALID' THEN 1
-                                            WHEN 'PENDING' THEN 2
-                                            WHEN 'PROCESSING' THEN 3
-                                            WHEN 'SHIPPED' THEN 4
-                                            WHEN 'DELIVERED' THEN 5
-                                            ELSE 6
-                                        END ASC, date_of_purchase ASC 
-                                        LIMIT $ordersPerPage OFFSET $offset";
-                        $result_query = mysqli_query($con, $select_query);
+                        if ($totalOrders == 0) {
+                            echo "<tr><td colspan='11'><center><b>No orders at the moment</b></center></td></tr>";
+                        } else {
+                            $select_query = "SELECT orders.*, user_accounts.firstname, user_accounts.lastname FROM orders 
+                            INNER JOIN user_accounts ON orders.customer_id = user_accounts.id 
+                            ORDER BY CASE `status` 
+                                WHEN 'INVALID' THEN 1
+                                WHEN 'PENDING' THEN 2
+                                WHEN 'PROCESSING' THEN 3
+                                WHEN 'SHIPPED' THEN 4
+                                WHEN 'DELIVERED' THEN 5
+                                ELSE 6
+                            END ASC, date_of_purchase ASC 
+                            LIMIT $ordersPerPage OFFSET $offset";
+                            $result_query = mysqli_query($con, $select_query);
 
-                        while ($row = mysqli_fetch_assoc($result_query)) {
-                            $proof_of_payment = $row['proof_of_payment'];
-                            echo '<tr id="order-row-' . $row['order_id'] . '">';
-                            echo "<td>" . $row['order_id'] . "</td>";
-                            echo "<td>" . $row['customer_id'] . "</td>";
-                            echo "<td>" . $row['firstname'] . "</td>";
-                            echo "<td>" . $row['lastname'] . "</td>";
-                            echo "<td>" . $row['address'] . "</td>";
-                            echo "<td>" . $row['items_ordered'] . "</td>";
-                            echo "<td>" . $row['item_quantity'] . "</td>";
-                            echo "<td>₱" . $row['total'] . "</td>";
-                            echo "<td>" . $row['date_of_purchase'] . "</td>";
-                            echo "<td>";
-                            echo '<div class="button-class">';
-                            echo '<select class="orderStatusSelect" onchange="updateOrderStatus(this.value, \'' . $row['order_id'] . '\')">';
+                            while ($row = mysqli_fetch_assoc($result_query)) {
+                                $proof_of_payment = $row['proof_of_payment'];
+                                echo '<tr id="order-row-' . $row['order_id'] . '">';
+                                echo "<td>" . $row['order_id'] . "</td>";
+                                echo "<td>" . $row['customer_id'] . "</td>";
+                                echo "<td>" . $row['firstname'] . "</td>";
+                                echo "<td>" . $row['lastname'] . "</td>";
+                                echo "<td>" . $row['address'] . "</td>";
+                                echo "<td>" . $row['items_ordered'] . "</td>";
+                                echo "<td>" . $row['item_quantity'] . "</td>";
+                                echo "<td>₱" . $row['total'] . "</td>";
+                                echo "<td>" . $row['date_of_purchase'] . "</td>";
+                                echo "<td>";
+                                echo '<div class="button-class">';
+                                echo '<select class="orderStatusSelect" onchange="updateOrderStatus(this.value, \'' . $row['order_id'] . '\')">';
 
-                            $status_query = "SHOW COLUMNS FROM `orders` LIKE 'status'";
-                            $status_result = mysqli_query($con, $status_query);
-                            $status_row = mysqli_fetch_assoc($status_result);
-                            preg_match("/^enum\(\'(.*)\'\)$/", $status_row['Type'], $matches);
-                            $status_enum_values = explode("','", $matches[1]);
+                                $status_query = "SHOW COLUMNS FROM `orders` LIKE 'status'";
+                                $status_result = mysqli_query($con, $status_query);
+                                $status_row = mysqli_fetch_assoc($status_result);
+                                preg_match("/^enum\(\'(.*)\'\)$/", $status_row['Type'], $matches);
+                                $status_enum_values = explode("','", $matches[1]);
 
-                            foreach ($status_enum_values as $value) {
-                                $disabled = (in_array($value, ['Processing', 'Shipped', 'Delivered']) && empty($proof_of_payment)) ? 'disabled' : '';
-                                echo '<option value="' . $value . '" ' . ($row['status'] == $value ? 'selected' : '') . ' ' . $disabled . '>' . $value . '</option>';
+                                foreach ($status_enum_values as $value) {
+                                    $disabled = (in_array($value, ['Processing', 'Shipped', 'Delivered']) && empty($proof_of_payment)) ? 'disabled' : '';
+                                    echo '<option value="' . $value . '" ' . ($row['status'] == $value ? 'selected' : '') . ' ' . $disabled . '>' . $value . '</option>';
+                                }
+                                echo '</select>';
+                                echo '</div>';
+                                echo "</td>";
+                                if (!empty($proof_of_payment)) {
+                                    echo '<td><center><img src="./item_images/' . $proof_of_payment . '" alt="Proof of Payment" width="auto" height="50" onclick="openImagePopup(\'./item_images/' . $proof_of_payment . '\')"></center></td>';
+                                } else {
+                                    echo '<td>Not yet paid</td>';
+                                }
+                                echo "</tr>";
                             }
-                            echo '</select>';
-                            echo '</div>';
-                            echo "</td>";
-                            if (!empty($proof_of_payment)) {
-                                echo '<td><center><img src="./item_images/' . $proof_of_payment . '" alt="Proof of Payment" width="auto" height="50" onclick="openImagePopup(\'./item_images/' . $proof_of_payment . '\')"></center></td>';
-                            } else {
-                                echo '<td>Not yet paid</td>';
-                            }
-                            echo "</tr>";
                         }
                         ?>
                     </tbody>
@@ -261,6 +265,8 @@
                 echo "</div>";
                 ?>
             </div>
+
+
             <div id="imagePopup" class="popup-image" style="display: none; padding-top: 100px;">
                 <div class="image-content">
                     <img id="popupImage" src="" alt="Proof of Payment" style="width: auto; height: 550px;">
@@ -305,11 +311,11 @@
 
         function updateOrderStatus(status, orderId) {
             document.getElementById('loadingOverlay').style.display = 'flex';
-            
+
             var xhttp = new XMLHttpRequest();
             xhttp.open("POST", "update_order_status.php", true);
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            
+
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                     console.log("Order status updated successfully");
@@ -320,7 +326,7 @@
                     }, 1500);
                 }
             };
-            
+
             xhttp.send("order_id=" + orderId + "&status=" + status);
         }
 

@@ -167,7 +167,7 @@ if (isset($_SESSION['lastname'])) {
                     <i class="las la-list"></i>
                     <span class="text">View Categories Table</span>
                 </a>
-                <a href="#" onclick="openAddCategoryPopup()" class="btn-employee">
+                <a href="#" onclick="openAddCategoryPopup()" class="btn-main">
                     <i class="las la-plus"></i>
                     <span class="text">Add Category</span>
                 </a>
@@ -193,7 +193,7 @@ if (isset($_SESSION['lastname'])) {
                     <tbody>
                         <?php
                         include('../database/db_yeokart.php');
-                        $itemsPerPage = 1;
+                        $itemsPerPage = 10;
 
                         // Default page number
                         $pageNumber = 1;
@@ -216,16 +216,20 @@ if (isset($_SESSION['lastname'])) {
                         // Add LIMIT and OFFSET to the query
                         $select_query .= " LIMIT $itemsPerPage OFFSET $offset";
                         $result_query = mysqli_query($con, $select_query);
-                        while ($row = mysqli_fetch_assoc($result_query)) {
-                            $category_id = $row['category_id'];
-                            $category_name = $row['category_name'];
-                            echo "<tr>";
-                            echo "<td>" . $row['category_name'] . "</td>";
-                            echo "<td>";
-                            echo "<div class='button-class'>";
-                            echo '<a href="#" onclick="openEditCategoryPopup(' . $category_id . ', \'' . $category_name . '\')" class="edit-button"><i class="las la-edit"></i></a>';
-                            echo "</td>";
-                            echo "</tr>";
+                        if (mysqli_num_rows($result_query) == 0) {
+                            echo "<tr><td colspan='11'><center><b>No category found</b></center></td></tr>";
+                        } else {
+                            while ($row = mysqli_fetch_assoc($result_query)) {
+                                $category_id = $row['category_id'];
+                                $category_name = $row['category_name'];
+                                echo "<tr>";
+                                echo "<td>" . $row['category_name'] . "</td>";
+                                echo "<td>";
+                                echo "<div class='button-class'>";
+                                echo '<a href="#" onclick="openEditCategoryPopup(' . $category_id . ', \'' . $category_name . '\')" class="edit-button"><i class="las la-edit"></i></a>';
+                                echo "</td>";
+                                echo "</tr>";
+                            }
                         }
                         ?>
                     </tbody>

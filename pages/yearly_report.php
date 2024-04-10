@@ -366,17 +366,21 @@
                             LIMIT 10";
 
                         $result_query = mysqli_query($con, $select_query);
-                        while ($row = mysqli_fetch_assoc($result_query)) {
-                            $item_name = $row['item_name'];
-                            $category_name = $row['category_name'];
-                            $artist_name = $row['artist_name'];
-                            $total_sold = $row['total_sold'];
-                            echo "<tr>";
-                            echo "<td>" . $item_name . "</td>";
-                            echo "<td style='text-align: center;'>" . $category_name . "</td>";
-                            echo "<td style='text-align: center;'>" . $artist_name . "</td>";
-                            echo "<td style='text-align: center;'>" . $total_sold . "</td>";
-                            echo "</tr>";
+                        if (mysqli_num_rows($result_query) == 0) {
+                            echo "<tr><td colspan='11'><center><b>No orders at the moment</b></center></td></tr>";
+                        } else {
+                            while ($row = mysqli_fetch_assoc($result_query)) {
+                                $item_name = $row['item_name'];
+                                $category_name = $row['category_name'];
+                                $artist_name = $row['artist_name'];
+                                $total_sold = $row['total_sold'];
+                                echo "<tr>";
+                                echo "<td>" . $item_name . "</td>";
+                                echo "<td style='text-align: center;'>" . $category_name . "</td>";
+                                echo "<td style='text-align: center;'>" . $artist_name . "</td>";
+                                echo "<td style='text-align: center;'>" . $total_sold . "</td>";
+                                echo "</tr>";
+                            }
                         }
                         ?>
 
