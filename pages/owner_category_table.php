@@ -88,7 +88,7 @@ if (isset($_SESSION['lastname'])) {
 
 <body>
     <input type="checkbox" id="nav-toggle" <?php echo $_SESSION['nav_toggle'] ? 'checked' : ''; ?>>
-     <div class="sidebar <?php echo $_SESSION['nav_toggle'] ? 'open' : ''; ?>">
+    <div class="sidebar <?php echo $_SESSION['nav_toggle'] ? 'open' : ''; ?>">
         <div class="sidebar-brand">
             <h2><span>Yeokart</span></h2>
         </div>
@@ -173,8 +173,8 @@ if (isset($_SESSION['lastname'])) {
                 </a>
             </div>
             <div class="head-search">
-                <form method="POST" id="searchForm">
-                    <input type="text" name="search" placeholder="Search categories..." id="searchInput" value="<?php echo isset($_POST['search']) ? $_POST['search'] : ''; ?>">
+                <form method="GET" id="searchForm">
+                    <input type="text" name="search" placeholder="Search categories..." id="searchInput" value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>">
                     <button type="submit" name="search_button">Search</button>
                     <button type="button" name="clear_button" onclick="clearSearch()">Clear</button>
                 </form>
@@ -193,16 +193,29 @@ if (isset($_SESSION['lastname'])) {
                     <tbody>
                         <?php
                         include('../database/db_yeokart.php');
+                        $itemsPerPage = 1;
 
-                        if (isset($_POST['search_button'])) {
-                            $search = $_POST['search'];
+                        // Default page number
+                        $pageNumber = 1;
+
+                        if (isset($_GET['page']) && is_numeric($_GET['page'])) {
+                            $pageNumber = $_GET['page'];
+                        }
+
+                        // Calculate the offset
+                        $offset = ($pageNumber - 1) * $itemsPerPage;
+                        if (isset($_GET['search_button'])) {
+                            $search = mysqli_real_escape_string($con, $_GET['search']);
                             $select_query = "SELECT * FROM categories WHERE category_name LIKE '%$search%'";
                         } else {
                             $select_query = "SELECT * FROM categories";
                         }
+                        $result = mysqli_query($con, $select_query);
+                        $totalItems = mysqli_num_rows($result);
 
+                        // Add LIMIT and OFFSET to the query
+                        $select_query .= " LIMIT $itemsPerPage OFFSET $offset";
                         $result_query = mysqli_query($con, $select_query);
-
                         while ($row = mysqli_fetch_assoc($result_query)) {
                             $category_id = $row['category_id'];
                             $category_name = $row['category_name'];
@@ -217,6 +230,43 @@ if (isset($_SESSION['lastname'])) {
                         ?>
                     </tbody>
                 </table>
+                <?php
+                $baseUrl = 'owner_category_table.php?';
+
+                $pageQuery = '';
+                if (isset($_GET['search_button'])) {
+                    $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
+                }
+
+                $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+                $totalPages = ceil($totalItems / $itemsPerPage);
+
+                $startPage = max(1, $pageNumber - 1);
+                $endPage = min($totalPages, $pageNumber + 1);
+
+                if ($pageNumber == 1) {
+                    $startPage = 1;
+                    $endPage = min(3, $totalPages);
+                } elseif ($pageNumber == $totalPages) {
+                    $startPage = max(1, $totalPages - 2);
+                    $endPage = $totalPages;
+                }
+
+                echo "<div class='pagination'>";
+
+                $prevPage = max(1, $pageNumber - 1);
+                echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
+
+                for ($i = $startPage; $i <= $endPage; $i++) {
+                    $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
+                    echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
+                }
+
+                $nextPage = min($totalPages, $pageNumber + 1);
+                echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
+
+                echo "</div>";
+                ?>
             </div>
             <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
                 <div class="popup-content">
@@ -296,7 +346,7 @@ if (isset($_SESSION['lastname'])) {
                 }
             }
 
-            
+
             if (isset($_POST['update_category'])) {
                 $category_id = $_POST['category_id'];
                 $category_name = $_POST['category_name'];
@@ -317,7 +367,7 @@ if (isset($_SESSION['lastname'])) {
                         icon: 'error',
                         confirmButtonText: 'OK'
                       }).then(function(){
-                        openEditCategoryPopup('$category_id', '".addslashes($old_category_name)."');
+                        openEditCategoryPopup('$category_id', '" . addslashes($old_category_name) . "');
                       });</script>";
                 } else {
                     if ($category_name == '') {
@@ -345,8 +395,7 @@ if (isset($_SESSION['lastname'])) {
             }
             ?>
 
-
-        <script>
+            <script>
                 // Function to toggle the sidebar and update session variable
                 function toggleSidebar() {
                     var isChecked = document.getElementById('nav-toggle').checked;

@@ -351,8 +351,8 @@
                             // Inside your while loop
                             echo "<td>";
                             echo "<div class='button-class'>";
-                            echo "<a href='edit_item.php?item_id=$item_id' class='edit-button'>Edit</a>";
-                            echo "<button type='button' onclick='openDeletePopup(\"$item_id\", \"" . htmlspecialchars($item_name, ENT_QUOTES) . "\")' class='delete-button'>Delete</button>";
+                            echo "<a href='edit_item.php?item_id=$item_id' class='edit-button'><i class='las la-edit'></i></a>";
+                            echo "<button type='button' onclick='openDeletePopup(\"$item_id\", \"" . htmlspecialchars($item_name, ENT_QUOTES) . "\")' class='delete-button'><i class='las la-trash'></i></button>";
                             echo "<form id='deleteItemForm" . $item_id . "' method='post' style='display:none;'>
                                         <input type='hidden' name='item_id' value='" . $item_id . "'>
                                         <input type='hidden' name='delete_item' value='true'> <!-- Ensure this input is included -->
@@ -439,12 +439,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- <div class="form-outline mb-4 mt-5">
-        <a href="./owner_dashboard.php" class="btn btn-danger mb-3 px-3 mx-auto">
-            Back
-        </a>
-    </div> -->
 
             <script>
                 // Function to toggle the sidebar and update session variable

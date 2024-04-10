@@ -79,7 +79,7 @@
                         <span>Employee Dashboard</span></a>
                 </li>
                 <li>
-                    <a href=""><span class="las la-users"></span>
+                    <a href="emp_view_customer.php"><span class="las la-users"></span>
                         <span>Customers</span></a>
                 </li>
                 <li>
@@ -119,14 +119,6 @@
                 </div>
             </div>
         </header>
-        <!-- <div class="container mt-3">
-        <h1 class="text-center mb-4">Item Catalog</h1>
-    </div>
-     <div class="form-outline mb-4 mt-5">
-        <a href="./owner_item.php" class="btn btn-info mb-3 px-3 mx-auto">
-            Add a new Item
-        </a>
-    </div> -->
 
         <main>
             <div class="head-title">
@@ -137,15 +129,15 @@
             </div>
             <div class="head-buttons">
                 <a href="emp_artist_table.php" class="btn-employee">
-                    <i class="las la-user-plus"></i>
+                    <i class="las la-user"></i>
                     <span class="text">View Artist Table</span>
                 </a>
                 <a href="emp_item_homepage.php" class="btn-employee">
-                    <i class="las la-user-plus"></i>
+                    <i class="las la-archive"></i>
                     <span class="text">View Item Catalog</span>
                 </a>
                 <a href="emp_category_table.php" class="btn-employee">
-                    <i class="las la-user-plus"></i>
+                    <i class="las la-list"></i>
                     <span class="text">View Categories Table</span>
                 </a>
             </div>
@@ -247,7 +239,7 @@
                             $stmt->close();
                         }
 
-                        $itemsPerPage = 10;
+                        $itemsPerPage = 3;
 
                         // Default page number
                         $pageNumber = 1;
@@ -322,8 +314,8 @@
                             // Inside your while loop
                             echo "<td>";
                             echo "<div class='button-class'>";
-                            echo "<a href='edit_item.php?item_id=$item_id' class='edit-button'>Edit</a>";
-                            echo "<button type='button' onclick='openDeletePopup(\"$item_id\", \"" . htmlspecialchars($item_name, ENT_QUOTES) . "\")' class='delete-button'>Delete</button>";
+                            echo "<a href='edit_item.php?item_id=$item_id' class='edit-button'><i class='las la-edit'></i></a>";
+                            echo "<button type='button' onclick='openDeletePopup(\"$item_id\", \"" . htmlspecialchars($item_name, ENT_QUOTES) . "\")' class='delete-button'><i class='las la-trash'></i></button>";
                             echo "<form id='deleteItemForm" . $item_id . "' method='post' style='display:none;'>
                                         <input type='hidden' name='item_id' value='" . $item_id . "'>
                                         <input type='hidden' name='delete_item' value='true'> <!-- Ensure this input is included -->
@@ -409,11 +401,6 @@
                 </div>
             </div>
         </div>
-        <!-- <div class="form-outline mb-4 mt-5">
-        <a href="./owner_dashboard.php" class="btn btn-danger mb-3 px-3 mx-auto">
-            Back
-        </a>
-    </div> -->
 
         <script>
             // Function to toggle the sidebar and update session variable

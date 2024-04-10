@@ -66,10 +66,6 @@ class MYPDF extends TCPDF
             die('Invalid query: ' . mysqli_error($con));
         }
 
-        if (mysqli_num_rows($result_query) == 0) {
-            die('No results found');
-        }
-
         return $result_query;
     }
 

@@ -87,7 +87,7 @@ if (isset($_SESSION['lastname'])) {
 
 <body>
     <input type="checkbox" id="nav-toggle" <?php echo $_SESSION['nav_toggle'] ? 'checked' : ''; ?>>
-     <div class="sidebar <?php echo $_SESSION['nav_toggle'] ? 'open' : ''; ?>">
+    <div class="sidebar <?php echo $_SESSION['nav_toggle'] ? 'open' : ''; ?>">
         <div class="sidebar-brand">
             <h2><span>Yeokart</span></h2>
         </div>
@@ -147,15 +147,6 @@ if (isset($_SESSION['lastname'])) {
             </div>
         </header>
 
-        <!-- <div class="container mt-3">
-        <h1 class="text-center mb-4">Item Catalog</h1>
-    </div>
-     <div class="form-outline mb-4 mt-5">
-        <a href="./owner_item.php" class="btn btn-info mb-3 px-3 mx-auto">
-            Add a new Item
-        </a>
-    </div> -->
-
         <main>
             <div class="head-title">
                 <div class="left">
@@ -181,8 +172,8 @@ if (isset($_SESSION['lastname'])) {
                 </a>
             </div>
             <div class="head-search">
-                <form method="POST" id="searchForm">
-                    <input type="text" name="search" placeholder="Search artists..." id="searchInput" value="<?php echo isset($_POST['search']) ? $_POST['search'] : ''; ?>">
+                <form method="GET" id="searchForm">
+                    <input type="text" name="search" placeholder="Search artists..." id="searchInput" value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>">
                     <button type="submit" name="search_button">Search</button>
                     <button type="button" name="clear_button" onclick="clearSearch()">Clear</button>
                 </form>
@@ -201,16 +192,29 @@ if (isset($_SESSION['lastname'])) {
                     <tbody>
                         <?php
                         include('../database/db_yeokart.php');
+                        $itemsPerPage = 10;
 
-                        if (isset($_POST['search_button'])) {
-                            $search = $_POST['search'];
+                        // Default page number
+                        $pageNumber = 1;
+
+                        if (isset($_GET['page']) && is_numeric($_GET['page'])) {
+                            $pageNumber = $_GET['page'];
+                        }
+
+                        // Calculate the offset
+                        $offset = ($pageNumber - 1) * $itemsPerPage;
+                        if (isset($_GET['search_button'])) {
+                            $search = mysqli_real_escape_string($con, $_GET['search']);
                             $select_query = "SELECT * FROM artists WHERE artist_name LIKE '%$search%'";
                         } else {
                             $select_query = "SELECT * FROM artists";
                         }
+                        $result = mysqli_query($con, $select_query);
+                        $totalItems = mysqli_num_rows($result);
 
+                        // Add LIMIT and OFFSET to the query
+                        $select_query .= " LIMIT $itemsPerPage OFFSET $offset";
                         $result_query = mysqli_query($con, $select_query);
-
                         while ($row = mysqli_fetch_assoc($result_query)) {
                             $artist_id = $row['artist_id'];
                             $artist_name = $row['artist_name'];
@@ -225,6 +229,43 @@ if (isset($_SESSION['lastname'])) {
                         ?>
                     </tbody>
                 </table>
+                <?php
+                $baseUrl = 'owner_artist_table.php?';
+
+                $pageQuery = '';
+                if (isset($_GET['search_button'])) {
+                    $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
+                }
+
+                $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+                $totalPages = ceil($totalItems / $itemsPerPage);
+
+                $startPage = max(1, $pageNumber - 1);
+                $endPage = min($totalPages, $pageNumber + 1);
+
+                if ($pageNumber == 1) {
+                    $startPage = 1;
+                    $endPage = min(3, $totalPages);
+                } elseif ($pageNumber == $totalPages) {
+                    $startPage = max(1, $totalPages - 2);
+                    $endPage = $totalPages;
+                }
+
+                echo "<div class='pagination'>";
+
+                $prevPage = max(1, $pageNumber - 1);
+                echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
+
+                for ($i = $startPage; $i <= $endPage; $i++) {
+                    $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
+                    echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
+                }
+
+                $nextPage = min($totalPages, $pageNumber + 1);
+                echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
+
+                echo "</div>";
+                ?>
             </div>
             <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
                 <div class="popup-content">
@@ -284,7 +325,6 @@ if (isset($_SESSION['lastname'])) {
                           document.getElementById('addArtistPopup').style.display = 'flex';
                         }
                       })</script>";
-                      
                 } else {
                     if ($artist_name == '') {
                         echo "<script>alert('Please fill up the field')</script>";
@@ -303,7 +343,7 @@ if (isset($_SESSION['lastname'])) {
                                 if (result.isConfirmed) {
                                   window.location.href = 'owner_artist_table.php';
                                 }
-                              })</script>";  
+                              })</script>";
                         }
                     }
                 }
@@ -312,16 +352,16 @@ if (isset($_SESSION['lastname'])) {
             if (isset($_POST['update_artist'])) {
                 $artist_id = $_POST['artist_id'];
                 $artist_name = $_POST['artist_name'];
-            
+
                 $get_old_artist_query = "SELECT artist_name FROM artists WHERE artist_id='$artist_id'";
                 $result_old_artist = mysqli_query($con, $get_old_artist_query);
                 $row_old_artist = mysqli_fetch_assoc($result_old_artist);
                 $old_artist_name = $row_old_artist['artist_name'];
-            
+
                 $select_query = "SELECT * FROM artists WHERE artist_name='$artist_name' AND artist_id <> '$artist_id'";
                 $result_select = mysqli_query($con, $select_query);
                 $number = mysqli_num_rows($result_select);
-            
+
                 if ($number > 0) {
                     echo "<script>
                         Swal.fire({
@@ -331,7 +371,7 @@ if (isset($_SESSION['lastname'])) {
                             confirmButtonText: 'OK'
                         }).then(function(){
                             // Calling the function to reopen the edit popup with the original artist name
-                            openEditArtistPopup('$artist_id', '".addslashes($row_old_artist['artist_name'])."');
+                            openEditArtistPopup('$artist_id', '" . addslashes($row_old_artist['artist_name']) . "');
                         });
                     </script>";
                 } else {
@@ -341,10 +381,10 @@ if (isset($_SESSION['lastname'])) {
                     } else {
                         $update_artist = "UPDATE artists SET artist_name='$artist_name' WHERE artist_id='$artist_id'";
                         $result_query_artist = mysqli_query($con, $update_artist);
-            
+
                         $update_products_artist = "UPDATE products SET artist_name='$artist_name' WHERE artist_name='$old_artist_name'";
                         $result_query_products_artist = mysqli_query($con, $update_products_artist);
-            
+
                         if ($result_query_artist && $result_query_products_artist) {
                             echo "<script>Swal.fire({
                                 title: 'Success!',
@@ -362,30 +402,22 @@ if (isset($_SESSION['lastname'])) {
             }
             ?>
 
+            <script>
+                // Function to toggle the sidebar and update session variable
+                function toggleSidebar() {
+                    var isChecked = document.getElementById('nav-toggle').checked;
+                    var newState = isChecked ? 'true' : 'false';
 
+                    // Update session variable using AJAX
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.open("POST", "", true);
+                    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    xhttp.send("nav_toggle=" + newState);
+                }
 
-            <!-- <div class="form-outline mb-4 mt-5">
-        <a href="./owner_dashboard.php" class="btn btn-danger mb-3 px-3 mx-auto">
-            Back
-        </a>
-    </div> -->
-
-    <script>
-        // Function to toggle the sidebar and update session variable
-        function toggleSidebar() {
-            var isChecked = document.getElementById('nav-toggle').checked;
-            var newState = isChecked ? 'true' : 'false';
-
-            // Update session variable using AJAX
-            var xhttp = new XMLHttpRequest();
-            xhttp.open("POST", "", true);
-            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhttp.send("nav_toggle=" + newState);
-        }
-
-        // Add event listener to checkbox change
-        document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
-    </script>
+                // Add event listener to checkbox change
+                document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
+            </script>
 </body>
 
 </html>

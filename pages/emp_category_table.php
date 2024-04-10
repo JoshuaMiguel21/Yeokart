@@ -37,6 +37,11 @@
     function closeEditCategoryPopup() {
         document.getElementById('editCategoryPopup').style.display = 'none';
     }
+
+    function clearSearch() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('searchForm').submit();
+    }
 </script>
 
 <body>
@@ -47,7 +52,7 @@
         // Set it to unchecked by default
         $_SESSION['nav_toggle'] = false;
     }
-    
+
     // Check if the nav-toggle checkbox has been toggled
     if (isset($_POST['nav_toggle'])) {
         // Update the session variable accordingly
@@ -73,7 +78,7 @@
                         <span>Employee Dashboard</span></a>
                 </li>
                 <li>
-                    <a href=""><span class="las la-users"></span>
+                    <a href="emp_view_customer.php"><span class="las la-users"></span>
                         <span>Customers</span></a>
                 </li>
                 <li>
@@ -123,17 +128,24 @@
             </div>
             <div class="head-buttons">
                 <a href="emp_artist_table.php" class="btn-employee">
-                    <i class="las la-user-plus"></i>
+                    <i class="las la-user"></i>
                     <span class="text">View Artist Table</span>
                 </a>
                 <a href="emp_item_homepage.php" class="btn-employee">
-                    <i class="las la-user-plus"></i>
+                    <i class="las la-archive"></i>
                     <span class="text">View Item Catalog</span>
                 </a>
                 <a href="emp_category_table.php" class="btn-employee">
-                    <i class="las la-user-plus"></i>
+                    <i class="las la-list"></i>
                     <span class="text">View Categories Table</span>
                 </a>
+            </div>
+            <div class="head-search">
+                <form method="GET" id="searchForm">
+                    <input type="text" name="search" placeholder="Search categories..." id="searchInput" value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>">
+                    <button type="submit" name="search_button">Search</button>
+                    <button type="button" name="clear_button" onclick="clearSearch()">Clear</button>
+                </form>
             </div>
             <div class="table">
                 <table class="table">
@@ -148,7 +160,28 @@
                     <tbody>
                         <?php
                         include('../database/db_yeokart.php');
-                        $select_query = "SELECT * FROM categories";
+                        $itemsPerPage = 10;
+
+                        // Default page number
+                        $pageNumber = 1;
+
+                        if (isset($_GET['page']) && is_numeric($_GET['page'])) {
+                            $pageNumber = $_GET['page'];
+                        }
+
+                        // Calculate the offset
+                        $offset = ($pageNumber - 1) * $itemsPerPage;
+                        if (isset($_GET['search_button'])) {
+                            $search = mysqli_real_escape_string($con, $_GET['search']);
+                            $select_query = "SELECT * FROM categories WHERE category_name LIKE '%$search%'";
+                        } else {
+                            $select_query = "SELECT * FROM categories";
+                        }
+                        $result = mysqli_query($con, $select_query);
+                        $totalItems = mysqli_num_rows($result);
+
+                        // Add LIMIT and OFFSET to the query
+                        $select_query .= " LIMIT $itemsPerPage OFFSET $offset";
                         $result_query = mysqli_query($con, $select_query);
                         while ($row = mysqli_fetch_assoc($result_query)) {
                             $category_id = $row['category_id'];
@@ -164,6 +197,43 @@
                         ?>
                     </tbody>
                 </table>
+                <?php
+                $baseUrl = 'emp_category_table.php?';
+
+                $pageQuery = '';
+                if (isset($_GET['search_button'])) {
+                    $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
+                }
+
+                $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+                $totalPages = ceil($totalItems / $itemsPerPage);
+
+                $startPage = max(1, $pageNumber - 1);
+                $endPage = min($totalPages, $pageNumber + 1);
+
+                if ($pageNumber == 1) {
+                    $startPage = 1;
+                    $endPage = min(3, $totalPages);
+                } elseif ($pageNumber == $totalPages) {
+                    $startPage = max(1, $totalPages - 2);
+                    $endPage = $totalPages;
+                }
+
+                echo "<div class='pagination'>";
+
+                $prevPage = max(1, $pageNumber - 1);
+                echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
+
+                for ($i = $startPage; $i <= $endPage; $i++) {
+                    $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
+                    echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
+                }
+
+                $nextPage = min($totalPages, $pageNumber + 1);
+                echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
+
+                echo "</div>";
+                ?>
             </div>
             <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
                 <div class="popup-content">
@@ -215,7 +285,7 @@
                         icon: 'error',
                         confirmButtonText: 'OK'
                       }).then(function(){
-                        openEditCategoryPopup('$category_id', '".addslashes($old_category_name)."');
+                        openEditCategoryPopup('$category_id', '" . addslashes($old_category_name) . "');
                       });</script>";
                 } else {
                     if ($category_name == '') {
@@ -244,22 +314,22 @@
 
             ?>
 
-    <script>
-        // Function to toggle the sidebar and update session variable
-        function toggleSidebar() {
-            var isChecked = document.getElementById('nav-toggle').checked;
-            var newState = isChecked ? 'true' : 'false';
+            <script>
+                // Function to toggle the sidebar and update session variable
+                function toggleSidebar() {
+                    var isChecked = document.getElementById('nav-toggle').checked;
+                    var newState = isChecked ? 'true' : 'false';
 
-            // Update session variable using AJAX
-            var xhttp = new XMLHttpRequest();
-            xhttp.open("POST", "", true);
-            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhttp.send("nav_toggle=" + newState);
-        }
+                    // Update session variable using AJAX
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.open("POST", "", true);
+                    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    xhttp.send("nav_toggle=" + newState);
+                }
 
-        // Add event listener to checkbox change
-        document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
-    </script>
+                // Add event listener to checkbox change
+                document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
+            </script>
 </body>
 
 </html>

@@ -62,7 +62,7 @@
                         <span>Employee Dashboard</span></a>
                 </li>
                 <li>
-                    <a href=""><span class="las la-users"></span>
+                    <a href="emp_view_customer.php"><span class="las la-users"></span>
                         <span>Customers</span></a>
                 </li>
                 <li>
