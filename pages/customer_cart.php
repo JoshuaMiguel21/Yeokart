@@ -328,74 +328,72 @@ if (mysqli_num_rows($result_query) > 0) {
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-    const checkoutForm = document.getElementById('checkoutForm');
-    const checkoutButton = checkoutForm.querySelector('button[name="checkout"]');
-    const cartIcon = checkoutButton.querySelector('.fa-cart-arrow-down');
-    const loadingIcon = checkoutButton.querySelector('.fas.fa-spinner');
+            const checkoutForm = document.getElementById('checkoutForm');
+            const checkoutButton = checkoutForm.querySelector('button[name="checkout"]');
+            const cartIcon = checkoutButton.querySelector('.fa-cart-arrow-down');
+            const loadingIcon = checkoutButton.querySelector('.fas.fa-spinner');
 
-    checkoutButton.addEventListener('click', function(event) {
-        event.preventDefault(); // Prevent the button's default action
+            checkoutButton.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent the button's default action
 
-        // Display the loading icon immediately
-        if(cartIcon && loadingIcon) {
-            cartIcon.style.display = 'none';
-            loadingIcon.style.display = 'inline-block';
-        }
-
-        // Delay the check slightly to ensure UI updates are visible
-        setTimeout(() => {
-            let exceededItems = [];
-            let zeroQuantityItems = [];
-            const cartItems = document.querySelectorAll('.box');
-
-            cartItems.forEach(function(item) {
-                const itemName = item.querySelector('.content h3').textContent;
-                const quantityInput = item.querySelector('input[type=number]');
-                const maxQuantity = quantityInput.getAttribute('data-max-quantity');
-
-                if (parseInt(quantityInput.value) > parseInt(maxQuantity)) {
-                    exceededItems.push(itemName);
+                // Display the loading icon immediately
+                if (cartIcon && loadingIcon) {
+                    cartIcon.style.display = 'none';
+                    loadingIcon.style.display = 'inline-block';
                 }
 
-                if (parseInt(quantityInput.value) === 0) {
-                    zeroQuantityItems.push(itemName);
-                }
-            });
+                // Delay the check slightly to ensure UI updates are visible
+                setTimeout(() => {
+                    let exceededItems = [];
+                    let zeroQuantityItems = [];
+                    const cartItems = document.querySelectorAll('.box');
 
-            // Check conditions and display errors if any
-            if (exceededItems.length > 0 || zeroQuantityItems.length > 0) {
-                let errorMessage = '';
-                if (exceededItems.length > 0) {
-                    errorMessage += `Adjust quantities for: ${exceededItems.join(", ")}.`;
-                }
-                if (zeroQuantityItems.length > 0) {
-                    errorMessage += errorMessage ? ' ' : '';
-                    errorMessage += `Set quantities above 0 for: ${zeroQuantityItems.join(", ")}.`;
-                }
+                    cartItems.forEach(function(item) {
+                        const itemName = item.querySelector('.content h3').textContent;
+                        const quantityInput = item.querySelector('input[type=number]');
+                        const maxQuantity = quantityInput.getAttribute('data-max-quantity');
 
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Checkout Error',
-                    text: errorMessage,
-                    customClass: {
-                        popup: 'swal2-custom-popup',
-                        title: 'swal2-custom-title',
-                        content: 'swal2-custom-text'
+                        if (parseInt(quantityInput.value) > parseInt(maxQuantity)) {
+                            exceededItems.push(itemName);
+                        }
+
+                        if (parseInt(quantityInput.value) === 0) {
+                            zeroQuantityItems.push(itemName);
+                        }
+                    });
+
+                    // Check conditions and display errors if any
+                    if (exceededItems.length > 0 || zeroQuantityItems.length > 0) {
+                        let errorMessage = '';
+                        if (exceededItems.length > 0) {
+                            errorMessage += `Adjust quantities for: ${exceededItems.join(", ")}.`;
+                        }
+                        if (zeroQuantityItems.length > 0) {
+                            errorMessage += errorMessage ? ' ' : '';
+                            errorMessage += `Set quantities above 0 for: ${zeroQuantityItems.join(", ")}.`;
+                        }
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Checkout Error',
+                            text: errorMessage,
+                            customClass: {
+                                popup: 'swal2-custom-popup',
+                                title: 'swal2-custom-title',
+                                content: 'swal2-custom-text'
+                            }
+                        });
+
+                        // Revert icon states due to error
+                        cartIcon.style.display = 'inline-block';
+                        loadingIcon.style.display = 'none';
+                    } else {
+                        // No errors, submit the form
+                        checkoutForm.submit();
                     }
-                });
-
-                // Revert icon states due to error
-                cartIcon.style.display = 'inline-block';
-                loadingIcon.style.display = 'none';
-            } else {
-                // No errors, submit the form
-                checkoutForm.submit();
-            }
-        }, 1000); // Small delay to ensure UI responsiveness
-    });
-});
-
-
+                }, 1000); // Small delay to ensure UI responsiveness
+            });
+        });
     </script>
     <iframe name="update_frame" style="display:none;"></iframe>
 </body>

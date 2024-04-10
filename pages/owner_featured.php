@@ -217,7 +217,7 @@ if (isset($_SESSION['lastname'])) {
                         $select_query = "SELECT * FROM products ORDER BY is_featured DESC LIMIT $featuresPerPage OFFSET $offset";
                         $result_query = mysqli_query($con, $select_query);
                         if (mysqli_num_rows($result_query) == 0) {
-                            echo "<tr><td colspan='11'><center><b>No orders at the moment</b></center></td></tr>";
+                            echo "<tr><td colspan='11'><center><b>No items found</b></center></td></tr>";
                         } else {
                             while ($row = mysqli_fetch_assoc($result_query)) {
                                 $item_id = $row['item_id'];

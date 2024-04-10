@@ -98,56 +98,67 @@ if (isset($_GET['item_id'])) {
 
 if (isset($_POST['add-to-cart-btn'])) {
     $customer_id = $_SESSION['id'];
-    $item_name = $fetch_item['item_name'];
-    $price = $fetch_item['item_price'];
-    $item_image = $fetch_item['item_image1'];
-    $quantity = $_POST['quantity'];
-    $item_stock = $fetch_item['item_quantity'];
-    $category = $fetch_item['category_name'];
+    $item_id = $_POST['item_id'];
+    // Check if the item exists in the products table
+    $check_item_query = "SELECT * FROM products WHERE item_id = $item_id";
+    $result_item_query = mysqli_query($con, $check_item_query);
 
-    // Check if the quantity exceeds the stock
-    if ($quantity > $item_stock) {
-        echo '<script>
-            Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "You cannot add more than the available stock."
-            });
-        </script>';
-    } else {
-        // Check if the item already exists in the cart for the same customer ID
-        $select_cart_query = "SELECT * FROM cart WHERE customer_id = '$customer_id' AND item_name = '$item_name'";
-        $result_cart_query = mysqli_query($con, $select_cart_query);
+    if (mysqli_num_rows($result_item_query) > 0) {
+        // Item exists in the products table, proceed with adding to cart
+        $fetch_item = mysqli_fetch_assoc($result_item_query);
+        $item_name = $fetch_item['item_name'];
+        $price = $fetch_item['item_price'];
+        $item_image = $fetch_item['item_image1'];
+        $quantity = $_POST['quantity'];
+        $item_stock = $fetch_item['item_quantity'];
+        $category = $fetch_item['category_name'];
 
-        if (mysqli_num_rows($result_cart_query) > 0) {
-            // Update the quantity of the existing item in the cart
-            $row = mysqli_fetch_assoc($result_cart_query);
-            $existing_quantity = $row['quantity'];
-            $new_quantity = $existing_quantity + $quantity;
-
-            $update_cart_query = "UPDATE cart SET quantity = $new_quantity WHERE customer_id = '$customer_id' AND item_name = '$item_name'";
-            mysqli_query($con, $update_cart_query);
-        } else {
-            // Insert a new row for the item in the cart
-            $insert_cart_query = "INSERT INTO cart (customer_id, item_name, price, item_image1, quantity, category) 
-                     VALUES ('$customer_id', '$item_name', '$price', '$item_image', '$quantity', '$category')";
-            mysqli_query($con, $insert_cart_query);
-        }
-
-        // Fetch the updated cart count
-        $sql = "SELECT COUNT(*) AS cart_count FROM cart WHERE customer_id = $customer_id";
-        $result = $con->query($sql);
-
-        if ($result) {
-            $row = $result->fetch_assoc();
-            $cartCount = $row['cart_count'];
-            // Return the updated cart count along with the response
+        // Check if the quantity exceeds the stock
+        if ($quantity > $item_stock) {
             echo '<script>
-                    document.getElementById("cart-num").innerText = "' . $cartCount . '";
+                    Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "You cannot add more than the available stock."
+                    });
                 </script>';
         } else {
-            echo "Error: " . $sql . "<br>" . $con->error;
+            // Check if the item already exists in the cart for the same customer ID and item ID
+            $select_cart_query = "SELECT * FROM cart WHERE customer_id = '$customer_id' AND item_id = '$item_id'";
+            $result_cart_query = mysqli_query($con, $select_cart_query);
+
+            if (mysqli_num_rows($result_cart_query) > 0) {
+                // Update the quantity of the existing item in the cart
+                $row = mysqli_fetch_assoc($result_cart_query);
+                $existing_quantity = $row['quantity'];
+                $new_quantity = $existing_quantity + $quantity;
+
+                $update_cart_query = "UPDATE cart SET quantity = $new_quantity WHERE customer_id = '$customer_id' AND item_id = '$item_id'";
+                mysqli_query($con, $update_cart_query);
+            } else {
+                // Insert a new row for the item in the cart
+                $insert_cart_query = "INSERT INTO cart (customer_id, item_id, item_name, price, item_image1, quantity, category) 
+                             VALUES ('$customer_id', '$item_id', '$item_name', '$price', '$item_image', '$quantity', '$category')";
+                mysqli_query($con, $insert_cart_query);
+            }
+
+            // Fetch the updated cart count
+            $sql = "SELECT COUNT(*) AS cart_count FROM cart WHERE customer_id = $customer_id";
+            $result = $con->query($sql);
+
+            if ($result) {
+                $row = $result->fetch_assoc();
+                $cartCount = $row['cart_count'];
+                // Return the updated cart count along with the response
+                echo '<script>
+                        document.getElementById("cart-num").innerText = "' . $cartCount . '";
+                    </script>';
+            } else {
+                echo "Error: " . $sql . "<br>" . $con->error;
+            }
         }
+    } else {
+        echo "Item does not exist in the database.";
     }
 }
 

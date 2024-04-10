@@ -58,10 +58,10 @@ ALTER TABLE `cart`
 ALTER TABLE `cart`
   MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
---
--- Constraints for dumped tables
---
 
+ALTER TABLE `cart`
+  ADD `item_id` INT(11) NOT NULL AFTER `cart_id`,
+  ADD CONSTRAINT `fk_item_id` FOREIGN KEY (`item_id`) REFERENCES `products` (`item_id`);
 --
 -- Constraints for table `cart`
 --

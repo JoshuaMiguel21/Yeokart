@@ -243,7 +243,7 @@ if (isset($_SESSION['firstname'])) {
                         $select_query = "SELECT * FROM contacts LIMIT $contactsPerPage OFFSET $offset";
                         $result_query = mysqli_query($con, $select_query);
                         if (mysqli_num_rows($result_query) == 0) {
-                            echo "<tr><td colspan='11'><center><b>No orders at the moment</b></center></td></tr>";
+                            echo "<tr><td colspan='11'><center><b>No contacts found</b></center></td></tr>";
                         } else {
                             while ($row = mysqli_fetch_assoc($result_query)) {
                                 $contacts_id = $row['contacts_id'];

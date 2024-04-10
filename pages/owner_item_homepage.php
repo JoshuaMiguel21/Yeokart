@@ -313,38 +313,76 @@
                             include('../database/db_yeokart.php');
                             if (isset($_POST['delete_item'])) {
                                 $item_id = $_POST['item_id'];
-                                $stmt = $con->prepare("DELETE FROM products WHERE item_id = ?");
-                                $stmt->bind_param("i", $item_id);
+                                // Start a transaction
+                                mysqli_autocommit($con, false);
 
-                                if ($stmt->execute()) {
-                                    echo "<script>
-                                            Swal.fire({
-                                                title: 'Success!',
-                                                text: 'Item deleted successfully',
-                                                icon: 'success',
-                                                confirmButtonText: 'OK'
-                                            }).then((result) => {
-                                                if (result.isConfirmed) {
-                                                    window.location.href = 'owner_item_homepage.php';
-                                                }
-                                            });
-                                          </script>";
+                                // Delete from cart table
+                                $delete_cart_query = "DELETE FROM cart WHERE item_id = ?";
+                                $stmt_cart = $con->prepare($delete_cart_query);
+                                $stmt_cart->bind_param("i", $item_id);
+                                $cart_deleted = $stmt_cart->execute();
+
+                                // Delete from products table if cart deletion is successful
+                                if ($cart_deleted) {
+                                    $delete_products_query = "DELETE FROM products WHERE item_id = ?";
+                                    $stmt_products = $con->prepare($delete_products_query);
+                                    $stmt_products->bind_param("i", $item_id);
+                                    $products_deleted = $stmt_products->execute();
                                 } else {
+                                    // Rollback the transaction if cart deletion fails
+                                    mysqli_rollback($con);
                                     echo "<script>
-                                            Swal.fire({
-                                                title: 'Error!',
-                                                text: 'Failed to delete item',
-                                                icon: 'error',
-                                                confirmButtonText: 'OK'
-                                            }).then((result) => {
-                                                if (result.isConfirmed) {
-                                                    window.location.href = 'owner_item_homepage.php';
-                                                }
-                                            });
-                                          </script>";
+                                        Swal.fire({
+                                            title: 'Error!',
+                                            text: 'Failed to delete item from cart',
+                                            icon: 'error',
+                                            confirmButtonText: 'OK'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                window.location.href = 'owner_item_homepage.php';
+                                            }
+                                        });
+                                      </script>";
                                 }
 
-                                $stmt->close();
+                                if ($products_deleted) {
+                                    // Commit the transaction if both deletions are successful
+                                    mysqli_commit($con);
+                                    echo "<script>
+                                        Swal.fire({
+                                            title: 'Success!',
+                                            text: 'Item deleted successfully',
+                                            icon: 'success',
+                                            confirmButtonText: 'OK'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                window.location.href = 'owner_item_homepage.php';
+                                            }
+                                        });
+                                      </script>";
+                                } else {
+                                    // Rollback the transaction if products deletion fails
+                                    mysqli_rollback($con);
+                                    echo "<script>
+                                        Swal.fire({
+                                            title: 'Error!',
+                                            text: 'Failed to delete item from products',
+                                            icon: 'error',
+                                            confirmButtonText: 'OK'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                window.location.href = 'owner_item_homepage.php';
+                                            }
+                                        });
+                                      </script>";
+                                }
+
+                                // Close the statements
+                                $stmt_cart->close();
+                                $stmt_products->close();
+
+                                // Set autocommit back to true
+                                mysqli_autocommit($con, true);
                             }
 
                             $itemsPerPage = 10;
