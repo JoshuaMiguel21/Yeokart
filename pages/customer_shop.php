@@ -236,6 +236,30 @@
                 </div>
             </nav>
             <section class="best" id="best">
+                <h1 class="heading"><span>Shop</span></h1>
+                <?php
+                $selectedFilters = [];
+                if (isset($_GET['search']) && !empty($_GET['search'])) {
+                    $searchTerm = htmlspecialchars($_GET['search']);
+                    $selectedFilters[] = "Search term: \"$searchTerm\"";
+                }
+                if (isset($_GET['category']) && !empty($_GET['category'])) {
+                    $category = htmlspecialchars($_GET['category']);
+                    $selectedFilters[] = "Category: \"$category\"";
+                }
+                if (isset($_GET['artist']) && !empty($_GET['artist'])) {
+                    $artist = htmlspecialchars($_GET['artist']);
+                    $selectedFilters[] = "Artist: \"$artist\"";
+                }
+                if (isset($_GET['price_order']) && ($_GET['price_order'] === 'low_to_high' || $_GET['price_order'] === 'high_to_low')) {
+                    $priceOrder = $_GET['price_order'] === 'low_to_high' ? 'Low to High' : 'High to Low';
+                    $selectedFilters[] = "Price Order: \"$priceOrder\"";
+                }
+
+                if (!empty($selectedFilters)) {
+                    echo "<h3>Showing results for " . implode(", ", $selectedFilters) . "</h3>";
+                }
+                ?>
                 <div class="best-slider">
                     <div class="wrapper">
                         <?php
