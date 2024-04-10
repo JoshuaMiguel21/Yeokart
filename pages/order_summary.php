@@ -16,7 +16,7 @@
     <link rel="icon" type="image/png" href="../res/icon.png">
 </head>
 <style>
-.swal2-custom-popup {
+    .swal2-custom-popup {
         font-size: 16px;
         width: 500px;
     }
@@ -140,7 +140,7 @@
     }
     $shippingFee = 0;
     $overallTotal = 0;
-    
+
     // Calculate total quantity of items with category "Albums"
     $totalAlbumsQuantity = array_reduce($cartItems, function ($acc, $item) {
         if ($item['category'] === 'Albums') {
@@ -148,10 +148,10 @@
         }
         return $acc;
     }, 0);
-    
+
     // Determine the province based on the selected address or default to Metro Manila
     $province = $province === 'Metro Manila' ? 'Metro Manila' : $province;
-    
+
     // Check if province is empty and set shippingFee to 0
     if ($province === '') {
         $shippingFee = 0;
@@ -163,10 +163,10 @@
             $shippingFee = $province === 'Metro Manila' ? 120 : 220;
         }
     }
-    
+
     // Update overall total
     $overallTotal = $cartTotal + $shippingFee;
-    
+
 
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_order'])) {
         if ($fullAddress === "No default address found") {
@@ -192,40 +192,40 @@
             $items_ordered_str = implode(", ", $items_ordered);
             $date_of_purchase = date("Y-m-d");
             $order_id = uniqid();
-    
+
             $item_quantities = array_column($cartItems, 'quantity');
             $item_quantities_str = implode(", ", $item_quantities);
-    
+
             $insert_query = $con->prepare("INSERT INTO orders (order_id, customer_id, address, items_ordered, item_quantity, total, shipping_fee, overall_total, date_of_purchase) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $insert_query->bind_param("sisssssss", $order_id, $customer_id, $fullAddress, $items_ordered_str, $item_quantities_str, $cartTotal, $shippingFee, $overallTotal, $date_of_purchase);
-    
+
             if ($insert_query->execute()) {
-    
+
                 $clear_cart_query = "DELETE FROM cart WHERE customer_id = ?";
                 $clear_cart_stmt = $con->prepare($clear_cart_query);
                 $clear_cart_stmt->bind_param("i", $customer_id);
                 $clear_cart_stmt->execute();
-    
+
                 foreach ($cartItems as $item) {
                     $item_name = $item['item_name'];
                     $quantity_purchased = $item['quantity'];
-    
+
                     $product_query = $con->prepare("SELECT `item_quantity`, `times_sold` FROM `products` WHERE `item_name` = ?");
                     $product_query->bind_param("s", $item_name);
                     $product_query->execute();
                     $product_result = $product_query->get_result();
-    
+
                     if ($product_result->num_rows > 0) {
                         $product_row = $product_result->fetch_assoc();
                         $current_stock = $product_row['item_quantity'];
                         $current_times_sold = $product_row['times_sold'];
-    
+
                         $new_stock = $current_stock - $quantity_purchased;
                         $new_times_sold = $current_times_sold + $quantity_purchased;
-    
+
                         $update_query = $con->prepare("UPDATE `products` SET `item_quantity` = ?, `times_sold` = ? WHERE `item_name` = ?");
                         $update_query->bind_param("iis", $new_stock, $new_times_sold, $item_name);
-    
+
                         if (!$update_query->execute()) {
                             echo "Error updating product stock and sales data for item: " . $item_name;
                         }
@@ -233,9 +233,9 @@
                         echo "Product not found for item: " . $item_name;
                     }
                 }
-    
+
                 unset($_SESSION['selectedAddressId']);
-    
+
                 echo "<script>
                     Swal.fire({
                         icon: 'success', 
@@ -288,6 +288,8 @@
             <div class="reminders-inf">
                 <h3><i class="fa-solid fa-circle-info"></i>Important Reminders</h3>
             </div>
+            <h3>WARNING: Orders placed cannot be canceled. Please verify your cart before proceeding.</h3>
+            <br></br>
             <p><strong class="name">Mode of Payment</strong></p>
             <p><strong>GCash</strong></p>
             <?php
