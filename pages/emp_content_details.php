@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>Manage Content - Yeokart</title>
+    <title>Contact Details - Yeokart</title>
     <link rel="icon" type="image/png" href="../res/icon.png">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -253,8 +253,8 @@ if (isset($_SESSION['firstname'])) {
                             echo "<td style='max-width: 350px;'>" . $row['contacts_description'] . "</td>";
                             echo "<td>";
                             echo "<div class='button-class'>";
-                            echo "<a href='emp_edit_contacts.php?contacts_id=$contacts_id' class='edit-button'>Edit</a>";
-                            echo "<button type='button' onclick='openDeletePopup(" . $contacts_id . ")' class='delete-button'>Delete</button>";
+                            echo "<a href='emp_edit_contacts.php?contacts_id=$contacts_id' class='edit-button'><i class='las la-edit'></i></a>";
+                            echo "<button type='button' onclick='openDeletePopup(" . $contacts_id . ")' class='delete-button'><i class='las la-trash'></i></button>";
                             echo "<form id='deleteForm_$contacts_id' method='post'>";
                             echo "<input type='hidden' name='contacts_id' value='$contacts_id'>";
                             echo "<input type='hidden' name='delete_contacts' value='true'>";

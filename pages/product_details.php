@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yeokart</title>
+    <title>Product Details - Yeokart</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -84,16 +84,6 @@ if (isset($_GET['item_id'])) {
     }
 }
 
-/*if (isset($_POST['add-to-cart-btn'])) {
-    $customer_id = $_SESSION['id'];
-    $item_name = $fetch_item['item_name'];
-    $price = $fetch_item['item_price'];
-    $item_image = $fetch_item['item_image1'];
-    $quantity = $_POST['quantity'];
-
-    $insert_cart_query = "INSERT INTO cart (customer_id, item_name, price, item_image1, quantity) VALUES ('$customer_id', '$item_name', '$price', '$item_image', '$quantity')";
-    mysqli_query($con, $insert_cart_query);
-}*/
 if (isset($_GET['item_id'])) {
     $item_id = $_GET['item_id'];
     $select_item_query = "SELECT * FROM products WHERE item_id = $item_id";
@@ -169,7 +159,7 @@ if (isset($_POST['add-to-cart-btn'])) {
         <div class="header-1">
             <a href="customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>
             <div class="icons">
-                <form action="new_customer_shop.php" method="GET" class="search-form">
+                <form action="customer_shop.php" method="GET" class="search-form">
                     <input type="search" name="search" placeholder="Search here..." id="search-box">
                     <button type="submit"><i class="fas fa-search"></i></button>
                 </form>
@@ -180,13 +170,13 @@ if (isset($_POST['add-to-cart-btn'])) {
             <div class="icons">
                 <ul>
                     <li class="search-ul">
-                        <form action="new_customer_shop.php" method="GET" class="search-form">
+                        <form action="customer_shop.php" method="GET" class="search-form">
                             <input type="search" name="search" placeholder="Search here..." id="search-box">
                             <button type="submit"><i class="fas fa-search"></i></button>
                         </form>
                     </li>
                     <li class="home-class"><a href="customer_homepage.php" id="home-nav">Home</a></li>
-                    <li><a href="new_customer_shop.php" class="active">Shop</a></li>
+                    <li><a href="customer_shop.php" class="active">Shop</a></li>
                     <li><a href="contact_page.php">Contact Us</a></li>
                     <li><a href="customer_cart.php"><i class="fas fa-shopping-cart"><span id="cart-num"><?php echo $cartCount; ?></span></i></a></li>
                     <li><a href="customer_profile.php" id="user-btn"><i class="fas fa-user"></i></a></li>
@@ -194,12 +184,12 @@ if (isset($_POST['add-to-cart-btn'])) {
             </div>
         </div>
     </header>
-        <div class="btn-return">
-            <a href="new_customer_shop.php" class="btn-prod">
-                <i class="fas fa-arrow-left"></i>
-                <span class="text">RETURN TO SHOP</span>
-            </a>
-        </div>
+    <div class="btn-return2">
+        <a href="customer_shop.php" class="btn-prod">
+            <i class="fas fa-arrow-left"></i>
+            <span class="text">RETURN TO SHOP</span>
+        </a>
+    </div>
     <section class="product-details" id="product-details">
         <div class="product-details-left">
             <?php if (!empty($fetch_item['item_image1']) || !empty($fetch_item['item_image2']) || !empty($fetch_item['item_image3'])) : ?>

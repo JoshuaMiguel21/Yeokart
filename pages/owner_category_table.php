@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
-    <title>Item Catalog - Yeokart</title>
+    <title>Category Table - Yeokart</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="icon" type="image/png" href="../res/icon.png">
 </head>
@@ -223,7 +223,7 @@ if (isset($_SESSION['lastname'])) {
                             echo "<td>" . $row['category_name'] . "</td>";
                             echo "<td>";
                             echo "<div class='button-class'>";
-                            echo '<a href="#" onclick="openEditCategoryPopup(' . $category_id . ', \'' . $category_name . '\')" class="edit-button">Edit</a>';
+                            echo '<a href="#" onclick="openEditCategoryPopup(' . $category_id . ', \'' . $category_name . '\')" class="edit-button"><i class="las la-edit"></i></a>';
                             echo "</td>";
                             echo "</tr>";
                         }

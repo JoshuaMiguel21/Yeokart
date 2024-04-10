@@ -66,7 +66,7 @@ if (isset($_SESSION['lastname'])) {
 <body>
 
     <input type="checkbox" id="nav-toggle" <?php echo $_SESSION['nav_toggle'] ? 'checked' : ''; ?>>
-     <div class="sidebar <?php echo $_SESSION['nav_toggle'] ? 'open' : ''; ?>">
+    <div class="sidebar <?php echo $_SESSION['nav_toggle'] ? 'open' : ''; ?>">
         <div class="sidebar-brand">
             <h2><span>Yeokart</span></h2>
         </div>
@@ -154,7 +154,7 @@ if (isset($_SESSION['lastname'])) {
             $totalEmployeesResult = mysqli_query($con, $totalEmployeesQuery);
             $totalEmployeesRow = mysqli_fetch_assoc($totalEmployeesResult);
             $totalEmployees = $totalEmployeesRow['total_employees'];
-            
+
             // Fetch employees with pagination
             $sql = "SELECT id, firstname, lastname, username, email FROM `employee_accounts` WHERE is_employee = 1 LIMIT $employeesPerPage OFFSET $offset";
             $result = $con->query($sql);
@@ -176,7 +176,6 @@ if (isset($_SESSION['lastname'])) {
                             }
                         });
                     </script>";
-            
                 } else {
                     echo "Error";
                 }
@@ -208,8 +207,8 @@ if (isset($_SESSION['lastname'])) {
                                 <td>" . $row["email"] . "</td>
                                 <td>
                                     <div class='button-class'>
-                                        <a href='edit_employee.php?id=" . $row["id"] . "' class='edit-button'>Edit</a>
-                                        <button class='delete-button' type='submit' name='deleteEmployee' value='" . $row["id"] . "'>Delete</button>
+                                        <a href='edit_employee.php?id=" . $row["id"] . "' class='edit-button'><i class='las la-edit'></i></a>
+                                        <button class='delete-button' type='submit' name='deleteEmployee' value='" . $row["id"] . "'><i class='las la-trash'></i></button>
                                     </div>
                                 </td>
                             </tr>";
@@ -237,36 +236,36 @@ if (isset($_SESSION['lastname'])) {
                         </form>";
             }
 
-                $baseUrl = 'manage_employees.php?';
+            $baseUrl = 'manage_employees.php?';
 
-                // Adjust the query parameters as needed for your employee management context
-                $pageQuery = '';
-                if (isset($_GET['search'])) {
-                    $pageQuery = 'search=' . urlencode($_GET['search']);
-                    // Add any other parameters you need to maintain during pagination
-                }
+            // Adjust the query parameters as needed for your employee management context
+            $pageQuery = '';
+            if (isset($_GET['search'])) {
+                $pageQuery = 'search=' . urlencode($_GET['search']);
+                // Add any other parameters you need to maintain during pagination
+            }
 
-                $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-                $totalPages = ceil($totalEmployees / $employeesPerPage);
+            $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+            $totalPages = ceil($totalEmployees / $employeesPerPage);
 
-                $startPage = max(1, $pageNumber - 2);
-                $endPage = min($totalPages, $pageNumber + 2);
+            $startPage = max(1, $pageNumber - 2);
+            $endPage = min($totalPages, $pageNumber + 2);
 
-                echo "<div class='pagination'>";
+            echo "<div class='pagination'>";
 
-                $prevPage = max(1, $pageNumber - 1);
-                echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link'" . ($pageNumber <= 1 ? " style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
+            $prevPage = max(1, $pageNumber - 1);
+            echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link'" . ($pageNumber <= 1 ? " style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
 
-                for ($i = $startPage; $i <= $endPage; $i++) {
-                    $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
-                    echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
-                }
+            for ($i = $startPage; $i <= $endPage; $i++) {
+                $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
+                echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
+            }
 
-                $nextPage = min($totalPages, $pageNumber + 1);
-                echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link'" . ($pageNumber >= $totalPages ? " style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
+            $nextPage = min($totalPages, $pageNumber + 1);
+            echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link'" . ($pageNumber >= $totalPages ? " style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
 
-                echo "</div>";
-                
+            echo "</div>";
+
             // Close connection
             $con->close();
             ?>

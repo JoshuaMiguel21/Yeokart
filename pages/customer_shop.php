@@ -85,7 +85,7 @@
             <div class="header-1">
                 <a href="customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>
                 <div class="icons">
-                    <form action="new_customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
+                    <form action="customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
                         <input type="search" name="search" placeholder="Search here..." id="search-box">
                         <button type="submit"><i class="fas fa-search"></i></button>
                     </form>
@@ -96,13 +96,13 @@
                 <div class="icons">
                     <ul>
                         <li class="search-ul">
-                            <form action="new_customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
+                            <form action="customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
                                 <input type="search" name="search" placeholder="Search here..." id="search-box">
                                 <button type="submit"><i class="fas fa-search"></i></button>
                             </form>
                         </li>
                         <li class="home-class"><a href="customer_homepage.php" id="home-nav">Home</a></li>
-                        <li><a href="new_customer_shop.php" class="active">Shop</a></li>
+                        <li><a href="customer_shop.php" class="active">Shop</a></li>
                         <li><a href="contact_page.php">Contact Us</a></li>
                         <li><a href="customer_cart.php"><i class="fas fa-shopping-cart"><span id="cart-num"><?php echo $cartCount; ?></span></i></a></li>
                         <li><a href="customer_profile.php" id="user-btn"><i class="fas fa-user"></i></a></li>
@@ -153,7 +153,7 @@
                         <form method="GET">
                             <h3>Sort By Price</h3>
                             <select name="price_order">
-                                <option value="default" <?php if (isset($_GET['price_order']) && $_GET['price_order'] == 'default') echo 'selected'; ?>>Sort By</option>
+                                <option value="" disabled selected>Sort By</option>
                                 <option value="low_to_high" <?php if (isset($_GET['price_order']) && $_GET['price_order'] == 'low_to_high') echo 'selected'; ?>>Price: Low to High</option>
                                 <option value="high_to_low" <?php if (isset($_GET['price_order']) && $_GET['price_order'] == 'high_to_low') echo 'selected'; ?>>Price: High to Low</option>
                             </select>
@@ -218,7 +218,7 @@
                         <form method="GET">
                             <h2>Sort By Price</h2>
                             <select name="price_order">
-                                <option value="default">Sort By</option>
+                                <option value="" disabled selected>Sort By</option>
                                 <option value="low_to_high">Price: Low to High</option>
                                 <option value="high_to_low">Price: High to Low</option>
                             </select>
@@ -236,6 +236,30 @@
                 </div>
             </nav>
             <section class="best" id="best">
+                <h1 class="heading"><span>Shop</span></h1>
+                <?php
+                $selectedFilters = [];
+                if (isset($_GET['search']) && !empty($_GET['search'])) {
+                    $searchTerm = htmlspecialchars($_GET['search']);
+                    $selectedFilters[] = "Search term: \"$searchTerm\"";
+                }
+                if (isset($_GET['category']) && !empty($_GET['category'])) {
+                    $category = htmlspecialchars($_GET['category']);
+                    $selectedFilters[] = "Category: \"$category\"";
+                }
+                if (isset($_GET['artist']) && !empty($_GET['artist'])) {
+                    $artist = htmlspecialchars($_GET['artist']);
+                    $selectedFilters[] = "Artist: \"$artist\"";
+                }
+                if (isset($_GET['price_order']) && ($_GET['price_order'] === 'low_to_high' || $_GET['price_order'] === 'high_to_low')) {
+                    $priceOrder = $_GET['price_order'] === 'low_to_high' ? 'Low to High' : 'High to Low';
+                    $selectedFilters[] = "Price Order: \"$priceOrder\"";
+                }
+
+                if (!empty($selectedFilters)) {
+                    echo "<h3>Showing results for " . implode(", ", $selectedFilters) . "</h3>";
+                }
+                ?>
                 <div class="best-slider">
                     <div class="wrapper">
                         <?php
@@ -337,7 +361,7 @@
                     </div>
                 </div>
                 <?php
-                $baseUrl = 'new_customer_shop.php?';
+                $baseUrl = 'customer_shop.php?';
 
                 $pageQuery = '';
                 if (isset($_GET['search_button'])) {
@@ -387,7 +411,7 @@
                 function clearSearch() {
                     document.getElementsByName('category')[0].selectedIndex = 0;
                     document.getElementsByName('artist')[0].selectedIndex = 0;
-                    window.location.href = 'new_customer_shop.php'; // Reload the page
+                    window.location.href = 'customer_shop.php'; // Reload the page
                 }
                 document.addEventListener('DOMContentLoaded', function() {
                     const searchForm = document.querySelector('.search-form');

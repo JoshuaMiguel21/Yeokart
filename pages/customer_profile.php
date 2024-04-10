@@ -144,7 +144,7 @@ $con->close();
         <div class="header-1">
             <a href="customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>
             <div class="icons">
-                <form action="new_customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
+                <form action="customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
                     <input type="search" name="search" placeholder="Search here..." id="search-box">
                     <button type="submit"><i class="fas fa-search"></i></button>
                 </form>
@@ -155,13 +155,13 @@ $con->close();
             <div class="icons">
                 <ul>
                     <li class="search-ul">
-                        <form action="new_customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
+                        <form action="customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
                             <input type="search" name="search" placeholder="Search here..." id="search-box">
                             <button type="submit"><i class="fas fa-search"></i></button>
                         </form>
                     </li>
                     <li class="home-class"><a href="customer_homepage.php" id="home-nav">Home</a></li>
-                    <li><a href="new_customer_shop.php">Shop</a></li>
+                    <li><a href="customer_shop.php">Shop</a></li>
                     <li><a href="contact_page.php">Contact Us</a></li>
                     <li><a href="customer_cart.php"><i class="fas fa-shopping-cart"><span id="cart-num"><?php echo $cartCount; ?></span></i></a></li>
                     <li><a href="customer_profile.php" id="user-btn" class="active"><i class="fas fa-user"></i></a></li>
@@ -287,7 +287,7 @@ $con->close();
                         if ($status == "DELIVERED") {
                             echo '<i class="fas fa-archive archive-icon" data-order-id="' . $order_id . '"></i>';
                         }
-                        echo '</td>';   
+                        echo '</td>';
                         echo '</tr>';
                         echo '<tr class="hidden-row">';
                         echo '<td colspan="5">';
@@ -389,52 +389,52 @@ $con->close();
                     echo '</tr>';
                     echo '</tbody>';
                     echo '</table>';
-                }         
+                }
                 $con->close();
                 ?>
 
                 <?php
-                    $baseUrl = 'customer_profile.php?';
+                $baseUrl = 'customer_profile.php?';
 
-                    $pageQuery = '';
-                    if (isset($_GET['search_button'])) {
-                        $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
-                    } elseif (isset($_GET['filter_button'])) {
-                        if (isset($_GET['category'])) {
-                            $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
-                        } elseif (isset($_GET['artist'])) {
-                            $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
-                        }
+                $pageQuery = '';
+                if (isset($_GET['search_button'])) {
+                    $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
+                } elseif (isset($_GET['filter_button'])) {
+                    if (isset($_GET['category'])) {
+                        $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
+                    } elseif (isset($_GET['artist'])) {
+                        $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
                     }
+                }
 
-                    $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-                    $totalPages = ceil($totalOrders / $ordersPerPage);
+                $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+                $totalPages = ceil($totalOrders / $ordersPerPage);
 
-                    $startPage = max(1, $pageNumber - 1);
-                    $endPage = min($totalPages, $pageNumber + 1);
+                $startPage = max(1, $pageNumber - 1);
+                $endPage = min($totalPages, $pageNumber + 1);
 
-                    if ($pageNumber == 1) {
-                        $startPage = 1;
-                        $endPage = min(3, $totalPages);
-                    } elseif ($pageNumber == $totalPages) {
-                        $startPage = max(1, $totalPages - 2);
-                        $endPage = $totalPages;
-                    }
+                if ($pageNumber == 1) {
+                    $startPage = 1;
+                    $endPage = min(3, $totalPages);
+                } elseif ($pageNumber == $totalPages) {
+                    $startPage = max(1, $totalPages - 2);
+                    $endPage = $totalPages;
+                }
 
-                    echo "<div class='pagination'>";
+                echo "<div class='pagination'>";
 
-                    $prevPage = max(1, $pageNumber - 1);
-                    echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
+                $prevPage = max(1, $pageNumber - 1);
+                echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
 
-                    for ($i = $startPage; $i <= $endPage; $i++) {
-                        $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
-                        echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
-                    }
+                for ($i = $startPage; $i <= $endPage; $i++) {
+                    $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
+                    echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
+                }
 
-                    $nextPage = min($totalPages, $pageNumber + 1);
-                    echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
+                $nextPage = min($totalPages, $pageNumber + 1);
+                echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
 
-                    echo "</div>";
+                echo "</div>";
                 ?>
             </div>
 
@@ -599,28 +599,28 @@ $con->close();
 
             toggleIcons.forEach(function(icon) {
                 icon.style.transition = 'transform 0.3s ease';
-                
+
                 icon.addEventListener('click', function(event) {
                     event.stopPropagation();
 
                     const row = icon.closest('.order-row');
                     const hiddenRow = row.nextElementSibling;
-                    
+
                     hiddenRow.classList.toggle('hidden-row-visible');
-                    icon.classList.toggle('active'); 
+                    icon.classList.toggle('active');
 
                     if (hiddenRow.classList.contains('hidden-row-visible')) {
                         icon.style.transform = 'rotate(180deg)';
                     } else {
                         icon.style.transform = 'rotate(0deg)';
-                        icon.classList.remove('active'); 
+                        icon.classList.remove('active');
                     }
 
                     if (currentlyOpenRow && currentlyOpenRow !== hiddenRow) {
                         currentlyOpenRow.classList.remove('hidden-row-visible');
                         const previousRowIcon = currentlyOpenRow.previousElementSibling.querySelector('.fa-chevron-down');
                         previousRowIcon.style.transform = 'rotate(0deg)';
-                        previousRowIcon.classList.remove('active'); 
+                        previousRowIcon.classList.remove('active');
                     }
 
                     currentlyOpenRow = hiddenRow.classList.contains('hidden-row-visible') ? hiddenRow : null;
@@ -673,7 +673,7 @@ $con->close();
         }
 
         document.addEventListener('click', function(e) {
-            if(e.target.classList.contains('archive-icon')) {
+            if (e.target.classList.contains('archive-icon')) {
                 const orderId = e.target.getAttribute('data-order-id');
                 archiveOrder(orderId);
             }
@@ -688,27 +688,27 @@ $con->close();
 
             setTimeout(() => {
                 fetch('archive_order.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: `orderId=${orderId}`,
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if(data.success) {
-                        location.reload();
-                    } else {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `orderId=${orderId}`,
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload();
+                        } else {
+                            archiveIcon.className = originalClassList;
+                            archiveIcon.style.cssText = originalStyle;
+                            alert('Failed to archive the order. Please try again.');
+                        }
+                    })
+                    .catch(error => {
                         archiveIcon.className = originalClassList;
                         archiveIcon.style.cssText = originalStyle;
                         alert('Failed to archive the order. Please try again.');
-                    }
-                })
-                .catch(error => {
-                    archiveIcon.className = originalClassList;
-                    archiveIcon.style.cssText = originalStyle;
-                    alert('Failed to archive the order. Please try again.');
-                });
+                    });
             }, 1000); // Delay of 2 seconds
         }
     </script>
