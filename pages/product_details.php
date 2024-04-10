@@ -194,7 +194,7 @@ if (isset($_POST['add-to-cart-btn'])) {
             </div>
         </div>
     </header>
-        <div class="btn-return">
+        <div class="btn-return2">
             <a href="new_customer_shop.php" class="btn-prod">
                 <i class="fas fa-arrow-left"></i>
                 <span class="text">RETURN TO SHOP</span>
