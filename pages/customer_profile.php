@@ -241,7 +241,7 @@ $con->close();
                 $totalOrdersRow = mysqli_fetch_assoc($totalOrdersResult);
                 $totalOrders = $totalOrdersRow['total_orders'];
 
-                $sql = "SELECT `order_id`, `customer_id`, `firstname`, `lastname`, `address`, `items_ordered`, `total`, `shipping_fee`, `overall_total`, `date_of_purchase`, `item_quantity`, `status`, `proof_of_payment`, 
+                $sql = "SELECT `order_id`, `customer_id`, `address`, `items_ordered`, `item_quantity`, `total`, `shipping_fee`, `overall_total`, `date_of_purchase`, `status`, `proof_of_payment`, `is_archive`, 
                 CASE `status`
                     WHEN 'INVALID' THEN 1
                     WHEN 'PENDING' THEN 2

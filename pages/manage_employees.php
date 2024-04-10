@@ -132,7 +132,7 @@ if (isset($_SESSION['lastname'])) {
                     <h3>Manage Employee</h3>
                 </div>
                 <div class="head-buttons">
-                    <a href="add_employee.php" class="btn-employee">
+                    <a href="add_employee.php" class="btn-main">
                         <i class="las la-plus"></i>
                         <span class="text">Add Employee</span>
                     </a>

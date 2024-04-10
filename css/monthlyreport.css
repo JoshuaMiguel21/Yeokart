@@ -5,6 +5,7 @@
     --dark-color:#d11c49;
     --color-dark: #1D2231;
     --text-grey: #8390A2;
+    --darker-pink: #880E4F;
 }
 
 * {
@@ -129,6 +130,19 @@
     padding: 0 16px;
     border-radius: 36px;
     background-color: var(--main-color);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    grid-gap: 10px;
+    font-weight: 500;
+}
+
+.head-buttons .btn-main{
+    height: 36px;
+    padding: 0 16px;
+    border-radius: 36px;
+    background-color: var(--darker-pink);
     color: #fff;
     display: flex;
     align-items: center;

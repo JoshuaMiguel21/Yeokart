@@ -4,7 +4,8 @@
     --main-color: #DD2F6E;
     --dark-color:#d11c49;
     --color-dark: #1D2231;
-    --text-grey: #8390A2;
+    --text-grey: #8390A2; 
+    --darker-pink: #880E4F;
 }
 
 * {
@@ -122,6 +123,7 @@
     justify-content: space-between;
     grid-gap: 16px;
     flex-wrap: wrap;
+    margin-bottom: 2rem;
 }
 
 .head-buttons .btn-employee{
@@ -129,6 +131,19 @@
     padding: 0 16px;
     border-radius: 36px;
     background-color: var(--main-color);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    grid-gap: 10px;
+    font-weight: 500;
+}
+
+.head-buttons .btn-main{
+    height: 36px;
+    padding: 0 16px;
+    border-radius: 36px;
+    background-color: var(--darker-pink);
     color: #fff;
     display: flex;
     align-items: center;
@@ -558,6 +573,21 @@ option:hover {
     color: #fff;
     box-shadow: 0 2px 5px rgba(221, 47, 110, 0.5);
 }
+
+.loader {
+    border: 4px solid #f3f3f3; /* Light grey */
+    border-top: 4px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 
 .current-page {
     font-weight: bold;
