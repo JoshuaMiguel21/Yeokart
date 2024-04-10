@@ -153,7 +153,7 @@
                         <form method="GET">
                             <h3>Sort By Price</h3>
                             <select name="price_order">
-                                <option value="default" <?php if (isset($_GET['price_order']) && $_GET['price_order'] == 'default') echo 'selected'; ?>>Sort By</option>
+                                <option value="" disabled selected>Sort By</option>
                                 <option value="low_to_high" <?php if (isset($_GET['price_order']) && $_GET['price_order'] == 'low_to_high') echo 'selected'; ?>>Price: Low to High</option>
                                 <option value="high_to_low" <?php if (isset($_GET['price_order']) && $_GET['price_order'] == 'high_to_low') echo 'selected'; ?>>Price: High to Low</option>
                             </select>
@@ -218,7 +218,7 @@
                         <form method="GET">
                             <h2>Sort By Price</h2>
                             <select name="price_order">
-                                <option value="default">Sort By</option>
+                                <option value="" disabled selected>Sort By</option>
                                 <option value="low_to_high">Price: Low to High</option>
                                 <option value="high_to_low">Price: High to Low</option>
                             </select>
