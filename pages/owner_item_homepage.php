@@ -158,7 +158,7 @@
                     <i class="las la-list"></i>
                     <span class="text">View Categories Table</span>
                 </a>
-                <a href="owner_item.php" class="btn-employee">
+                <a href="owner_item.php" class="btn-main">
                     <i class="las la-plus"></i>
                     <span class="text">Add Item</span>
                 </a>

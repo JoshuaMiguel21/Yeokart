@@ -49,7 +49,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $checkStmt->store_result();
 
         if ($checkStmt->num_rows > 0) {
-            // Use SweetAlert2 for the alert and redirection
             echo "<script>
                     Swal.fire({
                         title: 'Error!',

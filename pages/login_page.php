@@ -62,6 +62,7 @@ function myFunction() {
                     if ($user || $employee || $admin) {
                         // Check if the user is an admin
                         if ($admin && $password == $admin["password"]) {
+                            sleep(1); // Add 2-second delay
                             header("Location: owner_dashboard.php");
                             $_SESSION['logged_in'] = true;
                             $_SESSION['firstname'] = $admin['firstname'];
@@ -70,6 +71,7 @@ function myFunction() {
                         }
                         // Check if the user is an employee
                         elseif ($employee && password_verify($password, $employee["password"])) {
+                            sleep(1); // Add 2-second delay
                             header("Location: emp_dashboard.php");
                             $_SESSION['logged_in'] = true;
                             $_SESSION['firstname'] = $employee['firstname'];
@@ -78,6 +80,7 @@ function myFunction() {
                         }
                         // Check if the user is a verified customer
                         elseif ($user && $user['is_verified'] == 1 && password_verify($password, $user["password"])) {
+                            sleep(1); // Add 2-second delay
                             header("Location: customer_homepage.php");
                             $_SESSION['logged_in'] = true;
                             $_SESSION['id'] = $user['id'];
@@ -88,10 +91,12 @@ function myFunction() {
                             die();
                         } else {
                             // Password or email does not match
+                            sleep(1);
                             echo "<div class='alert alert-danger'>Password or Email does not match</div>";
                         }
                     } else {
                         // User does not exist
+                        sleep(1);
                         echo "<div class='alert alert-danger'>Email not found</div>";
                     }
                 }

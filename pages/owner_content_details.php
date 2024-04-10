@@ -151,7 +151,7 @@ if (isset($_SESSION['lastname'])) {
                     <i class="las la-edit"></i>
                     <span class="text">Edit Featured Section</span>
                 </a>
-                <a href="add_contacts.php" class="btn-employee">
+                <a href="add_contacts.php" class="btn-main">
                     <i class="las la-plus"></i>
                     <span class="text">Add Contacts</span>
                 </a>

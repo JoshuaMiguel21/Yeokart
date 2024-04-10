@@ -196,8 +196,8 @@
             $item_quantities = array_column($cartItems, 'quantity');
             $item_quantities_str = implode(", ", $item_quantities);
     
-            $insert_query = $con->prepare("INSERT INTO orders (order_id, customer_id, firstname, lastname, address, items_ordered, item_quantity, total, shipping_fee, overall_total, date_of_purchase) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $insert_query->bind_param("sisssssssss", $order_id, $customer_id, $firstname, $lastname, $fullAddress, $items_ordered_str, $item_quantities_str, $cartTotal, $shippingFee, $overallTotal, $date_of_purchase);
+            $insert_query = $con->prepare("INSERT INTO orders (order_id, customer_id, address, items_ordered, item_quantity, total, shipping_fee, overall_total, date_of_purchase) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $insert_query->bind_param("sisssssss", $order_id, $customer_id, $fullAddress, $items_ordered_str, $item_quantities_str, $cartTotal, $shippingFee, $overallTotal, $date_of_purchase);
     
             if ($insert_query->execute()) {
     

@@ -262,7 +262,7 @@
                     <input type="hidden" name="total_revenue" value="<?php echo  $totalRevenue; ?>">
                     <input type="hidden" name="total_income" value="<?php echo  $totalIncome; ?>"> <!-- Add this line -->
                 </form>
-                <a href="#" class="btn-employee" onclick="document.getElementById('reportForm').submit(); return false;">
+                <a href="#" class="btn-main" onclick="document.getElementById('reportForm').submit(); return false;">
                     <i class="las la-download"></i>
                     <span class="text">Generate Report</span>
                 </a>
