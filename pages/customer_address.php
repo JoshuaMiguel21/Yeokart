@@ -1,98 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account - Yeokart</title>
-    <link rel="icon" type="image/png" href="../res/icon.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <link rel="stylesheet" href="../css/style_homepage_customer.css">
-</head>
-<script>
-    function openDeletePopup(addressId) {
-        document.getElementById("deletePopup").style.display = "block";
-        document.getElementById("deletePopup").setAttribute("data-addressId", addressId);
-    }
-
-    function closeDeletePopup() {
-        document.getElementById("deletePopup").style.display = "none";
-    }
-
-    function confirmDeletion() {
-        var addressId = document.getElementById("deletePopup").getAttribute("data-addressId");
-
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "delete_address_process.php", true);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-        xhr.onload = function() {
-            if (xhr.status == 200) {
-                alert(xhr.responseText);
-                closeDeletePopup();
-                location.reload();
-            } else {
-                alert("Error deleting address.");
-            }
-        };
-
-        xhr.send("addressId=" + addressId);
-    }
-
-
-    function openPopup() {
-        document.getElementById("popup").style.display = "block";
-    }
-
-    function closePopup() {
-        document.getElementById("popup").style.display = "none";
-    }
-
-    function openEditPopup(addressId) {
-        document.getElementById("editPopup").style.display = "block";
-        fetchAddressDetails(addressId);
-    }
-
-    function fetchAddressDetails(addressId) {
-        fetch(`fetch_address_details.php?addressId=${addressId}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(addressDetails => {
-                document.getElementById("editAddressId").value = addressDetails.address_id;
-                document.getElementById("editAddress").value = addressDetails.address;
-                document.getElementById("editStreet").value = addressDetails.street;
-                document.getElementById("editCity").value = addressDetails.city;
-                document.getElementById("editProvince").value = addressDetails.province;
-                document.getElementById("editZipCode").value = addressDetails.zipCode;
-                document.getElementById("editPhoneNumber").value = addressDetails.phoneNumber;
-
-                var defaultAddressCheckbox = document.getElementById("defaultAddress");
-                var defaultAddressContainer = document.getElementById("defaultAddressCheckboxContainer");
-                if (addressDetails.is_default == 1) {
-                    if (defaultAddressCheckbox) defaultAddressCheckbox.checked = true;
-                    if (defaultAddressContainer) defaultAddressContainer.style.display = "none";
-                } else {
-                    if (defaultAddressCheckbox) defaultAddressCheckbox.checked = false;
-                    if (defaultAddressContainer) defaultAddressContainer.style.display = "block";
-                }
-            })
-            .catch(error => {
-                console.error('There was a problem with the fetch operation:', error);
-            });
-    }
-
-    function closeEditPopup() {
-        document.getElementById("editPopup").style.display = "none";
-    }
-</script>
-
-
 <?php
 require('../database/db_yeokart.php');
 session_start();
@@ -166,8 +71,146 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: customer_address.php");
     exit();
 }
-?>
+?>  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account - Yeokart</title>
+    <link rel="icon" type="image/png" href="../res/icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="../css/style_homepage_customer.css">
+</head>
 
+<style>
+    .swal2-custom-popup {
+        font-size: 16px;
+        width: 500px;
+    }
+
+    .swal2-custom-title {
+        font-size: 20px;
+    }
+</style>
+<script>
+    function openDeletePopup(addressId) {
+        document.getElementById("deletePopup").style.display = "block";
+        document.getElementById("deletePopup").setAttribute("data-addressId", addressId);
+    }
+
+    function closeDeletePopup() {
+        document.getElementById("deletePopup").style.display = "none";
+    }
+
+    function confirmDeletion() {
+        var addressId = document.getElementById("deletePopup").getAttribute("data-addressId");
+
+        // Show loading overlay
+        document.getElementById('del_loading_overlay').style.display = 'flex';
+
+        // Wait for 1 second before proceeding
+        setTimeout(function() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "delete_address_process.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            xhr.onload = function() {
+                // Hide loading overlay
+                document.getElementById('del_loading_overlay').style.display = 'none';
+
+                if (xhr.status == 200) {
+                    Swal.fire({ 
+                        icon: 'success',
+                        title: 'Deleted!',
+                        text: xhr.responseText,
+                        customClass: {
+                                popup: 'swal2-custom-popup',
+                                title: 'swal2-custom-title',
+                                content: 'swal2-custom-text'
+                        },
+                        backdrop: true, 
+                        allowOutsideClick: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            closeDeletePopup();
+                            location.reload();
+                        }
+                    });
+                } else {
+                    Swal.fire({ 
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Error deleting address.',
+                        customClass: {
+                                popup: 'swal2-custom-popup',
+                                title: 'swal2-custom-title',
+                                content: 'swal2-custom-text'
+                        },
+                        backdrop: true, 
+                        allowOutsideClick: false
+                    });
+                }
+            };
+
+            xhr.send("addressId=" + addressId);
+        }, 1000); // 1000 milliseconds delay
+    }
+
+    function openPopup() {
+        document.getElementById("popup").style.display = "block";
+    }
+
+    function closePopup() {
+        document.getElementById("popup").style.display = "none";
+    }
+
+    function openEditPopup(addressId) {
+        document.getElementById("editPopup").style.display = "block";
+        fetchAddressDetails(addressId);
+    }
+
+    function fetchAddressDetails(addressId) {
+        fetch(`fetch_address_details.php?addressId=${addressId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(addressDetails => {
+                document.getElementById("editAddressId").value = addressDetails.address_id;
+                document.getElementById("editAddress").value = addressDetails.address;
+                document.getElementById("editStreet").value = addressDetails.street;
+                document.getElementById("editCity").value = addressDetails.city;
+                document.getElementById("editProvince").value = addressDetails.province;
+                document.getElementById("editZipCode").value = addressDetails.zipCode;
+                document.getElementById("editPhoneNumber").value = addressDetails.phoneNumber;
+
+                var defaultAddressCheckbox = document.getElementById("defaultAddress");
+                var defaultAddressContainer = document.getElementById("defaultAddressCheckboxContainer");
+                if (addressDetails.is_default == 1) {
+                    if (defaultAddressCheckbox) defaultAddressCheckbox.checked = true;
+                    if (defaultAddressContainer) defaultAddressContainer.style.display = "none";
+                } else {
+                    if (defaultAddressCheckbox) defaultAddressCheckbox.checked = false;
+                    if (defaultAddressContainer) defaultAddressContainer.style.display = "block";
+                }
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    }
+
+    function closeEditPopup() {
+        document.getElementById("editPopup").style.display = "none";
+    }
+</script>
 <body>
     <input type="checkbox" id="click">
     <header class="header" style="box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
@@ -185,7 +228,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="icons">
                 <ul>
                     <li class="search-ul">
-                        <form action="customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
+                        <form action="customer_shop.php" method="GET" class="search-form1">
                             <input type="search" name="search" placeholder="Search here..." id="search-box">
                             <button type="submit"><i class="fas fa-search"></i></button>
                         </form>
@@ -275,6 +318,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button class="btn-cancel" onclick="closeDeletePopup()">Cancel</button>
         </div>
     </div>
+
+    <div id="add_loading_overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9999; justify-content: center; align-items: center;">
+        <div style="padding: 20px; background: white; border-radius: 5px; display: flex; justify-content: center; align-items: center;">
+            <div class="loader"></div>
+            <span style="margin-left: 10px; font-size: 15px;">Adding...</span>
+        </div>
+    </div>
+
+    <div id="del_loading_overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9999; justify-content: center; align-items: center;">
+        <div style="padding: 20px; background: white; border-radius: 5px; display: flex; justify-content: center; align-items: center;">
+            <div class="loader"></div>
+            <span style="margin-left: 10px; font-size: 15px;">Deleting...</span>
+        </div>
+    </div>
+
+    <div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9999; justify-content: center; align-items: center;">
+        <div style="padding: 20px; background: white; border-radius: 5px; display: flex; justify-content: center; align-items: center;">
+            <div class="loader"></div>
+            <span style="margin-left: 10px; font-size: 15px;">Updating...</span>
+        </div>
+    </div>
+
 
     <div id="editPopup" class="popup-add" style="display: none;">
         <div class="popup-add-content">
@@ -534,17 +599,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const checkbox = document.getElementById('click');
-            const cartToHide = document.getElementById('cart');
-            checkbox.addEventListener('change', function() {
-                if (this.checked) {
-                    cartToHide.style.display = 'none';
-                } else {
-                    cartToHide.style.display = 'block';
-                }
-            });
-        });
 
         function validateSearch() {
             var searchBox = document.getElementById('search-box');
@@ -553,6 +607,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             return true;
         }
+
+        document.getElementById('editAddressForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const form = this;
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            setTimeout(function() {
+                form.submit();
+            }, 1000);
+        });
+
+        document.getElementById('addressForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const form = this;
+            document.getElementById('add_loading_overlay').style.display = 'flex';
+            setTimeout(function() {
+                form.submit();
+            }, 1000);
+        });
+
     </script>
 </body>
 

@@ -79,7 +79,7 @@ if ($result) {
             <div class="icons">
                 <ul>
                     <li class="search-ul">
-                        <form action="customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
+                        <form action="customer_shop.php" method="GET" class="search-form1">
                             <input type="search" name="search" placeholder="Search here..." id="search-box">
                             <button type="submit"><i class="fas fa-search"></i></button>
                         </form>
@@ -330,24 +330,6 @@ if ($result) {
             // Redirect the user to the product details page
             window.location.href = url;
         }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const checkbox = document.getElementById('click');
-            const homeToHide = document.getElementById('home'); // Change 'home' to the ID of the section you want to hide/show
-            const bestToHide = document.getElementById('best');
-            const featuredToHide = document.getElementById('featured');
-            checkbox.addEventListener('change', function() {
-                if (this.checked) {
-                    homeToHide.style.display = 'none';
-                    bestToHide.style.display = 'none';
-                    featuredToHide.style.display = 'none';
-                } else {
-                    homeToHide.style.display = 'block';
-                    bestToHide.style.display = 'block';
-                    featuredToHide.style.display = 'block';
-                }
-            });
-        });
 
         function validateSearch() {
             var searchBox = document.getElementById('search-box');

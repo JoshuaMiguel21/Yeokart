@@ -155,7 +155,7 @@ $con->close();
             <div class="icons">
                 <ul>
                     <li class="search-ul">
-                        <form action="customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
+                        <form action="customer_shop.php" method="GET" class="search-form1">
                             <input type="search" name="search" placeholder="Search here..." id="search-box">
                             <button type="submit"><i class="fas fa-search"></i></button>
                         </form>
@@ -201,6 +201,13 @@ $con->close();
                     <button onclick="confirmLogout()" class="confirm-logout-btn">Logout</button>
                     <button onclick="closeLogoutPopup()" class="cancel-logout-btn">Cancel</button>
                 </div>
+            </div>
+        </div>
+
+        <div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9999; justify-content: center; align-items: center;">
+            <div style="padding: 20px; background: white; border-radius: 5px; display: flex; justify-content: center; align-items: center;">
+                <div class="loader"></div>
+                <span style="margin-left: 10px; font-size: 15px;">Updating...</span>
             </div>
         </div>
 
@@ -658,6 +665,16 @@ $con->close();
             // Hide the image when closing the popup
             document.getElementById('proof_of_payment_image').style.display = 'none';
         }
+
+        document.getElementById('editProfileForm').addEventListener('submit', function(event) {
+            event.preventDefault(); 
+            const form = this;
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            setTimeout(function() {
+                form.submit();
+            }, 1000);
+        });
+
 
         document.getElementById('proof_of_payment').addEventListener('change', function() {
             var fileName = document.getElementById('proof_of_payment').files[0].name;

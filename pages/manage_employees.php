@@ -42,12 +42,6 @@ if (isset($_POST['nav_toggle'])) {
     $_SESSION['nav_toggle'] = $_POST['nav_toggle'] === 'true' ? true : false;
 }
 
-// Redirect to login page if session variables are not set
-if (!isset($_SESSION['firstname']) || !isset($_SESSION['lastname'])) {
-    header("Location: login_page.php");
-    exit();
-}
-
 if (isset($_SESSION['firstname'])) {
     $firstname = $_SESSION['firstname'];
 } else {
