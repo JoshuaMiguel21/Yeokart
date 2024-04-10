@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 09, 2024 at 07:05 AM
+-- Generation Time: Apr 10, 2024 at 04:59 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -40,7 +40,8 @@ CREATE TABLE `orders` (
   `overall_total` decimal(10,2) DEFAULT NULL,
   `date_of_purchase` date DEFAULT NULL,
   `status` enum('Pending','Processing','Shipped','Delivered','Invalid') NOT NULL DEFAULT 'Pending',
-  `proof_of_payment` varchar(255) NOT NULL
+  `proof_of_payment` varchar(255) NOT NULL,
+  `is_archive` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
