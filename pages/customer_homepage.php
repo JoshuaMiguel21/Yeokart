@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yeokart</title>
+    <title>Yeokart - Homepage</title>
     <link rel="icon" type="image/png" href="../res/icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -68,7 +68,7 @@ if ($result) {
         <div class="header-1">
             <a href="customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>
             <div class="icons">
-                <form action="new_customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
+                <form action="customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
                     <input type="search" name="search" placeholder="Search here..." id="search-box">
                     <button type="submit"><i class="fas fa-search"></i></button>
                 </form>
@@ -79,13 +79,13 @@ if ($result) {
             <div class="icons">
                 <ul>
                     <li class="search-ul">
-                        <form action="new_customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
+                        <form action="customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
                             <input type="search" name="search" placeholder="Search here..." id="search-box">
                             <button type="submit"><i class="fas fa-search"></i></button>
                         </form>
                     </li>
                     <li class="home-class"><a href="customer_homepage.php" id="home-nav" class="active">Home</a></li>
-                    <li><a href="new_customer_shop.php">Shop</a></li>
+                    <li><a href="customer_shop.php">Shop</a></li>
                     <li><a href="contact_page.php">Contact Us</a></li>
                     <li><a href="customer_cart.php"><i class="fas fa-shopping-cart"><span id="cart-num"><?php echo $cartCount; ?></span></i></a></li>
                     <li><a href="customer_profile.php" id="user-btn"><i class="fas fa-user"></i></a></li>

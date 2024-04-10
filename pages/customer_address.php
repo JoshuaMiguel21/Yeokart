@@ -174,7 +174,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="header-1">
             <a href="customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>
             <div class="icons">
-                <form action="new_customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
+                <form action="customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
                     <input type="search" name="search" placeholder="Search here..." id="search-box">
                     <button type="submit"><i class="fas fa-search"></i></button>
                 </form>
@@ -185,13 +185,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="icons">
                 <ul>
                     <li class="search-ul">
-                        <form action="new_customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
+                        <form action="customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
                             <input type="search" name="search" placeholder="Search here..." id="search-box">
                             <button type="submit"><i class="fas fa-search"></i></button>
                         </form>
                     </li>
                     <li class="home-class"><a href="customer_homepage.php" id="home-nav">Home</a></li>
-                    <li><a href="new_customer_shop.php">Shop</a></li>
+                    <li><a href="customer_shop.php">Shop</a></li>
                     <li><a href="contact_page.php">Contact Us</a></li>
                     <li><a href="customer_cart.php"><i class="fas fa-shopping-cart"><span id="cart-num"><?php echo $cartCount; ?></span></i></a></li>
                     <li><a href="customer_profile.php" id="user-btn" class="active"><i class="fas fa-user"></i></a></li>

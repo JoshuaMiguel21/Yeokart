@@ -140,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart'])) {
                         </form>
                     </li>
                     <li class="home-class"><a href="customer_homepage.php" id="home-nav">Home</a></li>
-                    <li><a href="new_customer_shop.php">Shop</a></li>
+                    <li><a href="customer_shop.php">Shop</a></li>
                     <li><a href="contact_page.php">Contact Us</a></li>
                     <li><a href="customer_cart.php" class="active"><i class="fas fa-shopping-cart"></i></a></li>
                     <li><a href="customer_profile.php" id="user-btn"><i class="fas fa-user"></i></a></li>

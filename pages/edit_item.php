@@ -12,7 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.js"></script>
     <link href="../css/add&edit_item.css" rel="stylesheet" />
     <link rel="icon" type="image/png" href="../res/icon.png">
-    <title>Manage Item - Yeokart</title>
+    <title>Edit Item - Yeokart</title>
 </head>
 
 <body style="background-color: #DD2F6E;">
@@ -99,6 +99,7 @@
                         <p style="margin-top: 20px;">Current Image: <br></br><img src='./item_images/<?php echo $row['item_image3']; ?>' alt='Twice Album' height="200px" width="200px">
                         <?php endif; ?>
                 </div>
+                <br></br>
                 <div class="form-outline mb-4 w-50 m-auto">
                     <button type="submit" name="update_item" class="btn btn-info mb-3 px-3">Update Item</button>
                 </div>
