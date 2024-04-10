@@ -248,7 +248,7 @@ $con->close();
                 $totalOrdersRow = mysqli_fetch_assoc($totalOrdersResult);
                 $totalOrders = $totalOrdersRow['total_orders'];
 
-                $sql = "SELECT `order_id`, `customer_id`, `address`, `items_ordered`, `item_quantity`, `total`, `shipping_fee`, `overall_total`, `date_of_purchase`, `status`, `proof_of_payment`, `is_archive`, 
+                $sql = "SELECT `order_id`, `customer_id`, `address`, `items_ordered`, `item_quantity`, `items_category`,  `items_artist`, `items_price`, `subtotal`, `total`, `shipping_fee`, `overall_total`, `date_of_purchase`, `status`, `items_image`, `proof_of_payment`, `is_archive`, 
                 CASE `status`
                     WHEN 'INVALID' THEN 1
                     WHEN 'PENDING' THEN 2
@@ -338,32 +338,35 @@ $con->close();
 
 
                         echo '</div>'; // Close alert div
+                        $items = explode(", ", $row['items_ordered']);
+                        $quantities = explode(", ", $row['item_quantity']);
 
-                        $items = explode(",", $row['items_ordered']);
-                        $quantities = explode(",", $row['item_quantity']);
-
-                        foreach ($items as $key => $item_name) {
-                            $item_name = trim($item_name);
-                            $item_query = "SELECT * FROM products WHERE item_name = '$item_name'";
-                            $item_result = $con->query($item_query);
-
-                            if ($item_result->num_rows > 0) {
-                                $item_row = $item_result->fetch_assoc();
-
-                                echo "<div class='cart-item' style='background-color: #fff;'>";
-                                echo "<img src='item_images/{$item_row['item_image1']}' alt='Item Image' class='cart-item-image'>";
-                                echo "<div class='item-details'>";
-                                echo "<p><b>Name: </b>{$item_row['item_name']}</p>";
-                                echo "<p>Price: ₱" . $item_row['item_price'] . "</p>";
-                                echo "</div>";
-                                echo "<p>Quantity: {$quantities[$key]}</p>";
-                                echo "<p>Total: ₱" . ($item_row['item_price'] * $quantities[$key]) . "</p>";
-                                echo "</div>";
-                            } else {
-                                echo "Item not found";
-                            }
+                        $itemPrices = [];
+                        if (isset($row['items_price'])) {
+                            $itemPrices = explode(", ", $row['items_price']);
                         }
 
+                        $itemImages = [];
+                        if (isset($row['items_image'])) {
+                            $itemImages = explode(", ", $row['items_image']);
+                        }
+                        foreach ($items as $key => $itemName) {
+                            $itemName = trim($itemName);
+                            $itemPrice = isset($itemPrices[$key]) ? number_format(floatval(trim($itemPrices[$key])), 2) : '0.00';
+                            $itemQuantity = isset($quantities[$key]) ? intval(trim($quantities[$key])) : 0;
+                            $itemTotal = number_format($itemPrice * $itemQuantity, 2);
+                            $itemImage = isset($itemImages[$key]) ? trim($itemImages[$key]) : '';
+
+                            echo "<div class='cart-item' style='background-color: #fff;'>";
+                            echo "<img src='item_images/{$itemImage}' alt='Item Image' class='cart-item-image'>";
+                            echo "<div class='item-details'>";
+                            echo "<p><b>Name: </b>{$itemName}</p>";
+                            echo "<p>Price: ₱{$itemPrice}</p>";
+                            echo "</div>";
+                            echo "<p>Quantity: {$itemQuantity}</p>";
+                            echo "<p>Total: ₱{$itemTotal}</p>";
+                            echo "</div>";
+                        }
                         echo '<div class="total-for-order">';
                         echo '<p class="total-label">Subtotal: </p>';
                         echo '<p class="total-price">&nbsp;₱' . $row['total'] . '</p>';
@@ -667,7 +670,7 @@ $con->close();
         }
 
         document.getElementById('editProfileForm').addEventListener('submit', function(event) {
-            event.preventDefault(); 
+            event.preventDefault();
             const form = this;
             document.getElementById('loadingOverlay').style.display = 'flex';
             setTimeout(function() {

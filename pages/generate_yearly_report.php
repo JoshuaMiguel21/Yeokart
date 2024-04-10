@@ -40,13 +40,15 @@ class MYPDF extends TCPDF
         $select_query = "
                             SELECT
                                 o.item_name,
-                                p.category_name,
-                                p.artist_name,
+                                o.items_artist,
+                                o.items_category,
                                 SUM(o.item_quantity) AS total_sold
                             FROM (
                                 SELECT
                                     TRIM(LEADING ',' FROM SUBSTRING_INDEX(SUBSTRING_INDEX(items_ordered, ', ', n.digit+1), ', ', -1)) AS item_name,
-                                    TRIM(LEADING ',' FROM SUBSTRING_INDEX(SUBSTRING_INDEX(item_quantity, ', ', n.digit+1), ', ', -1)) AS item_quantity
+                                    TRIM(LEADING ',' FROM SUBSTRING_INDEX(SUBSTRING_INDEX(item_quantity, ', ', n.digit+1), ', ', -1)) AS item_quantity,
+                                    TRIM(LEADING ',' FROM SUBSTRING_INDEX(SUBSTRING_INDEX(items_artist, ', ', n.digit+1), ', ', -1)) AS items_artist,
+                                    TRIM(LEADING ',' FROM SUBSTRING_INDEX(SUBSTRING_INDEX(items_category, ', ', n.digit+1), ', ', -1)) AS items_category
                                 FROM orders
                                 JOIN (
                                     SELECT 0 AS digit UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL
@@ -57,10 +59,10 @@ class MYPDF extends TCPDF
                                     AND (status = 'shipped' OR status = 'delivered')
                                     AND proof_of_payment <> ''
                             ) AS o
-                            INNER JOIN products AS p ON o.item_name = p.item_name
                             GROUP BY o.item_name
                             ORDER BY total_sold DESC
                             LIMIT 10";
+
         $result_query = mysqli_query($con, $select_query);
         if (!$result_query) {
             die('Invalid query: ' . mysqli_error($con));
@@ -96,8 +98,8 @@ class MYPDF extends TCPDF
         $fill = 0;
         foreach ($data as $row) {
             $this->Cell($w[0], 6, $row['item_name'], 'LR', 0, 'L', $fill);
-            $this->Cell($w[1], 6, $row['category_name'], 'LR', 0, 'C', $fill);
-            $this->Cell($w[2], 6, $row['artist_name'], 'LR', 0, 'C', $fill);
+            $this->Cell($w[1], 6, $row['items_category'], 'LR', 0, 'C', $fill);
+            $this->Cell($w[2], 6, $row['items_artist'], 'LR', 0, 'C', $fill);
             $this->Cell($w[3], 6, number_format($row['total_sold']), 'LR', 0, 'C', $fill);
             $this->Ln();
             $fill = !$fill;

@@ -154,13 +154,15 @@ if (mysqli_num_rows($result_query) > 0) {
                         <?php
                         $total = 0;
                         include('../database/db_yeokart.php');
-                        $select_query = "SELECT c.cart_id, c.customer_id, c.item_name, c.item_image1, c.quantity, c.price, p.item_quantity FROM cart c INNER JOIN products p ON c.item_name = p.item_name WHERE c.customer_id = $customer_id";
+                        $select_query = "SELECT c.cart_id, c.customer_id, c.item_name, c.item_image1, c.quantity, c.price, p.item_quantity, p.artist_name, p.category_name FROM cart c INNER JOIN products p ON c.item_name = p.item_name WHERE c.customer_id = $customer_id";
                         $result_query = mysqli_query($con, $select_query);
                         if (mysqli_num_rows($result_query) > 0) {
                             while ($row = mysqli_fetch_assoc($result_query)) {
                                 $subtotal = $row['quantity'] * $row['price'];
                                 $total += $subtotal;
                                 $item_quantity = $row['item_quantity']; // Available item quantity
+                                $category = $row['category_name'];
+                                $artist = $row['artist_name'];
 
                                 echo "<div class='box'>";
                                 echo "<img src='item_images/{$row['item_image1']}' alt='Item Image'>";
