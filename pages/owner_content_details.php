@@ -28,7 +28,7 @@
         // Submit the form
         deleteForm.submit();
     }
-    
+
     function openLogoutPopup() {
         document.getElementById('logoutConfirmationPopup').style.display = 'flex';
     }
@@ -219,7 +219,7 @@ if (isset($_SESSION['lastname'])) {
                         $totalContactsResult = mysqli_query($con, $totalContactsQuery);
                         $totalContactsRow = mysqli_fetch_assoc($totalContactsResult);
                         $totalContacts = $totalContactsRow['total_contacts'];
-                        
+
                         $select_query = "SELECT * FROM contacts LIMIT $contactsPerPage OFFSET $offset";
                         $result_query = mysqli_query($con, $select_query);
                         while ($row = mysqli_fetch_assoc($result_query)) {
@@ -233,8 +233,8 @@ if (isset($_SESSION['lastname'])) {
                             echo "<td style='max-width: 350px;'>" . $row['contacts_description'] . "</td>";
                             echo "<td>";
                             echo "<div class='button-class'>";
-                            echo "<a href='edit_contacts.php?contacts_id=$contacts_id' class='edit-button'>Edit</a>";
-                            echo "<button type='button' onclick='openDeletePopup(" . $contacts_id . ")' class='delete-button'>Delete</button>";
+                            echo "<a href='edit_contacts.php?contacts_id=$contacts_id' class='edit-button'><i class='las la-edit'></i></a>";
+                            echo "<button type='button' onclick='openDeletePopup(" . $contacts_id . ")' class='delete-button'><i class='las la-trash'></i></button>";
                             echo "<form id='deleteForm_$contacts_id' method='post'>";
                             echo "<input type='hidden' name='contacts_id' value='$contacts_id'>";
                             echo "<input type='hidden' name='delete_contacts' value='true'>";
@@ -247,47 +247,47 @@ if (isset($_SESSION['lastname'])) {
                     </tbody>
                 </table>
                 <?php
-                    $baseUrl = 'owner_content_details.php?';
+                $baseUrl = 'owner_content_details.php?';
 
-                    $pageQuery = '';
-                    if (isset($_GET['search_button'])) {
-                        $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
-                    } elseif (isset($_GET['filter_button'])) {
-                        if (isset($_GET['category'])) {
-                            $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
-                        } elseif (isset($_GET['artist'])) {
-                            $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
-                        }
+                $pageQuery = '';
+                if (isset($_GET['search_button'])) {
+                    $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
+                } elseif (isset($_GET['filter_button'])) {
+                    if (isset($_GET['category'])) {
+                        $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
+                    } elseif (isset($_GET['artist'])) {
+                        $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
                     }
+                }
 
-                    $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-                    $totalPages = ceil($totalContacts / $contactsPerPage);
+                $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+                $totalPages = ceil($totalContacts / $contactsPerPage);
 
-                    $startPage = max(1, $pageNumber - 1);
-                    $endPage = min($totalPages, $pageNumber + 1);
+                $startPage = max(1, $pageNumber - 1);
+                $endPage = min($totalPages, $pageNumber + 1);
 
-                    if ($pageNumber == 1) {
-                        $startPage = 1;
-                        $endPage = min(3, $totalPages);
-                    } elseif ($pageNumber == $totalPages) {
-                        $startPage = max(1, $totalPages - 2);
-                        $endPage = $totalPages;
-                    }
+                if ($pageNumber == 1) {
+                    $startPage = 1;
+                    $endPage = min(3, $totalPages);
+                } elseif ($pageNumber == $totalPages) {
+                    $startPage = max(1, $totalPages - 2);
+                    $endPage = $totalPages;
+                }
 
-                    echo "<div class='pagination'>";
+                echo "<div class='pagination'>";
 
-                    $prevPage = max(1, $pageNumber - 1);
-                    echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
+                $prevPage = max(1, $pageNumber - 1);
+                echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
 
-                    for ($i = $startPage; $i <= $endPage; $i++) {
-                        $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
-                        echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
-                    }
+                for ($i = $startPage; $i <= $endPage; $i++) {
+                    $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
+                    echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
+                }
 
-                    $nextPage = min($totalPages, $pageNumber + 1);
-                    echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
+                $nextPage = min($totalPages, $pageNumber + 1);
+                echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
 
-                    echo "</div>";
+                echo "</div>";
                 ?>
             </div>
 

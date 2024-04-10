@@ -253,8 +253,8 @@ if (isset($_SESSION['firstname'])) {
                             echo "<td style='max-width: 350px;'>" . $row['contacts_description'] . "</td>";
                             echo "<td>";
                             echo "<div class='button-class'>";
-                            echo "<a href='emp_edit_contacts.php?contacts_id=$contacts_id' class='edit-button'>Edit</a>";
-                            echo "<button type='button' onclick='openDeletePopup(" . $contacts_id . ")' class='delete-button'>Delete</button>";
+                            echo "<a href='emp_edit_contacts.php?contacts_id=$contacts_id' class='edit-button'><i class='las la-edit'></i></a>";
+                            echo "<button type='button' onclick='openDeletePopup(" . $contacts_id . ")' class='delete-button'><i class='las la-trash'></i></button>";
                             echo "<form id='deleteForm_$contacts_id' method='post'>";
                             echo "<input type='hidden' name='contacts_id' value='$contacts_id'>";
                             echo "<input type='hidden' name='delete_contacts' value='true'>";

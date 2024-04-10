@@ -250,7 +250,7 @@
                         }
                         ?>
                     </select>
-                    <input type="submit" value="Filter" name="filter">
+                    <input type="submit" class="filter-btn" value="Filter" name="filter">
                 </form>
                 <form id="reportForm" method="post" action="generate_yearly_report.php" target="_blank">
                     <input type="hidden" name="pdf_creater" value="PDF">

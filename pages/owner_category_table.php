@@ -223,7 +223,7 @@ if (isset($_SESSION['lastname'])) {
                             echo "<td>" . $row['category_name'] . "</td>";
                             echo "<td>";
                             echo "<div class='button-class'>";
-                            echo '<a href="#" onclick="openEditCategoryPopup(' . $category_id . ', \'' . $category_name . '\')" class="edit-button">Edit</a>';
+                            echo '<a href="#" onclick="openEditCategoryPopup(' . $category_id . ', \'' . $category_name . '\')" class="edit-button"><i class="las la-edit"></i></a>';
                             echo "</td>";
                             echo "</tr>";
                         }
