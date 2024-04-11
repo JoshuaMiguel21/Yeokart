@@ -277,7 +277,7 @@
                     <input type="hidden" name="total_income" value="<?php echo  $totalIncome; ?>"> <!-- Add this line -->
                 </form>
 
-                <a href="#" class="btn-main" style="<?php echo $orderCount == 0 ? 'background-color: gray; cursor: not-allowed;' : ''; ?>" onclick="submitReportForm(); return false;" <?php echo $orderCount == 0 ? 'disabled' : ''; ?> onclick="document.getElementById('reportForm').submit(); return false;">
+                <a href="#" class="btn-main" style="<?php echo $orderCount == 0 ? 'background-color: gray; cursor: not-allowed;' : ''; ?>" onclick="submitReportForm(); return false;" <?php echo $orderCount == 0 ? 'disabled' : ''; ?>>
                     <i class="las la-download"></i>
                     <span class="text">Generate Report</span>
                 </a>
@@ -434,6 +434,10 @@
 
                 // Add event listener to checkbox change
                 document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
+
+                function submitReportForm() {
+                    document.getElementById('reportForm').submit();
+                }
             </script>
 </body>
 

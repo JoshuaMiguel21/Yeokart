@@ -280,15 +280,41 @@ $con->close();
                     while ($row = $result->fetch_assoc()) {
                         $order_id = $row['order_id'];
                         $status = strtoupper($row['status']);
+                        $proof_of_payment = $row['proof_of_payment'];
+                        $button_class = "upload-proof-cell"; // Default class
+                        $button_text = "";
+                        $button_disabled = false;
+
+                        if ($status == "PENDING") {
+                            if (empty($proof_of_payment)) {
+                                $button_text = "Upload Proof of Payment";
+                            } else {
+                                $button_text = "Proof of Payment Uploaded";
+                                $button_disabled = true;
+                            }
+                        } elseif (in_array($status, ["PROCESSING", "SHIPPED", "DELIVERED"])) {
+                            $button_text = "Payment Done";
+                            $button_disabled = true;
+                            $button_class = "payment-done"; // Change class for "Payment Done" button
+                        } else {
+                            $button_text = "Upload Proof of Payment";
+                        }
+
                         echo '<tr class="order-row">';
                         echo '<td>' . $row['order_id'] . '</td>';
                         echo '<td>' . $row['date_of_purchase'] . '</td>';
                         echo '<td>' . strtoupper($row['status']) . '</td>';
-                        if ($status == "PENDING" || $status == "INVALID") {
-                            echo '<td><center><a href="#" class="upload-proof-cell" data-order-id="' . $order_id . '" data-proof="' . $row['proof_of_payment'] . '">Upload Proof of Payment</a></center></td>';
+                        echo '<td><center>';
+                        if ($status != "INVALID") {
+                            echo '<a href="#" class="' . $button_class . '" data-order-id="' . $order_id . '" data-proof="' . $proof_of_payment . '" style="';
+                            if ($button_disabled) {
+                                echo 'cursor: not-allowed; pointer-events: none; ';
+                            }
+                            echo '">' . $button_text . '</a>';
                         } else {
-                            echo '<td><center><button class="payment-done" disabled>Payment Done <i class="fas fa-check"></i></button></center></td>';
+                            echo '<a href="#" class="' . $button_class . '" data-order-id="' . $order_id . '" data-proof="' . $proof_of_payment . '">' . $button_text . '</a>';
                         }
+                        echo '</center></td>';
                         echo '<td class="toggle-row">';
                         echo '<i class="fas fa-chevron-down toggle-icon"></i>';
                         if ($status == "DELIVERED") {
@@ -299,25 +325,25 @@ $con->close();
                         echo '<tr class="hidden-row">';
                         echo '<td colspan="5">';
                         echo '<div class="order-details-card">';
-                        echo '<div class="alert';
+                        echo '<div class="alert ';
                         switch ($status) {
                             case "DELIVERED":
-                                echo ' alert-success';
+                                echo 'alert-success';
                                 break;
                             case "PROCESSING":
-                                echo ' alert-info';
+                                echo 'alert-info';
                                 break;
                             case "PENDING":
-                                echo ' alert-danger';
+                                echo 'alert-danger';
                                 break;
                             case "INVALID":
-                                echo ' alert-danger';
+                                echo 'alert-danger';
                                 break;
                             case "SHIPPED":
-                                echo ' alert-warning';
+                                echo 'alert-warning';
                                 break;
                             default:
-                                echo ' alert-danger';
+                                echo 'alert-danger';
                                 break;
                         }
                         echo '" role="alert">';
@@ -335,28 +361,17 @@ $con->close();
                         } else {
                             echo 'Your order status is ' . $status . '. For more information, please contact customer support.';
                         }
-
-
                         echo '</div>'; // Close alert div
+
                         $items = explode(", ", $row['items_ordered']);
                         $quantities = explode(", ", $row['item_quantity']);
+                        $itemPrices = isset($row['items_price']) ? explode(", ", $row['items_price']) : [];
+                        $itemImages = isset($row['items_image']) ? explode(", ", $row['items_image']) : [];
 
-                        $itemPrices = [];
-                        if (isset($row['items_price'])) {
-                            $itemPrices = explode(", ", $row['items_price']);
-                        }
-
-                        $itemImages = [];
-                        if (isset($row['items_image'])) {
-                            $itemImages = explode(", ", $row['items_image']);
-                        }
                         foreach ($items as $key => $itemName) {
                             $itemName = trim($itemName);
-                            $itemPrices = explode(", ", $row['items_price']);
-                            $itemQuantities = explode(", ", $row['item_quantity']);
-
-                            $itemPrice = floatval($itemPrices[$key]);
-                            $itemQuantity = intval($itemQuantities[$key]);
+                            $itemPrice = isset($itemPrices[$key]) ? floatval($itemPrices[$key]) : 0;
+                            $itemQuantity = isset($quantities[$key]) ? intval($quantities[$key]) : 0;
                             $total = $itemPrice * $itemQuantity;
                             $itemImage = isset($itemImages[$key]) ? trim($itemImages[$key]) : '';
 

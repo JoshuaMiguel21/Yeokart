@@ -414,6 +414,10 @@
 
                 // Add event listener to checkbox change
                 document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
+
+                function submitReportForm() {
+                    document.getElementById('reportForm').submit();
+                }
             </script>
 </body>
 
