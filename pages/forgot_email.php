@@ -55,7 +55,7 @@
                                         Reset Password
                                     </a>
                                     <p>Thank you for using Yeokart WebApp!</p>
-                                    <p>Best regards,<br>Your Company Name Support Team</p>";
+                                    <p>Best regards,<br>Yeokart Support Team</p>";
 
             $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 

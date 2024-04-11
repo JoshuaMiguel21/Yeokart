@@ -125,9 +125,9 @@
                                             <p>We hope this email finds you well. You have been invited to verify your email address in order to complete the 
                                             registration process for our employee portal. This step is essential to ensure the security and integrity of our platform.</p>
                                             <p>To verify your email address, please click on the following link: </p>
-                                            <p><a href='http://localhost/Yeokart/pages/verify_employee.php?email=$email&v_code=$v_code'>Verify Your Email</a></p>;
+                                            <p><a href='http://localhost/Yeokart/pages/verify_employee.php?email=$email&v_code=$v_code'>Verify Your Email</a></p>
                                             <p>Thank you for using Yeokart WebApp!</p>
-                                            <p>Best regards,<br>Your Company Name Support Team</p>";
+                                            <p>Best regards,<br>Yeokart Support Team</p>";
                     $mail->send();
                     return true;
                 } catch (Exception $e) {
