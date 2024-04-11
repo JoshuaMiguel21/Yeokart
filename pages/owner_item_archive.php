@@ -80,7 +80,7 @@
     $itemsPerPage = 10;
 
     $filter_query = "";
-
+    
     $products_count_query = "SELECT COUNT(*) as total FROM products $filter_query";
     $products_count_result = mysqli_query($con, $products_count_query);
     $products_count_data = mysqli_fetch_assoc($products_count_result);
@@ -177,7 +177,7 @@
         <main>
             <div class="head-title">
                 <div class="left">
-                    <h3>Item Catalog</h3>
+                    <h3>Item Archives</h3>
                 </div>
             </div>
             <div class="head-buttons">
@@ -185,11 +185,12 @@
                     <i class="las la-user"></i>
                     <span class="text">View Artist Table</span>
                 </a>
-                <a href="owner_item_homepage.php" class="btn-employee active">
+                <a href="owner_item_homepage.php" class="btn-employee">
                     <i class="las la-archive"></i>
                     <span class="text">View Item Catalog</span>
                 </a>
-                <a href="owner_item_archive.php" class="btn-employee">
+                
+                <a href="owner_item_archive.php" class="btn-employee active">
                     <i class="las la-list"></i>
                     <span class="text">View Archives</span>
                 </a>
@@ -321,14 +322,14 @@
                             include('../database/db_yeokart.php');
                             if (isset($_POST['archive_item'])) {
                                 $item_id = $_POST['item_id'];
-                                $stmt = $con->prepare("UPDATE products SET is_archive = 1 WHERE item_id = ?");
+                                $stmt = $con->prepare("UPDATE products SET is_archive = 0 WHERE item_id = ?");
                                 $stmt->bind_param("i", $item_id);
 
                                 if ($stmt->execute()) {
                                     echo "<script>
                                         Swal.fire({
                                             title: 'Success!',
-                                            text: 'Item archived successfully',
+                                            text: 'Item restored successfully',
                                             icon: 'success',
                                             confirmButtonText: 'OK'
                                         }).then((result) => {
@@ -368,22 +369,22 @@
 
                             if (!isset($_GET['search_button']) && !isset($_GET['filter_button'])) {
                                 // Default query without any filters
-                                $select_query = "SELECT * FROM products WHERE is_archive=0";
+                                $select_query = "SELECT * FROM products WHERE is_archive=1";
                             } else {
                                 // Check for search or filter
                                 if (isset($_GET['search_button'])) {
                                     $search = $_GET['search'];
-                                    $select_query = "SELECT * FROM products WHERE is_archive=0 AND item_name LIKE '%$search%'";
+                                    $select_query = "SELECT * FROM products WHERE is_archive=1 AND item_name LIKE '%$search%'";
                                 } elseif (isset($_GET['filter_button'])) {
                                     $category_name = isset($_GET['category']) ? $_GET['category'] : '';
                                     $artist_name = isset($_GET['artist']) ? $_GET['artist'] : '';
 
                                     if (!empty($category_name)) {
                                         // Filter by category
-                                        $select_query = "SELECT * FROM products WHERE is_archive=0 AND category_name = '$category_name'";
+                                        $select_query = "SELECT * FROM products WHERE is_archive=1 AND category_name = '$category_name'";
                                     } elseif (!empty($artist_name)) {
                                         // Filter by artist
-                                        $select_query = "SELECT * FROM products WHERE is_archive=0 AND artist_name = '$artist_name'";
+                                        $select_query = "SELECT * FROM products WHERE is_archive=1 AND artist_name = '$artist_name'";
                                     } else {
                                         // No filter applied
                                         $select_query = "SELECT * FROM products WHERE is_archive=0";
@@ -411,9 +412,9 @@
                                 $item_image3 = $row['item_image3'];
                                 echo "<tr>";
                                 echo "<td>" . $row['item_name'] . "</td>";
-                                echo "<td> ₱" . number_format($row['item_price'], 2) . "</td>";
+                                echo "<td> ₱" . $row['item_price'] . "</td>";
                                 echo "<td style='max-width: 350px;'>" . $row['item_description'] . "</td>";
-                                echo "<td>" . number_format($row['item_quantity']) . "</td>";
+                                echo "<td>" . $row['item_quantity'] . "</td>";
                                 echo "<td>" . $row['artist_name'] . "</td>";
                                 echo "<td>" . $row['category_name'] . "</td>";
                                 echo "<td>";
@@ -429,8 +430,9 @@
                                 // Inside your while loop
                                 echo "<td>";
                                 echo "<div class='button-class'>";
-                                echo "<a href='edit_item.php?item_id=$item_id' class='edit-button'><i class='las la-edit'></i></a>";
-                                echo "<button type='button' onclick='openArchivePopup(\"$item_id\", \"" . htmlspecialchars($item_name, ENT_QUOTES) . "\")' class='delete-button'><i class='las la-archive'></i></button>";
+                                echo "<button type='button' onclick='openArchivePopup(\"$item_id\", \"" . htmlspecialchars($item_name, ENT_QUOTES) . "\")' class='edit-button'><i class='las la-undo-alt'></i>
+                                </i>
+                                </button>";
                                 echo "<form id='archiveItemForm" . $item_id . "' method='post' style='display:none;'>
                                 <input type='hidden' name='item_id' value='" . $item_id . "'>
                                 <input type='hidden' name='archive_item' value='true'> <!-- Ensure this input is included -->
@@ -510,9 +512,9 @@
             <div id="archiveConfirmationPopup" class="popup-container" style="display: none;">
                 <div class="popup-content">
                     <span class="close-btn" onclick="closeArchivePopup()">&times;</span>
-                    <p>Are you sure you want to archive this item "<span id="archiveItemName"></span>"?</p>
+                    <p>Are you sure you want to restore this item "<span id="archiveItemName"></span>"?</p>
                     <div class="logout-btns">
-                        <button onclick="confirmArchiveItem()" class="confirm-logout-btn">Archive</button>
+                        <button onclick="confirmArchiveItem()" class="confirm-logout-btn">Restore</button>
                         <button onclick="closeArchivePopup()" class="cancel-logout-btn">Cancel</button>
                     </div>
                 </div>

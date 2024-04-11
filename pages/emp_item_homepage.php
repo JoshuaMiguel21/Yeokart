@@ -70,6 +70,8 @@
     $totalItems = 0;
     $itemsPerPage = 10;
 
+    $filter_query = "";
+
     $products_count_query = "SELECT COUNT(*) as total FROM products $filter_query";
     $products_count_result = mysqli_query($con, $products_count_query);
     $products_count_data = mysqli_fetch_assoc($products_count_result);
@@ -80,8 +82,7 @@
     $filter_category = isset($_GET['category']) ? $_GET['category'] : '';
     $filter_artist = isset($_GET['artist']) ? $_GET['artist'] : '';
 
-    $filter_query = "";
-
+    
     if (!empty($search_query) || !empty($filter_category) || !empty($filter_artist)) {
         $filter_query .= "AND ";
         if (!empty($search_query)) {
@@ -383,7 +384,7 @@
                                 $item_image3 = $row['item_image3'];
                                 echo "<tr>";
                                 echo "<td>" . $row['item_name'] . "</td>";
-                                echo "<td> ₱" . $row['item_price'] . "</td>";
+                                echo "<td> ₱" . number_format($row['item_price'], 2) . "</td>";
                                 echo "<td style='max-width: 350px;'>" . $row['item_description'] . "</td>";
                                 echo "<td>" . $row['item_quantity'] . "</td>";
                                 echo "<td>" . $row['artist_name'] . "</td>";

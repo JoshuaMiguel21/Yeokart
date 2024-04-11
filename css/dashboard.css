@@ -6,6 +6,7 @@
     --color-dark: #1D2231;
     --text-grey: #8390A2; 
     --darker-pink: #880E4F;
+    --active-color: #E6A4B4;
 }
 
 * {
@@ -136,7 +137,16 @@
     justify-content: center;
     grid-gap: 10px;
     font-weight: 500;
+    transition: background-color 0.3s ease, border 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
+
+.head-buttons .btn-employee.active, .head-buttons .btn-employee:hover {
+    background-color: #fff; 
+    border: 2px solid var(--main-color); 
+    color: var(--main-color);
+    box-shadow: 0 0 8px rgba(0,0,0,0.2); 
+}
+
 
 .head-buttons .btn-main{
     height: 36px;

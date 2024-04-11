@@ -66,7 +66,7 @@
         echo "Error: " . $sql . "<br>" . $con->error;
     }
 
-    $sql = "SELECT COUNT(*) AS customer_count FROM user_accounts `is_verified`=1";
+    $sql = "SELECT COUNT(*) AS customer_count FROM user_accounts WHERE`is_verified`=1";
     $result = $con->query($sql);
 
     if ($result) {
