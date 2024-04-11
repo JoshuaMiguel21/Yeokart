@@ -148,6 +148,10 @@ if (isset($_SESSION['firstname'])) {
                         <?php
                         include('../database/db_yeokart.php');
 
+                        $featuresPerPage = 10; // Set the default number of features per page
+                        $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1;
+                        $offset = ($pageNumber - 1) * $featuresPerPage;
+
                         if (isset($_POST['add_featured']) && isset($_POST['item_id'])) {
                             $item_id = $_POST['item_id'];
                             $select_query = "SELECT * FROM products WHERE is_archive = 0 ORDER BY is_featured DESC LIMIT $featuresPerPage OFFSET $offset";
@@ -179,20 +183,43 @@ if (isset($_SESSION['firstname'])) {
                             exit();
                         }
 
-                        $featuresPerPage = 10;
-                        $pageNumber = 1;
 
-                        if (isset($_GET['page']) && is_numeric($_GET['page'])) {
-                            $pageNumber = $_GET['page'];
-                        }
-
-                        $offset = ($pageNumber - 1) * $featuresPerPage;
 
                         $totalFeaturesQuery = "SELECT COUNT(*) AS total_features FROM products";
                         $totalFeaturesResult = mysqli_query($con, $totalFeaturesQuery);
                         $totalFeaturesRow = mysqli_fetch_assoc($totalFeaturesResult);
                         $totalFeatures = $totalFeaturesRow['total_features'];
 
+                        if (isset($_POST['add_featured']) && isset($_POST['item_id'])) {
+                            $item_id = $_POST['item_id'];
+                            $select_query = "SELECT * FROM products WHERE is_archive = 0 ORDER BY is_featured DESC LIMIT $featuresPerPage OFFSET $offset";
+                            $result_query = mysqli_query($con, $select_query);
+                            $row = mysqli_fetch_assoc($result_query);
+                            $is_featured = $row['is_featured'];
+
+                            // Count the number of featured items
+                            $count_query = "SELECT COUNT(*) AS count FROM products WHERE is_featured = 1";
+                            $count_result = mysqli_query($con, $count_query);
+                            $count_row = mysqli_fetch_assoc($count_result);
+                            $featured_count = $count_row['count'];
+
+                            if ($is_featured == 1) {
+                                $update_query = "UPDATE products SET is_featured = 0 WHERE item_id = $item_id";
+                            } else {
+                                if ($featured_count < 10) { // Change 3 to 5 for 5 featured items
+                                    $update_query = "UPDATE products SET is_featured = 1 WHERE item_id = $item_id";
+                                } else {
+                                    // Display a message or handle the limit reached case
+                                    echo "You can only have 10 featured items at a time."; // Change 3 to 5 for 5 featured items
+                                }
+                            }
+
+                            if (isset($update_query)) {
+                                mysqli_query($con, $update_query);
+                            }
+                            echo "<script>window.location.href = 'emp_featured.php';</script>";
+                            exit();
+                        }
 
                         $select_query = "SELECT * FROM products WHERE is_archive = 0 ORDER BY is_featured DESC LIMIT $featuresPerPage OFFSET $offset";
                         $result_query = mysqli_query($con, $select_query);

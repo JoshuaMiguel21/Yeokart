@@ -114,6 +114,14 @@
             textarea.style.height = 'auto'; // Reset the height to auto to properly calculate the new height
             textarea.style.height = `${textarea.scrollHeight}px`; // Set the height to match the content
         });
+
+        document.getElementById('item_price').addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9.]/g, ''); // Allow only digits and decimal point
+        });
+
+        document.getElementById('item_quantity').addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, ''); // Allow only digits
+        });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>

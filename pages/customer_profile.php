@@ -352,29 +352,33 @@ $con->close();
                         }
                         foreach ($items as $key => $itemName) {
                             $itemName = trim($itemName);
-                            $itemPrice = isset($itemPrices[$key]) ? number_format(floatval(trim($itemPrices[$key])), 2) : '0.00';
-                            $itemQuantity = isset($quantities[$key]) ? intval(trim($quantities[$key])) : 0;
-                            $itemTotal = number_format($itemPrice * $itemQuantity, 2);
+                            $itemPrices = explode(", ", $row['items_price']);
+                            $itemQuantities = explode(", ", $row['item_quantity']);
+
+                            $itemPrice = floatval($itemPrices[$key]);
+                            $itemQuantity = intval($itemQuantities[$key]);
+                            $total = $itemPrice * $itemQuantity;
                             $itemImage = isset($itemImages[$key]) ? trim($itemImages[$key]) : '';
 
                             echo "<div class='cart-item' style='background-color: #fff;'>";
                             echo "<img src='item_images/{$itemImage}' alt='Item Image' class='cart-item-image'>";
                             echo "<div class='item-details'>";
                             echo "<p><b>Name: </b>{$itemName}</p>";
-                            echo "<p>Price: ₱{$itemPrice}</p>";
+                            echo "<p>Price: ₱" . number_format($itemPrice, 2) . "</p>";
                             echo "</div>";
                             echo "<p>Quantity: {$itemQuantity}</p>";
-                            echo "<p>Total: ₱{$itemTotal}</p>";
+                            echo "<p>Total: ₱" . number_format($total, 2) . "</p>";
                             echo "</div>";
                         }
+
                         echo '<div class="total-for-order">';
                         echo '<p class="total-label">Subtotal: </p>';
-                        echo '<p class="total-price">&nbsp;₱' . $row['total'] . '</p>';
+                        echo '<p class="total-price">&nbsp;₱' . number_format($row['total'], 2) . '</p>';
                         echo '<p class="total-label">Shipping Fee: </p>';
-                        echo '<p class="total-price">&nbsp;₱' . $row['shipping_fee'] . '</p>';
+                        echo '<p class="total-price">&nbsp;₱' . number_format($row['shipping_fee'], 2) . '</p>';
                         echo '<p class="total-label">Overall Total: </p>';
-                        echo '<p class="total-price">&nbsp;₱' . $row['overall_total'] . '</p>';
-                        echo '</div>'; // Close total-for-order div
+                        echo '<p class="total-price">&nbsp;₱' . number_format($row['overall_total'], 2) . '</p>';
+                        echo '</div>';
 
                         echo '</div>'; // Close order-details-card div
                         echo '</div>'; // Close hidden-row div
