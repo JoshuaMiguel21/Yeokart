@@ -1816,21 +1816,30 @@ label {
     width: 100%;
 }
 
-.order-header{
+.order-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 10px;
 }
 
-@keyframes slideRight {
+.slideRight {
+    display: inline-block; /* Ensure inline block for inline animation */
+    animation: slideRightAnimation 1s forwards;
+    opacity: 0; /* Start with opacity 0 to fade in */
+}
+
+@keyframes slideRightAnimation {
     from {
-        left: -100%; 
+        transform: translateX(-100%);
+        opacity: 0;
     }
     to {
-        left: 0; 
+        transform: translateX(0);
+        opacity: 1;
     }
 }
+
 
 .order-table {
     width: 100%;
