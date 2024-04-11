@@ -23,9 +23,6 @@
         font-size: 20px;
     }
 
-    .icon-loading {
-        margin-right: 5px;
-    }
 </style>
 <?php
 require('../database/db_yeokart.php');
@@ -504,7 +501,7 @@ if (isset($_POST['add-to-cart-btn'])) {
                     document.getElementById('cart-notification').style.display = 'block';
                     document.getElementById('cart-item-name').innerText = "<?php echo $fetch_item['item_name']; ?>";
                     document.getElementById('cart-item-image').src = "item_images/<?php echo $fetch_item['item_image1']; ?>";
-                }); // Delay before displaying the cart notification
+                }); 
 
             <?php endif; ?>
         });
@@ -517,7 +514,7 @@ if (isset($_POST['add-to-cart-btn'])) {
             setTimeout(() => {
                 const cartNotification = document.querySelector('#cart-notification');
                 cartNotification.style.display = 'none';
-            }, 3000); // Delay before hiding the cart notification
+            }, 3000); 
         }
 
         toggleLoading();

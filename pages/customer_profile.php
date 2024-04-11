@@ -8,6 +8,7 @@
     <title>Account - Yeokart</title>
     <link rel="icon" type="image/png" href="../res/icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -288,16 +289,20 @@ $con->close();
                         if ($status == "PENDING") {
                             if (empty($proof_of_payment)) {
                                 $button_text = "Upload Proof of Payment";
+                                $button_icon = "fas fa-cloud-upload-alt";
                             } else {
                                 $button_text = "Proof of Payment Uploaded";
                                 $button_disabled = true;
+                                $button_icon = "fa fa-check-square-o";
                             }
                         } elseif (in_array($status, ["PROCESSING", "SHIPPED", "DELIVERED"])) {
                             $button_text = "Payment Done";
                             $button_disabled = true;
-                            $button_class = "payment-done"; // Change class for "Payment Done" button
+                            $button_icon = "fas fa-check";
+                            $button_class = "payment-done"; 
                         } else {
                             $button_text = "Upload Proof of Payment";
+                            $button_icon = "fas fa-cloud-upload-alt";
                         }
 
                         echo '<tr class="order-row">';
@@ -310,9 +315,9 @@ $con->close();
                             if ($button_disabled) {
                                 echo 'cursor: not-allowed; pointer-events: none; ';
                             }
-                            echo '">' . $button_text . '</a>';
+                            echo '"><i class="' . $button_icon .'" style="margin-right: 5px;"></i>' . $button_text . '</a>';
                         } else {
-                            echo '<a href="#" class="' . $button_class . '" data-order-id="' . $order_id . '" data-proof="' . $proof_of_payment . '">' . $button_text . '</a>';
+                            echo '<a href="#" class="' . $button_class . '" data-order-id="' . $order_id . '" data-proof="' . $proof_of_payment . '"><i class="' . $button_icon .'" style="margin-right: 5px;"></i>' . $button_text . '</a>';
                         }
                         echo '</center></td>';
                         echo '<td class="toggle-row">';

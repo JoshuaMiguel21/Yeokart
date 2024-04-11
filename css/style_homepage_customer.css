@@ -1634,7 +1634,7 @@ label {
     height: calc(100% - 118px); 
     background-color: var(--light-color);
     display: none;
-    animation: slideRight 3s linear forwards; 
+    animation: slideRightAnimation 3s linear forwards; 
 }
 
 .loading-overlay.loading {
@@ -1824,9 +1824,9 @@ label {
 }
 
 .slideRight {
-    display: inline-block; /* Ensure inline block for inline animation */
+    display: inline-block; 
     animation: slideRightAnimation 1s forwards;
-    opacity: 0; /* Start with opacity 0 to fade in */
+    opacity: 0; 
 }
 
 @keyframes slideRightAnimation {
@@ -1883,7 +1883,7 @@ label {
     background-color: #3498db;
     color: white;
     text-decoration: none;
-    border-radius: 5px;
+    border-radius: 30px;
     font-weight: bold;
     transition: background-color 0.3s;
   }
@@ -1894,7 +1894,7 @@ label {
     background-color: #2ecc71;
     color: white;
     text-decoration: none;
-    border-radius: 5px;
+    border-radius: 30px;
     font-weight: bold;
     transition: background-color 0.3s;
   }

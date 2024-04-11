@@ -132,7 +132,7 @@
                                                 <p>Thank you for registering with <b>Yeokart</b>. To ensure the security of your account 
                                                 and to activate your membership, we need to verify your email address.</p>
                                                 <p>Please click the link below to complete the email verification process:</p>
-                                                <p><a href='http://localhost/Yeokart/pages/verify_email.php?email=$email&v_code=$v_code'>Verify Your Email</a></p>;
+                                                <p><a href='http://localhost/Yeokart/pages/verify_email.php?email=$email&v_code=$v_code'>Verify Your Email</a></p>
                                                 <p>Thank you for using Yeokart WebApp!</p>
                                                 <p>Best regards,<br>Your Company Name Support Team</p>";
                             $mail->send();
@@ -158,7 +158,7 @@
                             if ($num_rows > 0) {
                                 $result_fetch = mysqli_fetch_assoc($result);
                                 if ($result_fetch['type'] == 'user') {
-                                    if ($result_fetch['username'] == $username && $result_fetch['status'] == 1) {
+                                    if ($result_fetch['username'] == $username) {
                                         echo "<script>
                                             Swal.fire({
                                                 icon: 'error',
@@ -214,7 +214,9 @@
                                                                 icon: 'info',
                                                                 title: 'Email Sent!',
                                                                 text: 'Verification email has been sent again. Please check your email to proceed with the login.',
-                                                                confirmButtonText: 'OK'
+                                                                confirmButtonText: 'OK',
+                                                                backdrop: true, 
+                                                                allowOutsideClick: false
                                                             }).then((result) => {
                                                                 if (result.isConfirmed) {
                                                                     window.location = 'login_page.php';
@@ -277,10 +279,16 @@
                                 if (mysqli_query($con, $query) && sendMail($_POST['email'], $v_code)) {
                                     echo "<script>
                                             Swal.fire({
-                                            icon: 'info',
-                                            title: 'Email Sent!',
-                                            text: 'Verification email has been sent. Please check your email to proceed with the login.',
-                                            confirmButtonText: 'OK'
+                                                icon: 'info',
+                                                title: 'Email Sent!',
+                                                text: 'Verification email has been sent again. Please check your email to proceed with the login.',
+                                                confirmButtonText: 'OK',
+                                                backdrop: true, 
+                                                allowOutsideClick: false
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    window.location = 'login_page.php';
+                                                }
                                             });
                                         </script>";
                                 } else {

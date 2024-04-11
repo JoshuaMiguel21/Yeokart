@@ -46,7 +46,7 @@
         exit();
     }
 
-    $sql = "SELECT COUNT(*) AS item_count FROM products";
+    $sql = "SELECT COUNT(*) AS item_count FROM products WHERE `is_archive`= 0";
     $result = $con->query($sql);
 
     if ($result) {

@@ -174,7 +174,20 @@
                                 echo "<td>" . $row['date_of_purchase'] . "</td>";
                                 echo "<td>";
                                 echo '<div class="button-class">';
-                                echo '<select class="orderStatusSelect" onchange="updateOrderStatus(this.value, \'' . $row['order_id'] . '\')">';
+                                $selectDisabled = ($row['status'] == 'Delivered') ? 'disabled' : '';
+                                echo '<select class="orderStatusSelect" onchange="updateOrderStatus(this.value, \'' . $row['order_id'] . '\')" ' . $selectDisabled . ' style="';
+                                if ($row['status'] == 'Pending') {
+                                    echo 'border: 1px solid red;';
+                                } elseif ($row['status'] == 'Processing') {
+                                    echo 'border: 1px solid blue;';
+                                } elseif ($row['status'] == 'Shipped') {
+                                    echo 'border: 1px solid #FFD700;'; // Gold
+                                } elseif ($row['status'] == 'Delivered') {
+                                    echo 'border: 1px solid green;';
+                                } elseif ($row['status'] == 'Invalid') {
+                                    echo 'border: 2px solid red;';
+                                }
+                                echo '">';
 
                                 $status_query = "SHOW COLUMNS FROM `orders` LIKE 'status'";
                                 $status_result = mysqli_query($con, $status_query);
@@ -254,8 +267,7 @@
         <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
             <div class="popup-content">
                 <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>
-                <p>Are you sure you want to logout?
-                <p>
+                <p>Are you sure you want to logout?</p>
                 <div class="logout-btns">
                     <button onclick="confirmLogout()" class="confirm-logout-btn">Logout</button>
                     <button onclick="closeLogoutPopup()" class="cancel-logout-btn">Cancel</button>
@@ -263,6 +275,17 @@
             </div>
         </div>
     </div>
+
+    <div id="confirmDeliveryPopup" class="popup-container" style="display: none;">
+            <div class="popup-content">
+                <span class="close-btn" onclick="closeConfirmDeliveryPopup()">&times;</span>
+                <p>Are you sure that the order has been completed and delivered?</p>
+                <div class="confirm-buttons">
+                    <button onclick="proceedWithDelivery()" class="confirm-logout-btn">Proceed</button>
+                    <button onclick="closeConfirmDeliveryPopup()" class="cancel-logout-btn">Cancel</button>
+                </div>
+            </div>
+        </div>
 
     <div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9999; justify-content: center; align-items: center;">
         <div style="padding: 20px; background: white; border-radius: 5px; display: flex; justify-content: center; align-items: center;">
@@ -283,68 +306,85 @@
             xhttp.send("nav_toggle=" + newState);
         }
 
-        function updateOrderStatus(status, orderId) {
+        function openConfirmDeliveryPopup(orderId, status) {
+            var popup = document.getElementById('confirmDeliveryPopup');
+            popup.style.display = 'flex';
+            window.currentOrderForDelivery = orderId;
+            var orderStatusSelect = document.querySelector('.orderStatusSelect');
+            var selectedOption = orderStatusSelect.querySelector('option[value="Delivered"]');
+            selectedOption.selected = true;
+        }
+
+        function closeConfirmDeliveryPopup() {
+            var popup = document.getElementById('confirmDeliveryPopup');
+            popup.style.display = 'none';
+            var orderStatusSelect = document.querySelector('.orderStatusSelect');
+            var selectedOption = orderStatusSelect.querySelector('option[value="Delivered"]');
+            selectedOption.selected = false; 
+            enableAllOptions(orderStatusSelect); 
+            localStorage.removeItem('selectedStatus_' + window.currentOrderForDelivery);
+            window.location.reload(); 
+        }
+
+        function proceedWithDelivery() {
+            var orderId = window.currentOrderForDelivery;
+            var orderStatusSelect = document.querySelector('.orderStatusSelect');
+            var selectedOption = orderStatusSelect.querySelector('option[value="Delivered"]');
+            selectedOption.disabled = true; 
+            localStorage.setItem('selectedStatus_' + orderId, "Delivered");
+
+            // Show the loading overlay
             document.getElementById('loadingOverlay').style.display = 'flex';
 
+            sendStatusUpdateRequest(orderId, "Delivered");
+            // The closeConfirmDeliveryPopup call is now moved to the sendStatusUpdateRequest callback
+        }
+
+        function updateOrderStatus(status, orderId) {
+            if (status === 'Delivered') {
+                openConfirmDeliveryPopup(orderId, status); 
+            } else {
+                sendStatusUpdateRequest(orderId, status); 
+            }
+        }
+
+        function sendStatusUpdateRequest(orderId, status) {
+            document.getElementById('loadingOverlay').style.display = 'flex';
             var xhttp = new XMLHttpRequest();
             xhttp.open("POST", "update_order_status.php", true);
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                     console.log("Order status updated successfully");
-
                     setTimeout(function() {
                         document.getElementById('loadingOverlay').style.display = 'none';
                         window.location.reload();
                     }, 1500);
                 }
             };
-
             xhttp.send("order_id=" + orderId + "&status=" + status);
         }
 
         document.addEventListener('DOMContentLoaded', function() {
             var orderRows = document.querySelectorAll('tr[id^="order-row-"]');
-
             orderRows.forEach(function(orderRow) {
                 var orderStatusSelect = orderRow.querySelector('.orderStatusSelect');
-                var orderId = orderRow.getAttribute('id').split('-')[2]; // Extract order ID from row ID
+                var orderId = orderRow.getAttribute('id').split('-')[2];
                 var selectedStatus = localStorage.getItem('selectedStatus_' + orderId) || 'Pending';
-
-                // Set initial border color based on the stored status
-                orderStatusSelect.style.border = getBorderStyle(selectedStatus);
-
-                // Add event listener to update border color on status change
                 orderStatusSelect.addEventListener('change', function() {
                     var selectedOption = this.options[this.selectedIndex];
                     var selectedValue = selectedOption.value;
-                    this.style.border = getBorderStyle(selectedValue);
-
-                    // Store selected status in local storage
                     localStorage.setItem('selectedStatus_' + orderId, selectedValue);
                 });
             });
-
-            // Function to get border style based on status
-            function getBorderStyle(status) {
-                switch (status) {
-                    case 'Pending':
-                        return '1px solid red';
-                    case 'Invalid':
-                        return '2px solid red';
-                    case 'Processing':
-                        return '1px solid blue';
-                    case 'Shipped':
-                        return '1px solid #FFD700';
-                    case 'Delivered':
-                        return '1px solid green';
-                    default:
-                        return '';
-                }
-            }
         });
 
+        function enableAllOptions(orderStatusSelect) {
+            orderStatusSelect.querySelectorAll('option').forEach(function(option) {
+                option.disabled = false;
+            });
+        }
+       
         function openImagePopup(imageUrl) {
             var popup = document.getElementById('imagePopup');
             var image = document.getElementById('popupImage');
