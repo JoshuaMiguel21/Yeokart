@@ -172,20 +172,24 @@
         if ($fullAddress === "No default address found") {
             // Trigger SweetAlert error message due to lack of a default address
             echo "<script>
-                Swal.fire({
-                    icon: 'error', 
-                    title: 'No Address!',
-                    text: 'There is no default address yet. Please update your address information before placing the order.',
-                    confirmButtonText: '<a href=\"customer_address.php\" style=\"color: white; text-decoration: none;\">Add New Address</a>',
-                    customClass: {
-                        popup: 'swal2-custom-popup',
-                        title: 'swal2-custom-title',
-                        content: 'swal2-custom-text'
-                    },
-                    backdrop: true, 
-                    allowOutsideClick: false 
-                });
-            </script>";
+    Swal.fire({
+        icon: 'error', 
+        title: 'No Address!',
+        text: 'There is no default address yet. Please update your address information before placing the order.',
+        confirmButtonText: 'Add New Address',
+        customClass: {
+            popup: 'swal2-custom-popup',
+            title: 'swal2-custom-title',
+            content: 'swal2-custom-text'
+        },
+        backdrop: true, 
+        allowOutsideClick: false 
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = 'customer_address.php'; 
+        }
+    });
+</script>";
         } else {
             // Your existing order processing code starts here since a default address exists
             $items_ordered = array_column($cartItems, 'item_name');
