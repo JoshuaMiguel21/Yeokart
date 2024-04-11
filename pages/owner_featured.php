@@ -260,7 +260,7 @@ if (isset($_SESSION['lastname'])) {
                                 $is_featured = $row['is_featured'];
                                 echo "<tr>";
                                 echo "<td>" . $row['item_name'] . "</td>";
-                                echo "<td> ₱" . $row['item_price'] . "</td>";
+                                echo "<td> ₱" . number_format($row['item_price'], 2) . "</td>";
                                 echo "<td style='max-width: 2000px;'>" . $row['item_description'] . "</td>";
                                 echo "<td>" . $row['item_quantity'] . "</td>";
                                 echo "<td>" . $row['artist_name'] . "</td>";
