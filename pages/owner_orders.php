@@ -342,6 +342,15 @@
                 // Set initial border color based on the stored status
                 orderStatusSelect.style.border = getBorderStyle(selectedStatus);
 
+                // Disable all options if 'Delivered' is selected
+                if (selectedStatus === 'Delivered') {
+                    orderStatusSelect.querySelectorAll('option').forEach(function(option) {
+                        if (option.value !== 'Delivered') {
+                            option.disabled = true;
+                        }
+                    });
+                }
+
                 // Add event listener to update border color on status change
                 orderStatusSelect.addEventListener('change', function() {
                     var selectedOption = this.options[this.selectedIndex];
@@ -350,6 +359,20 @@
 
                     // Store selected status in local storage
                     localStorage.setItem('selectedStatus_' + orderId, selectedValue);
+
+                    // Disable all options if 'Delivered' is selected
+                    if (selectedValue === 'Delivered') {
+                        this.querySelectorAll('option').forEach(function(option) {
+                            if (option.value !== 'Delivered') {
+                                option.disabled = true;
+                            }
+                        });
+                    } else {
+                        // Enable all options if 'Delivered' is not selected
+                        this.querySelectorAll('option').forEach(function(option) {
+                            option.disabled = false;
+                        });
+                    }
                 });
             });
 

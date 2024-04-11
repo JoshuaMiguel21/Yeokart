@@ -65,7 +65,7 @@
         $startDate = date("$selectedYear-01-01");
         $endDate = date("$selectedYear-12-31");
 
-        $sql = "SELECT COUNT(*) AS order_count FROM orders WHERE date_of_purchase BETWEEN '$startDate' AND '$endDate' AND (status = 'shipped' OR status = 'delivered') AND proof_of_payment <> ''";
+        $sql = "SELECT COUNT(*) AS order_count FROM orders WHERE date_of_purchase BETWEEN '$startDate' AND '$endDate' AND (status = 'delivered') AND proof_of_payment <> ''";
         $result = $con->query($sql);
 
         if ($result) {
@@ -75,7 +75,7 @@
             echo "Error: " . $sql . "<br>" . $con->error;
         }
 
-        $sql = "SELECT item_quantity FROM orders WHERE date_of_purchase BETWEEN '$startDate' AND '$endDate' AND (status = 'shipped' OR status = 'delivered') AND proof_of_payment <> ''";
+        $sql = "SELECT item_quantity FROM orders WHERE date_of_purchase BETWEEN '$startDate' AND '$endDate' AND (status = 'delivered') AND proof_of_payment <> ''";
         $result = $con->query($sql);
 
         if ($result) {
@@ -90,7 +90,7 @@
             echo "Error: " . $sql . "<br>" . $con->error;
         }
 
-        $sql = "SELECT SUM(total) AS total_revenue FROM orders WHERE date_of_purchase BETWEEN '$startDate' AND '$endDate' AND (status = 'shipped' OR status = 'delivered') AND proof_of_payment <> ''";
+        $sql = "SELECT SUM(total) AS total_revenue FROM orders WHERE date_of_purchase BETWEEN '$startDate' AND '$endDate' AND (status = 'delivered') AND proof_of_payment <> ''";
         $result = $con->query($sql);
 
         if ($result) {
@@ -100,7 +100,7 @@
             echo "Error: " . $sql . "<br>" . $con->error;
         }
 
-        $sql = "SELECT SUM(overall_total) AS total_income FROM orders WHERE date_of_purchase BETWEEN '$startDate' AND '$endDate' AND (status = 'shipped' OR status = 'delivered') AND proof_of_payment <> ''";
+        $sql = "SELECT SUM(overall_total) AS total_income FROM orders WHERE date_of_purchase BETWEEN '$startDate' AND '$endDate' AND (status = 'delivered') AND proof_of_payment <> ''";
         $result = $con->query($sql);
 
         if ($result) {
@@ -117,7 +117,7 @@
         $endDate = date("$selectedYear-12-31");
 
         // Retrieve data for current year
-        $sql = "SELECT COUNT(*) AS order_count FROM orders WHERE date_of_purchase BETWEEN '$startDate' AND '$endDate' AND (status = 'shipped' OR status = 'delivered') AND proof_of_payment <> ''";
+        $sql = "SELECT COUNT(*) AS order_count FROM orders WHERE date_of_purchase BETWEEN '$startDate' AND '$endDate' AND (status = 'delivered') AND proof_of_payment <> ''";
         $result = $con->query($sql);
 
         if ($result) {
@@ -127,7 +127,7 @@
             echo "Error: " . $sql . "<br>" . $con->error;
         }
 
-        $sql = "SELECT item_quantity FROM orders WHERE date_of_purchase BETWEEN '$startDate' AND '$endDate' AND (status = 'shipped' OR status = 'delivered') AND proof_of_payment <> ''";
+        $sql = "SELECT item_quantity FROM orders WHERE date_of_purchase BETWEEN '$startDate' AND '$endDate' AND (status = 'delivered') AND proof_of_payment <> ''";
         $result = $con->query($sql);
 
         if ($result) {
@@ -142,7 +142,7 @@
             echo "Error: " . $sql . "<br>" . $con->error;
         }
 
-        $sql = "SELECT SUM(total) AS total_revenue FROM orders WHERE date_of_purchase BETWEEN '$startDate' AND '$endDate' AND (status = 'shipped' OR status = 'delivered') AND proof_of_payment <> ''";
+        $sql = "SELECT SUM(total) AS total_revenue FROM orders WHERE date_of_purchase BETWEEN '$startDate' AND '$endDate' AND (status = 'delivered') AND proof_of_payment <> ''";
         $result = $con->query($sql);
 
         if ($result) {
@@ -152,7 +152,7 @@
             echo "Error: " . $sql . "<br>" . $con->error;
         }
 
-        $sql = "SELECT SUM(overall_total) AS total_income FROM orders WHERE date_of_purchase BETWEEN '$startDate' AND '$endDate' AND (status = 'shipped' OR status = 'delivered') AND proof_of_payment <> ''";
+        $sql = "SELECT SUM(overall_total) AS total_income FROM orders WHERE date_of_purchase BETWEEN '$startDate' AND '$endDate' AND (status = 'delivered') AND proof_of_payment <> ''";
         $result = $con->query($sql);
 
         if ($result) {
@@ -360,7 +360,7 @@
                                 ) AS n
                                 WHERE n.digit < LENGTH(items_ordered) - LENGTH(REPLACE(items_ordered, ',', '')) + 1
                                     AND date_of_purchase BETWEEN '$startDate' AND '$endDate'
-                                    AND (status = 'shipped' OR status = 'delivered')
+                                    AND (status = 'delivered')
                                     AND proof_of_payment <> ''
                             ) AS o
                             GROUP BY o.item_name
@@ -416,7 +416,10 @@
                 document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
 
                 function submitReportForm() {
-                    document.getElementById('reportForm').submit();
+                    var button = document.querySelector('.btn-main');
+                    if (!button.hasAttribute('disabled')) {
+                        document.getElementById('reportForm').submit();
+                    }
                 }
             </script>
 </body>

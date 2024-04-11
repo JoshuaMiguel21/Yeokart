@@ -56,7 +56,7 @@ class MYPDF extends TCPDF
                                 ) AS n
                                 WHERE n.digit < LENGTH(items_ordered) - LENGTH(REPLACE(items_ordered, ',', '')) + 1
                                     AND date_of_purchase BETWEEN '$startDate' AND '$endDate'
-                                    AND (status = 'shipped' OR status = 'delivered')
+                                    AND (status = 'delivered')
                                     AND proof_of_payment <> ''
                             ) AS o
                             GROUP BY o.item_name
