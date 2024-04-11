@@ -71,9 +71,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: customer_address.php");
     exit();
 }
-?>  
+?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -125,16 +126,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 document.getElementById('del_loading_overlay').style.display = 'none';
 
                 if (xhr.status == 200) {
-                    Swal.fire({ 
+                    Swal.fire({
                         icon: 'success',
                         title: 'Deleted!',
                         text: xhr.responseText,
                         customClass: {
-                                popup: 'swal2-custom-popup',
-                                title: 'swal2-custom-title',
-                                content: 'swal2-custom-text'
+                            popup: 'swal2-custom-popup',
+                            title: 'swal2-custom-title',
+                            content: 'swal2-custom-text'
                         },
-                        backdrop: true, 
+                        backdrop: true,
                         allowOutsideClick: false
                     }).then((result) => {
                         if (result.isConfirmed) {
@@ -143,16 +144,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         }
                     });
                 } else {
-                    Swal.fire({ 
+                    Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
                         text: 'Error deleting address.',
                         customClass: {
-                                popup: 'swal2-custom-popup',
-                                title: 'swal2-custom-title',
-                                content: 'swal2-custom-text'
+                            popup: 'swal2-custom-popup',
+                            title: 'swal2-custom-title',
+                            content: 'swal2-custom-text'
                         },
-                        backdrop: true, 
+                        backdrop: true,
                         allowOutsideClick: false
                     });
                 }
@@ -211,6 +212,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         document.getElementById("editPopup").style.display = "none";
     }
 </script>
+
 <body>
     <input type="checkbox" id="click">
     <header class="header" style="box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
@@ -451,7 +453,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="form-group">
                     <label for="editPhoneNumber">Phone Number:</label>
-                    <input type="number" id="editPhoneNumber" name="phoneNumber" class="form-control" required>
+                    <input type="tel" id="editPhoneNumber" name="phoneNumber" class="form-control" pattern="[0-9]{11}" title="Please enter a valid 11-digit phone number 09XXXXXXXXX" required>
                 </div>
 
                 <div id="defaultAddressCheckboxContainer" class="form-group">
@@ -583,7 +585,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <div class="form-group">
                     <label for="phoneNumber">Phone Number:</label>
-                    <input type="number" id="phoneNumber" name="phoneNumber" class="form-control" required>
+                    <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" pattern="[0-9]{11}" title="Please enter a valid 11-digit phone number" required>
                 </div>
 
                 <div class="form-group">
@@ -599,7 +601,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <script>
-
         function validateSearch() {
             var searchBox = document.getElementById('search-box');
             if (searchBox.value.trim() === '') {
@@ -625,7 +626,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 form.submit();
             }, 1000);
         });
-
     </script>
 </body>
 

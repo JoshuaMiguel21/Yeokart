@@ -199,7 +199,7 @@ if (isset($_SESSION['lastname'])) {
                             if (isset($update_query)) {
                                 mysqli_query($con, $update_query);
                             }
-                            echo "<script>window.location.href = 'emp_featured.php';</script>";
+                            echo "<script>window.location.href = 'owner_featured.php';</script>";
                             exit();
                         }
 
@@ -237,7 +237,7 @@ if (isset($_SESSION['lastname'])) {
                             if (isset($update_query)) {
                                 mysqli_query($con, $update_query);
                             }
-                            echo "<script>window.location.href = 'emp_featured.php';</script>";
+                            echo "<script>window.location.href = 'owner_featured.php';</script>";
                             exit();
                         }
 

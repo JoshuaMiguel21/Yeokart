@@ -27,7 +27,7 @@
             </div>
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <label for="item_price" class="form-label">Price:</label>
-                <input type="number" name="item_price" id="item_price" class="form-control" placeholder="Enter item price" autocomplete="off" required required step="0.01">
+                <input type="text" name="item_price" id="item_price" class="form-control" placeholder="Please enter item price in the format ₱ XXX.XX, with two decimal places." autocomplete="off" required oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" pattern="^\d+(\.\d{1,2})?$">
             </div>
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <label for="item_description" class="form-label">Description:</label>
