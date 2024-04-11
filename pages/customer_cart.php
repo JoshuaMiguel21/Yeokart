@@ -211,7 +211,7 @@ if (mysqli_num_rows($result_query) > 0) {
                             echo "<form action='order_summary.php' method='POST' id='checkoutForm'>";
                             echo "<button type='submit' class='btn' name='checkout'>
                                     <i class='fa fa-cart-arrow-down'></i>
-                                    <i class='fas fa-spinner fa-spin' style='display: none;''></i>
+                                    <i class='fas fa-circle-notch fa-spin' style='display: none;''></i>
                                     Checkout
                                 </button>";
                             echo "</form>";
@@ -228,7 +228,7 @@ if (mysqli_num_rows($result_query) > 0) {
         <div class="popup-del-content">
             <span class="close" onclick="closeDeletePopup()">&times;</span>
             <h2>Confirm Deletion</h2>
-            <p>Are you sure you want to delete this item?</p>
+            <p>Are you sure you want to remove this item from your cart?</p>
             <button class="btn-confirm" onclick="confirmDeletion()">Delete</button>
             <button class="btn-cancel" onclick="closeDeletePopup()">Cancel</button>
         </div>
@@ -333,7 +333,7 @@ if (mysqli_num_rows($result_query) > 0) {
             const checkoutForm = document.getElementById('checkoutForm');
             const checkoutButton = checkoutForm.querySelector('button[name="checkout"]');
             const cartIcon = checkoutButton.querySelector('.fa-cart-arrow-down');
-            const loadingIcon = checkoutButton.querySelector('.fas.fa-spinner');
+            const loadingIcon = checkoutButton.querySelector('.fas.fa-circle-notch');
 
             checkoutButton.addEventListener('click', function(event) {
                 event.preventDefault(); // Prevent the button's default action

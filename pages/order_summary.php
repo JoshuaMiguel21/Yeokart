@@ -393,11 +393,11 @@
                 <p><strong>Overall Total: </strong>₱ <?php echo number_format($overallTotal, 2); ?></p>
                 <p><strong>Date of Purchase: </strong><?php echo date("F j, Y"); ?></p>
                 <div class="button-order">
-                    <button type="submit" class="btn-confirm" name="confirm_order" id="placeOrderButton">
-                        <input type="hidden" name="confirm_order" value="1">
-                        <i class='fa fa-cart-arrow-down'></i>
-                        <i class='fas fa-spinner fa-spin' style='display: none;' id='loadingIcon'></i> Place Order
-                    </button>
+                <button type="submit" class="btn-confirm" name="confirm_order" id="placeOrderButton">
+                    <input type="hidden" name="confirm_order" value="1">
+                    <i class='fa fa-cart-arrow-down'></i>
+                    <i class='fas fa-circle-notch fa-spin' style='display: none;' id='loadingIcon'></i> Place Order
+                </button>
                 </div>
             </div>
         </div>
