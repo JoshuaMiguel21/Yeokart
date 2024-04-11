@@ -411,9 +411,9 @@
                                 $item_image3 = $row['item_image3'];
                                 echo "<tr>";
                                 echo "<td>" . $row['item_name'] . "</td>";
-                                echo "<td> ₱" . $row['item_price'] . "</td>";
+                                echo "<td> ₱" . number_format($row['item_price'], 2) . "</td>";
                                 echo "<td style='max-width: 350px;'>" . $row['item_description'] . "</td>";
-                                echo "<td>" . $row['item_quantity'] . "</td>";
+                                echo "<td>" . number_format($row['item_quantity']) . "</td>";
                                 echo "<td>" . $row['artist_name'] . "</td>";
                                 echo "<td>" . $row['category_name'] . "</td>";
                                 echo "<td>";
