@@ -522,7 +522,7 @@ $con->close();
                 <form class="add-artist-form" method="post" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="proof_of_payment" class="form-label">Select Image for Proof of Payment:</label>
-                        <input type="file" name="proof_of_payment" id="proof_of_payment" accept="image/jpeg, image/png, image/gif" style="display:none;">
+                        <input type="file" name="proof_of_payment" id="proof_of_payment" accept="image/*" style="display:none;">
                         <div class="file_upload">
                             <button type="button" class="file-upload-btn" onclick="document.getElementById('proof_of_payment').click();">Choose File</button>
                             <span id="file-chosen">No file chosen</span>
