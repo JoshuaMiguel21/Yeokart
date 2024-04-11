@@ -47,7 +47,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     title: 'Username Exists',
                     text: 'The username already exists with either a verified user or an active employee. Please choose a different username.',
                 }).then(function(){
-                    window.history.go(-1);
+                    if (result.isConfirmed) {
+                        window.location = 'manage_employees.php';
+                    }
                 });
             </script>";
             $con->close();
