@@ -154,7 +154,9 @@ if (isset($_SESSION['firstname'])) {
 
                         if (isset($_POST['add_featured']) && isset($_POST['item_id'])) {
                             $item_id = $_POST['item_id'];
-                            $select_query = "SELECT * FROM products WHERE is_archive = 0 ORDER BY is_featured DESC LIMIT $featuresPerPage OFFSET $offset";
+
+                            // Get the current is_featured status of the item
+                            $select_query = "SELECT is_featured FROM products WHERE item_id = $item_id";
                             $result_query = mysqli_query($con, $select_query);
                             $row = mysqli_fetch_assoc($result_query);
                             $is_featured = $row['is_featured'];
@@ -165,20 +167,24 @@ if (isset($_SESSION['firstname'])) {
                             $count_row = mysqli_fetch_assoc($count_result);
                             $featured_count = $count_row['count'];
 
+                            // Toggle the is_featured status based on the current status and the count of featured items
                             if ($is_featured == 1) {
                                 $update_query = "UPDATE products SET is_featured = 0 WHERE item_id = $item_id";
                             } else {
-                                if ($featured_count < 10) { // Change 3 to 5 for 5 featured items
+                                if ($featured_count < 10) {
                                     $update_query = "UPDATE products SET is_featured = 1 WHERE item_id = $item_id";
                                 } else {
                                     // Display a message or handle the limit reached case
-                                    echo "You can only have 10 featured items at a time."; // Change 3 to 5 for 5 featured items
+                                    echo "You can only have 10 featured items at a time.";
                                 }
                             }
 
+                            // Update the is_featured status of the item
                             if (isset($update_query)) {
                                 mysqli_query($con, $update_query);
                             }
+
+                            // Redirect to the same page after updating the status
                             echo "<script>window.location.href = 'emp_featured.php';</script>";
                             exit();
                         }
@@ -192,7 +198,9 @@ if (isset($_SESSION['firstname'])) {
 
                         if (isset($_POST['add_featured']) && isset($_POST['item_id'])) {
                             $item_id = $_POST['item_id'];
-                            $select_query = "SELECT * FROM products WHERE is_archive = 0 ORDER BY is_featured DESC LIMIT $featuresPerPage OFFSET $offset";
+
+                            // Get the current is_featured status of the item
+                            $select_query = "SELECT is_featured FROM products WHERE item_id = $item_id";
                             $result_query = mysqli_query($con, $select_query);
                             $row = mysqli_fetch_assoc($result_query);
                             $is_featured = $row['is_featured'];
@@ -203,20 +211,24 @@ if (isset($_SESSION['firstname'])) {
                             $count_row = mysqli_fetch_assoc($count_result);
                             $featured_count = $count_row['count'];
 
+                            // Toggle the is_featured status based on the current status and the count of featured items
                             if ($is_featured == 1) {
                                 $update_query = "UPDATE products SET is_featured = 0 WHERE item_id = $item_id";
                             } else {
-                                if ($featured_count < 10) { // Change 3 to 5 for 5 featured items
+                                if ($featured_count < 10) {
                                     $update_query = "UPDATE products SET is_featured = 1 WHERE item_id = $item_id";
                                 } else {
                                     // Display a message or handle the limit reached case
-                                    echo "You can only have 10 featured items at a time."; // Change 3 to 5 for 5 featured items
+                                    echo "You can only have 10 featured items at a time.";
                                 }
                             }
 
+                            // Update the is_featured status of the item
                             if (isset($update_query)) {
                                 mysqli_query($con, $update_query);
                             }
+
+                            // Redirect to the same page after updating the status
                             echo "<script>window.location.href = 'emp_featured.php';</script>";
                             exit();
                         }
