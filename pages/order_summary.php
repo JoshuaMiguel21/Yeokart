@@ -378,7 +378,7 @@
                 <button type="submit" class="btn-confirm" name="confirm_order" id="placeOrderButton">
                     <input type="hidden" name="confirm_order" value="1">
                     <i class='fa fa-cart-arrow-down'></i>
-                    <i class='fas fa-spinner fa-spin' style='display: none;' id='loadingIcon'></i> Place Order
+                    <i class='fas fa-circle-notch fa-spin' style='display: none;' id='loadingIcon'></i> Place Order
                 </button>
                 </div>
             </div>

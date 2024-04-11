@@ -22,6 +22,10 @@
     .swal2-custom-title {
         font-size: 20px;
     }
+
+    .icon-loading {
+        margin-right: 5px;
+    }
 </style>
 <?php
 require('../database/db_yeokart.php');
@@ -387,25 +391,6 @@ if (isset($_POST['add-to-cart-btn'])) {
             hiddenInput.value = value;
         }
 
-        function checkStock(stock) {
-            var quantity = document.getElementById('quantity').value;
-            if (parseInt(quantity) > parseInt(stock)) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'You cannot add more than the available stock.',
-                    confirmButtonText: 'OK',
-                    customClass: {
-                        popup: 'swal2-custom-popup',
-                        title: 'swal2-custom-title',
-                        content: 'swal2-custom-text'
-                    }
-                });
-                return false;
-            }
-            return true;
-        }
-
         var swiper = new Swiper(".featured-slider", {
             spaceBetween: 10,
             loop: true,
@@ -480,23 +465,59 @@ if (isset($_POST['add-to-cart-btn'])) {
             });
         });
 
+        function checkStock(stock) {
+    var quantity = document.getElementById('quantity').value;
+    if (parseInt(quantity) > parseInt(stock)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'You cannot add more than the available stock.',
+            confirmButtonText: 'OK',
+            customClass: {
+                popup: 'swal2-custom-popup',
+                title: 'swal2-custom-title',
+                content: 'swal2-custom-text'
+            }
+        });
+        return false;
+    } else {
+        const addToCartBtn = document.querySelector('button[name="add-to-cart-btn"]');
+        const originalText = addToCartBtn.innerText;
+        const loadingIcon = document.createElement('i');
+        loadingIcon.classList.add('fas', 'fa-circle-notch', 'fa-spin', 'icon-loading'); // Changed classes for a different icon
+        addToCartBtn.innerText = 'Adding to Cart...';
+        addToCartBtn.prepend(loadingIcon);
+
+        setTimeout(function() {
+            addToCartBtn.removeChild(loadingIcon);
+            addToCartBtn.innerText = originalText;
+            addToCartBtn.form.submit(); 
+        }, 3000); 
+
+        return true;
+    }
+}
+
+
         document.addEventListener('DOMContentLoaded', function() {
             const closeNotification = document.getElementById('close-notification');
             const cartNotification = document.getElementById('cart-notification');
-
 
             closeNotification.addEventListener('click', function() {
                 cartNotification.style.display = 'none';
             });
 
-
             <?php if (isset($_POST['add-to-cart-btn'])) : ?>
 
+            setTimeout(function() {
                 document.getElementById('cart-notification').style.display = 'block';
                 document.getElementById('cart-item-name').innerText = "<?php echo $fetch_item['item_name']; ?>";
                 document.getElementById('cart-item-image').src = "item_images/<?php echo $fetch_item['item_image1']; ?>";
+            }); // Delay before displaying the cart notification
+
             <?php endif; ?>
         });
+
 
         function toggleLoading() {
             const loadingOverlay = document.querySelector('.loading-overlay');
@@ -505,10 +526,11 @@ if (isset($_POST['add-to-cart-btn'])) {
             setTimeout(() => {
                 const cartNotification = document.querySelector('#cart-notification');
                 cartNotification.style.display = 'none';
-            }, 4000);
+            }, 3000); // Delay before hiding the cart notification
         }
 
         toggleLoading();
+
     </script>
 
     <script>
