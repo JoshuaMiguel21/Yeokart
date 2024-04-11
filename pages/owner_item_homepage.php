@@ -13,20 +13,20 @@
 <script>
     var currentItemId = null; // This should be declared at the top of your script
 
-    function closeDeletePopup() {
-        document.getElementById('deleteConfirmationPopup').style.display = 'none';
+    function closeArchivePopup() {
+        document.getElementById('archiveConfirmationPopup').style.display = 'none';
     }
 
-    function confirmDeleteItem() {
+    function confirmArchiveItem() {
         if (currentItemId !== null) {
-            document.getElementById('deleteItemForm' + currentItemId).submit();
+            document.getElementById('archiveItemForm' + currentItemId).submit();
         }
     }
 
-    function openDeletePopup(itemId, itemName) {
+    function openArchivePopup(itemId, itemName) {
         currentItemId = itemId;
-        document.getElementById('deleteItemName').textContent = itemName;
-        document.getElementById('deleteConfirmationPopup').style.display = 'flex';
+        document.getElementById('archiveItemName').textContent = itemName;
+        document.getElementById('archiveConfirmationPopup').style.display = 'flex';
     }
 
     function openLogoutPopup() {
@@ -79,7 +79,7 @@
     $totalItems = 0;
     $itemsPerPage = 10;
 
-    $products_count_query = "SELECT COUNT(*) as total FROM products";
+    $products_count_query = "SELECT COUNT(*) as total FROM products $filter_query";
     $products_count_result = mysqli_query($con, $products_count_query);
     $products_count_data = mysqli_fetch_assoc($products_count_result);
     $products_count = $products_count_data['total'];
@@ -90,8 +90,9 @@
     $filter_artist = isset($_GET['artist']) ? $_GET['artist'] : '';
 
     $filter_query = "";
+
     if (!empty($search_query) || !empty($filter_category) || !empty($filter_artist)) {
-        $filter_query = "WHERE ";
+        $filter_query .= "AND ";
         if (!empty($search_query)) {
             $filter_query .= "item_name LIKE '%$search_query%'";
         }
@@ -103,7 +104,7 @@
         }
     }
 
-    $check_query = "SELECT COUNT(*) as total FROM products $filter_query";
+    $check_query = "SELECT COUNT(*) as total FROM products WHERE is_archive=0 $filter_query";
     $check_result = mysqli_query($con, $check_query);
     $check_data = mysqli_fetch_assoc($check_result);
     $no_results = $check_data['total'] == 0;
@@ -158,7 +159,6 @@
                 <label for="nav-toggle">
                     <span class="las la-bars"></span>
                 </label>
-
                 Manage Items
             </h3>
 
@@ -311,47 +311,16 @@
                         <tbody>
                             <?php
                             include('../database/db_yeokart.php');
-                            if (isset($_POST['delete_item'])) {
+                            if (isset($_POST['archive_item'])) {
                                 $item_id = $_POST['item_id'];
-                                // Start a transaction
-                                mysqli_autocommit($con, false);
+                                $stmt = $con->prepare("UPDATE products SET is_archive = 1 WHERE item_id = ?");
+                                $stmt->bind_param("i", $item_id);
 
-                                // Delete from cart table
-                                $delete_cart_query = "DELETE FROM cart WHERE item_id = ?";
-                                $stmt_cart = $con->prepare($delete_cart_query);
-                                $stmt_cart->bind_param("i", $item_id);
-                                $cart_deleted = $stmt_cart->execute();
-
-                                // Delete from products table if cart deletion is successful
-                                if ($cart_deleted) {
-                                    $delete_products_query = "DELETE FROM products WHERE item_id = ?";
-                                    $stmt_products = $con->prepare($delete_products_query);
-                                    $stmt_products->bind_param("i", $item_id);
-                                    $products_deleted = $stmt_products->execute();
-                                } else {
-                                    // Rollback the transaction if cart deletion fails
-                                    mysqli_rollback($con);
-                                    echo "<script>
-                                        Swal.fire({
-                                            title: 'Error!',
-                                            text: 'Failed to delete item from cart',
-                                            icon: 'error',
-                                            confirmButtonText: 'OK'
-                                        }).then((result) => {
-                                            if (result.isConfirmed) {
-                                                window.location.href = 'owner_item_homepage.php';
-                                            }
-                                        });
-                                      </script>";
-                                }
-
-                                if ($products_deleted) {
-                                    // Commit the transaction if both deletions are successful
-                                    mysqli_commit($con);
+                                if ($stmt->execute()) {
                                     echo "<script>
                                         Swal.fire({
                                             title: 'Success!',
-                                            text: 'Item deleted successfully',
+                                            text: 'Item archived successfully',
                                             icon: 'success',
                                             confirmButtonText: 'OK'
                                         }).then((result) => {
@@ -359,14 +328,12 @@
                                                 window.location.href = 'owner_item_homepage.php';
                                             }
                                         });
-                                      </script>";
+                                    </script>";
                                 } else {
-                                    // Rollback the transaction if products deletion fails
-                                    mysqli_rollback($con);
                                     echo "<script>
                                         Swal.fire({
                                             title: 'Error!',
-                                            text: 'Failed to delete item from products',
+                                            text: 'Failed to archive item',
                                             icon: 'error',
                                             confirmButtonText: 'OK'
                                         }).then((result) => {
@@ -374,15 +341,9 @@
                                                 window.location.href = 'owner_item_homepage.php';
                                             }
                                         });
-                                      </script>";
+                                    </script>";
                                 }
-
-                                // Close the statements
-                                $stmt_cart->close();
-                                $stmt_products->close();
-
-                                // Set autocommit back to true
-                                mysqli_autocommit($con, true);
+                                $stmt->close();
                             }
 
                             $itemsPerPage = 10;
@@ -399,25 +360,25 @@
 
                             if (!isset($_GET['search_button']) && !isset($_GET['filter_button'])) {
                                 // Default query without any filters
-                                $select_query = "SELECT * FROM products";
+                                $select_query = "SELECT * FROM products WHERE is_archive=0";
                             } else {
                                 // Check for search or filter
                                 if (isset($_GET['search_button'])) {
                                     $search = $_GET['search'];
-                                    $select_query = "SELECT * FROM products WHERE item_name LIKE '%$search%'";
+                                    $select_query = "SELECT * FROM products WHERE is_archive=0 AND item_name LIKE '%$search%'";
                                 } elseif (isset($_GET['filter_button'])) {
                                     $category_name = isset($_GET['category']) ? $_GET['category'] : '';
                                     $artist_name = isset($_GET['artist']) ? $_GET['artist'] : '';
 
                                     if (!empty($category_name)) {
                                         // Filter by category
-                                        $select_query = "SELECT * FROM products WHERE category_name = '$category_name'";
+                                        $select_query = "SELECT * FROM products WHERE is_archive=0 AND category_name = '$category_name'";
                                     } elseif (!empty($artist_name)) {
                                         // Filter by artist
-                                        $select_query = "SELECT * FROM products WHERE artist_name = '$artist_name'";
+                                        $select_query = "SELECT * FROM products WHERE is_archive=0 AND artist_name = '$artist_name'";
                                     } else {
                                         // No filter applied
-                                        $select_query = "SELECT * FROM products";
+                                        $select_query = "SELECT * FROM products WHERE is_archive=0";
                                     }
                                 }
                             }
@@ -461,11 +422,11 @@
                                 echo "<td>";
                                 echo "<div class='button-class'>";
                                 echo "<a href='edit_item.php?item_id=$item_id' class='edit-button'><i class='las la-edit'></i></a>";
-                                echo "<button type='button' onclick='openDeletePopup(\"$item_id\", \"" . htmlspecialchars($item_name, ENT_QUOTES) . "\")' class='delete-button'><i class='las la-trash'></i></button>";
-                                echo "<form id='deleteItemForm" . $item_id . "' method='post' style='display:none;'>
-                                        <input type='hidden' name='item_id' value='" . $item_id . "'>
-                                        <input type='hidden' name='delete_item' value='true'> <!-- Ensure this input is included -->
-                                        <button type='submit' name='delete_item_button'>Delete</button>
+                                echo "<button type='button' onclick='openArchivePopup(\"$item_id\", \"" . htmlspecialchars($item_name, ENT_QUOTES) . "\")' class='delete-button'><i class='las la-archive'></i></button>";
+                                echo "<form id='archiveItemForm" . $item_id . "' method='post' style='display:none;'>
+                                <input type='hidden' name='item_id' value='" . $item_id . "'>
+                                <input type='hidden' name='archive_item' value='true'> <!-- Ensure this input is included -->
+                                <button type='submit' name='archive_item_button'>Archive</button>
                                     </form>";
                                 echo "</div>";
                                 echo "</td>";
@@ -538,13 +499,13 @@
                 </div>
             </div>
 
-            <div id="deleteConfirmationPopup" class="popup-container" style="display: none;">
+            <div id="archiveConfirmationPopup" class="popup-container" style="display: none;">
                 <div class="popup-content">
-                    <span class="close-btn" onclick="closeDeletePopup()">&times;</span>
-                    <p>Are you sure you want to delete this item "<span id="deleteItemName"></span>"?</p>
+                    <span class="close-btn" onclick="closeArchivePopup()">&times;</span>
+                    <p>Are you sure you want to archive this item "<span id="archiveItemName"></span>"?</p>
                     <div class="logout-btns">
-                        <button onclick="confirmDeleteItem()" class="confirm-logout-btn">Delete</button>
-                        <button onclick="closeDeletePopup()" class="cancel-logout-btn">Cancel</button>
+                        <button onclick="confirmArchiveItem()" class="confirm-logout-btn">Archive</button>
+                        <button onclick="closeArchivePopup()" class="cancel-logout-btn">Cancel</button>
                     </div>
                 </div>
             </div>

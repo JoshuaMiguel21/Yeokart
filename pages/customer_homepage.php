@@ -123,7 +123,7 @@ if ($result) {
             <div class="swiper-wrapper">
                 <?php
                 include('../database/db_yeokart.php');
-                $select_query = "SELECT * FROM products ORDER BY times_sold DESC LIMIT 10";
+                $select_query = "SELECT * FROM products WHERE is_archive = 0 ORDER BY times_sold DESC LIMIT 10";
                 $result_query = mysqli_query($con, $select_query);
                 while ($row = mysqli_fetch_assoc($result_query)) {
                     $item_id = $row['item_id'];
@@ -166,7 +166,7 @@ if ($result) {
             <div class="swiper-wrapper">
                 <?php
                 include('../database/db_yeokart.php');
-                $select_query = $select_query = "SELECT * FROM products WHERE is_featured = 1";
+                $select_query = $select_query = "SELECT * FROM products WHERE is_featured = 1 AND is_archive = 0";
                 $result_query = mysqli_query($con, $select_query);
                 while ($row = mysqli_fetch_assoc($result_query)) {
                     $item_id = $row['item_id'];

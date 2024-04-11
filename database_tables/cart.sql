@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 01, 2024 at 04:45 PM
+-- Generation Time: Apr 11, 2024 at 02:44 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -32,9 +32,11 @@ CREATE TABLE `cart` (
   `customer_id` int(11) DEFAULT NULL,
   `item_name` varchar(255) DEFAULT NULL,
   `category` varchar(255) DEFAULT NULL,
+  `artist` varchar(255) NOT NULL,
   `item_image1` varchar(255) DEFAULT NULL,
   `quantity` int(11) DEFAULT NULL,
-  `price` decimal(10,2) DEFAULT NULL
+  `price` decimal(10,2) DEFAULT NULL,
+  `subtotal` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -56,12 +58,12 @@ ALTER TABLE `cart`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT;
 
+--
+-- Constraints for dumped tables
+--
 
-ALTER TABLE `cart`
-  ADD `item_id` INT(11) NOT NULL AFTER `cart_id`,
-  ADD CONSTRAINT `fk_item_id` FOREIGN KEY (`item_id`) REFERENCES `products` (`item_id`);
 --
 -- Constraints for table `cart`
 --

@@ -150,7 +150,7 @@ if (isset($_SESSION['firstname'])) {
 
                         if (isset($_POST['add_featured']) && isset($_POST['item_id'])) {
                             $item_id = $_POST['item_id'];
-                            $select_query = "SELECT is_featured FROM products WHERE item_id = $item_id";
+                            $select_query = "SELECT * FROM products WHERE is_archive = 0 ORDER BY is_featured DESC LIMIT $featuresPerPage OFFSET $offset";
                             $result_query = mysqli_query($con, $select_query);
                             $row = mysqli_fetch_assoc($result_query);
                             $is_featured = $row['is_featured'];
@@ -194,7 +194,7 @@ if (isset($_SESSION['firstname'])) {
                         $totalFeatures = $totalFeaturesRow['total_features'];
 
 
-                        $select_query = "SELECT * FROM products ORDER BY is_featured DESC LIMIT $featuresPerPage OFFSET $offset";
+                        $select_query = "SELECT * FROM products WHERE is_archive = 0 ORDER BY is_featured DESC LIMIT $featuresPerPage OFFSET $offset";
                         $result_query = mysqli_query($con, $select_query);
                         if (mysqli_num_rows($result_query) == 0) {
                             echo "<tr><td colspan='11'><center><b>No items found</b></center></td></tr>";

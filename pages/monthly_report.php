@@ -358,13 +358,15 @@
                         $select_query = "
                             SELECT
                                 o.item_name,
-                                p.category_name,
-                                p.artist_name,
+                                o.items_artist,
+                                o.items_category,
                                 SUM(o.item_quantity) AS total_sold
                             FROM (
                                 SELECT
                                     TRIM(LEADING ',' FROM SUBSTRING_INDEX(SUBSTRING_INDEX(items_ordered, ', ', n.digit+1), ', ', -1)) AS item_name,
-                                    TRIM(LEADING ',' FROM SUBSTRING_INDEX(SUBSTRING_INDEX(item_quantity, ', ', n.digit+1), ', ', -1)) AS item_quantity
+                                    TRIM(LEADING ',' FROM SUBSTRING_INDEX(SUBSTRING_INDEX(item_quantity, ', ', n.digit+1), ', ', -1)) AS item_quantity,
+                                    TRIM(LEADING ',' FROM SUBSTRING_INDEX(SUBSTRING_INDEX(items_artist, ', ', n.digit+1), ', ', -1)) AS items_artist,
+                                    TRIM(LEADING ',' FROM SUBSTRING_INDEX(SUBSTRING_INDEX(items_category, ', ', n.digit+1), ', ', -1)) AS items_category
                                 FROM orders
                                 JOIN (
                                     SELECT 0 AS digit UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL
@@ -375,7 +377,6 @@
                                     AND (status = 'shipped' OR status = 'delivered')
                                     AND proof_of_payment <> ''
                             ) AS o
-                            INNER JOIN products AS p ON o.item_name = p.item_name
                             GROUP BY o.item_name
                             ORDER BY total_sold DESC
                             LIMIT 10";
@@ -387,8 +388,8 @@
                         } else {
                             while ($row = mysqli_fetch_assoc($result_query)) {
                                 $item_name = $row['item_name'];
-                                $category_name = $row['category_name'];
-                                $artist_name = $row['artist_name'];
+                                $category_name = $row['items_category'];
+                                $artist_name = $row['items_artist'];
                                 $total_sold = $row['total_sold'];
                                 echo "<tr>";
                                 echo "<td>" . $item_name . "</td>";

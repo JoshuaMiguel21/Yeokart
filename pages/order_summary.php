@@ -196,8 +196,26 @@
             $item_quantities = array_column($cartItems, 'quantity');
             $item_quantities_str = implode(", ", $item_quantities);
 
-            $insert_query = $con->prepare("INSERT INTO orders (order_id, customer_id, address, items_ordered, item_quantity, total, shipping_fee, overall_total, date_of_purchase) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $insert_query->bind_param("sisssssss", $order_id, $customer_id, $fullAddress, $items_ordered_str, $item_quantities_str, $cartTotal, $shippingFee, $overallTotal, $date_of_purchase);
+            $categories = array_column($cartItems, 'category');
+            $item_categories_str = implode(", ", $categories);
+
+            $artists = array_column($cartItems, 'artist');
+            $item_artists_str = implode(", ", $artists);
+
+            $price = array_column($cartItems, 'price');
+            $item_price_str = implode(", ", $price);
+
+            $subtotal_array = array();
+            foreach ($cartItems as $item) {
+                $subtotal_array[] = $item['subtotal'];
+            }
+            $item_subtotal_str = implode(", ", $subtotal_array);
+
+            $image1 = array_column($cartItems, 'item_image1');
+            $item_images_str = implode(", ", $image1);
+
+            $insert_query = $con->prepare("INSERT INTO orders (order_id, customer_id, address, items_ordered, item_quantity, items_category, items_artist, items_price, subtotal, total, shipping_fee, overall_total, date_of_purchase, items_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $insert_query->bind_param("sissssssssssss", $order_id, $customer_id, $fullAddress, $items_ordered_str, $item_quantities_str, $item_categories_str, $item_artists_str, $item_price_str, $item_subtotal_str, $cartTotal, $shippingFee, $overallTotal, $date_of_purchase, $item_images_str);
 
             if ($insert_query->execute()) {
 
@@ -403,7 +421,6 @@
 
 
     <script>
-
         function closePopup() {
             document.getElementById("chooseAddressPopup").style.display = "none";
         }

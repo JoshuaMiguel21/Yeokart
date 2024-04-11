@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 10, 2024 at 07:07 AM
+-- Generation Time: Apr 10, 2024 at 07:12 PM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -33,11 +33,16 @@ CREATE TABLE `orders` (
   `address` text DEFAULT NULL,
   `items_ordered` text DEFAULT NULL,
   `item_quantity` text DEFAULT NULL,
+  `items_category` text NOT NULL,
+  `items_artist` text NOT NULL,
+  `items_price` text NOT NULL,
+  `subtotal` text NOT NULL,
   `total` decimal(10,2) DEFAULT NULL,
   `shipping_fee` decimal(10,2) DEFAULT NULL,
   `overall_total` decimal(10,2) DEFAULT NULL,
   `date_of_purchase` date DEFAULT NULL,
   `status` enum('Pending','Processing','Shipped','Delivered','Invalid') NOT NULL DEFAULT 'Pending',
+  `items_image` varchar(255) NOT NULL,
   `proof_of_payment` varchar(255) NOT NULL,
   `is_archive` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

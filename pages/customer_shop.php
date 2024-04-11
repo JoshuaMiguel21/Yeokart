@@ -276,26 +276,26 @@
                         $totalPages = ceil($totalItems / $itemsPerPage);
 
                         // Base query
-                        $select_query = "SELECT * FROM products";
+                        $select_query = "SELECT * FROM products WHERE is_archive = 0";
 
                         // Apply search filter if search term is provided
                         if (isset($_GET['search']) && !empty($_GET['search'])) {
                             $searchTerm = mysqli_real_escape_string($con, $_GET['search']);
-                            $select_query .= " WHERE item_name LIKE '%$searchTerm%'";
+                            $select_query .= " AND item_name LIKE '%$searchTerm%'"; // Use AND instead of WHERE here
                         }
 
                         // Apply category filter if selected
                         if (isset($_GET['category']) && !empty($_GET['category'])) {
                             $category = mysqli_real_escape_string($con, $_GET['category']);
-                            $select_query .= isset($_GET['search']) && !empty($_GET['search']) ? " AND category_name = '$category'" : " WHERE category_name = '$category'";
+                            $select_query .= " AND category_name = '$category'";
                         }
 
                         // Apply artist filter if selected
                         if (isset($_GET['artist']) && !empty($_GET['artist'])) {
                             $artist = mysqli_real_escape_string($con, $_GET['artist']);
-                            $select_query .= isset($_GET['search']) && !empty($_GET['search']) || isset($_GET['category']) && !empty($_GET['category']) ? " AND artist_name = '$artist'" : " WHERE artist_name = '$artist'";
+                            $select_query .= " AND artist_name = '$artist'";
                         }
-                        //
+
                         // Check if the form is submitted
                         if (isset($_GET['price_order'])) {
                             $price_order = $_GET['price_order'];
@@ -305,7 +305,6 @@
                                 $select_query .= " ORDER BY item_price DESC";
                             }
                         }
-
 
                         // Add limit and offset
                         $select_query .= " LIMIT $itemsPerPage OFFSET $offset";
