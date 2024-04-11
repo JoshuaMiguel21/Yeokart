@@ -295,10 +295,15 @@
     }
 
     ?>
-    <header class="order-header">
-        <img src="../res/logo.png" alt="Yeokart Logo" class="logo1" width="200px" height="80px">
-        <a href="customer_cart.php" class="cart-dir"><i class="fas fa-shopping-cart"></i></a>
-    </header>
+<header class="order-header">
+    <img src="../res/logo.png" alt="Yeokart Logo" class="logo1" width="200px" height="80px">
+    <a href="customer_cart.php" class="cart-dir">
+        <div class="slideRight">
+            Return To Cart <i class="fas fa-shopping-cart"></i>
+        </div>
+    </a>
+</header>
+
     <hr class="order-hr">
 
     <div class="left">
