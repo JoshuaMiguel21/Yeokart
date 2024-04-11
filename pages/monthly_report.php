@@ -278,7 +278,7 @@
                 </form>
 
                 <a href="#" class="btn-main" style="<?php echo $orderCount == 0 ? 'background-color: gray; cursor: not-allowed;' : ''; ?>" onclick="submitReportForm(); return false;" <?php echo $orderCount == 0 ? 'disabled' : ''; ?>>
-                    <i class="las la-download"></i>
+                    <i class="las la-file-invoice-dollar"></i>
                     <span class="text">Generate Report</span>
                 </a>
             </div>

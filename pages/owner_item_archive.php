@@ -80,7 +80,7 @@
     $itemsPerPage = 10;
 
     $filter_query = "";
-    
+
     $products_count_query = "SELECT COUNT(*) as total FROM products $filter_query";
     $products_count_result = mysqli_query($con, $products_count_query);
     $products_count_data = mysqli_fetch_assoc($products_count_result);
@@ -91,7 +91,7 @@
     $filter_category = isset($_GET['category']) ? $_GET['category'] : '';
     $filter_artist = isset($_GET['artist']) ? $_GET['artist'] : '';
 
-    
+
 
     if (!empty($search_query) || !empty($filter_category) || !empty($filter_artist)) {
         $filter_query .= "AND ";
@@ -190,14 +190,14 @@
                     <i class="las la-list"></i>
                     <span class="text">View Categories Table</span>
                 </a>
-                
+
                 <a href="owner_item_homepage.php" class="btn-employee">
                     <i class="las la-archive"></i>
                     <span class="text">View Item Catalog</span>
                 </a>
-                
+
                 <a href="owner_item_archive.php" class="btn-employee active">
-                    <i class="las la-list"></i>
+                    <i class="las la-server"></i>
                     <span class="text">View Archives</span>
                 </a>
 
@@ -343,7 +343,7 @@
                                     echo "<script>
                                         Swal.fire({
                                             title: 'Error!',
-                                            text: 'Failed to archive item',
+                                            text: 'Failed to restore item',
                                             icon: 'error',
                                             confirmButtonText: 'OK'
                                         }).then((result) => {

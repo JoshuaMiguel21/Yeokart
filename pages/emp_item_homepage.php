@@ -89,7 +89,7 @@
     $filter_category = isset($_GET['category']) ? $_GET['category'] : '';
     $filter_artist = isset($_GET['artist']) ? $_GET['artist'] : '';
 
-    
+
     if (!empty($search_query) || !empty($filter_category) || !empty($filter_artist)) {
         $filter_query .= "AND ";
         if (!empty($search_query)) {
@@ -187,7 +187,7 @@
                 </a>
 
                 <a href="emp_item_archive.php" class="btn-employee">
-                    <i class="las la-list"></i>
+                    <i class="las la-server"></i>
                     <span class="text">View Archives</span>
                 </a>
             </div>
@@ -320,7 +320,7 @@
                                             confirmButtonText: 'OK'
                                         }).then((result) => {
                                             if (result.isConfirmed) {
-                                                window.location.href = 'owner_item_homepage.php';
+                                                window.location.href = 'emp_item_homepage.php';
                                             }
                                         });
                                     </script>";
@@ -333,7 +333,7 @@
                                             confirmButtonText: 'OK'
                                         }).then((result) => {
                                             if (result.isConfirmed) {
-                                                window.location.href = 'owner_item_homepage.php';
+                                                window.location.href = 'emp_item_homepage.php';
                                             }
                                         });
                                     </script>";
@@ -432,7 +432,7 @@
                     </table>
                 <?php endif; ?>
                 <?php
-                $baseUrl = 'owner_item_homepage.php?';
+                $baseUrl = 'emp_item_homepage.php?';
 
                 $pageQuery = '';
                 if (isset($_GET['search_button'])) {
@@ -506,15 +506,15 @@
         </div>
 
         <div id="archiveStockConfirmationPopup" class="popup-container" style="display: none;">
-                <div class="popup-content">
-                    <span class="close-btn" onclick="closeArchivePopup()">&times;</span>
-                    <p>This item "<span id="archiveStockItemName"></span>" still has stock. Are you sure you want to archive it?</p>
-                    <div class="logout-btns">
-                        <button onclick="confirmArchiveItem()" class="confirm-logout-btn">Proceed</button>
-                        <button onclick="closeArchivePopup()" class="cancel-logout-btn">Cancel</button>
-                    </div>
+            <div class="popup-content">
+                <span class="close-btn" onclick="closeArchivePopup()">&times;</span>
+                <p>This item "<span id="archiveStockItemName"></span>" still has stock. Are you sure you want to archive it?</p>
+                <div class="logout-btns">
+                    <button onclick="confirmArchiveItem()" class="confirm-logout-btn">Proceed</button>
+                    <button onclick="closeArchivePopup()" class="cancel-logout-btn">Cancel</button>
                 </div>
             </div>
+        </div>
 
         <script>
             // Function to toggle the sidebar and update session variable

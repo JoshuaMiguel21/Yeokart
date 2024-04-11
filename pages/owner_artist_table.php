@@ -163,17 +163,17 @@ if (isset($_SESSION['lastname'])) {
                     <i class="las la-list"></i>
                     <span class="text">View Categories Table</span>
                 </a>
-                
+
                 <a href="owner_item_homepage.php" class="btn-employee">
                     <i class="las la-archive"></i>
                     <span class="text">View Item Catalog</span>
                 </a>
 
                 <a href="owner_item_archive.php" class="btn-employee">
-                    <i class="las la-list"></i>
+                    <i class="las la-server"></i>
                     <span class="text">View Archives</span>
                 </a>
-                
+
                 <a href="#" onclick="openAddArtistPopup()" class="btn-main">
                     <i class="las la-plus"></i>
                     <span class="text">Add Artist</span>

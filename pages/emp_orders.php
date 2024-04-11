@@ -170,7 +170,7 @@
                                 echo "<td>" . $row['address'] . "</td>";
                                 echo "<td>" . $row['items_ordered'] . "</td>";
                                 echo "<td>" . $row['item_quantity'] . "</td>";
-                                echo "<td>₱" . $row['total'] . "</td>";
+                                echo "<td>₱" . number_format($row['total'], 2) . "</td>";
                                 echo "<td>" . $row['date_of_purchase'] . "</td>";
                                 echo "<td>";
                                 echo '<div class="button-class">';
@@ -371,10 +371,29 @@
                 var orderStatusSelect = orderRow.querySelector('.orderStatusSelect');
                 var orderId = orderRow.getAttribute('id').split('-')[2];
                 var selectedStatus = localStorage.getItem('selectedStatus_' + orderId) || 'Pending';
+
+                // Set initial border color based on the stored status
+                orderStatusSelect.style.border = getBorderStyle(selectedStatus);
+
+                // Add event listener to update border color on status change
                 orderStatusSelect.addEventListener('change', function() {
                     var selectedOption = this.options[this.selectedIndex];
                     var selectedValue = selectedOption.value;
                     localStorage.setItem('selectedStatus_' + orderId, selectedValue);
+
+                    // Disable all options if 'Delivered' is selected
+                    if (selectedValue === 'Delivered') {
+                        this.querySelectorAll('option').forEach(function(option) {
+                            if (option.value !== 'Delivered') {
+                                option.disabled = true;
+                            }
+                        });
+                    } else {
+                        // Enable all options if 'Delivered' is not selected
+                        this.querySelectorAll('option').forEach(function(option) {
+                            option.disabled = false;
+                        });
+                    }
                 });
             });
         });

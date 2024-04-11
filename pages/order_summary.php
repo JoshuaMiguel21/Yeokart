@@ -24,7 +24,6 @@
     .swal2-custom-title {
         font-size: 20px;
     }
-    
 </style>
 
 <body style="margin: 30px;">
@@ -296,16 +295,16 @@
     }
 
     ?>
-<header class="order-header">
-<a href="customer_homepage.php">
-        <img src="../res/logo.png" alt="Yeokart Logo" class="logo1" width="200px" height="80px">
-    </a>
-    <a href="customer_cart.php" class="cart-dir">
-        <div class="slideRight">
-            Return To Cart <i class="fas fa-shopping-cart"></i>
-        </div>
-    </a>
-</header>
+    <header class="order-header">
+        <a href="customer_homepage.php">
+            <img src="../res/logo.png" alt="Yeokart Logo" class="logo1" width="200px" height="80px">
+        </a>
+        <a href="customer_cart.php" class="cart-dir">
+            <div class="slideRight">
+                Return To Cart <i class="fas fa-shopping-cart"></i>
+            </div>
+        </a>
+    </header>
 
     <hr class="order-hr">
 
@@ -349,7 +348,7 @@
                 <li style="margin-left: 20px;">Metro Manila - <strong>₱ 100</strong></li>
                 <li style="margin-left: 20px;">Provinces - <strong>₱ 180</strong></li>
             </ul>
-            <p>Large Items (More than 3 albums)</p>
+            <p>Large Items (3 albums and more)</p>
             <ul>
                 <li style="margin-left: 20px;">Metro Manila - <strong>₱ 120</strong></li>
                 <li style="margin-left: 20px;">Provinces - <strong>₱ 220</strong></li>
@@ -401,11 +400,11 @@
                 <p><strong>Overall Total: </strong>₱ <?php echo number_format($overallTotal, 2); ?></p>
                 <p><strong>Date of Purchase: </strong><?php echo date("F j, Y"); ?></p>
                 <div class="button-order">
-                <button type="submit" class="btn-confirm" name="confirm_order" id="placeOrderButton">
-                    <input type="hidden" name="confirm_order" value="1">
-                    <i class='fa fa-cart-arrow-down'></i>
-                    <i class='fas fa-circle-notch fa-spin' style='display: none;' id='loadingIcon'></i> Place Order
-                </button>
+                    <button type="submit" class="btn-confirm" name="confirm_order" id="placeOrderButton">
+                        <input type="hidden" name="confirm_order" value="1">
+                        <i class='fa fa-cart-arrow-down'></i>
+                        <i class='fas fa-circle-notch fa-spin' style='display: none;' id='loadingIcon'></i> Place Order
+                    </button>
                 </div>
             </div>
         </div>

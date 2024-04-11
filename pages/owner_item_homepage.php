@@ -97,7 +97,7 @@
     $filter_category = isset($_GET['category']) ? $_GET['category'] : '';
     $filter_artist = isset($_GET['artist']) ? $_GET['artist'] : '';
 
-    
+
 
     if (!empty($search_query) || !empty($filter_category) || !empty($filter_artist)) {
         $filter_query .= "AND ";
@@ -202,7 +202,7 @@
                     <span class="text">View Item Catalog</span>
                 </a>
                 <a href="owner_item_archive.php" class="btn-employee">
-                    <i class="las la-list"></i>
+                    <i class="las la-server"></i>
                     <span class="text">View Archives</span>
                 </a>
 
