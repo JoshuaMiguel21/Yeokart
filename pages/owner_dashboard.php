@@ -72,7 +72,7 @@
         echo "Error: " . $sql . "<br>" . $con->error;
     }
 
-    $sql = "SELECT COUNT(*) AS employee_count FROM employee_accounts";
+    $sql = "SELECT COUNT(*) AS employee_count FROM employee_accounts WHERE `is_employee`= 1";
     $result = $con->query($sql);
 
     if ($result) {
@@ -82,7 +82,7 @@
         echo "Error: " . $sql . "<br>" . $con->error;
     }
 
-    $sql = "SELECT COUNT(*) AS customer_count FROM user_accounts";
+    $sql = "SELECT COUNT(*) AS customer_count FROM user_accounts WHERE `is_verified`=1";
     $result = $con->query($sql);
 
     if ($result) {
