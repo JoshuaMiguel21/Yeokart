@@ -146,7 +146,7 @@ if ($result) {
                         <div class='content'>
                             <h3 class='artist'><?php echo $artist_name; ?></h3>
                             <h3 class='marquee'><?php echo $item_name; ?></h3>
-                            <div class='price'>₱ <?php echo $item_price; ?></div>
+                            <div class='price'>₱ <?php echo number_format($item_price, 2); ?></div>
                             <?php if ($item_quantity > 0) { ?>
                                 <a href='product_details.php?item_id=<?php echo $item_id; ?>' class='btn'><i class='fa-solid fa-cart-plus'></i> Add to Cart</a>
                             <?php } else { ?>
@@ -189,7 +189,7 @@ if ($result) {
                         <div class='content'>
                             <h3 class='artist'><?php echo $artist_name; ?></h3>
                             <h3 class='marquee'><?php echo $item_name; ?></h3>
-                            <div class='price'>₱ <?php echo $item_price; ?></div>
+                            <div class='price'>₱ <?php echo number_format($item_price, 2); ?></div>
                             <?php if ($item_quantity > 0) { ?>
                                 <a href='product_details.php?item_id=<?php echo $item_id; ?>' class='btn'><i class='fa-solid fa-cart-plus'></i> Add to Cart</a>
                             <?php } else { ?>

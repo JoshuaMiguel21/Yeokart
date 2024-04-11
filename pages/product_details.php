@@ -245,7 +245,7 @@ if (isset($_POST['add-to-cart-btn'])) {
                 </div>
 
                 <div class="item-price">
-                    <h4>&#8369; <?php echo $fetch_item['item_price']; ?></h4>
+                    <h4>&#8369; <?php echo number_format($fetch_item['item_price'], 2); ?></h4>
                 </div>
                 <div class="select-quantity">
                     <span>Select Quantity:</span>
@@ -316,7 +316,7 @@ if (isset($_POST['add-to-cart-btn'])) {
                                 <div class='content'>
                                     <h3 class='artist'>$artist_name</h3>
                                     <h3 class='marquee'>$item_name</h3>
-                                    <div class='price'>₱ $item_price</div>
+                                    <div class='price'>₱ <?php echo number_format($item_price, 2); ?></div>
                                     <a href='product_details.php?item_id=$item_id' class='btn'><i class='fa-solid fa-cart-plus'></i> Add to Cart</a>
                                 </div>
                         </div>";
@@ -457,37 +457,37 @@ if (isset($_POST['add-to-cart-btn'])) {
         });
 
         function checkStock(stock) {
-    var quantity = document.getElementById('quantity').value;
-    if (parseInt(quantity) > parseInt(stock)) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'You cannot add more than the available stock.',
-            confirmButtonText: 'OK',
-            customClass: {
-                popup: 'swal2-custom-popup',
-                title: 'swal2-custom-title',
-                content: 'swal2-custom-text'
+            var quantity = document.getElementById('quantity').value;
+            if (parseInt(quantity) > parseInt(stock)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'You cannot add more than the available stock.',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        popup: 'swal2-custom-popup',
+                        title: 'swal2-custom-title',
+                        content: 'swal2-custom-text'
+                    }
+                });
+                return false;
+            } else {
+                const addToCartBtn = document.querySelector('button[name="add-to-cart-btn"]');
+                const originalText = addToCartBtn.innerText;
+                const loadingIcon = document.createElement('i');
+                loadingIcon.classList.add('fas', 'fa-circle-notch', 'fa-spin', 'icon-loading'); // Changed classes for a different icon
+                addToCartBtn.innerText = 'Adding to Cart...';
+                addToCartBtn.prepend(loadingIcon);
+
+                setTimeout(function() {
+                    addToCartBtn.removeChild(loadingIcon);
+                    addToCartBtn.innerText = originalText;
+                    addToCartBtn.form.submit();
+                }, 3000);
+
+                return true;
             }
-        });
-        return false;
-    } else {
-        const addToCartBtn = document.querySelector('button[name="add-to-cart-btn"]');
-        const originalText = addToCartBtn.innerText;
-        const loadingIcon = document.createElement('i');
-        loadingIcon.classList.add('fas', 'fa-circle-notch', 'fa-spin', 'icon-loading'); // Changed classes for a different icon
-        addToCartBtn.innerText = 'Adding to Cart...';
-        addToCartBtn.prepend(loadingIcon);
-
-        setTimeout(function() {
-            addToCartBtn.removeChild(loadingIcon);
-            addToCartBtn.innerText = originalText;
-            addToCartBtn.form.submit(); 
-        }, 3000); 
-
-        return true;
-    }
-}
+        }
 
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -500,11 +500,11 @@ if (isset($_POST['add-to-cart-btn'])) {
 
             <?php if (isset($_POST['add-to-cart-btn'])) : ?>
 
-            setTimeout(function() {
-                document.getElementById('cart-notification').style.display = 'block';
-                document.getElementById('cart-item-name').innerText = "<?php echo $fetch_item['item_name']; ?>";
-                document.getElementById('cart-item-image').src = "item_images/<?php echo $fetch_item['item_image1']; ?>";
-            }); // Delay before displaying the cart notification
+                setTimeout(function() {
+                    document.getElementById('cart-notification').style.display = 'block';
+                    document.getElementById('cart-item-name').innerText = "<?php echo $fetch_item['item_name']; ?>";
+                    document.getElementById('cart-item-image').src = "item_images/<?php echo $fetch_item['item_image1']; ?>";
+                }); // Delay before displaying the cart notification
 
             <?php endif; ?>
         });
@@ -521,7 +521,6 @@ if (isset($_POST['add-to-cart-btn'])) {
         }
 
         toggleLoading();
-
     </script>
 
     <script>

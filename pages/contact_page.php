@@ -101,29 +101,34 @@ if ($result) {
             <div class="box-container">
                 <?php
                 include('../database/db_yeokart.php');
-                $select_query = $select_query = "SELECT * FROM contacts";
+                $select_query = "SELECT * FROM contacts";
                 $result_query = mysqli_query($con, $select_query);
-                while ($row = mysqli_fetch_assoc($result_query)) {
-                    $contacts_id = $row['contacts_id'];
-                    $contacts_name = $row['contacts_name'];
-                    $icon_link = $row['icon_link'];
-                    $contacts_description = $row['contacts_description'];
 
-                    if ($icon_link !== "<i class='fa-solid fa-peso-sign'></i>") {
-                        if (filter_var($contacts_description, FILTER_VALIDATE_URL)) {
-                            $contacts_link = "<a href='$contacts_description' target='_blank'>$contacts_description</a>";
-                        } else {
-                            $contacts_link = $contacts_description;
-                        }
+                if (mysqli_num_rows($result_query) > 0) {
+                    while ($row = mysqli_fetch_assoc($result_query)) {
+                        $contacts_id = $row['contacts_id'];
+                        $contacts_name = $row['contacts_name'];
+                        $icon_link = $row['icon_link'];
+                        $contacts_description = $row['contacts_description'];
 
-                        echo "<div class='box'>
-                        <div class='iconbox'>
-                            $icon_link
-                        </div>
-                        <h3>$contacts_name</h3>
-                        <p>$contacts_link</p>
+                        if ($icon_link !== "<i class='fa-solid fa-peso-sign'></i>") {
+                            if (filter_var($contacts_description, FILTER_VALIDATE_URL)) {
+                                $contacts_link = "<a href='$contacts_description' target='_blank'>$contacts_description</a>";
+                            } else {
+                                $contacts_link = $contacts_description;
+                            }
+
+                            echo "<div class='box'>
+                            <div class='iconbox'>
+                                $icon_link
+                            </div>
+                            <h3>$contacts_name</h3>
+                            <p>$contacts_link</p>
                         </div>";
+                        }
                     }
+                } else {
+                    echo "<h1>No contacts found.</h1>";
                 }
                 ?>
             </div>

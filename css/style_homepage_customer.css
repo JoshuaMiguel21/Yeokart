@@ -2430,7 +2430,7 @@ label {
 
 @media (max-width:450px){
     html{
-        font-size: 55%;
+        font-size: 40%;
     }
     .wrapper {
         grid-template-columns: repeat(2, 1fr);
@@ -2487,6 +2487,18 @@ label {
         margin-top: 20px;
         margin-left: 15px;
     }
+
+    .logout-btn{
+        padding: 7px 10px;;
+    }
+
+    .upload-proof-cell {
+        padding: 5px 10px;
+      }
+    
+      .payment-done{
+        padding: 5px 10px;
+      }
 }
 
 @media (max-width:376px){

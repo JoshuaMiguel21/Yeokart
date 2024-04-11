@@ -258,60 +258,59 @@
 
                 if (!empty($selectedFilters)) {
                     echo "<h3>Showing results for " . implode(", ", $selectedFilters) . "</h3>";
-                    echo "<br></br>";
                 }
                 ?>
                 <div class="best-slider">
-                        <?php
-                        include('../database/db_yeokart.php');
-                        $itemsPerPage = 12;
-                        $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1;
-                        $offset = ($pageNumber - 1) * $itemsPerPage;
+                    <?php
+                    include('../database/db_yeokart.php');
+                    $itemsPerPage = 12;
+                    $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1;
+                    $offset = ($pageNumber - 1) * $itemsPerPage;
 
-                        $totalItemsQuery = "SELECT COUNT(*) AS totalItems FROM products";
-                        $totalItemsResult = mysqli_query($con, $totalItemsQuery);
-                        $totalItemsRow = mysqli_fetch_assoc($totalItemsResult);
-                        $totalItems = $totalItemsRow['totalItems'];
-                        $totalPages = ceil($totalItems / $itemsPerPage);
+                    $totalItemsQuery = "SELECT COUNT(*) AS totalItems FROM products";
+                    $totalItemsResult = mysqli_query($con, $totalItemsQuery);
+                    $totalItemsRow = mysqli_fetch_assoc($totalItemsResult);
+                    $totalItems = $totalItemsRow['totalItems'];
+                    $totalPages = ceil($totalItems / $itemsPerPage);
 
-                        // Base query
-                        $select_query = "SELECT * FROM products WHERE is_archive = 0";
+                    // Base query
+                    $select_query = "SELECT * FROM products WHERE is_archive = 0";
 
-                        // Apply search filter if search term is provided
-                        if (isset($_GET['search']) && !empty($_GET['search'])) {
-                            $searchTerm = mysqli_real_escape_string($con, $_GET['search']);
-                            $select_query .= " AND item_name LIKE '%$searchTerm%'"; // Use AND instead of WHERE here
+                    // Apply search filter if search term is provided
+                    if (isset($_GET['search']) && !empty($_GET['search'])) {
+                        $searchTerm = mysqli_real_escape_string($con, $_GET['search']);
+                        $select_query .= " AND item_name LIKE '%$searchTerm%'"; // Use AND instead of WHERE here
+                    }
+
+                    // Apply category filter if selected
+                    if (isset($_GET['category']) && !empty($_GET['category'])) {
+                        $category = mysqli_real_escape_string($con, $_GET['category']);
+                        $select_query .= " AND category_name = '$category'";
+                    }
+
+                    // Apply artist filter if selected
+                    if (isset($_GET['artist']) && !empty($_GET['artist'])) {
+                        $artist = mysqli_real_escape_string($con, $_GET['artist']);
+                        $select_query .= " AND artist_name = '$artist'";
+                    }
+
+                    // Check if the form is submitted
+                    if (isset($_GET['price_order'])) {
+                        $price_order = $_GET['price_order'];
+                        if ($price_order === 'low_to_high') {
+                            $select_query .= " ORDER BY item_price ASC";
+                        } elseif ($price_order === 'high_to_low') {
+                            $select_query .= " ORDER BY item_price DESC";
                         }
+                    }
 
-                        // Apply category filter if selected
-                        if (isset($_GET['category']) && !empty($_GET['category'])) {
-                            $category = mysqli_real_escape_string($con, $_GET['category']);
-                            $select_query .= " AND category_name = '$category'";
-                        }
+                    // Add limit and offset
+                    $select_query .= " LIMIT $itemsPerPage OFFSET $offset";
 
-                        // Apply artist filter if selected
-                        if (isset($_GET['artist']) && !empty($_GET['artist'])) {
-                            $artist = mysqli_real_escape_string($con, $_GET['artist']);
-                            $select_query .= " AND artist_name = '$artist'";
-                        }
+                    $result_query = mysqli_query($con, $select_query);
 
-                        // Check if the form is submitted
-                        if (isset($_GET['price_order'])) {
-                            $price_order = $_GET['price_order'];
-                            if ($price_order === 'low_to_high') {
-                                $select_query .= " ORDER BY item_price ASC";
-                            } elseif ($price_order === 'high_to_low') {
-                                $select_query .= " ORDER BY item_price DESC";
-                            }
-                        }
-
-                        // Add limit and offset
-                        $select_query .= " LIMIT $itemsPerPage OFFSET $offset";
-
-                        $result_query = mysqli_query($con, $select_query);
-
-                        if (mysqli_num_rows($result_query) == 0) {
-                            echo "
+                    if (mysqli_num_rows($result_query) == 0) {
+                        echo "
                                 <div class='empty-shop-container'>
                                     <div class='no-results'>
                                         <div class='no-results-icon'>
@@ -325,19 +324,19 @@
                                 </div>
                                 ";
 
-                                echo "<div class='wrapper empty-shop'>";
-                        } else {
-                            echo "<div class='wrapper'>";
-                            while ($row = mysqli_fetch_assoc($result_query)) {
-                                $item_id = $row['item_id'];
-                                $item_name = $row['item_name'];
-                                $item_price = $row['item_price'];
-                                $item_description = $row['item_description'];
-                                $item_quantity = $row['item_quantity'];
-                                $category_name = $row['category_name'];
-                                $item_image1 = $row['item_image1'];
-                                $artist_name = $row['artist_name'];
-                        ?>
+                        echo "<div class='wrapper empty-shop'>";
+                    } else {
+                        echo "<div class='wrapper'>";
+                        while ($row = mysqli_fetch_assoc($result_query)) {
+                            $item_id = $row['item_id'];
+                            $item_name = $row['item_name'];
+                            $item_price = $row['item_price'];
+                            $item_description = $row['item_description'];
+                            $item_quantity = $row['item_quantity'];
+                            $category_name = $row['category_name'];
+                            $item_image1 = $row['item_image1'];
+                            $artist_name = $row['artist_name'];
+                    ?>
                             <center>
                                 <div class='box'>
                                     <div class='icons'>
@@ -349,7 +348,7 @@
                                     <div class='content'>
                                         <h3 class='artist'><?php echo $artist_name; ?></h3>
                                         <h3 class='marquee'><?php echo $item_name; ?></h3>
-                                        <div class='price'>₱ <?php echo $item_price; ?></div>
+                                        <div class='price'>₱ <?php echo number_format($item_price, 2); ?></div>
                                         <?php if ($item_quantity > 0) { ?>
                                             <a href='product_details.php?item_id=<?php echo $item_id; ?>' class='btn'><i class='fa-solid fa-cart-plus'></i> Add to Cart</a>
                                         <?php } else { ?>
@@ -358,12 +357,12 @@
                                     </div>
                                 </div>
                             </center>
-                        <?php
-                            }
+                    <?php
                         }
-                        echo "</div>";
-                        ?>
-                    </div>
+                    }
+                    echo "</div>";
+                    ?>
+                </div>
                 </div>
                 <?php
                 $baseUrl = 'customer_shop.php?';
