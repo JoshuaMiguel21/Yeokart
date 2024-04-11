@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 25, 2024 at 09:40 AM
+-- Generation Time: Apr 11, 2024 at 03:15 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -39,7 +39,8 @@ CREATE TABLE `products` (
   `item_image2` varchar(250) NOT NULL,
   `item_image3` varchar(250) NOT NULL,
   `is_featured` tinyint(1) NOT NULL,
-  `times_sold` int(11) NOT NULL
+  `times_sold` int(11) NOT NULL,
+  `is_archive` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
