@@ -263,7 +263,7 @@
                     <input type="hidden" name="total_income" value="<?php echo  $totalIncome; ?>"> <!-- Add this line -->
                 </form>
                 <a href="#" class="btn-main" style="<?php echo $orderCount == 0 ? 'background-color: gray; cursor: not-allowed;' : ''; ?>" onclick="submitReportForm(); return false;" <?php echo $orderCount == 0 ? 'disabled' : ''; ?> onclick="document.getElementById('reportForm').submit(); return false;">
-                    <i class="las la-download"></i>
+                    <i class="las la-file-invoice-dollar"></i>
                     <span class="text">Generate Report</span>
                 </a>
 

@@ -83,7 +83,7 @@
     $filter_category = isset($_GET['category']) ? $_GET['category'] : '';
     $filter_artist = isset($_GET['artist']) ? $_GET['artist'] : '';
 
-    
+
     if (!empty($search_query) || !empty($filter_category) || !empty($filter_artist)) {
         $filter_query .= "AND ";
         if (!empty($search_query)) {
@@ -181,7 +181,7 @@
                 </a>
 
                 <a href="emp_item_archive.php" class="btn-employee active">
-                    <i class="las la-list"></i>
+                    <i class="las la-server"></i>
                     <span class="text">View Archives</span>
                 </a>
             </div>
@@ -309,12 +309,12 @@
                                     echo "<script>
                                         Swal.fire({
                                             title: 'Success!',
-                                            text: 'Item archived successfully',
+                                            text: 'Item restored successfully',
                                             icon: 'success',
                                             confirmButtonText: 'OK'
                                         }).then((result) => {
                                             if (result.isConfirmed) {
-                                                window.location.href = 'owner_item_homepage.php';
+                                                window.location.href = 'emp_item_homepage.php';
                                             }
                                         });
                                     </script>";
@@ -322,12 +322,12 @@
                                     echo "<script>
                                         Swal.fire({
                                             title: 'Error!',
-                                            text: 'Failed to archive item',
+                                            text: 'Failed to restore item',
                                             icon: 'error',
                                             confirmButtonText: 'OK'
                                         }).then((result) => {
                                             if (result.isConfirmed) {
-                                                window.location.href = 'owner_item_homepage.php';
+                                                window.location.href = 'emp_item_homepage.php';
                                             }
                                         });
                                     </script>";
@@ -425,7 +425,7 @@
                     </table>
                 <?php endif; ?>
                 <?php
-                $baseUrl = 'owner_item_homepage.php?';
+                $baseUrl = 'emp_item_homepage.php?';
 
                 $pageQuery = '';
                 if (isset($_GET['search_button'])) {
