@@ -214,7 +214,7 @@ if (isset($_SESSION['lastname'])) {
                         $totalFeatures = $totalFeaturesRow['total_features'];
 
 
-                        $select_query = "SELECT * FROM products ORDER BY is_featured DESC LIMIT $featuresPerPage OFFSET $offset";
+                        $select_query = "SELECT * FROM products WHERE is_archive = 0 ORDER BY is_featured DESC LIMIT $featuresPerPage OFFSET $offset";
                         $result_query = mysqli_query($con, $select_query);
                         if (mysqli_num_rows($result_query) == 0) {
                             echo "<tr><td colspan='11'><center><b>No items found</b></center></td></tr>";
