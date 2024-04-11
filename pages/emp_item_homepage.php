@@ -7,12 +7,14 @@
     <link rel="icon" type="image/png" href="../res/icon.png">
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Item Catalog - Yeokart</title>
     <link rel="icon" type="image/png" href="../res/icon.png">
 </head>
 <script>
     function closeArchivePopup() {
         document.getElementById('archiveConfirmationPopup').style.display = 'none';
+        document.getElementById('archiveStockConfirmationPopup').style.display = 'none';
     }
 
     function confirmArchiveItem() {
@@ -21,10 +23,15 @@
         }
     }
 
-    function openArchivePopup(itemId, itemName) {
+    function openArchivePopup(itemId, itemName, itemStock) {
         currentItemId = itemId;
         document.getElementById('archiveItemName').textContent = itemName;
-        document.getElementById('archiveConfirmationPopup').style.display = 'flex';
+        if (itemStock > 0) {
+            document.getElementById('archiveStockItemName').textContent = itemName;
+            document.getElementById('archiveStockConfirmationPopup').style.display = 'flex';
+        } else {
+            document.getElementById('archiveConfirmationPopup').style.display = 'flex';
+        }
     }
 
     function openLogoutPopup() {
@@ -168,13 +175,20 @@
                     <i class="las la-user"></i>
                     <span class="text">View Artist Table</span>
                 </a>
-                <a href="emp_item_homepage.php" class="btn-employee">
-                    <i class="las la-archive"></i>
-                    <span class="text">View Item Catalog</span>
-                </a>
+
                 <a href="emp_category_table.php" class="btn-employee">
                     <i class="las la-list"></i>
                     <span class="text">View Categories Table</span>
+                </a>
+
+                <a href="emp_item_homepage.php" class="btn-employee active">
+                    <i class="las la-archive"></i>
+                    <span class="text">View Item Catalog</span>
+                </a>
+
+                <a href="emp_item_archive.php" class="btn-employee">
+                    <i class="las la-list"></i>
+                    <span class="text">View Archives</span>
                 </a>
             </div>
             <div class="head-search">
@@ -403,7 +417,7 @@
                                 echo "<td>";
                                 echo "<div class='button-class'>";
                                 echo "<a href='edit_item.php?item_id=$item_id' class='edit-button'><i class='las la-edit'></i></a>";
-                                echo "<button type='button' onclick='openArchivePopup(\"$item_id\", \"" . htmlspecialchars($item_name, ENT_QUOTES) . "\")' class='delete-button'><i class='las la-archive'></i></button>";
+                                echo "<button type='button' onclick='openArchivePopup(\"$item_id\", \"" . htmlspecialchars($item_name, ENT_QUOTES) . "\", \"$item_quantity\")' class='delete-button'><i class='las la-archive'></i></button>";
                                 echo "<form id='archiveItemForm" . $item_id . "' method='post' style='display:none;'>
                                 <input type='hidden' name='item_id' value='" . $item_id . "'>
                                 <input type='hidden' name='archive_item' value='true'> <!-- Ensure this input is included -->
@@ -490,6 +504,17 @@
                 </div>
             </div>
         </div>
+
+        <div id="archiveStockConfirmationPopup" class="popup-container" style="display: none;">
+                <div class="popup-content">
+                    <span class="close-btn" onclick="closeArchivePopup()">&times;</span>
+                    <p>This item "<span id="archiveStockItemName"></span>" still has stock. Are you sure you want to archive it?</p>
+                    <div class="logout-btns">
+                        <button onclick="confirmArchiveItem()" class="confirm-logout-btn">Proceed</button>
+                        <button onclick="closeArchivePopup()" class="cancel-logout-btn">Cancel</button>
+                    </div>
+                </div>
+            </div>
 
         <script>
             // Function to toggle the sidebar and update session variable

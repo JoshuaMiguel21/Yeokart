@@ -130,14 +130,22 @@
                     <i class="las la-user"></i>
                     <span class="text">View Artist Table</span>
                 </a>
+
+                <a href="emp_category_table.php" class="btn-employee active">
+                    <i class="las la-list"></i>
+                    <span class="text">View Categories Table</span>
+                </a>
+                
                 <a href="emp_item_homepage.php" class="btn-employee">
                     <i class="las la-archive"></i>
                     <span class="text">View Item Catalog</span>
                 </a>
-                <a href="emp_category_table.php" class="btn-employee">
+
+                <a href="emp_item_archive.php" class="btn-employee">
                     <i class="las la-list"></i>
-                    <span class="text">View Categories Table</span>
+                    <span class="text">View Archives</span>
                 </a>
+
             </div>
             <div class="head-search">
                 <form method="GET" id="searchForm">

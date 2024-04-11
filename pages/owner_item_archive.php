@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <title>Item Catalog - Yeokart</title>
+    <title>Item Archives - Yeokart</title>
     <link rel="icon" type="image/png" href="../res/icon.png">
 </head>
 <script>
@@ -106,7 +106,7 @@
         }
     }
 
-    $check_query = "SELECT COUNT(*) as total FROM products WHERE is_archive=0 $filter_query";
+    $check_query = "SELECT COUNT(*) as total FROM products WHERE is_archive=1 $filter_query";
     $check_result = mysqli_query($con, $check_query);
     $check_data = mysqli_fetch_assoc($check_result);
     $no_results = $check_data['total'] == 0;
@@ -185,6 +185,12 @@
                     <i class="las la-user"></i>
                     <span class="text">View Artist Table</span>
                 </a>
+
+                <a href="owner_category_table.php" class="btn-employee">
+                    <i class="las la-list"></i>
+                    <span class="text">View Categories Table</span>
+                </a>
+                
                 <a href="owner_item_homepage.php" class="btn-employee">
                     <i class="las la-archive"></i>
                     <span class="text">View Item Catalog</span>
@@ -193,11 +199,6 @@
                 <a href="owner_item_archive.php" class="btn-employee active">
                     <i class="las la-list"></i>
                     <span class="text">View Archives</span>
-                </a>
-
-                <a href="owner_category_table.php" class="btn-employee">
-                    <i class="las la-list"></i>
-                    <span class="text">View Categories Table</span>
                 </a>
 
                 <a href="owner_item.php" class="btn-main">

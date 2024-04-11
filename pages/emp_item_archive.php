@@ -4,18 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../res/icon.png">
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <title>Item Catalog - Yeokart</title>
+    <title>Item Archives - Yeokart</title>
     <link rel="icon" type="image/png" href="../res/icon.png">
 </head>
 <script>
-    var currentItemId = null; // This should be declared at the top of your script
-
     function closeArchivePopup() {
         document.getElementById('archiveConfirmationPopup').style.display = 'none';
-        document.getElementById('archiveStockConfirmationPopup').style.display = 'none';
     }
 
     function confirmArchiveItem() {
@@ -24,15 +22,10 @@
         }
     }
 
-    function openArchivePopup(itemId, itemName, itemStock) {
+    function openArchivePopup(itemId, itemName) {
         currentItemId = itemId;
         document.getElementById('archiveItemName').textContent = itemName;
-        if (itemStock > 0) {
-            document.getElementById('archiveStockItemName').textContent = itemName;
-            document.getElementById('archiveStockConfirmationPopup').style.display = 'flex';
-        } else {
-            document.getElementById('archiveConfirmationPopup').style.display = 'flex';
-        }
+        document.getElementById('archiveConfirmationPopup').style.display = 'flex';
     }
 
     function openLogoutPopup() {
@@ -75,13 +68,6 @@
         header("Location: login_page.php");
         exit();
     }
-
-    if (isset($_SESSION['lastname'])) {
-        $lastname = $_SESSION['lastname'];
-    } else {
-        header("Location: login_page.php");
-        exit();
-    }
     $totalItems = 0;
     $itemsPerPage = 10;
 
@@ -98,7 +84,6 @@
     $filter_artist = isset($_GET['artist']) ? $_GET['artist'] : '';
 
     
-
     if (!empty($search_query) || !empty($filter_category) || !empty($filter_artist)) {
         $filter_query .= "AND ";
         if (!empty($search_query)) {
@@ -112,10 +97,11 @@
         }
     }
 
-    $check_query = "SELECT COUNT(*) as total FROM products WHERE is_archive=0 $filter_query";
+    $check_query = "SELECT COUNT(*) as total FROM products WHERE is_archive=1 $filter_query";
     $check_result = mysqli_query($con, $check_query);
     $check_data = mysqli_fetch_assoc($check_result);
     $no_results = $check_data['total'] == 0;
+
 
     ?>
     <input type="checkbox" id="nav-toggle" <?php echo $_SESSION['nav_toggle'] ? 'checked' : ''; ?>>
@@ -126,31 +112,23 @@
         <div class="sidebar-menu">
             <ul>
                 <li>
-                    <a href="owner_dashboard.php"><span class="las la-igloo"></span>
-                        <span>Owner Dashboard</span></a>
+                    <a href="emp_dashboard.php"><span class="las la-igloo"></span>
+                        <span>Employee Dashboard</span></a>
                 </li>
                 <li>
-                    <a href="owner_view_customers.php"><span class="las la-users"></span>
+                    <a href="emp_view_customer.php"><span class="las la-users"></span>
                         <span>Customers</span></a>
                 </li>
                 <li>
-                    <a href="owner_item_homepage.php" class="active"><span class="las la-shopping-basket"></span>
+                    <a href="emp_item_homepage.php" class="active"><span class="las la-shopping-basket"></span>
                         <span>Items</span></a>
                 </li>
                 <li>
-                    <a href="owner_orders.php"><span class="las la-shopping-bag"></span>
+                    <a href="emp_orders.php"><span class="las la-shopping-bag"></span>
                         <span>Orders</span></a>
                 </li>
                 <li>
-                    <a href="monthly_report.php"><span class="las la-chart-line"></span>
-                        <span>Report</span></a>
-                </li>
-                <li>
-                    <a href="manage_employees.php" class=""><span class="las la-user-circle"></span>
-                        <span>Manage Employee</span></a>
-                </li>
-                <li>
-                    <a href="owner_featured.php"><span class="las la-tasks"></span>
+                    <a href="emp_featured.php"><span class="las la-tasks"></span>
                         <span>Manage Content</span></a>
                 </li>
                 <li>
@@ -167,15 +145,14 @@
                 <label for="nav-toggle">
                     <span class="las la-bars"></span>
                 </label>
+
                 Manage Items
             </h3>
 
             <div class="user-wrapper">
                 <div>
-                    <div>
-                        <h3><?php echo $firstname . " " . $lastname; ?></h3>
-                        <small>Owner</small>
-                    </div>
+                    <h3>Hi, <?php echo $firstname; ?></h3>
+                    <small>Employee</small>
                 </div>
             </div>
         </header>
@@ -183,32 +160,29 @@
         <main>
             <div class="head-title">
                 <div class="left">
-                    <h3>Item Catalog</h3>
+                    <h3>Item Archives</h3>
                 </div>
+
             </div>
             <div class="head-buttons">
-                <a href="owner_artist_table.php" class="btn-employee">
+                <a href="emp_artist_table.php" class="btn-employee">
                     <i class="las la-user"></i>
                     <span class="text">View Artist Table</span>
                 </a>
 
-                <a href="owner_category_table.php" class="btn-employee">
+                <a href="emp_category_table.php" class="btn-employee">
                     <i class="las la-list"></i>
                     <span class="text">View Categories Table</span>
                 </a>
 
-                <a href="owner_item_homepage.php" class="btn-employee active">
+                <a href="emp_item_homepage.php" class="btn-employee">
                     <i class="las la-archive"></i>
                     <span class="text">View Item Catalog</span>
                 </a>
-                <a href="owner_item_archive.php" class="btn-employee">
+
+                <a href="emp_item_archive.php" class="btn-employee active">
                     <i class="las la-list"></i>
                     <span class="text">View Archives</span>
-                </a>
-
-                <a href="owner_item.php" class="btn-main">
-                    <i class="las la-plus"></i>
-                    <span class="text">Add Item</span>
                 </a>
             </div>
             <div class="head-search">
@@ -328,7 +302,7 @@
                             include('../database/db_yeokart.php');
                             if (isset($_POST['archive_item'])) {
                                 $item_id = $_POST['item_id'];
-                                $stmt = $con->prepare("UPDATE products SET is_archive = 1 WHERE item_id = ?");
+                                $stmt = $con->prepare("UPDATE products SET is_archive = 0 WHERE item_id = ?");
                                 $stmt->bind_param("i", $item_id);
 
                                 if ($stmt->execute()) {
@@ -375,25 +349,25 @@
 
                             if (!isset($_GET['search_button']) && !isset($_GET['filter_button'])) {
                                 // Default query without any filters
-                                $select_query = "SELECT * FROM products WHERE is_archive=0";
+                                $select_query = "SELECT * FROM products WHERE is_archive=1";
                             } else {
                                 // Check for search or filter
                                 if (isset($_GET['search_button'])) {
                                     $search = $_GET['search'];
-                                    $select_query = "SELECT * FROM products WHERE is_archive=0 AND item_name LIKE '%$search%'";
+                                    $select_query = "SELECT * FROM products WHERE is_archive=1 AND item_name LIKE '%$search%'";
                                 } elseif (isset($_GET['filter_button'])) {
                                     $category_name = isset($_GET['category']) ? $_GET['category'] : '';
                                     $artist_name = isset($_GET['artist']) ? $_GET['artist'] : '';
 
                                     if (!empty($category_name)) {
                                         // Filter by category
-                                        $select_query = "SELECT * FROM products WHERE is_archive=0 AND category_name = '$category_name'";
+                                        $select_query = "SELECT * FROM products WHERE is_archive=1 AND category_name = '$category_name'";
                                     } elseif (!empty($artist_name)) {
                                         // Filter by artist
-                                        $select_query = "SELECT * FROM products WHERE is_archive=0 AND artist_name = '$artist_name'";
+                                        $select_query = "SELECT * FROM products WHERE is_archive=1 AND artist_name = '$artist_name'";
                                     } else {
                                         // No filter applied
-                                        $select_query = "SELECT * FROM products WHERE is_archive=0";
+                                        $select_query = "SELECT * FROM products WHERE is_archive=1";
                                     }
                                 }
                             }
@@ -420,7 +394,7 @@
                                 echo "<td>" . $row['item_name'] . "</td>";
                                 echo "<td> ₱" . number_format($row['item_price'], 2) . "</td>";
                                 echo "<td style='max-width: 350px;'>" . $row['item_description'] . "</td>";
-                                echo "<td>" . number_format($row['item_quantity']) . "</td>";
+                                echo "<td>" . $row['item_quantity'] . "</td>";
                                 echo "<td>" . $row['artist_name'] . "</td>";
                                 echo "<td>" . $row['category_name'] . "</td>";
                                 echo "<td>";
@@ -436,12 +410,11 @@
                                 // Inside your while loop
                                 echo "<td>";
                                 echo "<div class='button-class'>";
-                                echo "<a href='edit_item.php?item_id=$item_id' class='edit-button'><i class='las la-edit'></i></a>";
-                                echo "<button type='button' onclick='openArchivePopup(\"$item_id\", \"" . htmlspecialchars($item_name, ENT_QUOTES) . "\", \"$item_quantity\")' class='delete-button'><i class='las la-archive'></i></button>";
+                                echo "<button type='button' onclick='openArchivePopup(\"$item_id\", \"" . htmlspecialchars($item_name, ENT_QUOTES) . "\")' class='edit-button'><i class='las la-undo-alt'></i></button>";
                                 echo "<form id='archiveItemForm" . $item_id . "' method='post' style='display:none;'>
                                 <input type='hidden' name='item_id' value='" . $item_id . "'>
                                 <input type='hidden' name='archive_item' value='true'> <!-- Ensure this input is included -->
-                                <button type='submit' name='archive_item_button'>Archive</button>
+                                <button type='submit' name='archive_item_button'>Restore</button>
                                     </form>";
                                 echo "</div>";
                                 echo "</td>";
@@ -496,79 +469,68 @@
                 ?>
             </div>
 
-            <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
-                <div class="popup-content">
-                    <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>
-                    <p>Are you sure you want to logout?
-                    <p>
-                    <div class="logout-btns">
-                        <button onclick="confirmLogout()" class="confirm-logout-btn">Logout</button>
-                        <button onclick="closeLogoutPopup()" class="cancel-logout-btn">Cancel</button>
-                    </div>
+        </main>
+        <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
+            <div class="popup-content">
+                <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>
+                <p>Are you sure you want to logout?
+                <p>
+                <div class="logout-btns">
+                    <button onclick="confirmLogout()" class="confirm-logout-btn">Logout</button>
+                    <button onclick="closeLogoutPopup()" class="cancel-logout-btn">Cancel</button>
                 </div>
             </div>
+        </div>
+        <div id="imagePopup" class="popup-image" style="display: none; padding-top: 100px;">
+            <div class="image-content">
+                <img id="popupImage" src="" alt="Proof of Payment" style="width: auto; height: 550px;">
+            </div>
+        </div>
 
-            <div id="imagePopup" class="popup-image" style="display: none; padding-top: 100px;">
-                <div class="image-content">
-                    <img id="popupImage" src="" alt="Proof of Payment" style="width: auto; height: 550px;">
+        <div id="archiveConfirmationPopup" class="popup-container" style="display: none;">
+            <div class="popup-content">
+                <span class="close-btn" onclick="closeArchivePopup()">&times;</span>
+                <p>Are you sure you want to restore this item "<span id="archiveItemName"></span>"?</p>
+                <div class="logout-btns">
+                    <button onclick="confirmArchiveItem()" class="confirm-logout-btn">Restore</button>
+                    <button onclick="closeArchivePopup()" class="cancel-logout-btn">Cancel</button>
                 </div>
             </div>
+        </div>
 
-            <div id="archiveConfirmationPopup" class="popup-container" style="display: none;">
-                <div class="popup-content">
-                    <span class="close-btn" onclick="closeArchivePopup()">&times;</span>
-                    <p>Are you sure you want to archive this item "<span id="archiveItemName"></span>"?</p>
-                    <div class="logout-btns">
-                        <button onclick="confirmArchiveItem()" class="confirm-logout-btn">Archive</button>
-                        <button onclick="closeArchivePopup()" class="cancel-logout-btn">Cancel</button>
-                    </div>
-                </div>
-            </div>
+        <script>
+            // Function to toggle the sidebar and update session variable
+            function toggleSidebar() {
+                var isChecked = document.getElementById('nav-toggle').checked;
+                var newState = isChecked ? 'true' : 'false';
 
-            <div id="archiveStockConfirmationPopup" class="popup-container" style="display: none;">
-                <div class="popup-content">
-                    <span class="close-btn" onclick="closeArchivePopup()">&times;</span>
-                    <p>This item "<span id="archiveStockItemName"></span>" still has stock. Are you sure you want to archive it?</p>
-                    <div class="logout-btns">
-                        <button onclick="confirmArchiveItem()" class="confirm-logout-btn">Proceed</button>
-                        <button onclick="closeArchivePopup()" class="cancel-logout-btn">Cancel</button>
-                    </div>
-                </div>
-            </div>
+                // Update session variable using AJAX
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("POST", "", true);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send("nav_toggle=" + newState);
+            }
 
-            <script>
-                // Function to toggle the sidebar and update session variable
-                function toggleSidebar() {
-                    var isChecked = document.getElementById('nav-toggle').checked;
-                    var newState = isChecked ? 'true' : 'false';
+            // Add event listener to checkbox change
+            document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
 
-                    // Update session variable using AJAX
-                    var xhttp = new XMLHttpRequest();
-                    xhttp.open("POST", "", true);
-                    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                    xhttp.send("nav_toggle=" + newState);
-                }
+            function openImagePopup(imageUrl) {
+                var popup = document.getElementById('imagePopup');
+                var image = document.getElementById('popupImage');
+                image.src = imageUrl;
+                popup.style.display = 'flex';
+            }
 
-                // Add event listener to checkbox change
-                document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
+            document.addEventListener('DOMContentLoaded', function() {
+                var popup = document.getElementById('imagePopup');
 
-                function openImagePopup(imageUrl) {
-                    var popup = document.getElementById('imagePopup');
-                    var image = document.getElementById('popupImage');
-                    image.src = imageUrl;
-                    popup.style.display = 'flex';
-                }
-
-                document.addEventListener('DOMContentLoaded', function() {
-                    var popup = document.getElementById('imagePopup');
-
-                    popup.addEventListener('click', function(event) {
-                        if (event.target === popup) {
-                            popup.style.display = 'none';
-                        }
-                    });
+                popup.addEventListener('click', function(event) {
+                    if (event.target === popup) {
+                        popup.style.display = 'none';
+                    }
                 });
-            </script>
+            });
+        </script>
 </body>
 
 </html>
