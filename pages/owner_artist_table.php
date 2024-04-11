@@ -154,7 +154,7 @@ if (isset($_SESSION['lastname'])) {
                 </div>
             </div>
             <div class="head-buttons">
-                <a href="owner_artist_table.php" class="btn-employee">
+                <a href="owner_artist_table.php" class="btn-employee active">
                     <i class="las la-user"></i>
                     <span class="text">View Artist Table</span>
                 </a>
@@ -162,6 +162,12 @@ if (isset($_SESSION['lastname'])) {
                     <i class="las la-archive"></i>
                     <span class="text">View Item Catalog</span>
                 </a>
+
+                <a href="owner_item_archive.php" class="btn-employee">
+                    <i class="las la-list"></i>
+                    <span class="text">View Archives</span>
+                </a>
+                
                 <a href="owner_category_table.php" class="btn-employee">
                     <i class="las la-list"></i>
                     <span class="text">View Categories Table</span>
