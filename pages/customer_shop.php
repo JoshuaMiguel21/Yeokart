@@ -262,7 +262,6 @@
                 }
                 ?>
                 <div class="best-slider">
-                    <div class="wrapper">
                         <?php
                         include('../database/db_yeokart.php');
                         $itemsPerPage = 12;
@@ -312,8 +311,23 @@
                         $result_query = mysqli_query($con, $select_query);
 
                         if (mysqli_num_rows($result_query) == 0) {
-                            echo "<div class='no-results'>0 results found</div>";
+                            echo "
+                                <div class='empty-shop-container'>
+                                    <div class='no-results'>
+                                        <div class='no-results-icon'>
+                                            <i class='fas fa-store-slash'></i>
+                                        </div>
+                                        <div class='no-results-text'>
+                                            <h2>Shop is Empty</h2>
+                                            <p>There's nothing here... yet.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                ";
+
+                                echo "<div class='wrapper empty-shop'>";
                         } else {
+                            echo "<div class='wrapper'>";
                             while ($row = mysqli_fetch_assoc($result_query)) {
                                 $item_id = $row['item_id'];
                                 $item_name = $row['item_name'];
@@ -324,6 +338,7 @@
                                 $item_image1 = $row['item_image1'];
                                 $artist_name = $row['artist_name'];
                         ?>
+                            <center>
                                 <div class='box'>
                                     <div class='icons'>
                                         <a href='#' class='fas fa-eye' onclick='handleImageClick(<?php echo $item_id; ?>)'></a>
@@ -342,9 +357,11 @@
                                         <?php } ?>
                                     </div>
                                 </div>
+                            </center>
                         <?php
                             }
                         }
+                        echo "</div>";
                         ?>
                     </div>
                 </div>
