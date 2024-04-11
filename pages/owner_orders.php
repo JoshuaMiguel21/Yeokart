@@ -191,7 +191,7 @@
                                 echo "<td>" . $row['address'] . "</td>";
                                 echo "<td>" . $row['items_ordered'] . "</td>";
                                 echo "<td>" . $row['item_quantity'] . "</td>";
-                                echo "<td>₱" . $row['total'] . "</td>";
+                                echo "<td>₱" . number_format($row['total'], 2) . "</td>";
                                 echo "<td>" . $row['date_of_purchase'] . "</td>";
                                 echo "<td>";
                                 echo '<div class="button-class">';
