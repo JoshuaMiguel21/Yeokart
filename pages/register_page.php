@@ -166,7 +166,7 @@
                                                 text: '$username - Username already taken'
                                             }).then((result) => {
                                                 if (result.isConfirmed) {
-                                                    window.location = 'register_page.php';
+                                                    window.history.go(-1);
                                                 }
                                             });
                                         </script>";
@@ -178,7 +178,7 @@
                                                 text: '$email - E-mail already registered'
                                             }).then((result) => {
                                                 if (result.isConfirmed) {
-                                                    window.location = 'register_page.php';
+                                                    window.history.go(-1);
                                                 }
                                             });
                                         </script>";

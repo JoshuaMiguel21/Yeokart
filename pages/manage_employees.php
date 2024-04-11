@@ -11,9 +11,21 @@
     <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <script>
-    function confirmDelete() {
-        return confirm("Are you sure you want to delete this employee?");
+
+    function openDeletePopup(employeeId) {
+        document.getElementById('employeeIdToDelete').value = employeeId;
+        document.getElementById('deleteConfirmationPopup').style.display = 'flex';
     }
+
+    function closeDeletePopup() {
+        document.getElementById('deleteConfirmationPopup').style.display = 'none';
+    }
+
+    function confirmDelete() {
+        document.getElementById('deleteEmployeeForm').submit();
+        closeDeletePopup();
+    }
+
 
     function openLogoutPopup() {
         document.getElementById('logoutConfirmationPopup').style.display = 'flex';
@@ -156,9 +168,10 @@ if (isset($_SESSION['lastname'])) {
 
             if (isset($_POST['deleteEmployee'])) {
                 $employeeIdToDelete = $_POST['deleteEmployee'];
-                $deleteSql = "DELETE FROM `employee_accounts` WHERE id = $employeeIdToDelete";
-
-                if ($con->query($deleteSql) === TRUE) {
+                $deleteSql = "DELETE FROM `employee_accounts` WHERE id = ?";
+                $stmt = $con->prepare($deleteSql);
+                $stmt->bind_param("i", $employeeIdToDelete);
+                if ($stmt->execute()) {
                     echo "<script>
                         Swal.fire({
                             icon: 'success',
@@ -194,22 +207,21 @@ if (isset($_SESSION['lastname'])) {
 
                 while ($row = $result->fetch_assoc()) {
                     echo "<tr>
-                                <td>" . $counter . "</td>
-                                <td>" . $row["firstname"] . "</td>
-                                <td>" . $row["lastname"] . "</td>
-                                <td>" . $row["username"] . "</td>
-                                <td>" . $row["email"] . "</td>
-                                <td>
-                                    <div class='button-class'>
-                                        <a href='edit_employee.php?id=" . $row["id"] . "' class='edit-button'><i class='las la-edit'></i></a>
-                                        <button class='delete-button' type='submit' name='deleteEmployee' value='" . $row["id"] . "'><i class='las la-trash'></i></button>
-                                    </div>
-                                </td>
-                            </tr>";
-
-                    // Increment the counter
+                            <td>" . $counter . "</td>
+                            <td>" . $row["firstname"] . "</td>
+                            <td>" . $row["lastname"] . "</td>
+                            <td>" . $row["username"] . "</td>
+                            <td>" . $row["email"] . "</td>
+                            <td>
+                                <div class='button-class'>
+                                    <a href='edit_employee.php?id=" . $row["id"] . "' class='edit-button'><i class='las la-edit'></i></a>
+                                    <button class='delete-button' onclick='openDeletePopup(\"" . $row["id"] . "\"); return false;'><i class='las la-trash'></i></button>
+                                </div>
+                            </td>
+                          </tr>";
                     $counter++;
                 }
+                
 
                 echo "</table></form>";
             } else {
@@ -264,16 +276,6 @@ if (isset($_SESSION['lastname'])) {
             $con->close();
             ?>
         </main>
-
-        <script>
-            // Add confirmation to the delete button
-            var deleteButtons = document.querySelectorAll('.delete-button');
-            deleteButtons.forEach(function(button) {
-                button.onclick = function() {
-                    return confirmDelete();
-                };
-            });
-        </script>
     </div>
 
     <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
@@ -287,6 +289,22 @@ if (isset($_SESSION['lastname'])) {
             </div>
         </div>
     </div>
+
+    <div id="deleteConfirmationPopup" class="popup-container" style="display: none;">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closeDeletePopup()">&times;</span>
+            <p>Are you sure you want to delete this employee?</p>
+            <form method="POST" action="" id="deleteEmployeeForm">
+                <input type="hidden" name="deleteEmployee" id="employeeIdToDelete" value="">
+                <div class="delete-btns">
+                    <button type="button" onclick="confirmDelete()" class="confirm-logout-btn">Delete</button>
+                    <button type="button" onclick="closeDeletePopup()" class="cancel-logout-btn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
 
     <script>
         // Function to toggle the sidebar and update session variable

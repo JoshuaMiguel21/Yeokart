@@ -82,104 +82,124 @@
 </script>
 
 <body style="background-color: #E6A4B4;">
-    <?php
-    require('../database/db_yeokart.php');
+<?php
+require('../database/db_yeokart.php');
 
-    if (isset($_GET['email']) && isset($_GET['reset_token'])) {
-        date_default_timezone_set('Asia/Manila');
-        $date = date("Y-m-d");
-        $email = mysqli_real_escape_string($con, $_GET['email']); // Sanitize input
-        $reset_token = mysqli_real_escape_string($con, $_GET['reset_token']); // Sanitize input
+if (isset($_GET['email']) && isset($_GET['reset_token'])) {
+    date_default_timezone_set('Asia/Manila');
+    $date = date("Y-m-d");
+    $email = mysqli_real_escape_string($con, $_GET['email']); // Sanitize input
+    $reset_token = mysqli_real_escape_string($con, $_GET['reset_token']); // Sanitize input
 
-        $query = "SELECT * FROM `user_accounts` WHERE `email`='$email' AND `reset_token`='$reset_token' AND `reset_token_expire`='$date'";
+    // Attempt to find the record in user_accounts
+    $userQuery = "SELECT * FROM `user_accounts` WHERE `email`='$email' AND `reset_token`='$reset_token' AND `reset_token_expire`='$date'";
+    $userResult = mysqli_query($con, $userQuery);
 
-        $result = mysqli_query($con, $query);
+    // Attempt to find the record in employee_accounts
+    $employeeQuery = "SELECT * FROM `employee_accounts` WHERE `email`='$email' AND `reset_token`='$reset_token' AND `reset_token_expire`='$date'";
+    $employeeResult = mysqli_query($con, $employeeQuery);
 
-        if ($result) {
-            if (mysqli_num_rows($result) == 1) {
-                // Display the password reset form
-                echo "
-                    <div class='container'>
-                        <div class='row'>
-                            <div class='col-sm-12 col-md-6 col-lg-6' id='div2'>
-                                <img src='../res/logo.png' alt='Yeokart Logo'>
-                                <p style='font-style: italic;'>Welcome back chingu~</p>
-                            </div>
-                            <div class='col-sm-12 col-md-6 col-lg-6' id='div1'>
-                                <form method='POST'>
-                                    <h2 style='margin-bottom: 30px;'><b>Forgot Password</b></h2>
-                                    <p>Enter your new password and confirm it.</p>
-                                    <hr>
-                                    <label for='Password'>Password</label>
-                                    <input type='password' class='form-control' id='password' name='password' placeholder='Enter new password' required>
-                                    <p id='message'>Password is <span id='strength'></span></p>
-                                    <label for='confirmPass'>Confirm Password</label>
-                                    <input type='password' class='form-control' id='confirmPass' name='confirmPass' placeholder='Confirm password' required>
-                                    <small id='passwordMatch'></small>
-                                    <input type='hidden' name='email' value='$email'>
-                                    <br>
-                                    <center><button type='submit' class='custom-button' name='submit' id='enter'>Submit</button></center>
-                                </form>
-                            </div>
+    if ($userResult || $employeeResult) {
+        if (mysqli_num_rows($userResult) == 1 || mysqli_num_rows($employeeResult) == 1) {
+            $tableName = mysqli_num_rows($userResult) == 1 ? 'user_accounts' : 'employee_accounts';
+            echo "
+                <div class='container'>
+                    <div class='row'>
+                        <div class='col-sm-12 col-md-6 col-lg-6' id='div2'>
+                            <img src='../res/logo.png' alt='Yeokart Logo'>
+                            <p style='font-style: italic;'>Welcome back chingu~</p>
                         </div>
-                    </div>";
-            } else {
-                // Invalid or expired link
-                echo "
-                    <script>
-                        alert('Invalid or Expired Link');
-                        window.location.href='login_page.php';
-                    </script>";
-            }
+                        <div class='col-sm-12 col-md-6 col-lg-6' id='div1'>
+                            <form method='POST'>
+                                <h2 style='margin-bottom: 30px;'><b>Forgot Password</b></h2>
+                                <p>Enter your new password and confirm it.</p>
+                                <hr>
+                                <label for='Password'>Password</label>
+                                <input type='password' class='form-control' id='password' name='password' placeholder='Enter new password' required>
+                                <p id='message'>Password is <span id='strength'></span></p>
+                                <label for='confirmPass'>Confirm Password</label>
+                                <input type='password' class='form-control' id='confirmPass' name='confirmPass' placeholder='Confirm password' required>
+                                <small id='passwordMatch'></small>
+                                <input type='hidden' name='email' value='$email'>
+                                <input type='hidden' name='table' value='$tableName'>
+                                <br>
+                                <center><button type='submit' class='custom-button' name='submit' id='enter'>Submit</button></center>
+                            </form>
+                        </div>
+                    </div>
+                </div>";
         } else {
-            // Server error
-            echo "
-                <script>
-                    alert('Server Down! Try again later');
+            echo "<script>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Invalid or Expired Link',
+                    confirmButtonText: 'OK'
+                }).then(() => {
                     window.location.href='login_page.php';
-                </script>";
+                });
+            </script>";
         }
+    } else {
+        echo "<script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Server Down! Try again later',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                window.location.href='login_page.php';
+            });
+        </script>";
     }
+}
 
-    if (isset($_POST['submit'])) {
-        $email = mysqli_real_escape_string($con, $_POST['email']); // Sanitize input
-        $password = mysqli_real_escape_string($con, $_POST['password']);
-        $confirmPassword = mysqli_real_escape_string($con, $_POST['confirmPass']);
+if (isset($_POST['submit'])) {
+    $email = mysqli_real_escape_string($con, $_POST['email']); // Sanitize input
+    $password = mysqli_real_escape_string($con, $_POST['password']);
+    $confirmPassword = mysqli_real_escape_string($con, $_POST['confirmPass']);
+    $tableName = mysqli_real_escape_string($con, $_POST['table']); // Sanitize input
 
-        if ($password == $confirmPassword) {
-            $pass = password_hash($password, PASSWORD_BCRYPT);
-            $update = "UPDATE `user_accounts` SET `password`='$pass', `reset_token`= NULL, `reset_token_expire`= NULL WHERE `email`='$email'";
+    if ($password == $confirmPassword) {
+        $pass = password_hash($password, PASSWORD_BCRYPT);
+        $update = "UPDATE `$tableName` SET `password`='$pass', `reset_token`= NULL, `reset_token_expire`= NULL WHERE `email`='$email'";
 
-            if (mysqli_query($con, $update)) {
-                // Password updated successfully
-                echo "  
-                            <script>
-                                Swal.fire({
-                                    title: 'Successful!',
-                                    text: 'Password Updated Successfully. You can now login with your new password.',
-                                    icon: 'success',
-                                    confirmButtonText: 'OK'
-                                }).then(() => {
-                                    window.location.href='login_page.php';
-                                });
-                            </script>";
-            } else {
-                // Server error
-                echo "
-                    <script>
-                        alert('Server Down! Try again later');
-                        window.location.href='updatepassword.php';
-                    </script>";
-            }
+        if (mysqli_query($con, $update)) {
+            echo "<script>
+                Swal.fire({
+                    title: 'Successful!',
+                    text: 'Password Updated Successfully. You can now login with your new password.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    window.location.href='login_page.php';
+                });
+            </script>";
         } else {
-            // Passwords do not match
-            echo "
-                <script>
-                    alert('Password and Confirm Password do not match');
-                </script>";
+            echo "<script>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Server Down! Try again later',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    window.location.href='updatepassword.php';
+                });
+            </script>";
         }
+    } else {
+        echo "<script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Password and Confirm Password do not match',
+                confirmButtonText: 'OK'
+            });
+        </script>";
     }
-    ?>
+}
+?>
+
 </body>
 
 </html>
