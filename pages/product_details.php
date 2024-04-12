@@ -22,7 +22,6 @@
     .swal2-custom-title {
         font-size: 20px;
     }
-
 </style>
 <?php
 require('../database/db_yeokart.php');
@@ -313,7 +312,7 @@ if (isset($_POST['add-to-cart-btn'])) {
                                 <div class='content'>
                                     <h3 class='artist'>$artist_name</h3>
                                     <h3 class='marquee'>$item_name</h3>
-                                    <div class='price'>₱ <?php echo number_format($item_price, 2); ?></div>
+                                    <div class='price'>₱ " . number_format($item_price, 2) . "</div>
                                     <a href='product_details.php?item_id=$item_id' class='btn'><i class='fa-solid fa-cart-plus'></i> Add to Cart</a>
                                 </div>
                         </div>";
@@ -501,7 +500,7 @@ if (isset($_POST['add-to-cart-btn'])) {
                     document.getElementById('cart-notification').style.display = 'block';
                     document.getElementById('cart-item-name').innerText = "<?php echo $fetch_item['item_name']; ?>";
                     document.getElementById('cart-item-image').src = "item_images/<?php echo $fetch_item['item_image1']; ?>";
-                }); 
+                });
 
             <?php endif; ?>
         });
@@ -514,7 +513,7 @@ if (isset($_POST['add-to-cart-btn'])) {
             setTimeout(() => {
                 const cartNotification = document.querySelector('#cart-notification');
                 cartNotification.style.display = 'none';
-            }, 3000); 
+            }, 3000);
         }
 
         toggleLoading();

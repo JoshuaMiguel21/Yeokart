@@ -39,7 +39,7 @@
                 </div>
                 <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                     <label for="item_price" class="form-label">Price:</label>
-                    <input type="text" name="item_price" id="item_price" class="form-control" placeholder="Please enter item price in the format ₱ XXX.XX, with two decimal places." autocomplete="off" required oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" pattern="^\d+(\.\d{1,2})?$">
+                    <input type="text" name="item_price" id="item_price" class="form-control" placeholder="Please enter item price in the format ₱ XXX.XX, with two decimal places." autocomplete="off" required value="<?php echo $row['item_price']; ?>" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" pattern="^\d+(\.\d{1,2})?$">
                 </div>
                 <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                     <label for="item_description" class="form-label">Description:</label>
@@ -82,21 +82,21 @@
                     <label for="item_image1" class="form-label">Item Image 1:</label>
                     <input type="file" name="item_image1" id="item_image1" accept="image/*" class="image-input">
                     <?php if ($row['item_image1']) : ?>
-                        <p style="margin-top: 20px;">Current Image: <br></br><img src='./item_images/<?php echo $row['item_image1']; ?>' alt='Image 1' height="200px" width="200px">
+                        <p style="margin-top: 20px;">Current Image: <br></br><img src='./item_images/<?php echo $row['item_image1']; ?>' alt='Image 1' height="200px" width="auto">
                         <?php endif; ?>
                 </div>
                 <div class="form-outline mb-4 w-50 m-auto">
                     <label for="item_image2" class="form-label">Item Image 2:</label>
                     <input type="file" name="item_image2" id="item_image2" accept="image/*" class="image-input">
                     <?php if ($row['item_image2']) : ?>
-                        <p style="margin-top: 20px;">Current Image: <br></br><img src='./item_images/<?php echo $row['item_image2']; ?>' alt='Image 2' height="200px" width="200px">
+                        <p style="margin-top: 20px;">Current Image: <br></br><img src='./item_images/<?php echo $row['item_image2']; ?>' alt='Image 2' height="200px" width="auto">
                         <?php endif; ?>
                 </div>
                 <div class="form-outline mb-4 w-50 m-auto">
                     <label for="item_image3" class="form-label">Item Image 3:</label>
                     <input type="file" name="item_image3" id="item_image3" accept="image/*" class="image-input">
                     <?php if ($row['item_image3']) : ?>
-                        <p style="margin-top: 20px;">Current Image: <br></br><img src='./item_images/<?php echo $row['item_image3']; ?>' alt='Image 3' height="200px" width="200px">
+                        <p style="margin-top: 20px;">Current Image: <br></br><img src='./item_images/<?php echo $row['item_image3']; ?>' alt='Image 3' height="200px" width="auto">
                         <?php endif; ?>
                 </div>
                 <br></br>

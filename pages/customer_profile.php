@@ -323,7 +323,7 @@ $con->close();
                         echo '<td class="toggle-row">';
                         echo '<i class="fas fa-chevron-down toggle-icon"></i>';
                         if ($status == "DELIVERED") {
-                            echo '<i class="fa-solid fa-trash" data-order-id="' . $order_id . '"></i>';
+                            echo '<i class="fas fa-archive archive-icon" data-order-id="' . $order_id . '"></i>';
                         }
                         echo '</td>';
                         echo '</tr>';
