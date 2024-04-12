@@ -131,7 +131,7 @@
 include('../database/db_yeokart.php');
 
 if (isset($_POST['insert_item'])) {
-    $item_name = $_POST['item_name'];
+    $item_name = strtolower($_POST['item_name']);
     $item_price = $_POST['item_price'];
     $item_description = mysqli_real_escape_string($con, $_POST['item_description']);
     $item_quantity = $_POST['item_quantity'];
@@ -146,7 +146,7 @@ if (isset($_POST['insert_item'])) {
     $temp_image2 = $_FILES['item_image2']['tmp_name'];
     $temp_image3 = $_FILES['item_image3']['tmp_name'];
 
-    $select_query = "SELECT * FROM products WHERE item_name='$item_name'";
+    $select_query = "SELECT * FROM products WHERE LOWER(item_name)='$item_name'"; // Convert item names in the database to lowercase for comparison
     $result_select = mysqli_query($con, $select_query);
     $number = mysqli_num_rows($result_select);
     if ($number > 0) {
