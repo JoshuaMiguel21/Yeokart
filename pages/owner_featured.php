@@ -205,7 +205,7 @@ if (isset($_SESSION['lastname'])) {
                             }
 
                             // Redirect to the same page after updating the status
-                            echo "<script>window.location.href = 'emp_featured.php';</script>";
+                            echo "<script>window.location.href = 'owner_featured.php';</script>";
                             exit();
                         }
 
@@ -249,7 +249,7 @@ if (isset($_SESSION['lastname'])) {
                             }
 
                             // Redirect to the same page after updating the status
-                            echo "<script>window.location.href = 'emp_featured.php';</script>";
+                            echo "<script>window.location.href = 'owner_featured.php';</script>";
                             exit();
                         }
 
