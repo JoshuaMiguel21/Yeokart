@@ -114,9 +114,9 @@ class MYPDF extends TCPDF
         // Add bottom border to "Total Income" row
         $this->Cell(array_sum($w), 0, 'Total Items Sold = ' . $totalItemsSold, 'LR', 0, 'R', 1);
         $this->Ln();
-        $this->Cell(array_sum($w), 0, 'Sales Revenue = PHP ' . $totalRevenue, 'LR', 0, 'R', 1);
+        $this->Cell(array_sum($w), 0, 'Total Income = PHP ' . $totalRevenue, 'LR', 0, 'R', 1);
         $this->Ln();
-        $this->Cell(array_sum($w), 0, 'Total Income = PHP ' . $totalIncome, 'LRB', 1, 'R', 1);
+        $this->Cell(array_sum($w), 0, 'Sales Revenue = PHP ' . $totalIncome, 'LRB', 1, 'R', 1);
     }
 }
 

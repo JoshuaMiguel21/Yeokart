@@ -294,7 +294,7 @@
                 <div class="card-single">
                     <div>
                         <h1><?php echo '₱ ' . $totalRevenue; ?></h1>
-                        <span>Sales Revenue</span>
+                        <span>Total Income</span>
                     </div>
                     <div>
                         <span class="las la-hand-holding-usd"></span>
@@ -304,7 +304,7 @@
                 <div class="card-single">
                     <div>
                         <h1><?php echo '₱ ' . $totalIncome; ?></h1>
-                        <span>Total Income</span>
+                        <span>Sales Revenue</span>
                     </div>
                     <div>
                         <span class="las la-donate"></span>
