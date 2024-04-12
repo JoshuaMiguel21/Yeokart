@@ -969,7 +969,7 @@ margin-top: 23px;
 }
 
 .toggle-row .archive-icon:hover::after {
-    content: "Archive";
+    content: "Remove";
     position: absolute;
     text-transform: none; 
     top: -25px; 

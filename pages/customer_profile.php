@@ -299,7 +299,7 @@ $con->close();
                             $button_text = "Payment Done";
                             $button_disabled = true;
                             $button_icon = "fas fa-check";
-                            $button_class = "payment-done"; 
+                            $button_class = "payment-done";
                         } else {
                             $button_text = "Upload Proof of Payment";
                             $button_icon = "fas fa-cloud-upload-alt";
@@ -315,15 +315,15 @@ $con->close();
                             if ($button_disabled) {
                                 echo 'cursor: not-allowed; pointer-events: none; ';
                             }
-                            echo '"><i class="' . $button_icon .'" style="margin-right: 5px;"></i>' . $button_text . '</a>';
+                            echo '"><i class="' . $button_icon . '" style="margin-right: 5px;"></i>' . $button_text . '</a>';
                         } else {
-                            echo '<a href="#" class="' . $button_class . '" data-order-id="' . $order_id . '" data-proof="' . $proof_of_payment . '"><i class="' . $button_icon .'" style="margin-right: 5px;"></i>' . $button_text . '</a>';
+                            echo '<a href="#" class="' . $button_class . '" data-order-id="' . $order_id . '" data-proof="' . $proof_of_payment . '"><i class="' . $button_icon . '" style="margin-right: 5px;"></i>' . $button_text . '</a>';
                         }
                         echo '</center></td>';
                         echo '<td class="toggle-row">';
                         echo '<i class="fas fa-chevron-down toggle-icon"></i>';
                         if ($status == "DELIVERED") {
-                            echo '<i class="fas fa-archive archive-icon" data-order-id="' . $order_id . '"></i>';
+                            echo '<i class="fa-solid fa-trash" data-order-id="' . $order_id . '"></i>';
                         }
                         echo '</td>';
                         echo '</tr>';

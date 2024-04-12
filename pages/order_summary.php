@@ -143,7 +143,7 @@
 
     // Calculate total quantity of items with category "Albums"
     $totalAlbumsQuantity = array_reduce($cartItems, function ($acc, $item) {
-        if ($item['category'] === 'Albums') {
+        if (preg_match('/\b(albums?|albums)\b/i', $item['category'])) {
             return $acc + $item['quantity'];
         }
         return $acc;
