@@ -286,7 +286,7 @@ if (isset($_SESSION['firstname'])) {
                     </tbody>
                 </table>
                 <?php
-                $baseUrl = 'owner_featured.php?';
+                $baseUrl = 'emp_featured.php?';
 
                 $pageQuery = '';
                 if (isset($_GET['search_button'])) {
