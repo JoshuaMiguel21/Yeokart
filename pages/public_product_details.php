@@ -61,7 +61,7 @@ if (isset($_GET['item_id'])) {
                     </li>
                     <li class="home-class"><a href="public_customer_homepage.php" id="home-nav">Home</a></li>
                     <li><a href="customer_shop.php" class="active">Shop</a></li>
-                    <li><a href="contact_page.php">Contact Us</a></li>
+                    <li><a href="public_contact_page.php">Contact Us</a></li>
                     <li><a href="customer_cart.php"><i class="fas fa-shopping-cart"></i></a></li>
                     <li><a href="customer_profile.php" id="user-btn"><i class="fas fa-user"></i></a></li>
                 </ul>
@@ -386,7 +386,7 @@ if (isset($_GET['item_id'])) {
         });
     </script>
 
-    
+
 </body>
 
 </html>

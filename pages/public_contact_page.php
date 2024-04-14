@@ -12,61 +12,13 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="../css/contacts.css">
 </head>
-<?php
-require('../database/db_yeokart.php');
-session_start();
 
-if (isset($_SESSION['id'])) {
-    $customer_id = $_SESSION['id'];
-} else {
-    header("Location: login_page.php");
-    exit();
-}
-
-if (isset($_SESSION['firstname'])) {
-    $firstname = $_SESSION['firstname'];
-} else {
-    header("Location: login_page.php");
-    exit();
-}
-
-if (isset($_SESSION['lastname'])) {
-    $lastname = $_SESSION['lastname'];
-} else {
-    header("Location: login_page.php");
-    exit();
-}
-
-if (isset($_SESSION['username'])) {
-    $username = $_SESSION['username'];
-} else {
-    header("Location: login_page.php");
-    exit();
-}
-
-if (isset($_SESSION['email'])) {
-    $email = strtolower($_SESSION['email']);
-} else {
-    header("Location: login_page.php");
-    exit();
-}
-
-$sql = "SELECT COUNT(*) AS cart_count FROM cart WHERE customer_id = $customer_id";
-$result = $con->query($sql);
-
-if ($result) {
-    $row = $result->fetch_assoc();
-    $cartCount = $row['cart_count'];
-} else {
-    echo "Error: " . $sql . "<br>" . $con->error;
-}
-?>
 
 <body>
     <input type="checkbox" id="click">
     <header class="header" style="box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
         <div class="header-1">
-            <a href="customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>
+            <a href="public_customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>
             <div class="icons">
                 <form action="customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
                     <input type="search" name="search" placeholder="Search here..." id="search-box">
@@ -85,9 +37,9 @@ if ($result) {
                         </form>
                     </li>
                     <li class="home-class"><a href="customer_homepage.php" id="home-nav">Home</a></li>
-                    <li><a href="customer_shop.php">Shop</a></li>
-                    <li><a href="contact_page.php" class="active">Contact Us</a></li>
-                    <li><a href="customer_cart.php"><i class="fas fa-shopping-cart"><span id="cart-num"><?php echo $cartCount; ?></span></i></a></li>
+                    <li><a href="public_customer_shop.php">Shop</a></li>
+                    <li><a href="public_contact_page.php" class="active">Contact Us</a></li>
+                    <li><a href="customer_cart.php"><i class="fas fa-shopping-cart"></i></a></li>
                     <li><a href="customer_profile.php" id="user-btn"><i class="fas fa-user"></i></a></li>
                 </ul>
             </div>
