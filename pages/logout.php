@@ -3,6 +3,6 @@
     $_SESSION = array();
     session_destroy();
     
-    header("Location: login_page.php");
+    header("Location: public_customer_homepage.php");
     exit();
 ?>

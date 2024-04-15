@@ -592,7 +592,7 @@ margin-top: 23px;
     background: var(--pink);
     height: 200px;
     width: 330px;
-    border-radius: 7px;
+    border-radius: 8px;
     border: 1px solid var(--pink);
     font-family: 'helvetica neue';
     animation: slideDown 0.5s ease forwards; /* Animation for sliding down */
@@ -604,13 +604,13 @@ margin-top: 23px;
         opacity: 0; /* Optionally, fade in */
     }
     to {
-        top: 60%; /* Slide to the middle */
+        top: 58%; /* Slide to the middle */
         opacity: 1; /* Optionally, fade in */
     }
 }
 
 .valid {
-    height: 20px;
+    height: 19px;
     width: 30px;
     background: #fff;
     margin: 0 auto;
