@@ -366,7 +366,7 @@ $result_artists = mysqli_query($con, $select_artists);
             function clearSearch() {
                 document.getElementsByName('category')[0].selectedIndex = 0;
                 document.getElementsByName('artist')[0].selectedIndex = 0;
-                window.location.href = 'customer_shop.php'; // Reload the page
+                window.location.href = 'public_customer_shop.php'; // Reload the page
             }
             document.addEventListener('DOMContentLoaded', function() {
                 const searchForm = document.querySelector('.search-form');

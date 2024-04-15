@@ -596,6 +596,7 @@ margin-top: 23px;
     border: 1px solid var(--pink);
     font-family: 'helvetica neue';
     animation: slideDown 0.5s ease forwards; /* Animation for sliding down */
+    z-index: 1000;
 }
 
 @keyframes slideDown {
@@ -604,7 +605,7 @@ margin-top: 23px;
         opacity: 0; /* Optionally, fade in */
     }
     to {
-        top: 58%; /* Slide to the middle */
+        top: 70%; /* Slide to the middle */
         opacity: 1; /* Optionally, fade in */
     }
 }
