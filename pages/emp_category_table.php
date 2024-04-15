@@ -154,7 +154,7 @@
                     <button type="button" name="clear_button" onclick="clearSearch()">Clear</button>
                 </form>
             </div>
-            <div class="table">
+            <div class="scrollable-container">
                 <table class="table">
                     <thead>
                         <tr>
@@ -208,7 +208,9 @@
                         ?>
                     </tbody>
                 </table>
-                <?php
+            </div>
+
+            <?php
                 $baseUrl = 'emp_category_table.php?';
 
                 $pageQuery = '';
@@ -245,7 +247,7 @@
 
                 echo "</div>";
                 ?>
-            </div>
+                
             <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
                 <div class="popup-content">
                     <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>

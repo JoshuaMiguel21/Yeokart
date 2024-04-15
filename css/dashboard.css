@@ -294,17 +294,27 @@ main {
     color: #fff;
 }
 
+main{
+    overflow: hidden;
+}
+
+.scrollable-container {
+    overflow-x: auto; 
+    margin-top: 20px;
+}
+
 table {
     border-collapse: collapse;
     width: 100%;
     margin-top: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+    overflow: auto;
 }
 
 th, td {
-    padding: 12px; /* Adjusted padding for better spacing */
+    padding: 12px; 
     text-align: left;
-    border-bottom: 1px solid #ddd; /* Subtle border color */
+    border-bottom: 1px solid #ddd;
 }
 
 tr {
@@ -391,7 +401,7 @@ th {
 .popup-image {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    z-index: 1; 
     left: 0;
     top: 0;
     width: 100%; /* Full width */
@@ -469,7 +479,7 @@ th {
     background-color: rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
-    z-index: 1;
+    z-index: 9999;
 }
 
 .popup-content {
@@ -639,6 +649,19 @@ option:hover {
     #nav-toggle:checked ~ .main-content {
         margin-left: 0rem !important;
     }
+
+    .popup-container{
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
 }
 
 @media only screen and (max-width: 960px){
@@ -731,6 +754,19 @@ option:hover {
     #nav-toggle:checked ~ .main-content {
         margin-left: 0rem !important;
     }
+
+    .popup-container{
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
 }
 
 @media only screen and (max-width: 560px) {
@@ -740,6 +776,23 @@ option:hover {
 
     .main-content{
         width: 757px;
+    }
+
+    .popup-container{
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .popup-content{
+        top: -30%;
     }
 }
 

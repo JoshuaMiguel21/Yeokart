@@ -157,8 +157,8 @@ if (isset($_SESSION['lastname'])) {
                 </a>
             </div>
 
-            <div class="table">
-                <table class="table">
+            <div class="scrollable-container">
+                <table>
                     <thead>
                         <tr>
                             <th>Contact Title</th>
@@ -251,7 +251,9 @@ if (isset($_SESSION['lastname'])) {
                         ?>
                     </tbody>
                 </table>
-                <?php
+            </div>
+
+            <?php
                 $baseUrl = 'owner_content_details.php?';
 
                 $pageQuery = '';
@@ -294,8 +296,7 @@ if (isset($_SESSION['lastname'])) {
 
                 echo "</div>";
                 ?>
-            </div>
-
+                
             <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
                 <div class="popup-content">
                     <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>

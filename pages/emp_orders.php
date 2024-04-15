@@ -109,7 +109,7 @@
                 </div>
             </div>
 
-            <div class="table">
+            <div class="scrollable-container">
                 <table class="table">
                     <thead>
                         <tr>
@@ -213,7 +213,9 @@
                         ?>
                     </tbody>
                 </table>
-                <?php
+            </div>
+
+            <?php
                 $baseUrl = 'emp_orders.php?';
 
                 $pageQuery = '';
@@ -256,7 +258,7 @@
 
                 echo "</div>";
                 ?>
-            </div>
+                
             <div id="imagePopup" class="popup-image" style="display: none; padding-top: 100px;">
                 <div class="image-content">
                     <img id="popupImage" src="" alt="Proof of Payment" style="width: auto; height: 550px;">

@@ -75,6 +75,8 @@ if (isset($_GET['item_id'])) {
         </a>
     </div>
 
+    <div class="overlay" id="overlay"></div>
+
     <div class="cart-access-popup" id="cart-access-popup">
         <a href="#" class="close" id="close-popup">
             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="10px" height="10px" viewBox="215.186 215.671 80.802 80.8" enable-background="new 215.186 215.671 80.802 80.8" xml:space="preserve">
@@ -406,15 +408,24 @@ if (isset($_GET['item_id'])) {
             const addToCartBtn = document.querySelector('button[name="add-to-cart-btn"]');
             const popup = document.getElementById('cart-access-popup');
             const closePopup = document.getElementById('close-popup');
+            const overlay = document.getElementById('overlay'); // Get the overlay element
 
             addToCartBtn.addEventListener('click', function(event) {
                 event.preventDefault();
                 popup.style.display = 'block';
+                overlay.style.display = 'block'; // Display the overlay
             });
 
             closePopup.addEventListener('click', function(event) {
                 event.preventDefault();
                 popup.style.display = 'none';
+                overlay.style.display = 'none'; // Hide the overlay
+            });
+
+            // Optional: Hide popup and overlay when clicking outside of the popup
+            overlay.addEventListener('click', function() {
+                popup.style.display = 'none';
+                overlay.style.display = 'none';
             });
         });
     </script>

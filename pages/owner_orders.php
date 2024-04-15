@@ -130,8 +130,8 @@
                 </div>
             </div>
 
-            <div class="table">
-                <table class="table">
+            <div class="scrollable-container">
+                <table>
                     <thead>
                         <tr>
                             <th>Order ID</th>
@@ -235,7 +235,9 @@
                         ?>
                     </tbody>
                 </table>
-                <?php
+            </div>
+
+            <?php
                 $baseUrl = 'owner_orders.php?';
 
                 $pageQuery = '';
@@ -278,7 +280,6 @@
 
                 echo "</div>";
                 ?>
-            </div>
 
 
             <div id="imagePopup" class="popup-image" style="display: none; padding-top: 100px;">

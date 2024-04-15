@@ -249,7 +249,7 @@
                 </form>
             </div>
 
-            <div class="table">
+            <div class="scrollable-container">
                 <?php if ($products_count == 0 || $no_results) : ?>
                     <table class="table">
                         <thead>
@@ -447,7 +447,9 @@
                         </tbody>
                     </table>
                 <?php endif; ?>
-                <?php
+            </div>
+
+            <?php
                 $baseUrl = 'owner_item_homepage.php?';
 
                 $pageQuery = '';
@@ -490,7 +492,6 @@
 
                 echo "</div>";
                 ?>
-            </div>
 
             <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
                 <div class="popup-content">

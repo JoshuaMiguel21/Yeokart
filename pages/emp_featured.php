@@ -114,8 +114,8 @@ if (isset($_SESSION['firstname'])) {
                 </a>
             </div>
 
-            <div class="table">
-                <table class="table">
+            <div class="scrollable-container">
+                <table>
                     <thead>
                         <tr>
                             <th>
@@ -285,7 +285,9 @@ if (isset($_SESSION['firstname'])) {
 
                     </tbody>
                 </table>
-                <?php
+            </div>
+
+             <?php
                 $baseUrl = 'emp_featured.php?';
 
                 $pageQuery = '';
@@ -328,7 +330,7 @@ if (isset($_SESSION['firstname'])) {
 
                 echo "</div>";
                 ?>
-            </div>
+        </main>
             <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
                 <div class="popup-content">
                     <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>

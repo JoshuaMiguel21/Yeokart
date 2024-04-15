@@ -253,10 +253,10 @@
                     <button type="submit" name="filter_button">Filter</button>
                 </form>
             </div>
-
-            <div class="table">
+                    
+            <div class="scrollable-container">
                 <?php if ($products_count == 0 || $no_results) : ?>
-                    <table class="table">
+                    <table>
                         <thead>
                             <tr>
                                 <th>
@@ -495,6 +495,8 @@
                 echo "</div>";
                 ?>
             </div>
+
+        </main>
 
             <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
                 <div class="popup-content">

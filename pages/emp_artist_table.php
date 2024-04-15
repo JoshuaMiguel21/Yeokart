@@ -154,8 +154,8 @@
                     <button type="button" name="clear_button" onclick="clearSearch()">Clear</button>
                 </form>
             </div>
-            <div class="table">
-                <table class="table">
+            <div class="scrollable-container">
+                <table>
                     <thead>
                         <tr>
                             <th>Artist Name</th>
@@ -208,7 +208,9 @@
                         ?>
                     </tbody>
                 </table>
-                <?php
+            </div>
+
+            <?php
                 $baseUrl = 'emp_artist_table.php?';
 
                 $pageQuery = '';
@@ -245,8 +247,7 @@
 
                 echo "</div>";
                 ?>
-            </div>
-    </div>
+                
     <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
         <div class="popup-content">
             <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>
