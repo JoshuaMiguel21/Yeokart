@@ -13,6 +13,28 @@
 </head>
 
 <body>
+    <div class="overlay" id="overlay"></div>
+
+    <div class="access-popup" id="access-popup">
+        <a href="#" class="access-close" id="access-close-popup">
+            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="10px" height="10px" viewBox="215.186 215.671 80.802 80.8" enable-background="new 215.186 215.671 80.802 80.8" xml:space="preserve">
+                <polygon fill="#FFFFFF" points="280.486,296.466 255.586,271.566 230.686,296.471 215.19,280.964 240.086,256.066 215.186,231.17 
+230.69,215.674 255.586,240.566 280.475,215.671 295.985,231.169 271.987,256.064 295.987,280.96 " />
+            </svg>
+        </a>
+
+        <div class="valid2">
+            <!-- Shopping cart GIF icon -->
+            <img src="../res/unlock-gif.gif" alt="Shopping Cart" width="40px" height="40px">
+        </div>
+
+        <h1>Interested to see more?</h1>
+        <p>Please log in or sign up to continue.</p>
+        <div class="bottom-popup">
+            <a class="start" href="login_page.php">Login / Sign Up</a>
+        </div>
+    </div>
+
     <input type="checkbox" id="click">
     <header class="header" style="box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
         <div class="header-1">
@@ -37,8 +59,8 @@
                     <li class="home-class"><a href="public_customer_homepage.php" id="home-nav" class="active">Home</a></li>
                     <li><a href="public_customer_shop.php">Shop</a></li>
                     <li><a href="public_contact_page.php">Contact Us</a></li>
-                    <li><a href="customer_cart.php"><i class="fas fa-shopping-cart"></span></i></a></li>
-                    <li><a href="customer_profile.php" id="user-btn"><i class="fas fa-user"></i></a></li>
+                    <li><a href="#"><i class="fas fa-shopping-cart"></span></i></a></li>
+                    <li><a href="#" id="user-btn"><i class="fas fa-user"></i></a></li>
                 </ul>
             </div>
         </div>
@@ -289,6 +311,41 @@
             return true;
         }
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cartBtn = document.querySelector('.fa-shopping-cart');
+            const userBtn = document.querySelector('.fas.fa-user');
+            const popup = document.getElementById('access-popup');
+            const accessClosePopup = document.getElementById('access-close-popup');
+            const overlay = document.getElementById('overlay'); // Get the overlay element
+
+            cartBtn.addEventListener('click', function(event) {
+                event.preventDefault();
+                popup.style.display = 'block';
+                overlay.style.display = 'block'; // Display the overlay
+            });
+
+            userBtn.addEventListener('click', function(event) {
+                event.preventDefault();
+                popup.style.display = 'block';
+                overlay.style.display = 'block'; // Display the overlay
+            });
+
+            accessClosePopup.addEventListener('click', function(event) {
+                event.preventDefault();
+                popup.style.display = 'none';
+                overlay.style.display = 'none'; // Hide the overlay
+            });
+
+            // Optional: Hide popup and overlay when clicking outside of the popup
+            overlay.addEventListener('click', function() {
+                popup.style.display = 'none';
+                overlay.style.display = 'none';
+            });
+        });
+    </script>
+
 </body>
 
 </html>
