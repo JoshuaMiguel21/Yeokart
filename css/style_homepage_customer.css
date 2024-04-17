@@ -74,9 +74,47 @@ section{
     width: 150px;
 }
 
+.sign-in-button {
+    margin-left: 10px;
+    background-color: #ffffff00;
+    color: var(--pink);
+    width: auto; /* Adjusted to auto width */
+    height: auto; /* Adjusted to auto height */
+    border: var(--pink) 0.2em solid;
+    border-radius: 11px;
+    text-align: right;
+    transition: all 0.6s ease;
+    padding: 0.2em 0.5em; /* Adjusted padding */
+}
+
+.sign-in-button:hover {
+    background-color: var(--pink);
+    color: #fff;
+    cursor: pointer;
+}
+
+.sign-in-button svg {
+    width: 1.6em;
+    margin: 0.2em 0.5em 0.2em 0; /* Adjusted margins */
+    display: inline-block; /* Changed to inline-block */
+    vertical-align: middle; /* Added to vertically align with text */
+    transition: all 0.6s ease;
+}
+
+.sign-in-button:hover svg {
+    transform: translateX(5px);
+}
+
+.sign-in-btn-text {
+    font-size: medium;
+    margin: 0 0.5em; /* Adjusted margin */
+    display: inline-block; /* Added to align with SVG */
+}
+
+
 .header .header-1 .search-form, 
 .header .header-1 .search-form1{
-    width: 50rem;
+    width: 35rem;
     height: 5rem;
     border: var(--border);
     overflow: hidden;
@@ -136,14 +174,21 @@ section{
     width: 100%;
 }
 
+/* Adjustments for alignment */
 .icons ul {
     display: flex;
+    align-items: center; /* Added to vertically align items */
     list-style-type: none;
-}
-
-.icons li {
+  }
+  
+  .icons li {
     margin: 0 10px;
-}
+  }
+  
+  /* Added to align with the shop and contact us links */
+  .icons li:last-child {
+    margin-right: 0;
+  }
 
 .header .header-1 .icons .search-ul {
     display: none;

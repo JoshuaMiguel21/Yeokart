@@ -40,8 +40,17 @@
                     <li class="home-class"><a href="customer_homepage.php" id="home-nav">Home</a></li>
                     <li><a href="public_customer_shop.php">Shop</a></li>
                     <li><a href="public_contact_page.php" class="active">Contact Us</a></li>
-                    <li><a href="#"><i class="fas fa-shopping-cart"></i></a></li>
-                    <li><a href="#" id="user-btn"><i class="fas fa-user"></i></a></li>
+                    <button class="sign-in-button" onclick="window.location.href='login_page.php';">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"></path>
+                        </svg>
+
+
+                        <div class="sign-in-btn-text">
+                            Sign In
+                        </div>
+
+                    </button>
                 </ul>
             </div>
         </div>
