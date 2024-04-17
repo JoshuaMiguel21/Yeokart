@@ -61,6 +61,7 @@ if (isset($_GET['item_id'])) {
                     </li>
                     <li class="home-class"><a href="public_customer_homepage.php" id="home-nav">Home</a></li>
                     <li><a href="customer_shop.php" class="active">Shop</a></li>
+                    <li><a href="#">FAQ</a></li>
                     <li><a href="public_contact_page.php">Contact Us</a></li>
                     <button class="sign-in-button" onclick="window.location.href='login_page.php';">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

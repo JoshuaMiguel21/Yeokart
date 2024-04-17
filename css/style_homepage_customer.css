@@ -75,7 +75,7 @@ section{
 }
 
 .sign-in-button {
-    margin-left: 10px;
+    margin-left: 1.5rem;
     background-color: #ffffff00;
     color: var(--pink);
     width: auto; /* Adjusted to auto width */
