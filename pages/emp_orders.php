@@ -42,6 +42,14 @@
         header("Location: login_page.php");
         exit();
     }
+
+    if (isset($_SESSION['email'])) {
+        $email = strtolower($_SESSION['email']);
+    } else {
+        header("Location: login_page.php");
+        exit();
+    }
+
     if (!isset($_SESSION['nav_toggle'])) {
         $_SESSION['nav_toggle'] = false;
     }
@@ -124,6 +132,7 @@
                             <th>Date of Purchase</th>
                             <th>Status</th>
                             <th>Proof of Payment</th>
+                            <th>Activity Log</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -145,7 +154,7 @@
                         $totalOrders = $totalOrdersRow['total_orders'];
 
                         if ($totalOrders == 0) {
-                            echo "<tr><td colspan='11'><center><b>No orders at the moment</b></center></td></tr>";
+                            echo "<tr><td colspan='12'><center><b>No orders at the moment</b></center></td></tr>";
                         } else {
                             $select_query = "SELECT orders.*, user_accounts.firstname, user_accounts.lastname FROM orders 
                             INNER JOIN user_accounts ON orders.customer_id = user_accounts.id 
@@ -207,6 +216,7 @@
                                 } else {
                                     echo '<td>Not yet paid</td>';
                                 }
+                                echo '<td><center><button onclick="viewActivityLogs(\'' . $row['order_id'] . '\')" class="edit-button"><i class="las la-eye"></i></button></center></td>';
                                 echo "</tr>";
                             }
                         }
@@ -286,6 +296,14 @@
                     <button onclick="proceedWithDelivery()" class="confirm-logout-btn">Proceed</button>
                     <button onclick="closeConfirmDeliveryPopup()" class="cancel-logout-btn">Cancel</button>
                 </div>
+            </div>
+        </div>
+
+        <div id="activityLogsPopup" class="popup-container" style="display: none;">
+            <div class="popup-activity-log">
+                <span class="close-btn" onclick="closeActivityLogsPopup()">&times;</span>
+                <h2>Activity Logs</h2>
+                <div id="activityLogsContent"></div>
             </div>
         </div>
 
@@ -436,6 +454,37 @@
 
         // Add event listener to checkbox change
         document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
+
+        function viewActivityLogs(orderId) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var activityLogs = JSON.parse(this.responseText);
+                    var activityLogsContent = document.getElementById('activityLogsContent');
+                    activityLogsContent.innerHTML = '';
+
+                    if (activityLogs.length > 0) {
+                        var ul = document.createElement('ul');
+                        activityLogs.forEach(function(log) {
+                            var li = document.createElement('li');
+                            li.textContent = log.text + " - " + log.time;
+                            ul.appendChild(li);
+                        });
+                        activityLogsContent.appendChild(ul);
+                    } else {
+                        activityLogsContent.textContent = 'No activity logs available.';
+                    }
+
+                    document.getElementById('activityLogsPopup').style.display = 'flex';
+                }
+            };
+            xhttp.open("GET", "fetch_activity_logs.php?order_id=" + orderId, true);
+            xhttp.send();
+        }
+        
+        function closeActivityLogsPopup() {
+            document.getElementById('activityLogsPopup').style.display = 'none';
+        }
     </script>
 </body>
 

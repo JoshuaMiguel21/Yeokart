@@ -83,6 +83,13 @@ if (isset($_SESSION['lastname'])) {
     header("Location: login_page.php");
     exit();
 }
+
+if (isset($_SESSION['email'])) {
+    $email = strtolower($_SESSION['email']);
+} else {
+    header("Location: login_page.php");
+    exit();
+}
 ?>
 
 <body>

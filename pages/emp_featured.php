@@ -44,6 +44,13 @@ if (isset($_SESSION['firstname'])) {
     header("Location: login_page.php");
     exit();
 }
+
+if (isset($_SESSION['email'])) {
+    $email = strtolower($_SESSION['email']);
+} else {
+    header("Location: login_page.php");
+    exit();
+}
 ?>
 
 <body>

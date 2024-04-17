@@ -389,6 +389,25 @@ th {
     max-width: 400px;
 }
 
+.popup-activity-log {
+    background-color: #fff;
+    padding: 30px 40px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    position: relative;
+}
+
+.popup-activity-log h2{
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.popup-activity-log span{
+    text-align: center;
+    margin-bottom: 10px;
+}
+
 .popup-content p{
     font-size: 1rem;
     text-transform: none;
@@ -410,6 +429,7 @@ th {
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
     padding-top: 100px;
+    z-index: 9999;
 }
 
 .image-content {

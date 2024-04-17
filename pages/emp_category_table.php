@@ -64,6 +64,13 @@
         header("Location: login_page.php");
         exit();
     }
+
+    if (isset($_SESSION['email'])) {
+        $email = strtolower($_SESSION['email']);
+    } else {
+        header("Location: login_page.php");
+        exit();
+    }
     ?>
     <input type="checkbox" id="nav-toggle" <?php echo $_SESSION['nav_toggle'] ? 'checked' : ''; ?>>
     <div class="sidebar <?php echo $_SESSION['nav_toggle'] ? 'open' : ''; ?>">

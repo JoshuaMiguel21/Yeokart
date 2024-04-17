@@ -40,6 +40,13 @@
         // Update the session variable accordingly
         $_SESSION['nav_toggle'] = $_POST['nav_toggle'] === 'true' ? true : false;
     }
+
+    if (isset($_SESSION['email'])) {
+        $email = strtolower($_SESSION['email']);
+    } else {
+        header("Location: login_page.php");
+        exit();
+    }   
     ?>
     <input type="checkbox" id="nav-toggle" <?php echo $_SESSION['nav_toggle'] ? 'checked' : ''; ?>>
     <div class="sidebar <?php echo $_SESSION['nav_toggle'] ? 'open' : ''; ?>">

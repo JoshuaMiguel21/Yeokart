@@ -82,6 +82,14 @@
         header("Location: login_page.php");
         exit();
     }
+
+    if (isset($_SESSION['email'])) {
+        $email = strtolower($_SESSION['email']);
+    } else {
+        header("Location: login_page.php");
+        exit();
+    }
+    
     $totalItems = 0;
     $itemsPerPage = 10;
 
@@ -451,7 +459,9 @@
                         </tbody>
                     </table>
                 <?php endif; ?>
-                <?php
+                
+            </div>
+            <?php
                 $baseUrl = 'owner_item_homepage.php?';
 
                 $pageQuery = '';
@@ -494,8 +504,6 @@
 
                 echo "</div>";
                 ?>
-            </div>
-
         </main>
 
             <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">

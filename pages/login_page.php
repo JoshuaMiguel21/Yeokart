@@ -66,6 +66,7 @@ function myFunction() {
                             header("Location: owner_dashboard.php");
                             $_SESSION['logged_in'] = true;
                             $_SESSION['firstname'] = $admin['firstname'];
+                            $_SESSION['email'] = $admin['email'];
                             $_SESSION['lastname'] = $admin['lastname'];
                             die();
                         }
@@ -75,6 +76,7 @@ function myFunction() {
                             header("Location: emp_dashboard.php");
                             $_SESSION['logged_in'] = true;
                             $_SESSION['firstname'] = $employee['firstname'];
+                            $_SESSION['email'] = $employee['email'];
                             $_SESSION['username'] = $employee['username'];
                             die();
                         }

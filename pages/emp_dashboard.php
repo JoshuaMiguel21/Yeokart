@@ -46,6 +46,13 @@
         exit();
     }
 
+    if (isset($_SESSION['email'])) {
+        $email = strtolower($_SESSION['email']);
+    } else {
+        header("Location: login_page.php");
+        exit();
+    }
+
     $sql = "SELECT COUNT(*) AS item_count FROM products WHERE `is_archive`= 0";
     $result = $con->query($sql);
 
