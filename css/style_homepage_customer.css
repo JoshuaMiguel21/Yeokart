@@ -80,7 +80,7 @@ section{
     color: var(--pink);
     width: auto; /* Adjusted to auto width */
     height: auto; /* Adjusted to auto height */
-    border: var(--pink) 0.2em solid;
+    border: var(--pink) 0.1em solid;
     border-radius: 11px;
     text-align: right;
     transition: all 0.6s ease;
