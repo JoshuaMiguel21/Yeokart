@@ -60,6 +60,36 @@
     } else {
         echo "Error: " . $sql . "<br>" . $con->error;
     }
+
+    function getDaysDifference($date) {
+        $now = new DateTime();
+        $notificationDate = new DateTime($date);
+        $interval = $now->diff($notificationDate);
+        $days = $interval->days;
+    
+        if ($days === 0) {
+            return 'Today';
+        } elseif ($days === 1) {
+            return '1 day ago';
+        } else {
+            return $days . ' days ago';
+        }
+    }
+    
+    // Query to get notifications for the logged-in customer
+    $notification_query = "SELECT * FROM notifications WHERE customer_id = $customer_id ORDER BY created_at DESC";
+    $notifications_result = $con->query($notification_query);
+    
+    $notifications = array();
+    if ($notifications_result->num_rows > 0) {
+        while ($notification = $notifications_result->fetch_assoc()) {
+            // Calculate days difference
+            $notification['days_difference'] = getDaysDifference($notification['created_at']);
+            $notifications[] = $notification;
+        }
+    } else {
+        echo "<p>No notifications found.</p>";
+    }
     ?>
 
     <?php
@@ -77,6 +107,17 @@
 
 
     <body>
+        <div id="notificationPopup" style="display: none; position: absolute; right: 10px; top: 60px; background-color: white; border: 1px solid #ccc; padding: 10px; width: 300px; z-index: 100;">
+            <h2 style="margin: 10px 0">Notifications</h2>
+            <hr class="notif">
+            <?php foreach ($notifications as $notification): ?>
+                <div class="notification-item" style="padding: 10px; border-bottom: 1px solid #eee;">
+                    <p><strong><?php echo htmlspecialchars($notification['title']); ?></strong></p>
+                    <p><?php echo htmlspecialchars($notification['message']); ?></p>
+                    <p style="font-size: 0.8em; color: #666;"><?php echo $notification['days_difference']; ?></p>
+                </div>
+            <?php endforeach; ?>
+        </div>
         <!-- Overlay for translucent background of popup -->
         <div class="filter-overlay" id="filter-overlay"></div>
 
@@ -107,6 +148,7 @@
                         <li><a href="contact_page.php">Contact Us</a></li>
                         <li><a href="customer_cart.php"><i class="fas fa-shopping-cart"><span id="cart-num"><?php echo $cartCount; ?></span></i></a></li>
                         <li><a href="customer_profile.php" id="user-btn"><i class="fas fa-user"></i></a></li>
+                        <li><a href="#" id="notificationIcon"><i class="fas fa-bell"></i></a></li>
                     </ul>
                 </div>
             </div>
@@ -486,6 +528,34 @@
                     }
                     return true;
                 }
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    const notificationIcon = document.getElementById('notificationIcon');
+                    const notificationPopup = document.getElementById('notificationPopup');
+
+                    function handleNotificationClick(event) {
+                        if (window.matchMedia('(max-width: 768px)').matches) {
+                            window.location.href = 'notification_page.php'; 
+                        } else {
+                            event.preventDefault();
+                            if (notificationPopup.style.display === 'none' || !notificationPopup.style.display) {
+                                notificationPopup.style.display = 'block';
+                                notificationIcon.classList.add('active');
+                            } else {
+                                notificationPopup.style.display = 'none';
+                                notificationIcon.classList.remove('active');
+                            }
+                        }
+                    }
+
+                    notificationIcon.addEventListener('click', handleNotificationClick);
+
+                    window.addEventListener('resize', function() {
+                        notificationIcon.removeEventListener('click', handleNotificationClick);
+                        notificationIcon.addEventListener('click', handleNotificationClick);
+                    });
+
+                });
             </script>
 
 

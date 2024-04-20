@@ -5,12 +5,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contacts - Yeokart</title>
+    <title>Yeokart - Notifications</title>
     <link rel="icon" type="image/png" href="../res/icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="../css/contacts.css">
+    <link rel="stylesheet" href="../css/style_homepage_customer.css">
 </head>
 <?php
 require('../database/db_yeokart.php');
@@ -90,20 +89,9 @@ if ($notifications_result->num_rows > 0) {
 } else {
     echo "<p>No notifications found.</p>";
 }
-?>
 
+?>
 <body>
-    <div id="notificationPopup" style="display: none; position: absolute; right: 10px; top: 60px; background-color: white; border: 1px solid #ccc; padding: 10px; width: 300px; z-index: 100;">
-        <h2 style="margin: 10px 0">Notifications</h2>
-        <hr class="notif">
-        <?php foreach ($notifications as $notification): ?>
-            <div class="notification-item" style="padding: 10px; border-bottom: 1px solid #eee;">
-                <p><strong><?php echo htmlspecialchars($notification['title']); ?></strong></p>
-                <p><?php echo htmlspecialchars($notification['message']); ?></p>
-                <p style="font-size: 0.8em; color: #666;"><?php echo $notification['days_difference']; ?></p>
-            </div>
-        <?php endforeach; ?>
-    </div>
     <input type="checkbox" id="click">
     <header class="header" style="box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
         <div class="header-1">
@@ -128,55 +116,34 @@ if ($notifications_result->num_rows > 0) {
                     <li class="home-class"><a href="customer_homepage.php" id="home-nav">Home</a></li>
                     <li><a href="customer_shop.php">Shop</a></li>
                     <li><a href="#">FAQ</a></li>
-                    <li><a href="contact_page.php" class="active">Contact Us</a></li>
+                    <li><a href="contact_page.php">Contact Us</a></li>
                     <li><a href="customer_cart.php"><i class="fas fa-shopping-cart"><span id="cart-num"><?php echo $cartCount; ?></span></i></a></li>
                     <li><a href="customer_profile.php" id="user-btn"><i class="fas fa-user"></i></a></li>
-                    <li><a href="#" id="notificationIcon"><i class="fas fa-bell"></i></a></li>
+                    <li><a href="#" id="notificationIcon" class="active"><i class="fas fa-bell"></i></a></li>
                 </ul>
             </div>
         </div>
-    </header>
-    <section class="contacts" id="contacts">
-        <div class="container">
-            <h1 class="heading"><span>Contact Us</span></h1>
-            <br></br>
-
-            <div class="box-container">
-                <?php
-                include('../database/db_yeokart.php');
-                $select_query = "SELECT * FROM contacts";
-                $result_query = mysqli_query($con, $select_query);
-
-                if (mysqli_num_rows($result_query) > 0) {
-                    while ($row = mysqli_fetch_assoc($result_query)) {
-                        $contacts_id = $row['contacts_id'];
-                        $contacts_name = $row['contacts_name'];
-                        $icon_link = $row['icon_link'];
-                        $contacts_description = $row['contacts_description'];
-
-                        if ($icon_link !== "<i class='fa-solid fa-peso-sign'></i>") {
-                            if (filter_var($contacts_description, FILTER_VALIDATE_URL)) {
-                                $contacts_link = "<a href='$contacts_description' target='_blank'>$contacts_description</a>";
-                            } else {
-                                $contacts_link = $contacts_description;
-                            }
-
-                            echo "<div class='box'>
-                            <div class='iconbox'>
-                                $icon_link
-                            </div>
-                            <h3>$contacts_name</h3>
-                            <p>$contacts_link</p>
-                        </div>";
-                        }
-                    }
-                } else {
-                    echo "<h1>No contacts found.</h1>";
-                }
-                ?>
-            </div>
+        <div class="header-2">
+            <nav class="navbar">
+                <a href="#home">Home</a>
+                <a href="#best">Best Sellers</a>
+                <a href="#featured">Featured</a>
+            </nav>
         </div>
-    </section>
+    </header>
+    <div class="container">
+        <h1>Notifications</h1>
+        <div class="notifications">
+            <?php foreach ($notifications as $notification) : ?>
+                <div class="notification">
+                    <h3><?php echo $notification['title']; ?></h3>
+                    <p><?php echo $notification['message']; ?></p>
+                    <span class="date"><?php echo $notification['days_difference']; ?></span>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const searchForm = document.querySelector('.search-form');
@@ -215,15 +182,15 @@ if ($notifications_result->num_rows > 0) {
 
             function handleNotificationClick(event) {
                 if (window.matchMedia('(max-width: 768px)').matches) {
+                    
                     window.location.href = 'notification_page.php'; 
                 } else {
+                    // Otherwise, toggle the notification popup
                     event.preventDefault();
                     if (notificationPopup.style.display === 'none' || !notificationPopup.style.display) {
                         notificationPopup.style.display = 'block';
-                        notificationIcon.classList.add('active');
                     } else {
                         notificationPopup.style.display = 'none';
-                        notificationIcon.classList.remove('active');
                     }
                 }
             }
@@ -234,9 +201,9 @@ if ($notifications_result->num_rows > 0) {
                 notificationIcon.removeEventListener('click', handleNotificationClick);
                 notificationIcon.addEventListener('click', handleNotificationClick);
             });
-
         });
     </script>
+    
 </body>
 
 </html>
