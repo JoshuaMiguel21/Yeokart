@@ -328,7 +328,7 @@ if (isset($_GET['item_id'])) {
 
         function handleImageClick(itemId) {
             // Construct the URL for the product details page
-            var url = "product_details.php?item_id=" + itemId;
+            var url = "public_product_details.php?item_id=" + itemId;
             // Redirect the user to the product details page
             window.location.href = url;
         }

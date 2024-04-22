@@ -321,6 +321,9 @@
                                     <center>Images</center>
                                 </th>
                                 <th>
+                                    <center>Days Left</center>
+                                </th>
+                                <th>
                                     <center>Action</center>
                                 </th>
                             </tr>
@@ -330,7 +333,7 @@
                             include('../database/db_yeokart.php');
                             if (isset($_POST['archive_item'])) {
                                 $item_id = $_POST['item_id'];
-                                $stmt = $con->prepare("UPDATE products SET is_archive = 0 WHERE item_id = ?");
+                                $stmt = $con->prepare("UPDATE products SET is_archive = 0, archive_timestamp = NULL WHERE item_id = ?");
                                 $stmt->bind_param("i", $item_id);
 
                                 if ($stmt->execute()) {
@@ -418,6 +421,12 @@
                                 $item_image1 = $row['item_image1'];
                                 $item_image2 = $row['item_image2'];
                                 $item_image3 = $row['item_image3'];
+                                $archive_timestamp = $row['archive_timestamp'];
+                                $archive_date = new DateTime($archive_timestamp);
+                                $expiration_date = $archive_date->modify('+30 days');
+                                $today = new DateTime();
+                                $interval = $today->diff($expiration_date);
+                                $days_left = $interval->days;
                                 echo "<tr>";
                                 echo "<td>" . $row['item_name'] . "</td>";
                                 echo "<td> ₱" . $row['item_price'] . "</td>";
@@ -435,6 +444,7 @@
                                     echo "<img src='./item_images/$item_image3' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image3 . "\")'>&nbsp;";
                                 }
                                 echo "</td>";
+                                echo "<td><center>{$days_left} day/s</center></td>";
                                 // Inside your while loop
                                 echo "<td>";
                                 echo "<div class='button-class'>";
@@ -457,48 +467,48 @@
             </div>
 
             <?php
-                $baseUrl = 'owner_item_homepage.php?';
+            $baseUrl = 'owner_item_homepage.php?';
 
-                $pageQuery = '';
-                if (isset($_GET['search_button'])) {
-                    $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
-                } elseif (isset($_GET['filter_button'])) {
-                    if (isset($_GET['category'])) {
-                        $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
-                    } elseif (isset($_GET['artist'])) {
-                        $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
-                    }
+            $pageQuery = '';
+            if (isset($_GET['search_button'])) {
+                $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
+            } elseif (isset($_GET['filter_button'])) {
+                if (isset($_GET['category'])) {
+                    $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
+                } elseif (isset($_GET['artist'])) {
+                    $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
                 }
+            }
 
-                $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-                $totalPages = ceil($totalItems / $itemsPerPage);
+            $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+            $totalPages = ceil($totalItems / $itemsPerPage);
 
-                $startPage = max(1, $pageNumber - 1);
-                $endPage = min($totalPages, $pageNumber + 1);
+            $startPage = max(1, $pageNumber - 1);
+            $endPage = min($totalPages, $pageNumber + 1);
 
-                if ($pageNumber == 1) {
-                    $startPage = 1;
-                    $endPage = min(3, $totalPages);
-                } elseif ($pageNumber == $totalPages) {
-                    $startPage = max(1, $totalPages - 2);
-                    $endPage = $totalPages;
-                }
+            if ($pageNumber == 1) {
+                $startPage = 1;
+                $endPage = min(3, $totalPages);
+            } elseif ($pageNumber == $totalPages) {
+                $startPage = max(1, $totalPages - 2);
+                $endPage = $totalPages;
+            }
 
-                echo "<div class='pagination'>";
+            echo "<div class='pagination'>";
 
-                $prevPage = max(1, $pageNumber - 1);
-                echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
+            $prevPage = max(1, $pageNumber - 1);
+            echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
 
-                for ($i = $startPage; $i <= $endPage; $i++) {
-                    $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
-                    echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
-                }
+            for ($i = $startPage; $i <= $endPage; $i++) {
+                $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
+                echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
+            }
 
-                $nextPage = min($totalPages, $pageNumber + 1);
-                echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
+            $nextPage = min($totalPages, $pageNumber + 1);
+            echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
 
-                echo "</div>";
-                ?>
+            echo "</div>";
+            ?>
 
             <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
                 <div class="popup-content">

@@ -134,9 +134,53 @@ if ($phoneResult->num_rows > 0) {
 } else {
     $displayPhone = "No default phone number set.";
 }
+function deleteOldOrders($con)
+{
+    // Calculate the timestamp 24 hours ago
+    $timestamp24HoursAgo = strtotime('-24 hours');
 
+    // Query to select orders older than 24 hours with empty proof_of_payment
+    $selectQuery = "SELECT `items_ordered`, `item_quantity` FROM orders WHERE proof_of_payment = '' AND date_of_purchase < FROM_UNIXTIME($timestamp24HoursAgo)";
+    $result = $con->query($selectQuery);
+
+    if ($result === false) {
+        // Handle query error
+        echo "Error: " . $con->error;
+        return;
+    }
+
+    // Loop through the orders and add the quantities back to the products table
+    while ($row = $result->fetch_assoc()) {
+        $items = explode(", ", $row['items_ordered']);
+        $quantities = explode(", ", $row['item_quantity']);
+
+        foreach ($items as $key => $item) {
+            $item = trim($item);
+            $quantity = intval($quantities[$key]);
+
+            // Update the products table to add back the quantity
+            $updateQuery = "UPDATE products SET item_quantity = item_quantity + $quantity WHERE item_name = '$item'";
+            $updateResult = $con->query($updateQuery);
+
+            if ($updateResult === false) {
+                // Handle query error
+                echo "Error updating products table: " . $con->error;
+                return;
+            }
+        }
+    }
+
+    // Delete the old orders
+    $deleteQuery = "DELETE FROM orders WHERE proof_of_payment = '' AND date_of_purchase < FROM_UNIXTIME($timestamp24HoursAgo)";
+    $deleteResult = $con->query($deleteQuery);
+
+    if ($deleteResult === false) {
+        // Handle query error
+        echo "Error deleting old orders: " . $con->error;
+        return;
+    }
+}
 // Close the database connection
-$con->close();
 ?>
 
 <body>
@@ -193,7 +237,6 @@ $con->close();
                 </form>
             </div>
         </div>
-
         <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
             <div class="popup-content">
                 <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>
@@ -205,14 +248,12 @@ $con->close();
                 </div>
             </div>
         </div>
-
         <div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9999; justify-content: center; align-items: center;">
             <div style="padding: 20px; background: white; border-radius: 5px; display: flex; justify-content: center; align-items: center;">
                 <div class="loader"></div>
                 <span style="margin-left: 10px; font-size: 15px;">Updating...</span>
             </div>
         </div>
-
         <div class="header-3">
             <h1>My Account</h1>
             <div class="nav-user">
@@ -249,6 +290,8 @@ $con->close();
                 $totalOrdersResult = mysqli_query($con, $totalOrdersQuery);
                 $totalOrdersRow = mysqli_fetch_assoc($totalOrdersResult);
                 $totalOrders = $totalOrdersRow['total_orders'];
+
+                deleteOldOrders($con);
 
                 $sql = "SELECT `order_id`, `customer_id`, `address`, `items_ordered`, `item_quantity`, `items_category`,  `items_artist`, `items_price`, `subtotal`, `total`, `shipping_fee`, `overall_total`, `date_of_purchase`, `status`, `items_image`, `proof_of_payment`, `is_archive`, 
                 CASE `status`
@@ -359,7 +402,7 @@ $con->close();
                         } elseif ($status == "PROCESSING") {
                             echo 'Your order is currently being processed. Please wait for further updates.';
                         } elseif ($status == "PENDING") {
-                            echo 'Your order is pending. We are waiting for your payment.';
+                            echo 'Your order is pending and we are waiting for your payment. You only have <b>24 hours</b> to complete your payment.';
                         } elseif ($status == "SHIPPED") {
                             echo 'Your order has been shipped. You will receive it soon.';
                         } elseif ($status == "INVALID") {

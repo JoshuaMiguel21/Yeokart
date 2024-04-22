@@ -89,7 +89,7 @@
         header("Location: login_page.php");
         exit();
     }
-    
+
     $totalItems = 0;
     $itemsPerPage = 10;
 
@@ -104,8 +104,6 @@
     $search_query = isset($_GET['search']) ? $_GET['search'] : '';
     $filter_category = isset($_GET['category']) ? $_GET['category'] : '';
     $filter_artist = isset($_GET['artist']) ? $_GET['artist'] : '';
-
-
 
     if (!empty($search_query) || !empty($filter_category) || !empty($filter_artist)) {
         $filter_query .= "AND ";
@@ -124,6 +122,19 @@
     $check_result = mysqli_query($con, $check_query);
     $check_data = mysqli_fetch_assoc($check_result);
     $no_results = $check_data['total'] == 0;
+
+    function deleteExpiredArchivedItems($con)
+    {
+        $delete_query = "DELETE FROM products WHERE is_archive = 1 AND archive_timestamp <= DATE_SUB(NOW(), INTERVAL 30 DAY)";
+        if (mysqli_query($con, $delete_query)) {
+            // Deleted expired archived items successfully
+        } else {
+            // Failed to delete expired archived items
+        }
+    }
+
+    // Call this function before displaying the archived items
+    deleteExpiredArchivedItems($con);
 
     ?>
     <input type="checkbox" id="nav-toggle" <?php echo $_SESSION['nav_toggle'] ? 'checked' : ''; ?>>
@@ -261,7 +272,7 @@
                     <button type="submit" name="filter_button">Filter</button>
                 </form>
             </div>
-                    
+
             <div class="scrollable-container">
                 <?php if ($products_count == 0 || $no_results) : ?>
                     <table>
@@ -336,7 +347,7 @@
                             include('../database/db_yeokart.php');
                             if (isset($_POST['archive_item'])) {
                                 $item_id = $_POST['item_id'];
-                                $stmt = $con->prepare("UPDATE products SET is_archive = 1 WHERE item_id = ?");
+                                $stmt = $con->prepare("UPDATE products SET is_archive = 1, archive_timestamp = NOW() WHERE item_id = ?");
                                 $stmt->bind_param("i", $item_id);
 
                                 if ($stmt->execute()) {
@@ -459,126 +470,126 @@
                         </tbody>
                     </table>
                 <?php endif; ?>
-                
+
             </div>
             <?php
-                $baseUrl = 'owner_item_homepage.php?';
+            $baseUrl = 'owner_item_homepage.php?';
 
-                $pageQuery = '';
-                if (isset($_GET['search_button'])) {
-                    $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
-                } elseif (isset($_GET['filter_button'])) {
-                    if (isset($_GET['category'])) {
-                        $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
-                    } elseif (isset($_GET['artist'])) {
-                        $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
-                    }
+            $pageQuery = '';
+            if (isset($_GET['search_button'])) {
+                $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
+            } elseif (isset($_GET['filter_button'])) {
+                if (isset($_GET['category'])) {
+                    $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
+                } elseif (isset($_GET['artist'])) {
+                    $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
                 }
+            }
 
-                $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-                $totalPages = ceil($totalItems / $itemsPerPage);
+            $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+            $totalPages = ceil($totalItems / $itemsPerPage);
 
-                $startPage = max(1, $pageNumber - 1);
-                $endPage = min($totalPages, $pageNumber + 1);
+            $startPage = max(1, $pageNumber - 1);
+            $endPage = min($totalPages, $pageNumber + 1);
 
-                if ($pageNumber == 1) {
-                    $startPage = 1;
-                    $endPage = min(3, $totalPages);
-                } elseif ($pageNumber == $totalPages) {
-                    $startPage = max(1, $totalPages - 2);
-                    $endPage = $totalPages;
-                }
+            if ($pageNumber == 1) {
+                $startPage = 1;
+                $endPage = min(3, $totalPages);
+            } elseif ($pageNumber == $totalPages) {
+                $startPage = max(1, $totalPages - 2);
+                $endPage = $totalPages;
+            }
 
-                echo "<div class='pagination'>";
+            echo "<div class='pagination'>";
 
-                $prevPage = max(1, $pageNumber - 1);
-                echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
+            $prevPage = max(1, $pageNumber - 1);
+            echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
 
-                for ($i = $startPage; $i <= $endPage; $i++) {
-                    $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
-                    echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
-                }
+            for ($i = $startPage; $i <= $endPage; $i++) {
+                $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
+                echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
+            }
 
-                $nextPage = min($totalPages, $pageNumber + 1);
-                echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
+            $nextPage = min($totalPages, $pageNumber + 1);
+            echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
 
-                echo "</div>";
-                ?>
+            echo "</div>";
+            ?>
         </main>
 
-            <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
-                <div class="popup-content">
-                    <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>
-                    <p>Are you sure you want to logout?
-                    <p>
-                    <div class="logout-btns">
-                        <button onclick="confirmLogout()" class="confirm-logout-btn">Logout</button>
-                        <button onclick="closeLogoutPopup()" class="cancel-logout-btn">Cancel</button>
-                    </div>
+        <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
+            <div class="popup-content">
+                <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>
+                <p>Are you sure you want to logout?
+                <p>
+                <div class="logout-btns">
+                    <button onclick="confirmLogout()" class="confirm-logout-btn">Logout</button>
+                    <button onclick="closeLogoutPopup()" class="cancel-logout-btn">Cancel</button>
                 </div>
             </div>
+        </div>
 
-            <div id="imagePopup" class="popup-image" style="display: none; padding-top: 100px;">
-                <div class="image-content">
-                    <img id="popupImage" src="" alt="Proof of Payment" style="width: auto; height: 550px;">
+        <div id="imagePopup" class="popup-image" style="display: none; padding-top: 100px;">
+            <div class="image-content">
+                <img id="popupImage" src="" alt="Proof of Payment" style="width: auto; height: 550px;">
+            </div>
+        </div>
+
+        <div id="archiveConfirmationPopup" class="popup-container" style="display: none;">
+            <div class="popup-content">
+                <span class="close-btn" onclick="closeArchivePopup()">&times;</span>
+                <p>Are you sure you want to archive this item "<span id="archiveItemName"></span>"?</p>
+                <div class="logout-btns">
+                    <button onclick="confirmArchiveItem()" class="confirm-logout-btn">Archive</button>
+                    <button onclick="closeArchivePopup()" class="cancel-logout-btn">Cancel</button>
                 </div>
             </div>
+        </div>
 
-            <div id="archiveConfirmationPopup" class="popup-container" style="display: none;">
-                <div class="popup-content">
-                    <span class="close-btn" onclick="closeArchivePopup()">&times;</span>
-                    <p>Are you sure you want to archive this item "<span id="archiveItemName"></span>"?</p>
-                    <div class="logout-btns">
-                        <button onclick="confirmArchiveItem()" class="confirm-logout-btn">Archive</button>
-                        <button onclick="closeArchivePopup()" class="cancel-logout-btn">Cancel</button>
-                    </div>
+        <div id="archiveStockConfirmationPopup" class="popup-container" style="display: none;">
+            <div class="popup-content">
+                <span class="close-btn" onclick="closeArchivePopup()">&times;</span>
+                <p>This item "<span id="archiveStockItemName"></span>" still has stock. Are you sure you want to archive it?</p>
+                <div class="logout-btns">
+                    <button onclick="confirmArchiveItem()" class="confirm-logout-btn">Proceed</button>
+                    <button onclick="closeArchivePopup()" class="cancel-logout-btn">Cancel</button>
                 </div>
             </div>
+        </div>
 
-            <div id="archiveStockConfirmationPopup" class="popup-container" style="display: none;">
-                <div class="popup-content">
-                    <span class="close-btn" onclick="closeArchivePopup()">&times;</span>
-                    <p>This item "<span id="archiveStockItemName"></span>" still has stock. Are you sure you want to archive it?</p>
-                    <div class="logout-btns">
-                        <button onclick="confirmArchiveItem()" class="confirm-logout-btn">Proceed</button>
-                        <button onclick="closeArchivePopup()" class="cancel-logout-btn">Cancel</button>
-                    </div>
-                </div>
-            </div>
+        <script>
+            // Function to toggle the sidebar and update session variable
+            function toggleSidebar() {
+                var isChecked = document.getElementById('nav-toggle').checked;
+                var newState = isChecked ? 'true' : 'false';
 
-            <script>
-                // Function to toggle the sidebar and update session variable
-                function toggleSidebar() {
-                    var isChecked = document.getElementById('nav-toggle').checked;
-                    var newState = isChecked ? 'true' : 'false';
+                // Update session variable using AJAX
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("POST", "", true);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send("nav_toggle=" + newState);
+            }
 
-                    // Update session variable using AJAX
-                    var xhttp = new XMLHttpRequest();
-                    xhttp.open("POST", "", true);
-                    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                    xhttp.send("nav_toggle=" + newState);
-                }
+            // Add event listener to checkbox change
+            document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
 
-                // Add event listener to checkbox change
-                document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
+            function openImagePopup(imageUrl) {
+                var popup = document.getElementById('imagePopup');
+                var image = document.getElementById('popupImage');
+                image.src = imageUrl;
+                popup.style.display = 'flex';
+            }
 
-                function openImagePopup(imageUrl) {
-                    var popup = document.getElementById('imagePopup');
-                    var image = document.getElementById('popupImage');
-                    image.src = imageUrl;
-                    popup.style.display = 'flex';
-                }
+            document.addEventListener('DOMContentLoaded', function() {
+                var popup = document.getElementById('imagePopup');
 
-                document.addEventListener('DOMContentLoaded', function() {
-                    var popup = document.getElementById('imagePopup');
-
-                    popup.addEventListener('click', function(event) {
-                        if (event.target === popup) {
-                            popup.style.display = 'none';
-                        }
-                    });
+                popup.addEventListener('click', function(event) {
+                    if (event.target === popup) {
+                        popup.style.display = 'none';
+                    }
                 });
-            </script>
+            });
+        </script>
 </body>
 
 </html>

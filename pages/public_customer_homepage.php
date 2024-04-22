@@ -109,7 +109,7 @@
                             <h3 class='marquee'><?php echo $item_name; ?></h3>
                             <div class='price'>₱ <?php echo number_format($item_price, 2); ?></div>
                             <?php if ($item_quantity > 0) { ?>
-                                <a href='product_details.php?item_id=<?php echo $item_id; ?>' class='btn'><i class='fa-solid fa-cart-plus'></i> Add to Cart</a>
+                                <a href='public_product_details.php?item_id=<?php echo $item_id; ?>' class='btn'><i class='fa-solid fa-cart-plus'></i> Add to Cart</a>
                             <?php } else { ?>
                                 <button class='btn' disabled style='cursor: not-allowed; background-color: gray; border-radius: 3px;'><i class='fa-solid fa-cart-plus'></i> Out of Stock</button>
                             <?php } ?>
@@ -152,7 +152,7 @@
                             <h3 class='marquee'><?php echo $item_name; ?></h3>
                             <div class='price'>₱ <?php echo number_format($item_price, 2); ?></div>
                             <?php if ($item_quantity > 0) { ?>
-                                <a href='product_details.php?item_id=<?php echo $item_id; ?>' class='btn'><i class='fa-solid fa-cart-plus'></i> Add to Cart</a>
+                                <a href='public_product_details.php?item_id=<?php echo $item_id; ?>' class='btn'><i class='fa-solid fa-cart-plus'></i> Add to Cart</a>
                             <?php } else { ?>
                                 <button class='btn' disabled style='cursor: not-allowed; background-color: gray; border-radius: 3px;'><i class='fa-solid fa-cart-plus'></i> Out of Stock</button>
                             <?php } ?>
@@ -287,7 +287,7 @@
 
         function handleImageClick(itemId) {
             // Construct the URL for the product details page
-            var url = "product_details.php?item_id=" + itemId;
+            var url = "public_product_details.php?item_id=" + itemId;
             // Redirect the user to the product details page
             window.location.href = url;
         }

@@ -194,7 +194,7 @@
             // Your existing order processing code starts here since a default address exists
             $items_ordered = array_column($cartItems, 'item_name');
             $items_ordered_str = implode(", ", $items_ordered);
-            $date_of_purchase = date("Y-m-d");
+            $date_of_purchase = "NOW()";
             $order_id = uniqid();
 
             $item_quantities = array_column($cartItems, 'quantity');
@@ -218,8 +218,8 @@
             $image1 = array_column($cartItems, 'item_image1');
             $item_images_str = implode(", ", $image1);
 
-            $insert_query = $con->prepare("INSERT INTO orders (order_id, customer_id, address, items_ordered, item_quantity, items_category, items_artist, items_price, subtotal, total, shipping_fee, overall_total, date_of_purchase, items_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $insert_query->bind_param("sissssssssssss", $order_id, $customer_id, $fullAddress, $items_ordered_str, $item_quantities_str, $item_categories_str, $item_artists_str, $item_price_str, $item_subtotal_str, $cartTotal, $shippingFee, $overallTotal, $date_of_purchase, $item_images_str);
+            $insert_query = $con->prepare("INSERT INTO orders (order_id, customer_id, address, items_ordered, item_quantity, items_category, items_artist, items_price, subtotal, total, shipping_fee, overall_total, date_of_purchase, items_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)");
+            $insert_query->bind_param("sisssssssssss", $order_id, $customer_id, $fullAddress, $items_ordered_str, $item_quantities_str, $item_categories_str, $item_artists_str, $item_price_str, $item_subtotal_str, $cartTotal, $shippingFee, $overallTotal, $item_images_str);
 
             if ($insert_query->execute()) {
 
