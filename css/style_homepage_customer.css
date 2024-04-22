@@ -372,7 +372,7 @@ section{
     border-radius: 5px; /* Rounded corners */
     cursor: pointer; /* Show pointer cursor on hover */
     background: none;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
     margin: 5px;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
