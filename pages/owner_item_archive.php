@@ -423,7 +423,7 @@
                                 $item_image3 = $row['item_image3'];
                                 $archive_timestamp = $row['archive_timestamp'];
                                 $archive_date = new DateTime($archive_timestamp);
-                                $expiration_date = $archive_date->modify('+30 days');
+                                $expiration_date = $archive_date->modify('+90 days');
                                 $today = new DateTime();
                                 $interval = $today->diff($expiration_date);
                                 $days_left = $interval->days;
