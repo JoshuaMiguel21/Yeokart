@@ -72,7 +72,9 @@ $result_artists = mysqli_query($con, $select_artists);
         </div>
         <div class="header-2">
             <nav class="navbar">
-
+                <div class="filter-button-container">
+                    <button id="filterButton" onclick="toggleFilterSection()">Filter & Sort <span id="arrowIcon">&#x25BC;</span></button>
+                </div>
                 <div class="filter-section">
                     <form method="GET">
                         <h3>Filter By Category</h3>
@@ -449,6 +451,22 @@ $result_artists = mysqli_query($con, $select_artists);
         </script>
 
 
+        <script>
+            function toggleFilterSection() {
+                var filterSection = document.querySelector('.filter-section');
+                var arrowIcon = document.getElementById('arrowIcon');
+
+                if (filterSection.style.maxHeight) {
+                    // If the max-height is set, hide the section
+                    filterSection.style.maxHeight = null;
+                    arrowIcon.innerHTML = '&#x25BC;'; // Change arrow to down
+                } else {
+                    // If the max-height is not set, show the section
+                    filterSection.style.maxHeight = filterSection.scrollHeight + "px";
+                    arrowIcon.innerHTML = '&#x25B2;'; // Change arrow to up
+                }
+            }
+        </script>
 
 
 

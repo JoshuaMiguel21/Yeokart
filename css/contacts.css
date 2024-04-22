@@ -75,6 +75,7 @@ section{
     text-align: right;
     transition: all 0.6s ease;
     padding: 0.2em 0.5em; /* Adjusted padding */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow */
 }
 
 .sign-in-button:hover {
