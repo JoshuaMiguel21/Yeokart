@@ -87,8 +87,6 @@
             $notification['days_difference'] = getDaysDifference($notification['created_at']);
             $notifications[] = $notification;
         }
-    } else {
-        echo "<p>No notifications found.</p>";
     }
     ?>
 
