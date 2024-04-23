@@ -36,26 +36,26 @@
             $mail->isSMTP();                                            //Send using SMTP
             $mail->Host       = 'smtp.gmail.com';                       //Set the SMTP server to send through
             $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-            $mail->Username   = 'cipcastro123@gmail.com';               //SMTP username
-            $mail->Password   = 'rzktkbebxdissxix';                     //SMTP password
+            $mail->Username   = 'yeokartstore@gmail.com';               //SMTP username
+            $mail->Password   = 'oiprjetdssfltprn';                     //SMTP password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         //Enable implicit TLS encryption
             $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
             //Recipients
-            $mail->setFrom('cipcastro123@gmail.com', 'Ivan Castro');
+            $mail->setFrom('yeokartstore@gmail.com', 'YeoKart');
             $mail->addAddress($email);
 
             //Content
             $mail->isHTML(true);                                  //Set email format to HTML
-            $mail->Subject = 'Yeokart - Password Reset Link';
+            $mail->Subject = 'YeoKart - Password Reset Link';
             $mail->Body    = "<p>Dear User,</p>
-                                    <p>We received a password reset request for your Yeokart WebApp account. If you did not initiate this request, please ignore this email.</p>
+                                    <p>We received a password reset request for your YeoKart WebApp account. If you did not initiate this request, please ignore this email.</p>
                                     <p>To reset your password, click on the following link:</p>
                                     <a href='http://localhost/Yeokart/pages/updatepassword.php?email=$email&reset_token=$reset_token'>
                                         Reset Password
                                     </a>
-                                    <p>Thank you for using Yeokart WebApp!</p>
-                                    <p>Best regards,<br>Yeokart Support Team</p>";
+                                    <p>Thank you for using YeoKart WebApp!</p>
+                                    <p>Best regards,<br>The YeoKart Team</p>";
 
             $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 

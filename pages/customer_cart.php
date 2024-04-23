@@ -133,8 +133,6 @@ if ($notifications_result->num_rows > 0) {
         $notification['days_difference'] = getDaysDifference($notification['created_at']);
         $notifications[] = $notification;
     }
-} else {
-    echo "<p>No notifications found.</p>";
 }
 ?>
 
@@ -224,9 +222,9 @@ if ($notifications_result->num_rows > 0) {
                                 echo "<input type='submit' style='display: none;'>";
                                 echo "</form>";
                                 echo "</div>";
-                                echo "<p class='btn-area'>";
+                                echo "<p class='btn-area' onclick='openDeletePopup({$row['cart_id']})'>";
                                 echo "<i class='fa fa-trash'></i>";
-                                echo "<span class='btn2'onclick='openDeletePopup({$row['cart_id']})'> Remove</span>";
+                                echo "<span class='btn2'> Remove</span>";
                                 echo "</p>";
                                 echo "</div>";
                                 echo "</div>";

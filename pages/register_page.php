@@ -116,25 +116,25 @@
                             $mail->isSMTP();                                            //Send using SMTP
                             $mail->Host       = 'smtp.gmail.com';                       //Set the SMTP server to send through
                             $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-                            $mail->Username   = 'cipcastro123@gmail.com';               //SMTP username
-                            $mail->Password   = 'rzktkbebxdissxix';                     //SMTP password
+                            $mail->Username   = 'yeokartstore@gmail.com';               //SMTP username
+                            $mail->Password   = 'oiprjetdssfltprn';                        //SMTP password
                             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         //Enable implicit TLS encryption
                             $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
                             //Recipients
-                            $mail->setFrom('cipcastro123@gmail.com', 'Ivan Castro');
+                            $mail->setFrom('yeokartstore@gmail.com', 'YeoKart');
                             $mail->addAddress($email);                                  //Add a recipient
 
                             //Content
                             $mail->isHTML(true);                                        //Set email format to HTML
-                            $mail->Subject = 'Yeokart - Email Verification for Account Creation';
+                            $mail->Subject = 'YeoKart - Email Verification for Account Creation';
                             $mail->Body    = "<p>Dear User,</p>
-                                                <p>Thank you for registering with <b>Yeokart</b>. To ensure the security of your account 
+                                                <p>Thank you for registering with <b>YeoKart</b>. To ensure the security of your account 
                                                 and to activate your membership, we need to verify your email address.</p>
                                                 <p>Please click the link below to complete the email verification process:</p>
                                                 <p><a href='http://localhost/Yeokart/pages/verify_email.php?email=$email&v_code=$v_code'>Verify Your Email</a></p>
-                                                <p>Thank you for using Yeokart WebApp!</p>
-                                                <p>Best regards,<br>Your Company Name Support Team</p>";
+                                                <p>Thank you for using YeoKart WebApp!</p>
+                                                <p>Best regards,<br>The YeoKart Team</p>";
                             $mail->send();
                             return true;
                         } catch (Exception $e) {
