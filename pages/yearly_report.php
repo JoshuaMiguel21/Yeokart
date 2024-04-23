@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link href="../css/monthlyreport.css" rel="stylesheet" />
     <link rel="icon" type="image/png" href="../res/icon.png">
+    <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
     <title>Yearly Report - Yeokart</title>
 </head>
 <script>
@@ -162,6 +163,41 @@
             echo "Error: " . $sql . "<br>" . $con->error;
         }
     }
+    $dataPoints = array();
+
+    // Create an array of month names
+    $months = array(
+        1 => "January", 2 => "February", 3 => "March", 4 => "April",
+        5 => "May", 6 => "June", 7 => "July", 8 => "August",
+        9 => "September", 10 => "October", 11 => "November", 12 => "December"
+    );
+
+    // Query to get the total for each month
+    $sql = "SELECT MONTH(date_of_purchase) AS month, SUM(total) AS total_monthly FROM orders WHERE YEAR(date_of_purchase) = $selectedYear AND (status = 'delivered') AND proof_of_payment <> '' GROUP BY MONTH(date_of_purchase)";
+    $result = $con->query($sql);
+
+    // Initialize an array to store the total for each month
+    $totalByMonth = array_fill(1, 12, 0);
+
+    if ($result->num_rows > 0) {
+        // Loop through each row of the result set
+        while ($row = $result->fetch_assoc()) {
+            // Update the total for the corresponding month
+            $totalByMonth[$row["month"]] = $row["total_monthly"];
+        }
+    }
+
+    // Populate the $dataPoints array with data for each month
+    $currentMonth = date("n");
+    foreach ($months as $monthNumber => $monthName) {
+        if ($monthNumber <= $currentMonth) {
+            $dataPoints[] = array("y" => $totalByMonth[$monthNumber], "label" => $monthName);
+        } else {
+            $dataPoints[] = array("y" => null, "label" => $monthName);
+        }
+    }
+
+
     ?>
     <input type="checkbox" id="nav-toggle" <?php echo $_SESSION['nav_toggle'] ? 'checked' : ''; ?>>
     <div class="sidebar <?php echo $_SESSION['nav_toggle'] ? 'open' : ''; ?>">
@@ -312,9 +348,11 @@
                 </div>
             </div>
             <br></br>
+            <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+            <br></br>
             <div class="head-title">
                 <div class="left">
-                    <h3>Best Seller Items</h3>
+                    <h3>Most Sold Items</h3>
                 </div>
             </div>
             <div class="table">
@@ -420,6 +458,21 @@
                     if (!button.hasAttribute('disabled')) {
                         document.getElementById('reportForm').submit();
                     }
+                }
+                window.onload = function() {
+                    var chart = new CanvasJS.Chart("chartContainer", {
+                        title: {
+                            text: "Total Sales Over Months"
+                        },
+                        axisY: {
+                            title: "Total Sales"
+                        },
+                        data: [{
+                            type: "line",
+                            dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
+                        }]
+                    });
+                    chart.render();
                 }
             </script>
 </body>

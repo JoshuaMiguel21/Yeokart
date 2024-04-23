@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link href="../css/monthlyreport.css" rel="stylesheet" />
     <link rel="icon" type="image/png" href="../res/icon.png">
-
+    <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
     <title>Monthly Report - Yeokart</title>
 </head>
 
@@ -164,6 +164,29 @@
             $totalIncome = number_format($row['total_income'], 2);
         } else {
             echo "Error: " . $sql . "<br>" . $con->error;
+        }
+    }
+    // Calculate the number of weeks in the selected month and year
+    $numDays = cal_days_in_month(CAL_GREGORIAN, $selectedMonth, $selectedYear);
+    $numWeeks = ceil($numDays / 7);
+
+    // Initialize an array to store the data points
+    $dataPoints = array();
+
+    // Loop through each week and calculate the total column of every order in that week
+    for ($week = 1; $week <= $numWeeks; $week++) {
+        $weekStartDate = date("Y-m-d", strtotime("{$selectedYear}-{$selectedMonth}-01 + " . ($week - 1) . " weeks"));
+        $weekEndDate = date("Y-m-d", strtotime("{$selectedYear}-{$selectedMonth}-01 + " . $week . " weeks - 1 day"));
+
+        // Query to calculate the total column of every order in the current week
+        $sql = "SELECT SUM(total) AS total_amount FROM orders WHERE date_of_purchase BETWEEN '$weekStartDate' AND '$weekEndDate' AND (status = 'delivered') AND proof_of_payment <> ''";
+        $result = $con->query($sql);
+
+        if ($result && $row = $result->fetch_assoc()) {
+            $totalAmount = $row['total_amount'] ? $row['total_amount'] : 0;
+            $dataPoints[] = array("y" => $totalAmount, "label" => "Week $week");
+        } else {
+            $dataPoints[] = array("y" => 0, "label" => "Week $week");
         }
     }
     ?>
@@ -326,9 +349,11 @@
                 </div>
             </div>
             <br></br>
+            <div id="lineChartContainer" style="height: 370px; width: 100%;"></div>
+            <br></br>
             <div class="head-title">
                 <div class="left">
-                    <h3>Best Seller Items</h3>
+                    <h3>Most Sold Items</h3>
                 </div>
             </div>
             <div class="table">
@@ -440,6 +465,21 @@
                     if (!button.hasAttribute('disabled')) {
                         document.getElementById('reportForm').submit();
                     }
+                }
+                window.onload = function() {
+                    var chart = new CanvasJS.Chart("lineChartContainer", {
+                        title: {
+                            text: "Total Sales Over Weeks"
+                        },
+                        axisY: {
+                            title: "Total Sales"
+                        },
+                        data: [{
+                            type: "line",
+                            dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
+                        }]
+                    });
+                    chart.render();
                 }
             </script>
 </body>

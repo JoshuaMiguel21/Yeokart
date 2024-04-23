@@ -125,7 +125,7 @@
 
     function deleteExpiredArchivedItems($con)
     {
-        $delete_query = "DELETE FROM products WHERE is_archive = 1 AND archive_timestamp <= DATE_SUB(NOW(), INTERVAL 30 DAY)";
+        $delete_query = "DELETE FROM products WHERE is_archive = 1 AND archive_timestamp <= DATE_SUB(NOW(), INTERVAL 90 DAY)";
         if (mysqli_query($con, $delete_query)) {
             // Deleted expired archived items successfully
         } else {

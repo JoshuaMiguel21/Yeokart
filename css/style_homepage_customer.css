@@ -85,6 +85,7 @@ section{
     text-align: right;
     transition: all 0.6s ease;
     padding: 0.2em 0.5em; /* Adjusted padding */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow */
 }
 
 .sign-in-button:hover {
@@ -213,7 +214,7 @@ section{
     background: var(--pink);
 }
 
-.header .header-2 .navbar{
+.header .header-2 .navbar{  
     text-align: center;
 }
 
@@ -358,17 +359,48 @@ section{
     grid-gap: 20px;
 }
 
+.filter-button-container {
+    position: relative;
+    display: inline-block;
+}
+
+.filter-button-container button{
+    padding: 5px 10px; /* Padding around text inside button */
+    background-color: var(--dark-color); /* Background color of button */
+    color: white; /* Text color of button */
+    border: none; /* Remove default button border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Show pointer cursor on hover */
+    background: none;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 5px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
+}
+
+.filter-button-container button:hover{
+    background-color: var(--dark-color);
+    color: white;
+    
+}
+
 .filter-section {
     color: #fff;
-    display: flex; /* Use Flexbox to align children side by side */
-    justify-content: center; /* Center the dropdowns */
-    align-items: center; /* Align items vertically in the center */
-    flex-wrap: wrap; /* Allow the items to wrap if necessary */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    max-height: 0; /* Initially hidden */
+    overflow: hidden;
+    transition: max-height 0.5s ease-out; /* Animation for slide down */
 }
+
 
 .filter-section h3 {
     font-size: 12px;
     margin-top: 5px;
+    padding-right: 65px; /* Adjust the value to your preference */
+
 }
 
 .filter-section > form {

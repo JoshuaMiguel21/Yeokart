@@ -61,12 +61,13 @@
         echo "Error: " . $sql . "<br>" . $con->error;
     }
 
-    function getDaysDifference($date) {
+    function getDaysDifference($date)
+    {
         $now = new DateTime();
         $notificationDate = new DateTime($date);
         $interval = $now->diff($notificationDate);
         $days = $interval->days;
-    
+
         if ($days === 0) {
             return 'Today';
         } elseif ($days === 1) {
@@ -75,11 +76,11 @@
             return $days . ' days ago';
         }
     }
-    
+
     // Query to get notifications for the logged-in customer
     $notification_query = "SELECT * FROM notifications WHERE customer_id = $customer_id ORDER BY created_at DESC";
     $notifications_result = $con->query($notification_query);
-    
+
     $notifications = array();
     if ($notifications_result->num_rows > 0) {
         while ($notification = $notifications_result->fetch_assoc()) {
@@ -108,7 +109,7 @@
         <div id="notificationPopup" style="display: none; position: absolute; right: 10px; top: 60px; background-color: white; border: 1px solid #ccc; padding: 10px; width: 300px; z-index: 100;">
             <h2 style="margin: 10px 0">Notifications</h2>
             <hr class="notif">
-            <?php foreach ($notifications as $notification): ?>
+            <?php foreach ($notifications as $notification) : ?>
                 <div class="notification-item" style="padding: 10px; border-bottom: 1px solid #eee;">
                     <p><strong><?php echo htmlspecialchars($notification['title']); ?></strong></p>
                     <p><?php echo htmlspecialchars($notification['message']); ?></p>
@@ -152,6 +153,9 @@
             </div>
             <div class="header-2">
                 <nav class="navbar">
+                    <div class="filter-button-container">
+                        <button id="filterButton" onclick="toggleFilterSection()">Filter & Sort <span id="arrowIcon">&#x25BC;</span></button>
+                    </div>
 
                     <div class="filter-section">
                         <form method="GET">
@@ -533,7 +537,7 @@
 
                     function handleNotificationClick(event) {
                         if (window.matchMedia('(max-width: 768px)').matches) {
-                            window.location.href = 'notification_page.php'; 
+                            window.location.href = 'notification_page.php';
                         } else {
                             event.preventDefault();
                             if (notificationPopup.style.display === 'none' || !notificationPopup.style.display) {
@@ -555,6 +559,25 @@
 
                 });
             </script>
+
+            <script>
+                function toggleFilterSection() {
+                    var filterSection = document.querySelector('.filter-section');
+                    var arrowIcon = document.getElementById('arrowIcon');
+
+                    if (filterSection.style.maxHeight) {
+                        // If the max-height is set, hide the section
+                        filterSection.style.maxHeight = null;
+                        arrowIcon.innerHTML = '&#x25BC;'; // Change arrow to down
+                    } else {
+                        // If the max-height is not set, show the section
+                        filterSection.style.maxHeight = filterSection.scrollHeight + "px";
+                        arrowIcon.innerHTML = '&#x25B2;'; // Change arrow to up
+                    }
+                }
+            </script>
+
+
 
 
 
