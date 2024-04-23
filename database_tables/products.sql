@@ -40,7 +40,8 @@ CREATE TABLE `products` (
   `item_image3` varchar(250) NOT NULL,
   `is_featured` tinyint(1) NOT NULL,
   `times_sold` int(11) NOT NULL,
-  `is_archive` tinyint(1) NOT NULL
+  `is_archive` tinyint(1) NOT NULL,
+  `archive_timestamp` timestamp DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --

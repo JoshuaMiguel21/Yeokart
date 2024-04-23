@@ -40,7 +40,7 @@ CREATE TABLE `orders` (
   `total` decimal(10,2) DEFAULT NULL,
   `shipping_fee` decimal(10,2) DEFAULT NULL,
   `overall_total` decimal(10,2) DEFAULT NULL,
-  `date_of_purchase` date DEFAULT NULL,
+  `date_of_purchase` timestamp DEFAULT NULL,
   `status` enum('Pending','Processing','Shipped','Delivered','Invalid') NOT NULL DEFAULT 'Pending',
   `items_image` varchar(255) NOT NULL,
   `proof_of_payment` varchar(255) NOT NULL,
