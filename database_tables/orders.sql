@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 10, 2024 at 07:12 PM
+-- Generation Time: Apr 23, 2024 at 04:26 PM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -40,7 +40,7 @@ CREATE TABLE `orders` (
   `total` decimal(10,2) DEFAULT NULL,
   `shipping_fee` decimal(10,2) DEFAULT NULL,
   `overall_total` decimal(10,2) DEFAULT NULL,
-  `date_of_purchase` timestamp DEFAULT NULL,
+  `date_of_purchase` timestamp NULL DEFAULT NULL,
   `status` enum('Pending','Processing','Shipped','Delivered','Invalid') NOT NULL DEFAULT 'Pending',
   `items_image` varchar(255) NOT NULL,
   `proof_of_payment` varchar(255) NOT NULL,
@@ -48,25 +48,11 @@ CREATE TABLE `orders` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Indexes for dumped tables
---
-
---
 -- Indexes for table `orders`
 --
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`order_id`),
   ADD KEY `customer_id` (`customer_id`);
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `orders`
---
-ALTER TABLE `orders`
-  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `user_accounts` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
