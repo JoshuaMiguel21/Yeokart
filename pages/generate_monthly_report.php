@@ -1,30 +1,4 @@
 <?php
-//============================================================+
-// File name   : example_011.php
-// Begin       : 2008-03-04
-// Last Update : 2013-05-14
-//
-// Description : Example 011 for TCPDF class
-//               Colored Table (very simple table)
-//
-// Author: Nicola Asuni
-//
-// (c) Copyright:
-//               Nicola Asuni
-//               Tecnick.com LTD
-//               www.tecnick.com
-//               info@tecnick.com
-//============================================================+
-
-/**
- * Creates an example PDF TEST document using TCPDF
- * @package com.tecnick.tcpdf
- * @abstract TCPDF - Example: Colored Table
- * @author Nicola Asuni
- * @since 2008-03-04
- */
-
-// Include the main TCPDF library (search for installation path).
 require_once('TCPDF-main/tcpdf.php');
 
 // extend TCPF with custom functions
@@ -38,30 +12,27 @@ class MYPDF extends TCPDF
         $startDate = $_POST['startDate'];
         $endDate = $_POST['endDate'];
         $select_query = "
-        SELECT
+            SELECT
             o.item_name,
             o.items_artist,
             o.items_category,
             SUM(o.item_quantity) AS total_sold
-        FROM (
+            FROM (
             SELECT
-                TRIM(LEADING ',' FROM SUBSTRING_INDEX(SUBSTRING_INDEX(items_ordered, ', ', n.digit+1), ', ', -1)) AS item_name,
-                TRIM(LEADING ',' FROM SUBSTRING_INDEX(SUBSTRING_INDEX(item_quantity, ', ', n.digit+1), ', ', -1)) AS item_quantity,
-                TRIM(LEADING ',' FROM SUBSTRING_INDEX(SUBSTRING_INDEX(items_artist, ', ', n.digit+1), ', ', -1)) AS items_artist,
-                TRIM(LEADING ',' FROM SUBSTRING_INDEX(SUBSTRING_INDEX(items_category, ', ', n.digit+1), ', ', -1)) AS items_category
+            TRIM(LEADING ',' FROM SUBSTRING_INDEX(SUBSTRING_INDEX(items_ordered, ', ', n.digit+1), ', ', -1)) AS item_name,
+            TRIM(LEADING ',' FROM SUBSTRING_INDEX(SUBSTRING_INDEX(item_quantity, ', ', n.digit+1), ', ', -1)) AS item_quantity,
+            TRIM(LEADING ',' FROM SUBSTRING_INDEX(SUBSTRING_INDEX(items_artist, ', ', n.digit+1), ', ', -1)) AS items_artist,
+            TRIM(LEADING ',' FROM SUBSTRING_INDEX(SUBSTRING_INDEX(items_category, ', ', n.digit+1), ', ', -1)) AS items_category
             FROM orders
             JOIN (
-                SELECT 0 AS digit UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL
-                SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9
+            SELECT 0 AS digit UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL
+            SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9
             ) AS n
-            WHERE n.digit < LENGTH(items_ordered) - LENGTH(REPLACE(items_ordered, ',', '')) + 1
-                AND date_of_purchase BETWEEN '$startDate' AND '$endDate'
-                AND (status = 'delivered')
-                AND proof_of_payment <> ''
-        ) AS o
-        GROUP BY o.item_name
-        ORDER BY total_sold DESC
-        LIMIT 10";
+            WHERE n.digit < LENGTH(items_ordered) - LENGTH(REPLACE(items_ordered, ',' , '' )) + 1 AND date_of_purchase BETWEEN '$startDate' AND '$endDate' AND (status='delivered' ) AND proof_of_payment <> ''
+                ) AS o
+                GROUP BY o.item_name
+                ORDER BY total_sold DESC
+                LIMIT 10";
 
         $result_query = mysqli_query($con, $select_query);
         if (!$result_query) {
@@ -194,12 +165,12 @@ if (isset($_POST['total_income'])) {
 }
 
 // print colored table
-$pdf->ColoredTable('Best Seller Items', $header, $data, $orderCount, $totalItemsSold, $totalRevenue, $totalIncome);
+$pdf->ColoredTable('Most Sold Items', $header, $data, $orderCount, $totalItemsSold, $totalRevenue, $totalIncome);
 // ---------------------------------------------------------
 
 // close and output PDF document
 $pdf->Output('' . $selectedMonth . '_' . $selectedYear . '_yeokart_monthly_report.pdf', 'I');
 
-//============================================================+
-// END OF FILE
-//============================================================+
+        //============================================================+
+        // END OF FILE
+        //============================================================+
