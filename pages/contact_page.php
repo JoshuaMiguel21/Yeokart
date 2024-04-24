@@ -192,7 +192,7 @@ if ($notifications_result->num_rows > 0) {
                     </li>
                     <li class="home-class"><a href="customer_homepage.php" id="home-nav">Home</a></li>
                     <li><a href="customer_shop.php">Shop</a></li>
-                    <li><a href="#">FAQ</a></li>
+                    <li><a href="faq.php">FAQ</a></li>
                     <li><a href="contact_page.php" class="active">Contact Us</a></li>
                     <li><a href="customer_cart.php"><i class="fas fa-shopping-cart"></i><span id="cart-num"><?php echo $cartCount; ?></span></a></li>
                     <li><a href="customer_profile.php" id="user-btn"><i class="fas fa-user"></i></a></li>
