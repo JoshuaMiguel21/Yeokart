@@ -79,9 +79,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['order_id']) && isset($
 
         $notification_title = "Order Status Update";
 
-        $insert_notification_query = "INSERT INTO notifications (customer_id, title, message) VALUES (?, ?, ?)";
+        // Updated to include order_id in the insert statement
+        $insert_notification_query = "INSERT INTO notifications (customer_id, title, message, order_id) VALUES (?, ?, ?, ?)";
         $stmt = mysqli_prepare($con, $insert_notification_query);
-        mysqli_stmt_bind_param($stmt, "iss", $customer_id, $notification_title, $notification_message);
+        mysqli_stmt_bind_param($stmt, "isss", $customer_id, $notification_title, $notification_message, $order_id);
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
 

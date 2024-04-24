@@ -131,7 +131,8 @@
 include('../database/db_yeokart.php');
 
 if (isset($_POST['insert_item'])) {
-    $item_name = strtolower($_POST['item_name']);
+    $item_name_original = $_POST['item_name']; // Store the original casing
+    $item_name = strtolower($item_name_original); // Convert to lowercase for comparison
     $item_price = $_POST['item_price'];
     $item_description = mysqli_real_escape_string($con, $_POST['item_description']);
     $item_quantity = $_POST['item_quantity'];
@@ -167,7 +168,7 @@ if (isset($_POST['insert_item'])) {
             move_uploaded_file($temp_image2, "./item_images/$item_image2");
             move_uploaded_file($temp_image3, "./item_images/$item_image3");
 
-            $insert_items = "INSERT INTO products (item_name,item_price,item_description,item_quantity,artist_name,category_name,item_image1,item_image2,item_image3) VALUES ('$item_name','$item_price','$item_description','$item_quantity', '$product_artist','$product_category','$item_image1','$item_image2','$item_image3')";
+            $insert_items = "INSERT INTO products (item_name,item_price,item_description,item_quantity,artist_name,category_name,item_image1,item_image2,item_image3) VALUES ('$item_name_original','$item_price','$item_description','$item_quantity', '$product_artist','$product_category','$item_image1','$item_image2','$item_image3')";
             $result_query_item = mysqli_query($con, $insert_items);
             if ($result_query_item) {
 

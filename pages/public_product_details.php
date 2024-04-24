@@ -43,7 +43,7 @@ if (isset($_GET['item_id'])) {
         <div class="header-1">
             <a href="public_customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>
             <div class="icons">
-                <form action="customer_shop.php" method="GET" class="search-form">
+                <form action="public_customer_shop.php" method="GET" class="search-form">
                     <input type="search" name="search" placeholder="Search here..." id="search-box">
                     <button type="submit"><i class="fas fa-search"></i></button>
                 </form>
@@ -61,7 +61,7 @@ if (isset($_GET['item_id'])) {
                     </li>
                     <li class="home-class"><a href="public_customer_homepage.php" id="home-nav">Home</a></li>
                     <li><a href="customer_shop.php" class="active">Shop</a></li>
-                    <li><a href="#">FAQ</a></li>
+                    <li><a href="public_faq.php">FAQ</a></li>
                     <li><a href="public_contact_page.php">Contact Us</a></li>
                     <button class="sign-in-button" onclick="window.location.href='login_page.php';">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

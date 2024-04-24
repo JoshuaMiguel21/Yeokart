@@ -39,8 +39,8 @@
                     </li>
                     <li class="home-class"><a href="customer_homepage.php" id="home-nav">Home</a></li>
                     <li><a href="public_customer_shop.php">Shop</a></li>
-                    <li><a href="public_faq.php">FAQ</a></li>
-                    <li><a href="public_contact_page.php" class="active">Contact Us</a></li>
+                    <li><a href="public_faq.php"  class="active">FAQ</a></li>
+                    <li><a href="public_contact_page.php">Contact Us</a></li>
                     <button class="sign-in-button" onclick="window.location.href='login_page.php';">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"></path>
@@ -56,45 +56,12 @@
             </div>
         </div>
     </header>
-    <section class="contacts" id="contacts">
+    <section class="faq" id="faq">
         <div class="container">
-            <h1 class="heading"><span>Contact Us</span></h1>
+            <h1 class="heading"><span>Frequently Asked Questions</span></h1>
             <br></br>
 
-            <div class="box-container">
-                <?php
-                include('../database/db_yeokart.php');
-                $select_query = "SELECT * FROM contacts";
-                $result_query = mysqli_query($con, $select_query);
-
-                if (mysqli_num_rows($result_query) > 0) {
-                    while ($row = mysqli_fetch_assoc($result_query)) {
-                        $contacts_id = $row['contacts_id'];
-                        $contacts_name = $row['contacts_name'];
-                        $icon_link = $row['icon_link'];
-                        $contacts_description = $row['contacts_description'];
-
-                        if ($icon_link !== "<i class='fa-solid fa-peso-sign'></i>") {
-                            if (filter_var($contacts_description, FILTER_VALIDATE_URL)) {
-                                $contacts_link = "<a href='$contacts_description' target='_blank'>$contacts_description</a>";
-                            } else {
-                                $contacts_link = $contacts_description;
-                            }
-
-                            echo "<div class='box'>
-                            <div class='iconbox'>
-                                $icon_link
-                            </div>
-                            <h3>$contacts_name</h3>
-                            <p>$contacts_link</p>
-                        </div>";
-                        }
-                    }
-                } else {
-                    echo "<h1>No contacts found.</h1>";
-                }
-                ?>
-            </div>
+ 
         </div>
     </section>
     <script>
