@@ -248,7 +248,7 @@ function deleteOldOrders($con)
                     </li>
                     <li class="home-class"><a href="customer_homepage.php" id="home-nav">Home</a></li>
                     <li><a href="customer_shop.php">Shop</a></li>
-                    <li><a href="#">FAQ</a></li>
+                    <li><a href="faq.php">FAQ</a></li>
                     <li><a href="contact_page.php">Contact Us</a></li>
                     <li><a href="customer_cart.php"><i class="fas fa-shopping-cart"><span id="cart-num"><?php echo $cartCount; ?></span></i></a></li>
                     <li><a href="customer_profile.php" id="user-btn" class="active"><i class="fas fa-user"></i></a></li>

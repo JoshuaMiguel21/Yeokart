@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contacts - Yeokart</title>
+    <title>FAQ - Yeokart</title>
     <link rel="icon" type="image/png" href="../res/icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -125,8 +125,8 @@ if ($notifications_result->num_rows > 0) {
                     </li>
                     <li class="home-class"><a href="customer_homepage.php" id="home-nav">Home</a></li>
                     <li><a href="customer_shop.php">Shop</a></li>
-                    <li><a href="faq.php">FAQ</a></li>
-                    <li><a href="contact_page.php" class="active">Contact Us</a></li>
+                    <li><a href="faq.php" class="active">FAQ</a></li>
+                    <li><a href="contact_page.php">Contact Us</a></li>
                     <li><a href="customer_cart.php"><i class="fas fa-shopping-cart"><span id="cart-num"><?php echo $cartCount; ?></span></i></a></li>
                     <li><a href="customer_profile.php" id="user-btn"><i class="fas fa-user"></i></a></li>
                     <li><a href="#" id="notificationIcon"><i class="fas fa-bell"></i></a></li>
@@ -134,45 +134,12 @@ if ($notifications_result->num_rows > 0) {
             </div>
         </div>
     </header>
-    <section class="contacts" id="contacts">
+    <section class="faq" id="faq">
         <div class="container">
-            <h1 class="heading"><span>Contact Us</span></h1>
+            <h1 class="heading"><span>Frequently Asked Questions</span></h1>
             <br></br>
 
-            <div class="box-container">
-                <?php
-                include('../database/db_yeokart.php');
-                $select_query = "SELECT * FROM contacts";
-                $result_query = mysqli_query($con, $select_query);
 
-                if (mysqli_num_rows($result_query) > 0) {
-                    while ($row = mysqli_fetch_assoc($result_query)) {
-                        $contacts_id = $row['contacts_id'];
-                        $contacts_name = $row['contacts_name'];
-                        $icon_link = $row['icon_link'];
-                        $contacts_description = $row['contacts_description'];
-
-                        if ($icon_link !== "<i class='fa-solid fa-peso-sign'></i>") {
-                            if (filter_var($contacts_description, FILTER_VALIDATE_URL)) {
-                                $contacts_link = "<a href='$contacts_description' target='_blank'>$contacts_description</a>";
-                            } else {
-                                $contacts_link = $contacts_description;
-                            }
-
-                            echo "<div class='box'>
-                            <div class='iconbox'>
-                                $icon_link
-                            </div>
-                            <h3>$contacts_name</h3>
-                            <p>$contacts_link</p>
-                        </div>";
-                        }
-                    }
-                } else {
-                    echo "<h1>No contacts found.</h1>";
-                }
-                ?>
-            </div>
         </div>
     </section>
     <script>
