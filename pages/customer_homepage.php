@@ -618,6 +618,12 @@ if ($notifications_result->num_rows > 0) {
 
 <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Check if the popup has already been shown
+            if (!localStorage.getItem('popupShown')) {
+                // If not shown, display the popup
+                document.getElementById('terms-popup').style.display = 'block';
+            }
+
             // Add event listener to the accept button
             document.querySelector('.button.is-primary').addEventListener('click', function() {
                 hidePopup();
@@ -628,14 +634,18 @@ if ($notifications_result->num_rows > 0) {
                 hidePopup();
             });
 
+            // Add event listener to the decline button
             document.querySelector('.button.is-ghost').addEventListener('click', function() {
+                // Handle the decline action if needed
+                // For example, redirect the user to another page
+                // window.location.href = 'decline_page.html';
                 hidePopup();
             });
         });
 
         function hidePopup() {
             // Hide the popup
-            document.querySelector('.terms-popup-content').style.visibility = 'hidden';
+            document.getElementById('terms-popup').style.display = 'none';
 
             // Set the flag indicating that the popup has been shown
             localStorage.setItem('popupShown', 'true');
