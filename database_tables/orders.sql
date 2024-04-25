@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 23, 2024 at 04:26 PM
+-- Generation Time: Apr 25, 2024 at 03:16 PM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -30,6 +30,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `orders` (
   `order_id` varchar(36) NOT NULL,
   `customer_id` int(11) DEFAULT NULL,
+  `email` varchar(255) NOT NULL,
   `address` text DEFAULT NULL,
   `items_ordered` text DEFAULT NULL,
   `item_quantity` text DEFAULT NULL,
