@@ -641,7 +641,6 @@ if ($notifications_result->num_rows > 0) {
             }
         }
 
-
         document.addEventListener('DOMContentLoaded', function() {
             const closeNotification = document.getElementById('close-notification');
             const cartNotification = document.getElementById('cart-notification');

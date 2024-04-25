@@ -139,6 +139,16 @@ if (isset($_SESSION['email'])) {
                     <i class="las la-edit"></i>
                     <span class="text">Edit Contact Details</span>
                 </a>
+
+                <a href="owner_featured.php" class="btn-employee active">
+                    <i class="las la-edit"></i>
+                    <span class="text">Edit Featured Section</span>
+                </a>
+
+                <a href="owner_faqs.php" class="btn-employee">
+                    <i class="las la-edit"></i>
+                    <span class="text">Edit FAQ's Section</span>
+                </a>
             </div>
 
             <div class="scrollable-container">

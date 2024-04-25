@@ -24,6 +24,12 @@
     .swal2-custom-title {
         font-size: 20px;
     }
+
+    .status-title{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 </style>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -587,7 +593,12 @@ function notificationExists($con, $customerId, $title, $orderId)
                                 break;
                         }
                         echo '" role="alert">';
-                        echo '<strong>Status:</strong> ' . $status . '<br>';
+                        echo '<div class="status-title">';
+                        echo '<strong>Status:' . ' ' . $status . '</strong>';
+                        if (in_array($row['status'], ['Processing', 'Shipped', 'Delivered'])) {
+                            echo '<a href="customer_orderstatus.php?order_id=' . $order_id . '" class="view-order-link" style>View Order</a>';
+                        }
+                        echo '</div>';
                         if ($status == "DELIVERED") {
                             echo 'Your order has been delivered. Thank you for shopping with us!';
                         } elseif ($status == "PROCESSING") {

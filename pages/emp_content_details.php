@@ -174,9 +174,17 @@ if (isset($_SESSION['email'])) {
 
             </div>
             <div class="head-buttons">
+                <a href="emp_content_details.php" class="btn-employee active">
+                    <i class="las la-edit"></i>
+                    <span class="text">Edit Contact Details</span>
+                </a>
                 <a href="emp_featured.php" class="btn-employee">
                     <i class="las la-edit"></i>
                     <span class="text">Edit Featured Section</span>
+                </a>
+                <a href="emp_faqs.php" class="btn-employee">
+                    <i class="las la-edit"></i>
+                    <span class="text">Edit FAQ's Section</span>
                 </a>
                 <a href="emp_add_contacts.php" class="btn-main">
                     <i class="las la-plus"></i>

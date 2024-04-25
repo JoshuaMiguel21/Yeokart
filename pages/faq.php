@@ -105,6 +105,18 @@ if ($notifications_result->num_rows > 0) {
         $notifications[] = $notification;
     }
 }
+
+// Fetch FAQ data from database
+$faq_query = "SELECT * FROM faqs ORDER BY created_at DESC";
+$faq_result = $con->query($faq_query);
+
+$faqs = [];
+if ($faq_result->num_rows > 0) {
+    while($faq = $faq_result->fetch_assoc()) {
+        $faqs[] = $faq;
+    }
+}
+
 ?>
 <style>
     .notification-item {
@@ -165,6 +177,7 @@ if ($notifications_result->num_rows > 0) {
     .notification-item:hover .delete-button {
         display: inline-block;
     }
+      
 </style>
 
 <body>
@@ -233,27 +246,14 @@ if ($notifications_result->num_rows > 0) {
             <br></br>
 
             <div class="faq-content">
-                <div class="faq-question">
-                    <input id="q1" type="checkbox" class="panel">
-                    <div class="plus">+</div>
-                    <label for="q1" class="panel-title">Loren Ipsum</label>
-                    <div class="panel-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
-                </div>
-
-                <div class="faq-question">
-                    <input id="q2" type="checkbox" class="panel">
-                    <div class="plus">+</div>
-                    <label for="q2" class="panel-title">Loren Ipsum</label>
-                    <div class="panel-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
-                </div>
-
-                <div class="faq-question">
-                    <input id="q3" type="checkbox" class="panel">
-                    <div class="plus">+</div>
-                    <label for="q3" class="panel-title">Loren Ipsum</label>
-                    <div class="panel-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
-                </div>
-
+                <?php foreach ($faqs as $faq): ?>
+                    <div class="faq-question">
+                        <input id="q<?= $faq['faq_id']; ?>" type="checkbox" class="panel">
+                        <div class="plus">+</div>
+                        <label for="q<?= $faq['faq_id']; ?>" class="panel-title"><?= htmlspecialchars($faq['question']); ?></label>
+                        <div class="panel-content"><?= nl2br(htmlspecialchars($faq['answer'])); ?></div>
+                    </div>
+                <?php endforeach; ?>
             </div>
 
         </div>

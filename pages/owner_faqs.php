@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>Contact Details - Yeokart</title>
+    <title>FAQ's Details - Yeokart</title>
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -13,18 +13,18 @@
     <link rel="icon" type="image/png" href="../res/icon.png">
 </head>
 <script>
-    function openDeletePopup(contacts_id) {
+    function openDeletePopup(faqs_id) {
         document.getElementById('deleteConfirmationPopup').style.display = 'flex';
-        document.getElementById('deleteForm_' + contacts_id).contacts_id.value = contacts_id;
+        document.getElementById('deleteForm_' + faqs_id).faqs_id.value = faqs_id;
     }
 
     function closeDeletePopup() {
         document.getElementById('deleteConfirmationPopup').style.display = 'none';
     }
 
-    function confirmDelete(contacts_id) {
+    function confirmDelete(faqs_id) {
         // Get the form associated with the delete action
-        var deleteForm = document.getElementById('deleteForm_' + contacts_id);
+        var deleteForm = document.getElementById('deleteForm_' + faqs_id);
         // Submit the form
         deleteForm.submit();
     }
@@ -149,12 +149,12 @@ if (isset($_SESSION['email'])) {
         <main>
             <div class="head-title">
                 <div class="left">
-                    <h3>Manage Contact Details</h3>
+                    <h3>Manage FAQ's Details</h3>
                 </div>
 
             </div>
             <div class="head-buttons">
-                <a href="owner_content_details.php" class="btn-employee active">
+                <a href="owner_content_details.php" class="btn-employee">
                     <i class="las la-edit"></i>
                     <span class="text">Edit Contact Details</span>
                 </a>
@@ -162,13 +162,14 @@ if (isset($_SESSION['email'])) {
                     <i class="las la-edit"></i>
                     <span class="text">Edit Featured Section</span>
                 </a>
-                <a href="owner_faqs.php" class="btn-employee">
+                <a href="owner_faqs.php" class="btn-employee active">
                     <i class="las la-edit"></i>
                     <span class="text">Edit FAQ's Section</span>
                 </a>
-                <a href="add_contacts.php" class="btn-main">
+                
+                <a href="add_faqs.php" class="btn-main">
                     <i class="las la-plus"></i>
-                    <span class="text">Add Contacts</span>
+                    <span class="text">Add FAQ's</span>
                 </a>
             </div>
 
@@ -176,32 +177,30 @@ if (isset($_SESSION['email'])) {
                 <table>
                     <thead>
                         <tr>
-                            <th>Contact Title</th>
-                            <th>Contact Type</th>
-                            <th>Description</th>
-                            <th>
-                                <center>Action</center>
-                            </th>
+                            <th><center>Question</center></th>
+                            <th><center>Answer</center></th>
+                            <th><center>Action</center></th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
                         include('../database/db_yeokart.php');
-                        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_contacts'])) {
-                            $contacts_id = $_POST['contacts_id'];
+
+                        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_faqs'])) {
+                            $faq_id = $_POST['faq_id'];
                             // Perform deletion query
-                            $delete_query = "DELETE FROM contacts WHERE contacts_id='$contacts_id'";
+                            $delete_query = "DELETE FROM faqs WHERE faq_id='$faq_id'";
                             $result_query = mysqli_query($con, $delete_query);
                             if ($result_query) {
                                 echo "<script>
                                     Swal.fire({
                                         icon: 'success',
                                         title: 'Success',
-                                        text: 'Contact deleted successfully',
+                                        text: 'FAQ deleted successfully',
                                         confirmButtonText: 'Ok'
                                     }).then((result) => {
                                         if (result.isConfirmed) {
-                                            window.location.href = 'owner_content_details.php';
+                                            window.location.href = 'owner_faqs.php';
                                         }
                                     });
                                 </script>";
@@ -210,107 +209,105 @@ if (isset($_SESSION['email'])) {
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'Error',
-                                        text: 'Failed to delete item',
+                                        text: 'Failed to delete FAQ',
                                         confirmButtonText: 'Ok'
                                     }).then((result) => {
                                         if (result.isConfirmed) {
-                                            window.location.href = 'owner_content_details.php';
+                                            window.location.href = 'owner_faqs.php';
                                         }
                                     });
                                 </script>";
                             }
                         }
 
-                        $contactsPerPage = 10;
+                        $faqsPerPage = 10;
                         $pageNumber = 1;
 
                         if (isset($_GET['page']) && is_numeric($_GET['page'])) {
                             $pageNumber = $_GET['page'];
                         }
 
-                        $offset = ($pageNumber - 1) * $contactsPerPage;
+                        $offset = ($pageNumber - 1) * $faqsPerPage;
 
-                        $totalContactsQuery = "SELECT COUNT(*) AS total_contacts FROM contacts";
-                        $totalContactsResult = mysqli_query($con, $totalContactsQuery);
-                        $totalContactsRow = mysqli_fetch_assoc($totalContactsResult);
-                        $totalContacts = $totalContactsRow['total_contacts'];
+                        $totalFaqsQuery = "SELECT COUNT(*) AS total_faqs FROM faqs";
+                        $totalFaqsResult = mysqli_query($con, $totalFaqsQuery);
+                        $totalFaqsRow = mysqli_fetch_assoc($totalFaqsResult);
+                        $totalFaqs = $totalFaqsRow['total_faqs'];
 
-                        $select_query = "SELECT * FROM contacts LIMIT $contactsPerPage OFFSET $offset";
+                        $select_query = "SELECT * FROM faqs LIMIT $faqsPerPage OFFSET $offset";
                         $result_query = mysqli_query($con, $select_query);
                         if (mysqli_num_rows($result_query) == 0) {
-                            echo "<tr><td colspan='11'><center><b>No contacts found</b></center></td></tr>";
+                            echo "<tr><td colspan='3'><center><b>No FAQs found</b></center></td></tr>";
                         } else {
                             while ($row = mysqli_fetch_assoc($result_query)) {
-                                $contacts_id = $row['contacts_id'];
-                                $contacts_name = $row['contacts_name'];
-                                $icon_link = $row['icon_link'];
-                                $contacts_description = $row['contacts_description'];
+                                $faq_id = $row['faq_id'];
+                                $question = $row['question'];
+                                $answer = $row['answer'];
                                 echo "<tr>";
-                                echo "<td>" . $row['contacts_name'] . "</td>";
-                                echo "<td><div class='iconbox'>" . $row['icon_link'] . "</div></td>";
-                                echo "<td style='max-width: 350px;'>" . $row['contacts_description'] . "</td>";
-                                echo "<td>";
+                                echo "<td><center>$question</center></td>";
+                                echo "<td><center>$answer</center></td>";
+                                echo "<td><center>";
                                 echo "<div class='button-class'>";
-                                echo "<a href='edit_contacts.php?contacts_id=$contacts_id' class='edit-button'><i class='las la-edit'></i></a>";
-                                echo "<button type='button' onclick='openDeletePopup(" . $contacts_id . ")' class='delete-button'><i class='las la-trash'></i></button>";
-                                echo "<form id='deleteForm_$contacts_id' method='post'>";
-                                echo "<input type='hidden' name='contacts_id' value='$contacts_id'>";
-                                echo "<input type='hidden' name='delete_contacts' value='true'>";
+                                echo "<a href='edit_faqs.php?faq_id=$faq_id' class='edit-button'><i class='las la-edit'></i></a>";
+                                echo "<button type='button' onclick='openDeletePopup($faq_id)' class='delete-button'><i class='las la-trash'></i></button>";
+                                echo "<form id='deleteForm_$faq_id' method='post'>";
+                                echo "<input type='hidden' name='faq_id' value='$faq_id'>";
+                                echo "<input type='hidden' name='delete_faqs' value='true'>";
                                 echo "</form>";
                                 echo "</div>";
-                                echo "</td>";
+                                echo "</center></td>";
                                 echo "</tr>";
                             }
                         }
-
                         ?>
                     </tbody>
                 </table>
             </div>
 
             <?php
-                $baseUrl = 'owner_content_details.php?';
+            $baseUrl = 'owner_faqs.php?';
 
-                $pageQuery = '';
-                if (isset($_GET['search_button'])) {
-                    $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
-                } elseif (isset($_GET['filter_button'])) {
-                    if (isset($_GET['category'])) {
-                        $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
-                    } elseif (isset($_GET['artist'])) {
-                        $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
-                    }
+            $pageQuery = '';
+            if (isset($_GET['search_button'])) {
+                $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
+            } elseif (isset($_GET['filter_button'])) {
+                if (isset($_GET['category'])) {
+                    $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
+                } elseif (isset($_GET['artist'])) {
+                    $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
                 }
+            }
 
-                $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-                $totalPages = ceil($totalContacts / $contactsPerPage);
+            $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+            $totalPages = ceil($totalFaqs / $faqsPerPage);
 
-                $startPage = max(1, $pageNumber - 1);
-                $endPage = min($totalPages, $pageNumber + 1);
+            $startPage = max(1, $pageNumber - 1);
+            $endPage = min($totalPages, $pageNumber + 1);
 
-                if ($pageNumber == 1) {
-                    $startPage = 1;
-                    $endPage = min(3, $totalPages);
-                } elseif ($pageNumber == $totalPages) {
-                    $startPage = max(1, $totalPages - 2);
-                    $endPage = $totalPages;
-                }
+            if ($pageNumber == 1) {
+                $startPage = 1;
+                $endPage = min(3, $totalPages);
+            } elseif ($pageNumber == $totalPages) {
+                $startPage = max(1, $totalPages - 2);
+                $endPage = $totalPages;
+            }
 
-                echo "<div class='pagination'>";
+            echo "<div class='pagination'>";
 
-                $prevPage = max(1, $pageNumber - 1);
-                echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
+            $prevPage = max(1, $pageNumber - 1);
+            echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
 
-                for ($i = $startPage; $i <= $endPage; $i++) {
-                    $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
-                    echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
-                }
+            for ($i = $startPage; $i <= $endPage; $i++) {
+                $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
+                echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
+            }
 
-                $nextPage = min($totalPages, $pageNumber + 1);
-                echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
+            $nextPage = min($totalPages, $pageNumber + 1);
+            echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
 
-                echo "</div>";
-                ?>
+            echo "</div>";
+            ?>
+
                 
             <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
                 <div class="popup-content">
@@ -326,9 +323,9 @@ if (isset($_SESSION['email'])) {
             <div id="deleteConfirmationPopup" class="popup-container" style="display: none;">
                 <div class="popup-content">
                     <span class="close-btn" onclick="closeDeletePopup()">&times;</span>
-                    <p>Are you sure you want to delete this contact?</p>
+                    <p>Are you sure you want to delete this FAQ?</p>
                     <div class="logout-btns">
-                        <button onclick="confirmDelete(<?php echo $contacts_id; ?>)" class="confirm-logout-btn">Delete</button>
+                        <button onclick="confirmDelete(<?php echo $faq_id; ?>)" class="confirm-logout-btn">Delete</button>
                         <button onclick="closeDeletePopup()" class="cancel-logout-btn">Cancel</button>
                     </div>
                 </div>
