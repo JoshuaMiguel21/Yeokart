@@ -125,6 +125,7 @@
                             <th>Customer ID</th>
                             <th>First Name</th>
                             <th>Last Name</th>
+                            <th>Email</th>
                             <th>Address</th>
                             <th>Items Ordered</th>
                             <th>Item Quantity</th>
@@ -176,6 +177,7 @@
                                 echo "<td>" . $row['customer_id'] . "</td>";
                                 echo "<td>" . $row['firstname'] . "</td>";
                                 echo "<td>" . $row['lastname'] . "</td>";
+                                echo "<td>" . $row['email'] . "</td>";
                                 echo "<td>" . $row['address'] . "</td>";
                                 echo "<td>" . $row['items_ordered'] . "</td>";
                                 echo "<td>" . $row['item_quantity'] . "</td>";
@@ -226,49 +228,49 @@
             </div>
 
             <?php
-                $baseUrl = 'emp_orders.php?';
+            $baseUrl = 'emp_orders.php?';
 
-                $pageQuery = '';
-                if (isset($_GET['search_button'])) {
-                    $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
-                } elseif (isset($_GET['filter_button'])) {
-                    if (isset($_GET['category'])) {
-                        $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
-                    } elseif (isset($_GET['artist'])) {
-                        $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
-                    }
+            $pageQuery = '';
+            if (isset($_GET['search_button'])) {
+                $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
+            } elseif (isset($_GET['filter_button'])) {
+                if (isset($_GET['category'])) {
+                    $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
+                } elseif (isset($_GET['artist'])) {
+                    $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
                 }
+            }
 
-                $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-                $totalPages = ceil($totalOrders / $ordersPerPage);
+            $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+            $totalPages = ceil($totalOrders / $ordersPerPage);
 
-                $startPage = max(1, $pageNumber - 1);
-                $endPage = min($totalPages, $pageNumber + 1);
+            $startPage = max(1, $pageNumber - 1);
+            $endPage = min($totalPages, $pageNumber + 1);
 
-                if ($pageNumber == 1) {
-                    $startPage = 1;
-                    $endPage = min(3, $totalPages);
-                } elseif ($pageNumber == $totalPages) {
-                    $startPage = max(1, $totalPages - 2);
-                    $endPage = $totalPages;
-                }
+            if ($pageNumber == 1) {
+                $startPage = 1;
+                $endPage = min(3, $totalPages);
+            } elseif ($pageNumber == $totalPages) {
+                $startPage = max(1, $totalPages - 2);
+                $endPage = $totalPages;
+            }
 
-                echo "<div class='pagination'>";
+            echo "<div class='pagination'>";
 
-                $prevPage = max(1, $pageNumber - 1);
-                echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
+            $prevPage = max(1, $pageNumber - 1);
+            echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
 
-                for ($i = $startPage; $i <= $endPage; $i++) {
-                    $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
-                    echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
-                }
+            for ($i = $startPage; $i <= $endPage; $i++) {
+                $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
+                echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
+            }
 
-                $nextPage = min($totalPages, $pageNumber + 1);
-                echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
+            $nextPage = min($totalPages, $pageNumber + 1);
+            echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
 
-                echo "</div>";
-                ?>
-                
+            echo "</div>";
+            ?>
+
             <div id="imagePopup" class="popup-image" style="display: none; padding-top: 100px;">
                 <div class="image-content">
                     <img id="popupImage" src="" alt="Proof of Payment" style="width: auto; height: 550px;">
@@ -289,23 +291,23 @@
     </div>
 
     <div id="confirmDeliveryPopup" class="popup-container" style="display: none;">
-            <div class="popup-content">
-                <span class="close-btn" onclick="closeConfirmDeliveryPopup()">&times;</span>
-                <p>Are you sure that the order has been completed and delivered?</p>
-                <div class="confirm-buttons">
-                    <button onclick="proceedWithDelivery()" class="confirm-logout-btn">Proceed</button>
-                    <button onclick="closeConfirmDeliveryPopup()" class="cancel-logout-btn">Cancel</button>
-                </div>
+        <div class="popup-content">
+            <span class="close-btn" onclick="closeConfirmDeliveryPopup()">&times;</span>
+            <p>Are you sure that the order has been completed and delivered?</p>
+            <div class="confirm-buttons">
+                <button onclick="proceedWithDelivery()" class="confirm-logout-btn">Proceed</button>
+                <button onclick="closeConfirmDeliveryPopup()" class="cancel-logout-btn">Cancel</button>
             </div>
         </div>
+    </div>
 
-        <div id="activityLogsPopup" class="popup-container" style="display: none;">
-            <div class="popup-activity-log">
-                <span class="close-btn" onclick="closeActivityLogsPopup()">&times;</span>
-                <h2>Activity Logs</h2>
-                <div id="activityLogsContent"></div>
-            </div>
+    <div id="activityLogsPopup" class="popup-container" style="display: none;">
+        <div class="popup-activity-log">
+            <span class="close-btn" onclick="closeActivityLogsPopup()">&times;</span>
+            <h2>Activity Logs</h2>
+            <div id="activityLogsContent"></div>
         </div>
+    </div>
 
     <div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9999; justify-content: center; align-items: center;">
         <div style="padding: 20px; background: white; border-radius: 5px; display: flex; justify-content: center; align-items: center;">
@@ -340,17 +342,17 @@
             popup.style.display = 'none';
             var orderStatusSelect = document.querySelector('.orderStatusSelect');
             var selectedOption = orderStatusSelect.querySelector('option[value="Delivered"]');
-            selectedOption.selected = false; 
-            enableAllOptions(orderStatusSelect); 
+            selectedOption.selected = false;
+            enableAllOptions(orderStatusSelect);
             localStorage.removeItem('selectedStatus_' + window.currentOrderForDelivery);
-            window.location.reload(); 
+            window.location.reload();
         }
 
         function proceedWithDelivery() {
             var orderId = window.currentOrderForDelivery;
             var orderStatusSelect = document.querySelector('.orderStatusSelect');
             var selectedOption = orderStatusSelect.querySelector('option[value="Delivered"]');
-            selectedOption.disabled = true; 
+            selectedOption.disabled = true;
             localStorage.setItem('selectedStatus_' + orderId, "Delivered");
 
             // Show the loading overlay
@@ -362,9 +364,9 @@
 
         function updateOrderStatus(status, orderId) {
             if (status === 'Delivered') {
-                openConfirmDeliveryPopup(orderId, status); 
+                openConfirmDeliveryPopup(orderId, status);
             } else {
-                sendStatusUpdateRequest(orderId, status); 
+                sendStatusUpdateRequest(orderId, status);
             }
         }
 
@@ -423,7 +425,7 @@
                 option.disabled = false;
             });
         }
-       
+
         function openImagePopup(imageUrl) {
             var popup = document.getElementById('imagePopup');
             var image = document.getElementById('popupImage');
@@ -481,7 +483,7 @@
             xhttp.open("GET", "fetch_activity_logs.php?order_id=" + orderId, true);
             xhttp.send();
         }
-        
+
         function closeActivityLogsPopup() {
             document.getElementById('activityLogsPopup').style.display = 'none';
         }
