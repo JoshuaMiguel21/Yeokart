@@ -138,7 +138,33 @@
     $stmt->execute();
     $result = $stmt->get_result();
     if ($result->num_rows == 0) {
-        echo '<p>No order found for this ID.</p>';
+        echo '<header class="header">';
+        echo '<a href="customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>';
+        echo '</header>';
+        echo '<div class="notification-container">';
+        echo '<h1>Order Status</h1>';
+        echo '<div class="status-bar">';
+        echo '<div class="status-circle"><i class="fa fa-check"></i></div>';
+        echo '<div class="status-circle"><i class="fa fa-truck"></i></div>';
+        echo '<div class="status-circle"><i class="fa fa-box"></i></div>';
+        echo '<div class="status-line"></div>';
+        echo '</div>';
+        echo '<div class="notification-status">';
+        echo '<div class="status-text">Payment Done</div>';
+        echo '<div class="status-text">Shipped</div>';
+        echo '<div class="status-text">Delivered</div>';
+        echo '</div>';
+        echo '<div style="text-align: center; margin: 50px 0px; font-size: 2rem; color: red;">';
+        echo '<strong>Sorry, this order has been cancelled and does not exist anymore.</strong>';
+        echo '</div>';
+        echo '</div>';
+        echo '<center>';
+        echo '<div class="button-container">';
+        echo '<a href="customer_homepage.php" class="btn-address">';
+        echo '<span class="text">Back to Homepage</span>';
+        echo '</a>';
+        echo '</div>';
+        echo '</center>';
         exit();
     }
     $row = $result->fetch_assoc();
