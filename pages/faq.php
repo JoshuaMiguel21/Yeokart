@@ -153,10 +153,6 @@ if ($notifications_result->num_rows > 0) {
             <button id="allButton" class="notif-button active">All</button>
             <button id="unreadButton" class="notif-button">Unread</button>
         </div>
-        <div style="padding-bottom: 10px;">
-            <button id="allButton" class="notif-button active">All</button>
-            <button id="unreadButton" class="notif-button">Unread</button>
-        </div>
         <hr class="notif">
         <?php foreach ($notifications as $notification) :
             $orderStatus = isset($notification['order_status']) ? $notification['order_status'] : 'Order Deleted/Not Available';
@@ -289,7 +285,7 @@ if ($notifications_result->num_rows > 0) {
                     const orderStatus = this.dataset.orderStatus;
 
                     if (orderStatus === 'Pending' || orderStatus === 'Invalid') {
-                        window.location.href = 'customer_profile.php';
+                        window.location.href = `customer_profile.php?highlight_order=${orderId}`;
                     } else {
                         window.location.href = `customer_orderstatus.php?order_id=${orderId}`;
                     }
