@@ -228,6 +228,30 @@ if ($notifications_result->num_rows > 0) {
             <h1 class="heading"><span>Frequently Asked Questions</span></h1>
             <br></br>
 
+            <div class="faq-content">
+                <div class="faq-question">
+                    <input id="q1" type="checkbox" class="panel">
+                    <div class="plus">+</div>
+                    <label for="q1" class="panel-title">Loren Ipsum</label>
+                    <div class="panel-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+                </div>
+
+                <div class="faq-question">
+                    <input id="q2" type="checkbox" class="panel">
+                    <div class="plus">+</div>
+                    <label for="q2" class="panel-title">Loren Ipsum</label>
+                    <div class="panel-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+                </div>
+
+                <div class="faq-question">
+                    <input id="q3" type="checkbox" class="panel">
+                    <div class="plus">+</div>
+                    <label for="q3" class="panel-title">Loren Ipsum</label>
+                    <div class="panel-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+                </div>
+
+            </div>
+
         </div>
     </section>
     <script>

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contacts - Yeokart</title>
+    <title>FAQ - Yeokart</title>
     <link rel="icon" type="image/png" href="../res/icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -39,7 +39,7 @@
                     </li>
                     <li class="home-class"><a href="customer_homepage.php" id="home-nav">Home</a></li>
                     <li><a href="public_customer_shop.php">Shop</a></li>
-                    <li><a href="public_faq.php"  class="active">FAQ</a></li>
+                    <li><a href="public_faq.php" class="active">FAQ</a></li>
                     <li><a href="public_contact_page.php">Contact Us</a></li>
                     <button class="sign-in-button" onclick="window.location.href='login_page.php';">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -60,9 +60,29 @@
         <div class="container">
             <h1 class="heading"><span>Frequently Asked Questions</span></h1>
             <br></br>
+            <div class="faq-content">
+                <div class="faq-question">
+                    <input id="q1" type="checkbox" class="panel">
+                    <div class="plus">+</div>
+                    <label for="q1" class="panel-title">Loren Ipsum</label>
+                    <div class="panel-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+                </div>
 
- 
-        </div>
+                <div class="faq-question">
+                    <input id="q2" type="checkbox" class="panel">
+                    <div class="plus">+</div>
+                    <label for="q2" class="panel-title">Loren Ipsum</label>
+                    <div class="panel-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+                </div>
+
+                <div class="faq-question">
+                    <input id="q3" type="checkbox" class="panel">
+                    <div class="plus">+</div>
+                    <label for="q3" class="panel-title">Loren Ipsum</label>
+                    <div class="panel-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. <a href="https://en.wikipedia.org/wiki/The_Unanswered_Question" target="_blank">unanswered</a></div>
+                </div>
+
+            </div>
     </section>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
