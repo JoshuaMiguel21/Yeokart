@@ -1336,6 +1336,10 @@ label {
     font-size: 1.5rem;
 }
 
+.notification-item p {
+    margin-bottom: 5px;
+}
+
 .custom-checkbox {
     position: relative;
     display: inline-block;

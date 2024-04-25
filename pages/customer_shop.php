@@ -173,7 +173,7 @@
                     data-order-id="<?= $notification['order_id']; ?>"
                     data-order-status="<?= $notification['order_status']; ?>"
                     onclick="markAsRead(<?= $notification['id']; ?>)">
-                    <p>
+                    <p style="font-size: 1.2rem">
                         <strong><?= htmlspecialchars($notification['title']); ?></strong>
                         <?= !$notification['is_read'] ? '<span class="unread-dot"></span>' : '' ?>
                     </p>

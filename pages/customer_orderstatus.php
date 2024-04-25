@@ -134,7 +134,7 @@
 
     $sql = "SELECT * FROM orders WHERE order_id = ?";
     $stmt = $con->prepare($sql);
-    $stmt->bind_param("i", $order_id);
+    $stmt->bind_param("s", $order_id);
     $stmt->execute();
     $result = $stmt->get_result();
     if ($result->num_rows == 0) {

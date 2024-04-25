@@ -181,11 +181,9 @@ if ($notifications_result->num_rows > 0) {
 
 function deleteOldOrders($con)
 {
-    // Calculate the timestamp 24 hours ago
     $timestamp24HoursAgo = strtotime('-24 hours');
-    $timestampOneMinuteToDeadline = strtotime('-23 hours'); 
+    $timestampOneMinuteToDeadline = strtotime('-23 hours');
 
-    // Notification for payment reminder before deletion
     $notifyQuery = "SELECT `order_id`, `customer_id` FROM orders WHERE proof_of_payment = '' AND date_of_purchase < FROM_UNIXTIME($timestampOneMinuteToDeadline)";
     $notifyResult = $con->query($notifyQuery);
 
@@ -196,17 +194,16 @@ function deleteOldOrders($con)
             $title = "Urgent Payment Reminder";
             $message = "Your payment for Order ID $orderId is due within the next hour. Please upload proof of payment immediately to avoid order cancellation.";
 
-            $insertNotificationQuery = "INSERT INTO notifications (customer_id, title, message, order_id) VALUES (?, ?, ?, ?)";
-            $stmt = $con->prepare($insertNotificationQuery);
-            if ($stmt) {
-                $stmt->bind_param("isss", $customerId, $title, $message, $orderId);
-                $stmt->execute();
-                $stmt->close();
+            if (!notificationExists($con, $customerId, $title, $orderId)) {
+                if ($stmt = $con->prepare("INSERT INTO notifications (customer_id, title, message, order_id) VALUES (?, ?, ?, ?)")) {
+                    $stmt->bind_param("isss", $customerId, $title, $message, $orderId);
+                    $stmt->execute();
+                    $stmt->close();
+                }
             }
         }
     }
 
-    // Select orders that are older than 24 hours with no proof of payment
     $selectQuery = "SELECT `order_id`, `customer_id`, `items_ordered`, `item_quantity` FROM orders WHERE proof_of_payment = '' AND date_of_purchase < FROM_UNIXTIME($timestamp24HoursAgo)";
     $result = $con->query($selectQuery);
 
@@ -225,10 +222,12 @@ function deleteOldOrders($con)
             $item = trim($item);
             $quantity = intval($quantities[$key]);
 
-            $updateQuery = "UPDATE products SET item_quantity = item_quantity + $quantity WHERE item_name = '$item'";
-            $updateResult = $con->query($updateQuery);
-
-            if ($updateResult === false) {
+            $updateQuery = "UPDATE products SET item_quantity = item_quantity + ? WHERE item_name = ?";
+            if ($stmt = $con->prepare($updateQuery)) {
+                $stmt->bind_param("is", $quantity, $item);
+                $stmt->execute();
+                $stmt->close();
+            } else {
                 echo "Error updating products table: " . $con->error;
                 return;
             }
@@ -237,24 +236,50 @@ function deleteOldOrders($con)
         $title = "Order Cancelled";
         $message = "Your Order ID $orderId has been cancelled due to non-receipt of payment.";
 
-        $insertNotificationQuery = "INSERT INTO notifications (customer_id, title, message, order_id) VALUES (?, ?, ?, ?)";
-        $stmt = $con->prepare($insertNotificationQuery);
-        if ($stmt) {
+        if ($stmt = $con->prepare("INSERT INTO notifications (customer_id, title, message, order_id) VALUES (?, ?, ?, ?)")) {
             $stmt->bind_param("isss", $customerId, $title, $message, $orderId);
             $stmt->execute();
             $stmt->close();
+        } else {
+            echo "Error inserting notification: " . $con->error;
+            return;
         }
     }
 
-    // Delete the old orders
     $deleteQuery = "DELETE FROM orders WHERE proof_of_payment = '' AND date_of_purchase < FROM_UNIXTIME($timestamp24HoursAgo)";
-    $deleteResult = $con->query($deleteQuery);
-
-    if ($deleteResult === false) {
+    if (!$con->query($deleteQuery)) {
         echo "Error deleting old orders: " . $con->error;
         return;
     }
 }
+
+function notificationExists($con, $customerId, $title, $orderId)
+{
+    $checkQuery = "SELECT COUNT(*) AS num_notifications FROM notifications WHERE customer_id = ? AND title = ? AND order_id = ?";
+    
+    if ($stmt = $con->prepare($checkQuery)) {
+        $stmt->bind_param("iss", $customerId, $title, $orderId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result) {
+            $row = $result->fetch_assoc();
+            $numNotifications = $row['num_notifications'];
+        } else {
+            echo "Error: " . $checkQuery . "<br>" . $con->error;
+            $stmt->close();
+            return false;
+        }
+
+        $stmt->close();
+        return $numNotifications > 0;
+    } else {
+        echo "Error preparing statement: " . $con->error;
+        return false;
+    }
+}
+
+
 
 
 // Close the database connection
@@ -315,7 +340,7 @@ function deleteOldOrders($con)
                 data-order-id="<?= $notification['order_id']; ?>"
                 data-order-status="<?= $notification['order_status']; ?>"
                 onclick="markAsRead(<?= $notification['id']; ?>)">
-                <p>
+                <p style="font-size: 1.2rem">
                     <strong><?= htmlspecialchars($notification['title']); ?></strong>
                     <?= !$notification['is_read'] ? '<span class="unread-dot"></span>' : '' ?>
                 </p>

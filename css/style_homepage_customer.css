@@ -2222,6 +2222,14 @@ label {
     background-color: #FCC8D1; 
 }
 
+.notification-item p {
+    margin-bottom: 5px;
+}
+
+.notif-container{
+    padding: 20px 40px;
+}
+
 .alert {
     padding: 10px;
     margin: 10px 0;
@@ -2695,7 +2703,7 @@ label {
 
 @media (max-width:450px){
     html{
-        font-size: 40%;
+        font-size: 50%;
     }
     .wrapper {
         grid-template-columns: repeat(2, 1fr);
@@ -2764,11 +2772,15 @@ label {
       .payment-done{
         padding: 5px 10px;
       }
+
+      .notif-container{
+        padding: 20px 0;
+    }
 }
 
 @media (max-width:376px){
     html{
-        font-size: 40%;
+        font-size: 50%;
     }
     .logout-link {
         padding: 8px 15px; /* Adjust padding for smaller screens */
