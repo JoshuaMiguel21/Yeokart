@@ -297,6 +297,9 @@
                                     <center>Category</center>
                                 </th>
                                 <th>
+                                    <center>Size</center>
+                                </th>
+                                <th>
                                     <center>Images</center>
                                 </th>
                                 <th>
@@ -306,7 +309,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td colspan='8'>
+                                <td colspan='9'>
                                     <center><b>No item/s found</b></center>
                                 </td>
                             </tr>
@@ -333,6 +336,9 @@
                                 </th>
                                 <th>
                                     <center>Category</center>
+                                </th>
+                                <th>
+                                    <center>Size</center>
                                 </th>
                                 <th>
                                     <center>Images</center>
@@ -432,6 +438,7 @@
                                 $item_quantity = $row['item_quantity'];
                                 $artist_name = $row['artist_name'];
                                 $category_name = $row['category_name'];
+                                $item_size = $row['item_size'];
                                 $item_image1 = $row['item_image1'];
                                 $item_image2 = $row['item_image2'];
                                 $item_image3 = $row['item_image3'];
@@ -442,6 +449,7 @@
                                 echo "<td>" . number_format($row['item_quantity']) . "</td>";
                                 echo "<td>" . $row['artist_name'] . "</td>";
                                 echo "<td>" . $row['category_name'] . "</td>";
+                                echo "<td>" . $row['item_size'] . "</td>";
                                 echo "<td>";
                                 echo "<img src='./item_images/$item_image1' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image1 . "\")'>&nbsp;";
                                 if (!empty($item_image2)) {

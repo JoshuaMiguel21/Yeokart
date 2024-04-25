@@ -103,6 +103,7 @@ if (isset($_POST['add-to-cart-btn'])) {
     $item_stock = $fetch_item['item_quantity'];
     $category = $fetch_item['category_name'];
     $artist = $fetch_item['artist_name'];
+    $item_size = $fetch_item['item_size'];
     $subtotal = $price * $quantity;
 
     // Check if the quantity exceeds the stock
@@ -129,8 +130,8 @@ if (isset($_POST['add-to-cart-btn'])) {
             mysqli_query($con, $update_cart_query);
         } else {
             // Insert a new row for the item in the cart
-            $insert_cart_query = "INSERT INTO cart (customer_id, item_name, price, item_image1, quantity, category, artist, subtotal) 
-                     VALUES ('$customer_id', '$item_name', '$price', '$item_image', '$quantity', '$category', '$artist', '$subtotal')";
+            $insert_cart_query = "INSERT INTO cart (customer_id, item_name, price, item_image1, quantity, category, artist, item_size, subtotal) 
+                     VALUES ('$customer_id', '$item_name', '$price', '$item_image', '$quantity', '$category', '$artist', '$item_size', '$subtotal')";
             mysqli_query($con, $insert_cart_query);
         }
 
@@ -151,7 +152,8 @@ if (isset($_POST['add-to-cart-btn'])) {
     }
 }
 
-function getDaysDifference($date) {
+function getDaysDifference($date)
+{
     $now = new DateTime();
     $notificationDate = new DateTime($date);
     $interval = $now->diff($notificationDate);
@@ -232,8 +234,8 @@ if ($notifications_result->num_rows > 0) {
         background-color: #DD2F6E;
         color: white;
     }
-
 </style>
+
 <body>
     <div id="notificationPopup" style="display: none; position: absolute; right: 10px; top: 60px; background-color: white; border: 1px solid #ccc; padding: 10px; width: 300px; z-index: 100;">
         <h2 style="margin: 10px 0">Notifications</h2>
@@ -245,11 +247,7 @@ if ($notifications_result->num_rows > 0) {
         <?php foreach ($notifications as $notification) :
             $orderStatus = isset($notification['order_status']) ? $notification['order_status'] : 'Order Deleted/Not Available';
         ?>
-            <div class="notification-item <?= !$notification['is_read'] ? 'unread' : '' ?>"
-                style="padding: 10px; border-bottom: 1px solid #eee; <?= !$notification['is_read'] ? 'background-color: #f9f9f9;' : '' ?>"
-                data-order-id="<?= $notification['order_id']; ?>"
-                data-order-status="<?= $notification['order_status']; ?>"
-                onclick="markAsRead(<?= $notification['id']; ?>)">
+            <div class="notification-item <?= !$notification['is_read'] ? 'unread' : '' ?>" style="padding: 10px; border-bottom: 1px solid #eee; <?= !$notification['is_read'] ? 'background-color: #f9f9f9;' : '' ?>" data-order-id="<?= $notification['order_id']; ?>" data-order-status="<?= $notification['order_status']; ?>" onclick="markAsRead(<?= $notification['id']; ?>)">
                 <p>
                     <strong><?= htmlspecialchars($notification['title']); ?></strong>
                     <?= !$notification['is_read'] ? '<span class="unread-dot"></span>' : '' ?>
@@ -371,6 +369,7 @@ if ($notifications_result->num_rows > 0) {
                         <input type="hidden" name="item_image1" value="<?php echo $fetch_item['item_image1']; ?>">
                         <input type="hidden" name="category_name" value="<?php echo $fetch_item['category_name']; ?>">
                         <input type="hidden" name="artist_name" value="<?php echo $fetch_item['artist_name']; ?>">
+                        <input type="hidden" name="item_size" value="<?php echo $fetch_item['item_size']; ?>">
                         <input type="hidden" name="subtotal" value="<?php echo $subtotal; ?>">
                         <input type="hidden" id="hidden-quantity" name="quantity" value="1"> <!-- Updated the ID -->
 
@@ -666,7 +665,7 @@ if ($notifications_result->num_rows > 0) {
 
             function handleNotificationClick(event) {
                 if (window.matchMedia('(max-width: 768px)').matches) {
-                    window.location.href = 'notification_page.php'; 
+                    window.location.href = 'notification_page.php';
                 } else {
                     event.preventDefault();
                     if (notificationPopup.style.display === 'none' || !notificationPopup.style.display) {
@@ -730,7 +729,7 @@ if ($notifications_result->num_rows > 0) {
 
         document.addEventListener('DOMContentLoaded', function() {
             const notificationItems = document.querySelectorAll('.notification-item');
-            
+
             notificationItems.forEach(function(item) {
                 item.addEventListener('click', function() {
                     const orderId = this.dataset.orderId;

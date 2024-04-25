@@ -60,7 +60,8 @@ if ($result) {
     echo "Error: " . $sql . "<br>" . $con->error;
 }
 
-function getDaysDifference($date) {
+function getDaysDifference($date)
+{
     $now = new DateTime();
     $notificationDate = new DateTime($date);
     $interval = $now->diff($notificationDate);
@@ -142,19 +143,18 @@ if ($notifications_result->num_rows > 0) {
         background-color: #DD2F6E;
         color: white;
     }
-
 </style>
 
 <body>
 
 
-<div id="terms-popup" class="terms-popup terms-popup-content">
+    <div id="terms-popup" class="terms-popup terms-popup-content">
         <article class="terms-container">
             <header class="terms-container-header">
                 <h1 class="terms-container-title">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
                         <path fill="none" d="M0 0h24v24H0z" />
-                        <path fill="var(--pink)"  d="M14 9V4H5v16h6.056c.328.417.724.785 1.18 1.085l1.39.915H3.993A.993.993 0 0 1 3 21.008V2.992C3 2.455 3.449 2 4.002 2h10.995L21 8v1h-7zm-2 2h9v5.949c0 .99-.501 1.916-1.336 2.465L16.5 21.498l-3.164-2.084A2.953 2.953 0 0 1 12 16.95V11zm2 5.949c0 .316.162.614.436.795l2.064 1.36 2.064-1.36a.954.954 0 0 0 .436-.795V13h-5v3.949z" />
+                        <path fill="var(--pink)" d="M14 9V4H5v16h6.056c.328.417.724.785 1.18 1.085l1.39.915H3.993A.993.993 0 0 1 3 21.008V2.992C3 2.455 3.449 2 4.002 2h10.995L21 8v1h-7zm-2 2h9v5.949c0 .99-.501 1.916-1.336 2.465L16.5 21.498l-3.164-2.084A2.953 2.953 0 0 1 12 16.95V11zm2 5.949c0 .316.162.614.436.795l2.064 1.36 2.064-1.36a.954.954 0 0 0 .436-.795V13h-5v3.949z" />
                     </svg>
                     Terms and Conditions
                 </h1>
@@ -233,11 +233,7 @@ if ($notifications_result->num_rows > 0) {
         <?php foreach ($notifications as $notification) :
             $orderStatus = isset($notification['order_status']) ? $notification['order_status'] : 'Order Deleted/Not Available';
         ?>
-            <div class="notification-item <?= !$notification['is_read'] ? 'unread' : '' ?>"
-                style="padding: 10px; border-bottom: 1px solid #eee; <?= !$notification['is_read'] ? 'background-color: #f9f9f9;' : '' ?>"
-                data-order-id="<?= $notification['order_id']; ?>"
-                data-order-status="<?= $notification['order_status']; ?>"
-                onclick="markAsRead(<?= $notification['id']; ?>)">
+            <div class="notification-item <?= !$notification['is_read'] ? 'unread' : '' ?>" style="padding: 10px; border-bottom: 1px solid #eee; <?= !$notification['is_read'] ? 'background-color: #f9f9f9;' : '' ?>" data-order-id="<?= $notification['order_id']; ?>" data-order-status="<?= $notification['order_status']; ?>" onclick="markAsRead(<?= $notification['id']; ?>)">
                 <p>
                     <strong><?= htmlspecialchars($notification['title']); ?></strong>
                     <?= !$notification['is_read'] ? '<span class="unread-dot"></span>' : '' ?>
@@ -285,7 +281,7 @@ if ($notifications_result->num_rows > 0) {
         <div class="header-2">
             <nav class="navbar">
                 <a href="#home">Home</a>
-                <a href="#best">Best Sellers</a>
+                <a href="#best">New Arrival</a>
                 <a href="#featured">Featured</a>
             </nav>
         </div>
@@ -308,12 +304,12 @@ if ($notifications_result->num_rows > 0) {
         </div>
     </section>
     <section class="best" id="best">
-        <h1 class="heading"><span>Best Sellers</span></h1>
+        <h1 class="heading"><span>New Arrival</span></h1>
         <div class="swiper best-slider">
             <div class="swiper-wrapper">
                 <?php
                 include('../database/db_yeokart.php');
-                $select_query = "SELECT * FROM products WHERE is_archive = 0 ORDER BY times_sold DESC LIMIT 10";
+                $select_query = "SELECT * FROM products WHERE is_archive = 0 ORDER BY item_id DESC LIMIT 10";
                 $result_query = mysqli_query($con, $select_query);
                 while ($row = mysqli_fetch_assoc($result_query)) {
                     $item_id = $row['item_id'];
@@ -535,7 +531,7 @@ if ($notifications_result->num_rows > 0) {
 
             function handleNotificationClick(event) {
                 if (window.matchMedia('(max-width: 768px)').matches) {
-                    window.location.href = 'notification_page.php'; 
+                    window.location.href = 'notification_page.php';
                 } else {
                     event.preventDefault();
                     if (notificationPopup.style.display === 'none' || !notificationPopup.style.display) {
@@ -599,7 +595,7 @@ if ($notifications_result->num_rows > 0) {
 
         document.addEventListener('DOMContentLoaded', function() {
             const notificationItems = document.querySelectorAll('.notification-item');
-            
+
             notificationItems.forEach(function(item) {
                 item.addEventListener('click', function() {
                     const orderId = this.dataset.orderId;
@@ -613,10 +609,9 @@ if ($notifications_result->num_rows > 0) {
                 });
             });
         });
-        
     </script>
 
-<script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Add event listener to the accept button
             document.querySelector('.button.is-primary').addEventListener('click', function() {
@@ -642,7 +637,7 @@ if ($notifications_result->num_rows > 0) {
         }
     </script>
 
-    
+
 </body>
 
 </html>
