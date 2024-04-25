@@ -325,35 +325,24 @@ if ($notifications_result->num_rows > 0) {
         });
 
         function deleteNotification(notificationId, button) {
-            const deleteIcon = button.querySelector('i');
-            const originalClassList = deleteIcon.className;
-
-            // Change the delete icon to a spinner
-            deleteIcon.className = 'fas fa-spinner fa-spin';
-
-            // Delay for 1 second
-            setTimeout(() => {
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "delete_notification.php", true);
-                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                xhr.onload = function() {
-                    if (this.status == 200) {
-                        // Notification deleted successfully
-                        console.log("Notification deleted successfully.");
-                        // Remove the deleted notification from the UI
-                        const notificationItem = button.closest('.notification-item');
-                        if (notificationItem) {
-                            notificationItem.remove();
-                        }
-                    } else {
-                        // Error deleting notification
-                        console.error("Error deleting notification.");
-                        // Reset the delete icon
-                        deleteIcon.className = originalClassList;
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "delete_notification.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onload = function() {
+                if (this.status == 200) {
+                    // Notification deleted successfully
+                    console.log("Notification deleted successfully.");
+                    // Remove the deleted notification from the UI
+                    const notificationItem = button.closest('.notification-item');
+                    if (notificationItem) {
+                        notificationItem.remove();
                     }
-                };
-                xhr.send("id=" + notificationId);
-            }, 1000); // Delay of 1 second
+                } else {
+                    // Error deleting notification
+                    console.error("Error deleting notification.");
+                }
+            };
+            xhr.send("id=" + notificationId);
         }
 
         function validateSearch() {
