@@ -165,7 +165,7 @@ if ($unread_notifications_result) {
 $notification_query = "
     SELECT notifications.*, orders.status AS order_status 
     FROM notifications 
-    JOIN orders ON notifications.order_id = orders.order_id
+    LEFT JOIN orders ON notifications.order_id = orders.order_id
     WHERE notifications.customer_id = $customer_id 
     ORDER BY notifications.created_at DESC";
 $notifications_result = $con->query($notification_query);
@@ -183,19 +183,41 @@ function deleteOldOrders($con)
 {
     // Calculate the timestamp 24 hours ago
     $timestamp24HoursAgo = strtotime('-24 hours');
+    $timestampOneMinuteToDeadline = strtotime('-23 hours'); 
 
-    // Query to select orders older than 24 hours with empty proof_of_payment
-    $selectQuery = "SELECT `items_ordered`, `item_quantity` FROM orders WHERE proof_of_payment = '' AND date_of_purchase < FROM_UNIXTIME($timestamp24HoursAgo)";
+    // Notification for payment reminder before deletion
+    $notifyQuery = "SELECT `order_id`, `customer_id` FROM orders WHERE proof_of_payment = '' AND date_of_purchase < FROM_UNIXTIME($timestampOneMinuteToDeadline)";
+    $notifyResult = $con->query($notifyQuery);
+
+    if ($notifyResult) {
+        while ($row = $notifyResult->fetch_assoc()) {
+            $orderId = $row['order_id'];
+            $customerId = $row['customer_id'];
+            $title = "Urgent Payment Reminder";
+            $message = "Your payment for Order ID $orderId is due within the next hour. Please upload proof of payment immediately to avoid order cancellation.";
+
+            $insertNotificationQuery = "INSERT INTO notifications (customer_id, title, message, order_id) VALUES (?, ?, ?, ?)";
+            $stmt = $con->prepare($insertNotificationQuery);
+            if ($stmt) {
+                $stmt->bind_param("isss", $customerId, $title, $message, $orderId);
+                $stmt->execute();
+                $stmt->close();
+            }
+        }
+    }
+
+    // Select orders that are older than 24 hours with no proof of payment
+    $selectQuery = "SELECT `order_id`, `customer_id`, `items_ordered`, `item_quantity` FROM orders WHERE proof_of_payment = '' AND date_of_purchase < FROM_UNIXTIME($timestamp24HoursAgo)";
     $result = $con->query($selectQuery);
 
     if ($result === false) {
-        // Handle query error
         echo "Error: " . $con->error;
         return;
     }
 
-    // Loop through the orders and add the quantities back to the products table
     while ($row = $result->fetch_assoc()) {
+        $orderId = $row['order_id'];
+        $customerId = $row['customer_id'];
         $items = explode(", ", $row['items_ordered']);
         $quantities = explode(", ", $row['item_quantity']);
 
@@ -203,15 +225,24 @@ function deleteOldOrders($con)
             $item = trim($item);
             $quantity = intval($quantities[$key]);
 
-            // Update the products table to add back the quantity
             $updateQuery = "UPDATE products SET item_quantity = item_quantity + $quantity WHERE item_name = '$item'";
             $updateResult = $con->query($updateQuery);
 
             if ($updateResult === false) {
-                // Handle query error
                 echo "Error updating products table: " . $con->error;
                 return;
             }
+        }
+
+        $title = "Order Cancelled";
+        $message = "Your Order ID $orderId has been cancelled due to non-receipt of payment.";
+
+        $insertNotificationQuery = "INSERT INTO notifications (customer_id, title, message, order_id) VALUES (?, ?, ?, ?)";
+        $stmt = $con->prepare($insertNotificationQuery);
+        if ($stmt) {
+            $stmt->bind_param("isss", $customerId, $title, $message, $orderId);
+            $stmt->execute();
+            $stmt->close();
         }
     }
 
@@ -220,11 +251,12 @@ function deleteOldOrders($con)
     $deleteResult = $con->query($deleteQuery);
 
     if ($deleteResult === false) {
-        // Handle query error
         echo "Error deleting old orders: " . $con->error;
         return;
     }
 }
+
+
 // Close the database connection
 ?>
 <style>
@@ -271,11 +303,13 @@ function deleteOldOrders($con)
     <div id="notificationPopup" style="display: none; position: absolute; right: 10px; top: 60px; background-color: white; border: 1px solid #ccc; padding: 10px; width: 300px; z-index: 100;">
         <h2 style="margin: 10px 0">Notifications</h2>
         <div style="padding-bottom: 10px;">
-            <button id="allButton" class="notif-button active">All</button>
+            <button id="allButton" class="notif-button active">All</button>                         
             <button id="unreadButton" class="notif-button">Unread</button>
         </div>
         <hr class="notif">
-        <?php foreach ($notifications as $notification) : ?>
+        <?php foreach ($notifications as $notification) :
+            $orderStatus = isset($notification['order_status']) ? $notification['order_status'] : 'Order Deleted/Not Available';
+        ?>
             <div class="notification-item <?= !$notification['is_read'] ? 'unread' : '' ?>"
                 style="padding: 10px; border-bottom: 1px solid #eee; <?= !$notification['is_read'] ? 'background-color: #f9f9f9;' : '' ?>"
                 data-order-id="<?= $notification['order_id']; ?>"
@@ -459,7 +493,7 @@ function deleteOldOrders($con)
                             $button_icon = "fas fa-cloud-upload-alt";
                         }
 
-                        echo '<tr class="order-row">';
+                        echo '<tr class="order-row" data-order-id="' . $row['order_id'] . '">';
                         echo '<td>' . $row['order_id'] . '</td>';
                         echo '<td>' . $row['date_of_purchase'] . '</td>';
                         echo '<td>' . strtoupper($row['status']) . '</td>';
@@ -959,13 +993,41 @@ function deleteOldOrders($con)
                     const orderStatus = this.dataset.orderStatus;
 
                     if (orderStatus === 'Pending' || orderStatus === 'Invalid') {
-                        window.location.href = 'customer_profile.php';
-                    } else {
+                        window.location.href = `customer_profile.php?highlight_order=${orderId}`;
+                    }
+                    else {
                         window.location.href = `customer_orderstatus.php?order_id=${orderId}`;
                     }
                 });
             });
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            function getURLParameter(name) {
+                return new URLSearchParams(window.location.search).get(name);
+            }
+
+            const highlightOrderId = getURLParameter('highlight_order');
+            let highlightedRow = null; 
+
+            if (highlightOrderId) {
+                highlightedRow = document.querySelector(`.order-row[data-order-id='${highlightOrderId}']`);
+                if (highlightedRow) {
+                    highlightedRow.style.backgroundColor = '#FFD8D8'; 
+                    highlightedRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+
+            document.addEventListener('click', function(event) {
+                if (highlightedRow && (!event.target.closest('.order-row') || event.target.closest('.order-row') !== highlightedRow)) {
+                    highlightedRow.style.backgroundColor = ''; 
+                    highlightedRow = null; 
+                    history.replaceState(null, '', 'customer_profile.php'); 
+                }
+            });
+        });
+
+
 
         document.addEventListener('DOMContentLoaded', function() {
             const notificationIcon = document.getElementById('notificationIcon');

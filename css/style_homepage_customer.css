@@ -9,6 +9,7 @@
     --border-hover:.1rem solid var(--black);
     --box-shadow:0 .5rem 1rem rgba(0,0,0,0.1);
 }
+
 *{
     font-family: 'Poppins', 'sans-serif';
     margin: 0;
@@ -62,6 +63,7 @@ section{
     background: #fff;
     border: var(--border);
 }
+
 .header .header-1{
     background: white;
     padding: 1.5rem 9%;
@@ -560,12 +562,12 @@ section{
 }
 
 .filter-button-container button{
-    padding: 5px 10px; /* Padding around text inside button */
-    background-color: var(--dark-color); /* Background color of button */
-    color: white; /* Text color of button */
-    border: none; /* Remove default button border */
-    border-radius: 5px; /* Rounded corners */
-    cursor: pointer; /* Show pointer cursor on hover */
+    padding: 5px 10px; 
+    background-color: var(--dark-color);
+    color: white; 
+    border: none; 
+    border-radius: 5px; 
+    cursor: pointer; 
     background: none;
     font-size: 18px;
     font-weight: bold;
@@ -2721,9 +2723,6 @@ label {
     html{
         font-size: 60%;
     }
-    .header .header-1{
-        padding: 2rem;
-    }
     .wrapper {
         grid-template-columns: repeat(4, 1fr);
     }
@@ -2733,6 +2732,14 @@ label {
     }
     .btn-return2{
         margin-left: 60px;
+    }
+
+    .header .header-1 .logo{
+        margin-left: 8rem;
+    }
+
+    .icons ul {
+        margin-right: 8rem;
     }
 }
 
@@ -2745,6 +2752,13 @@ label {
     }
     .wrapper {
         grid-template-columns: repeat(4, 1fr);
+    }
+    .header .header-1 .logo{
+        margin-left: 2rem;
+    }
+
+    .icons ul {
+        margin-right: 2rem;
     }
 }
 @media (max-width:991px){

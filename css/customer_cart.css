@@ -1903,7 +1903,14 @@ label {
     .wrapper {
         grid-template-columns: repeat(4, 1fr);
     }
-    
+
+    .header .header-1 .logo{
+        margin-left: 8rem;
+    }
+
+    .icons ul {
+        margin-right: 8rem;
+    }
 }
 
 @media (max-width:1250px){
@@ -1946,6 +1953,13 @@ label {
         margin-right: auto;
     }
     
+    .header .header-1 .logo{
+        margin-left: 2rem;
+    }
+
+    .icons ul {
+        margin-right: 2rem;
+    }
 }
 @media (max-width:991px){
     html{

@@ -90,7 +90,7 @@ if ($unread_notifications_result) {
 $notification_query = "
     SELECT notifications.*, orders.status AS order_status 
     FROM notifications 
-    JOIN orders ON notifications.order_id = orders.order_id
+    LEFT JOIN orders ON notifications.order_id = orders.order_id
     WHERE notifications.customer_id = $customer_id 
     ORDER BY notifications.created_at DESC";
 $notifications_result = $con->query($notification_query);
@@ -99,6 +99,7 @@ $notifications = array();
 if ($notifications_result->num_rows > 0) {
     while ($notification = $notifications_result->fetch_assoc()) {
         $notification['days_difference'] = getDaysDifference($notification['created_at']);
+        $notification['is_read'] = $notification['read_status'] == 1 ? true : false;
         $notification['is_read'] = $notification['read_status'] == 1 ? true : false;
         $notifications[] = $notification;
     }
@@ -144,6 +145,7 @@ if ($notifications_result->num_rows > 0) {
     }
 
 </style>
+
 <body>
     <div id="notificationPopup" style="display: none; position: absolute; right: 10px; top: 60px; background-color: white; border: 1px solid #ccc; padding: 10px; width: 300px; z-index: 100;">
         <h2 style="margin: 10px 0">Notifications</h2>
@@ -152,7 +154,9 @@ if ($notifications_result->num_rows > 0) {
             <button id="unreadButton" class="notif-button">Unread</button>
         </div>
         <hr class="notif">
-        <?php foreach ($notifications as $notification) : ?>
+        <?php foreach ($notifications as $notification) :
+            $orderStatus = isset($notification['order_status']) ? $notification['order_status'] : 'Order Deleted/Not Available';
+        ?>
             <div class="notification-item <?= !$notification['is_read'] ? 'unread' : '' ?>"
                 style="padding: 10px; border-bottom: 1px solid #eee; <?= !$notification['is_read'] ? 'background-color: #f9f9f9;' : '' ?>"
                 data-order-id="<?= $notification['order_id']; ?>"
@@ -281,7 +285,7 @@ if ($notifications_result->num_rows > 0) {
                     const orderStatus = this.dataset.orderStatus;
 
                     if (orderStatus === 'Pending' || orderStatus === 'Invalid') {
-                        window.location.href = 'customer_profile.php';
+                        window.location.href = `customer_profile.php?highlight_order=${orderId}`;
                     } else {
                         window.location.href = `customer_orderstatus.php?order_id=${orderId}`;
                     }
@@ -323,6 +327,63 @@ if ($notifications_result->num_rows > 0) {
                 notificationIcon.addEventListener('click', handleNotificationClick);
             });
 
+        });
+
+        function markAsRead(notificationId) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "update_notification.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onload = function() {
+                if (this.status == 200) {
+                    // Optionally reload the notifications to reflect the changes
+                    console.log("Notification marked as read.");
+                }
+            };
+            xhr.send("id=" + notificationId);
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const allButton = document.getElementById('allButton');
+            const unreadButton = document.getElementById('unreadButton');
+            const notifications = document.querySelectorAll('.notification-item');
+
+            allButton.addEventListener('click', function() {
+                notifications.forEach(notification => {
+                    notification.style.display = '';
+                });
+                allButton.classList.add('active');
+                unreadButton.classList.remove('active');
+            });
+
+            unreadButton.addEventListener('click', function() {
+                notifications.forEach(notification => {
+                    if (notification.classList.contains('unread')) {
+                        notification.style.display = '';
+                    } else {
+                        notification.style.display = 'none';
+                    }
+                });
+                unreadButton.classList.add('active');
+                allButton.classList.remove('active');
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const notificationItems = document.querySelectorAll('.notification-item');
+            
+            notificationItems.forEach(function(item) {
+                item.addEventListener('click', function() {
+                    const orderId = this.dataset.orderId;
+                    const orderStatus = this.dataset.orderStatus;
+
+                    if (orderStatus === 'Pending' || orderStatus === 'Invalid') {
+                        window.location.href = `customer_profile.php?highlight_order=${orderId}`;
+                    } else {
+                        window.location.href = `customer_orderstatus.php?order_id=${orderId}`;
+                    }
+                });
+            });
         });
     </script>
 </body>

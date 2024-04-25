@@ -89,7 +89,7 @@ if ($unread_notifications_result) {
 $notification_query = "
     SELECT notifications.*, orders.status AS order_status 
     FROM notifications 
-    JOIN orders ON notifications.order_id = orders.order_id
+    LEFT JOIN orders ON notifications.order_id = orders.order_id
     WHERE notifications.customer_id = $customer_id 
     ORDER BY notifications.created_at DESC";
 $notifications_result = $con->query($notification_query);
@@ -230,7 +230,9 @@ if ($notifications_result->num_rows > 0) {
             <button id="unreadButton" class="notif-button">Unread</button>
         </div>
         <hr class="notif">
-        <?php foreach ($notifications as $notification) : ?>
+        <?php foreach ($notifications as $notification) :
+            $orderStatus = isset($notification['order_status']) ? $notification['order_status'] : 'Order Deleted/Not Available';
+        ?>
             <div class="notification-item <?= !$notification['is_read'] ? 'unread' : '' ?>"
                 style="padding: 10px; border-bottom: 1px solid #eee; <?= !$notification['is_read'] ? 'background-color: #f9f9f9;' : '' ?>"
                 data-order-id="<?= $notification['order_id']; ?>"
@@ -604,7 +606,7 @@ if ($notifications_result->num_rows > 0) {
                     const orderStatus = this.dataset.orderStatus;
 
                     if (orderStatus === 'Pending' || orderStatus === 'Invalid') {
-                        window.location.href = 'customer_profile.php';
+                        window.location.href = `customer_profile.php?highlight_order=${orderId}`;
                     } else {
                         window.location.href = `customer_orderstatus.php?order_id=${orderId}`;
                     }
