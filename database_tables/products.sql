@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 23, 2024 at 04:25 PM
+-- Generation Time: Apr 25, 2024 at 09:06 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -35,6 +35,7 @@ CREATE TABLE `products` (
   `item_quantity` int(255) NOT NULL,
   `artist_name` varchar(255) NOT NULL,
   `category_name` varchar(255) NOT NULL,
+  `item_size` enum('Small','Medium','Large','') DEFAULT NULL,
   `item_image1` varchar(250) NOT NULL,
   `item_image2` varchar(250) NOT NULL,
   `item_image3` varchar(250) NOT NULL,
@@ -58,7 +59,7 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

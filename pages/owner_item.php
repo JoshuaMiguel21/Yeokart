@@ -70,6 +70,15 @@
                         ?>
                     </select>
                 </div>
+                <div class="form-outline mb-3 w-50 mr-auto ml-auto">
+                    <label for="item_size" class="form-label">Size:</label>
+                    <select name="item_size" id="item_size" class="form-select">
+                        <option value="">Select Size</option>
+                        <option value="Small">Small</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Large">Large</option>
+                    </select>
+                </div>
             </div>
             <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                 <label for="item_image1" class="form-label">Item Image 1:</label>
@@ -138,6 +147,7 @@ if (isset($_POST['insert_item'])) {
     $item_quantity = $_POST['item_quantity'];
     $product_artist = $_POST['product_artist'];
     $product_category = $_POST['product_category'];
+    $item_size = $_POST['item_size'];
 
     $item_image1 = $_FILES['item_image1']['name'];
     $item_image2 = $_FILES['item_image2']['name'];
@@ -168,11 +178,11 @@ if (isset($_POST['insert_item'])) {
             move_uploaded_file($temp_image2, "./item_images/$item_image2");
             move_uploaded_file($temp_image3, "./item_images/$item_image3");
 
-            $insert_items = "INSERT INTO products (item_name,item_price,item_description,item_quantity,artist_name,category_name,item_image1,item_image2,item_image3) VALUES ('$item_name_original','$item_price','$item_description','$item_quantity', '$product_artist','$product_category','$item_image1','$item_image2','$item_image3')";
+            $insert_items = "INSERT INTO products (item_name, item_price, item_description, item_quantity, artist_name, category_name, item_image1, item_image2, item_image3, item_size) VALUES ('$item_name_original', '$item_price', '$item_description', '$item_quantity', '$product_artist', '$product_category', '$item_image1', '$item_image2', '$item_image3', '$item_size')";
             $result_query_item = mysqli_query($con, $insert_items);
             if ($result_query_item) {
 
-                $total_items = mysqli_num_rows(mysqli_query($con, "SELECT * FROM products"));
+                $total_items = mysqli_num_rows(mysqli_query($con, "SELECT * FROM products WHERE is_archive=0"));
                 $items_per_page = 10;
                 $total_pages = ceil($total_items / $items_per_page);
 

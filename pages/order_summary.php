@@ -141,32 +141,60 @@
     $shippingFee = 0;
     $overallTotal = 0;
 
-    // Calculate total quantity of items with category "Albums"
-    $totalAlbumsQuantity = array_reduce($cartItems, function ($acc, $item) {
-        if (preg_match('/\b(albums?|albums)\b/i', $item['category'])) {
-            return $acc + $item['quantity'];
-        }
-        return $acc;
-    }, 0);
+    $luzonProvinces = [
+        'Abra', 'Albay', 'Apayao', 'Aurora', 'Bataan', 'Batanes', 'Batangas', 'Benguet', 'Bulacan', 'Cagayan', 'Camarines Norte',
+        'Camarines Sur', 'Catanduanes', 'Cavite', 'Ifugao', 'Ilocos Norte', 'Ilocos Sur', 'Isabela', 'Kalinga', 'La Union',
+        'Laguna', 'Marinduque', 'Masbate', 'Mountain Province', 'Nueva Ecija', 'Nueva Vizcaya', 'Palawan', 'Pampanga', 'Pangasinan',
+        'Quezon', 'Quirino', 'Rizal', 'Romblon', 'Sorsogon', 'Tarlac', 'Zambales'
+    ];
 
-    // Determine the province based on the selected address or default to Metro Manila
-    $province = $province === 'Metro Manila' ? 'Metro Manila' : $province;
+    $visayasAndMindanaoProvinces = [
+        'Agusan del Norte', 'Agusan del Sur', 'Aklan', 'Antique', 'Basilan', 'Biliran', 'Bohol', 'Bukidnon', 'Camiguin', 'Capiz',
+        'Cebu', 'Cotabato', 'Davao del Norte', 'Davao del Sur', 'Davao Occidental', 'Davao Oriental', 'Dinagat Islands', 'Eastern Samar',
+        'Guimaras', 'Iloilo', 'Lanao del Norte', 'Lanao del Sur', 'Leyte', 'Maguindanao', 'Misamis Occidental', 'Misamis Oriental',
+        'Negros Occidental', 'Negros Oriental', 'Northern Samar', 'Occidental Mindoro', 'Oriental Mindoro', 'Samar', 'Sarangani',
+        'Siquijor', 'South Cotabato', 'Southern Leyte', 'Sultan Kudarat', 'Sulu', 'Surigao del Norte', 'Surigao del Sur',
+        'Tawi-Tawi', 'Zamboanga del Norte', 'Zamboanga del Sur'
+    ];
 
-    // Check if province is empty and set shippingFee to 0
-    if ($province === '') {
-        $shippingFee = 0;
-    } else {
-        // Calculate shipping fee based on quantity and province
-        if ($totalAlbumsQuantity < 3) {
-            $shippingFee = $province === 'Metro Manila' ? 100 : 180;
-        } else {
-            $shippingFee = $province === 'Metro Manila' ? 120 : 220;
+    $largestItemSize = 'Small';
+    foreach ($cartItems as $item) {
+        if ($item['item_size'] === 'Large') {
+            $largestItemSize = 'Large';
+            break;
+        } elseif ($item['item_size'] === 'Medium' && $largestItemSize !== 'Large') {
+            $largestItemSize = 'Medium';
         }
     }
 
-    // Update overall total
-    $overallTotal = $cartTotal + $shippingFee;
+    $region = '';
+    if (in_array($province, $luzonProvinces)) {
+        $region = 'Luzon';
+    } elseif (in_array($province, $visayasAndMindanaoProvinces)) {
+        $region = 'Visayas and Mindanao';
+    } elseif ($province === 'Metro Manila') {
+        $region = 'Metro Manila';
+    }
 
+    // Calculate shipping fee based on the largest item size and region
+    $shippingFee = 0;
+    if ($region === '') {
+        $shippingFee = 0;
+    } else {
+        switch ($region) {
+            case 'Luzon':
+                $shippingFee = $largestItemSize === 'Large' ? 220 : 180;
+                break;
+            case 'Visayas and Mindanao':
+                $shippingFee = $largestItemSize === 'Large' ? 320 : ($largestItemSize === 'Medium' ? 260 : 180);
+                break;
+            case 'Metro Manila':
+                $shippingFee = $largestItemSize === 'Large' ? 120 : 100;
+                break;
+        }
+    }
+
+    $overallTotal = $cartTotal + $shippingFee;
 
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_order'])) {
         if ($fullAddress === "No default address found") {
@@ -218,8 +246,8 @@
             $image1 = array_column($cartItems, 'item_image1');
             $item_images_str = implode(", ", $image1);
 
-            $insert_query = $con->prepare("INSERT INTO orders (order_id, customer_id, address, items_ordered, item_quantity, items_category, items_artist, items_price, subtotal, total, shipping_fee, overall_total, date_of_purchase, items_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)");
-            $insert_query->bind_param("sisssssssssss", $order_id, $customer_id, $fullAddress, $items_ordered_str, $item_quantities_str, $item_categories_str, $item_artists_str, $item_price_str, $item_subtotal_str, $cartTotal, $shippingFee, $overallTotal, $item_images_str);
+            $insert_query = $con->prepare("INSERT INTO orders (order_id, customer_id, email, address, items_ordered, item_quantity, items_category, items_artist, items_price, subtotal, total, shipping_fee, overall_total, date_of_purchase, items_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)");
+            $insert_query->bind_param("sissssssssssss", $order_id, $customer_id, $email, $fullAddress, $items_ordered_str, $item_quantities_str, $item_categories_str, $item_artists_str, $item_price_str, $item_subtotal_str, $cartTotal, $shippingFee, $overallTotal, $item_images_str);
 
             if ($insert_query->execute()) {
 
@@ -346,16 +374,29 @@
                 The shipping rates will be provided below.</p>
             <p>The customer can choose if they want to pay the shipping fee through GCash or Cash on Delivery.</p>
             <p style="margin-top: 20px;"><strong class="name">Shipping Fee</strong></p>
-            <p><strong>These are the rates for the Shipping fee.</strong></p>
-            <p>Small to Medium Items (Up to 2 albums)</p>
+            <p><strong>These are the rates for the Shipping fee in Luzon Region.</strong></p>
+            <p>Small to Medium Items</p>
             <ul>
                 <li style="margin-left: 20px;">Metro Manila - <strong>₱ 100</strong></li>
-                <li style="margin-left: 20px;">Provinces - <strong>₱ 180</strong></li>
+                <li style="margin-left: 20px;">Provinces in Luzon- <strong>₱ 180</strong></li>
             </ul>
-            <p>Large Items (3 albums and more)</p>
+            <p>Large Items</p>
             <ul>
                 <li style="margin-left: 20px;">Metro Manila - <strong>₱ 120</strong></li>
-                <li style="margin-left: 20px;">Provinces - <strong>₱ 220</strong></li>
+                <li style="margin-left: 20px;">Provinces in Luzon- <strong>₱ 220</strong></li>
+            </ul>
+            <p><strong>For Visayas and Mindanao Region.</strong></p>
+            <p>Small Items</p>
+            <ul>
+                <li style="margin-left: 20px;">Provinces in Visayas and Mindanao - <strong>₱ 180</strong></li>
+            </ul>
+            <p>Medium Items</p>
+            <ul>
+                <li style="margin-left: 20px;">Provinces in Visayas and Mindanao - <strong>₱ 260</strong></li>
+            </ul>
+            <p>Large Items</p>
+            <ul>
+                <li style="margin-left: 20px;">Provinces in Visayas and Mindanao - <strong>₱ 320</strong></li>
             </ul>
 
         </div>

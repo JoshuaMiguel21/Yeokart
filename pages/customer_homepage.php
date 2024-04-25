@@ -60,7 +60,8 @@ if ($result) {
     echo "Error: " . $sql . "<br>" . $con->error;
 }
 
-function getDaysDifference($date) {
+function getDaysDifference($date)
+{
     $now = new DateTime();
     $notificationDate = new DateTime($date);
     $interval = $now->diff($notificationDate);
@@ -105,6 +106,15 @@ if ($notifications_result->num_rows > 0) {
 ?>
 
 <style>
+    .notification-item {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .notification-item.unread {
+        background-color: #f9f9f9;
+    }
+
     .notification-item .unread-dot {
         display: inline-block;
         width: 8px;
@@ -143,9 +153,97 @@ if ($notifications_result->num_rows > 0) {
         color: white;
     }
 
+    .delete-button {
+        display: none;
+        cursor: pointer;
+        color: #DD2F6E;
+        margin-left: 10px;
+        font-size: 13px;
+    }
+
+    .notification-item:hover .delete-button {
+        display: inline-block;
+    }
 </style>
 
 <body>
+
+
+    <div id="terms-popup" class="terms-popup terms-popup-content">
+        <article class="terms-container">
+            <header class="terms-container-header">
+                <h1 class="terms-container-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+                        <path fill="none" d="M0 0h24v24H0z" />
+                        <path fill="var(--pink)" d="M14 9V4H5v16h6.056c.328.417.724.785 1.18 1.085l1.39.915H3.993A.993.993 0 0 1 3 21.008V2.992C3 2.455 3.449 2 4.002 2h10.995L21 8v1h-7zm-2 2h9v5.949c0 .99-.501 1.916-1.336 2.465L16.5 21.498l-3.164-2.084A2.953 2.953 0 0 1 12 16.95V11zm2 5.949c0 .316.162.614.436.795l2.064 1.36 2.064-1.36a.954.954 0 0 0 .436-.795V13h-5v3.949z" />
+                    </svg>
+                    Terms and Conditions
+                </h1>
+                <button class="icon-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="none" d="M0 0h24v24H0z" />
+                        <path fill="currentColor" d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z" />
+                    </svg>
+                </button>
+            </header>
+            <section class="terms-container-body rtf">
+                <h2>Terms and Conditions for YeoKart K-Pop Merch Store
+                </h2>
+
+                <p>Welcome to YeoKart! These terms and conditions outline the rules and regulations for using YeoKart's Website, which specializes in selling Kpop merchandise, located at [yourwebsite.com].
+                    By accessing this website, we assume you accept these terms and conditions. Do not continue shopping at YeoKart if you do not agree to take all of the terms and conditions stated on this page.
+                </p>
+
+                <h3>1. Product Descriptions</h3>
+
+                <p>We strive to describe all merchandise listed on our website accurately. However, please note that these items may have minor flaws or imperfections due to the nature of these items. We provide detailed descriptions and images to give you a clear understanding of the condition of each item. </p>
+
+                <h3>2. Authenticity</h3>
+
+                <p>We guarantee the authenticity of all merchandise sold on our website. We source our products from reputable suppliers and conduct thorough inspections to ensure their authenticity. </p>
+
+                <h3>3. Pricing</h3>
+
+                <p>All prices listed on our website are in Philippine pesos (Php) and are inclusive of any applicable taxes. Prices are subject to change without prior notice. We reserve the right to modify or discontinue any product without liability to you or any third party.</p>
+
+                <h3>4. Orders</h3>
+
+                <p>By placing an order through YeoKart, you warrant that you are at least 18 years old or have obtained parental/guardian consent to make a purchase. Once an order is placed, you will receive details of your purchase.</p>
+
+                <h3>5. Payment</h3>
+
+                <p>Payment for orders must be made in full within 24 hours after creating an order. We accept payment via GCash only. To confirm payment, you must upload a screenshot of your transaction so that YeoKart can verify your payment. Your order will not be processed until payment has been received in full.</p>
+
+                <h3>7. Returns</h3>
+
+                <p>We offer shipping only to areas in the Philippines. Shipping costs and delivery times may vary depending on your location. Please refer to our Shipping Policy for more information.</p>
+
+                <h3>8. Privacy</h3>
+
+                <p>Your privacy is important to us. We collect and use personal information in accordance with our Privacy Policy. By using YeoKart, you consent to the collection and use of your personal information as described therein.</p>
+
+                <h3>9. Limitation of Liability</h3>
+
+                <p>In no event shall YeoKart, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from (i) your access to or use of or inability to access or use YeoKart; (ii) any conduct or content of any third party on YeoKart; (iii) any content obtained from YeoKart; and (iv) unauthorized access, use, or alteration of your transmissions or content, whether based on warranty, contract, tort (including negligence), or any other legal theory, whether or not we have been informed of the possibility of such damage.</p>
+
+                <h3>10. Governing Law</h3>
+
+                <p>These terms and conditions shall be governed by and construed in accordance with the laws of the Philippines, and you irrevocably submit to the exclusive jurisdiction of the courts in that State or location.</p>
+
+                <h3>11. Contact Us</h3>
+
+                <p>If you have any questions or concerns about these terms and conditions, please contact us at Yeokartstore@gmail.com or on our other socials on our Contact Us page.</p>
+
+                <br>
+                <p>By using YeoKart, you agree to abide by these terms and conditions. Thank you for shopping with us!</p>
+            </section>
+            <footer class="terms-container-footer">
+                <button class="button is-ghost">Decline</button>
+                <button class="button is-primary">Accept</button>
+            </footer>
+        </article>
+    </div>
+
     <div id="notificationPopup" style="display: none; position: absolute; right: 10px; top: 60px; background-color: white; border: 1px solid #ccc; padding: 10px; width: 300px; z-index: 100;">
         <h2 style="margin: 10px 0">Notifications</h2>
         <div style="padding-bottom: 10px;">
@@ -164,6 +262,7 @@ if ($notifications_result->num_rows > 0) {
                 <p style="font-size: 1.2rem">
                     <strong><?= htmlspecialchars($notification['title']); ?></strong>
                     <?= !$notification['is_read'] ? '<span class="unread-dot"></span>' : '' ?>
+                    <span class="delete-button" onclick="deleteNotification(<?= $notification['id']; ?>);" style="display: none; position: absolute; right: 0; top: 50%; margin-right: 5px; transform: translateY(-50%); cursor: pointer;"><i class="fas fa-trash-alt"></i></span>
                 </p>
                 <p><?= htmlspecialchars($notification['message']); ?></p>
                 <p style="font-size: 0.8em; color: <?= !$notification['is_read'] ? '#DD2F6E' : '#666'; ?>;">
@@ -172,7 +271,6 @@ if ($notifications_result->num_rows > 0) {
             </div>
         <?php endforeach; ?>
     </div>
-
 
     <input type="checkbox" id="click">
     <header class="header" style="box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
@@ -208,7 +306,7 @@ if ($notifications_result->num_rows > 0) {
         <div class="header-2">
             <nav class="navbar">
                 <a href="#home">Home</a>
-                <a href="#best">Best Sellers</a>
+                <a href="#best">New Arrival</a>
                 <a href="#featured">Featured</a>
             </nav>
         </div>
@@ -231,12 +329,12 @@ if ($notifications_result->num_rows > 0) {
         </div>
     </section>
     <section class="best" id="best">
-        <h1 class="heading"><span>Best Sellers</span></h1>
+        <h1 class="heading"><span>New Arrival</span></h1>
         <div class="swiper best-slider">
             <div class="swiper-wrapper">
                 <?php
                 include('../database/db_yeokart.php');
-                $select_query = "SELECT * FROM products WHERE is_archive = 0 ORDER BY times_sold DESC LIMIT 10";
+                $select_query = "SELECT * FROM products WHERE is_archive = 0 ORDER BY item_id DESC LIMIT 10";
                 $result_query = mysqli_query($con, $select_query);
                 while ($row = mysqli_fetch_assoc($result_query)) {
                     $item_id = $row['item_id'];
@@ -458,7 +556,7 @@ if ($notifications_result->num_rows > 0) {
 
             function handleNotificationClick(event) {
                 if (window.matchMedia('(max-width: 768px)').matches) {
-                    window.location.href = 'notification_page.php'; 
+                    window.location.href = 'notification_page.php';
                 } else {
                     event.preventDefault();
                     if (notificationPopup.style.display === 'none' || !notificationPopup.style.display) {
@@ -522,7 +620,7 @@ if ($notifications_result->num_rows > 0) {
 
         document.addEventListener('DOMContentLoaded', function() {
             const notificationItems = document.querySelectorAll('.notification-item');
-            
+
             notificationItems.forEach(function(item) {
                 item.addEventListener('click', function() {
                     const orderId = this.dataset.orderId;
@@ -536,9 +634,87 @@ if ($notifications_result->num_rows > 0) {
                 });
             });
         });
-        
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteButtons = document.querySelectorAll('.delete-button');
+
+            deleteButtons.forEach(function(button) {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevents the default behavior of the click event
+                    event.stopPropagation(); // Prevents the event from bubbling up the DOM tree
+
+                    const notificationId = button.closest('.notification-item').dataset.id;
+                    deleteNotification(notificationId, button);
+                });
+            });
+        });
+
+        function deleteNotification(notificationId, button) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "delete_notification.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onload = function() {
+                if (this.status == 200) {
+                    // Notification deleted successfully
+                    console.log("Notification deleted successfully.");
+                    // Remove the deleted notification from the UI
+                    const notificationItem = button.closest('.notification-item');
+                    if (notificationItem) {
+                        notificationItem.remove();
+                    }
+                } else {
+                    // Error deleting notification
+                    console.error("Error deleting notification.");
+                }
+            };
+            xhr.send("id=" + notificationId);
+        }
+
+        function showDeleteButton(element) {
+            element.querySelector('.delete-button').style.display = 'inline-block';
+        }
+
+        function hideDeleteButton(element) {
+            element.querySelector('.delete-button').style.display = 'none';
+        }
     </script>
-    
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if the popup has already been shown
+            if (!localStorage.getItem('popupShown')) {
+                // If not shown, display the popup
+                document.getElementById('terms-popup').style.display = 'block';
+            }
+
+            // Add event listener to the accept button
+            document.querySelector('.button.is-primary').addEventListener('click', function() {
+                hidePopup();
+            });
+
+            // Add event listener to the icon button
+            document.querySelector('.icon-button').addEventListener('click', function() {
+                hidePopup();
+            });
+
+            // Add event listener to the decline button
+            document.querySelector('.button.is-ghost').addEventListener('click', function() {
+                // Handle the decline action if needed
+                // For example, redirect the user to another page
+                // window.location.href = 'decline_page.html';
+                hidePopup();
+            });
+        });
+
+        function hidePopup() {
+            // Hide the popup
+            document.getElementById('terms-popup').style.display = 'none';
+
+            // Set the flag indicating that the popup has been shown
+            localStorage.setItem('popupShown', 'true');
+        }
+    </script>
+
+
 </body>
 
 </html>

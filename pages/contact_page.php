@@ -61,7 +61,8 @@ if ($result) {
     echo "Error: " . $sql . "<br>" . $con->error;
 }
 
-function getDaysDifference($date) {
+function getDaysDifference($date)
+{
     $now = new DateTime();
     $notificationDate = new DateTime($date);
     $interval = $now->diff($notificationDate);
@@ -105,6 +106,15 @@ if ($notifications_result->num_rows > 0) {
 }
 ?>
 <style>
+    .notification-item {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .notification-item.unread {
+        background-color: #f9f9f9;
+    }
+
     .notification-item .unread-dot {
         display: inline-block;
         width: 8px;
@@ -143,7 +153,19 @@ if ($notifications_result->num_rows > 0) {
         color: white;
     }
 
+    .delete-button {
+        display: none;
+        cursor: pointer;
+        color: #DD2F6E;
+        margin-left: 10px;
+        font-size: 13px;
+    }
+
+    .notification-item:hover .delete-button {
+        display: inline-block;
+    }
 </style>
+
 <body>
     <div id="notificationPopup" style="display: none; position: absolute; right: 10px; top: 60px; background-color: white; border: 1px solid #ccc; padding: 10px; width: 300px; z-index: 100;">
         <h2 style="margin: 10px 0">Notifications</h2>
@@ -163,6 +185,7 @@ if ($notifications_result->num_rows > 0) {
                 <p style="font-size: 1.2rem">
                     <strong><?= htmlspecialchars($notification['title']); ?></strong>
                     <?= !$notification['is_read'] ? '<span class="unread-dot"></span>' : '' ?>
+                    <span class="delete-button" onclick="deleteNotification(<?= $notification['id']; ?>);" style="display: none; position: absolute; right: 0; top: 50%; margin-right: 5px; transform: translateY(-50%); cursor: pointer;"><i class="fas fa-trash-alt"></i></span>
                 </p>
                 <p><?= htmlspecialchars($notification['message']); ?></p>
                 <p style="font-size: 0.8em; color: <?= !$notification['is_read'] ? '#DD2F6E' : '#666'; ?>;">
@@ -310,7 +333,7 @@ if ($notifications_result->num_rows > 0) {
 
         document.addEventListener('DOMContentLoaded', function() {
             const notificationItems = document.querySelectorAll('.notification-item');
-            
+
             notificationItems.forEach(function(item) {
                 item.addEventListener('click', function() {
                     const orderId = this.dataset.orderId;
@@ -324,7 +347,7 @@ if ($notifications_result->num_rows > 0) {
                 });
             });
         });
-        
+
         function validateSearch() {
             var searchBox = document.getElementById('search-box');
             if (searchBox.value.trim() === '') {
@@ -339,7 +362,7 @@ if ($notifications_result->num_rows > 0) {
 
             function handleNotificationClick(event) {
                 if (window.matchMedia('(max-width: 768px)').matches) {
-                    window.location.href = 'notification_page.php'; 
+                    window.location.href = 'notification_page.php';
                 } else {
                     event.preventDefault();
                     if (notificationPopup.style.display === 'none' || !notificationPopup.style.display) {
@@ -360,6 +383,48 @@ if ($notifications_result->num_rows > 0) {
             });
 
         });
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteButtons = document.querySelectorAll('.delete-button');
+
+            deleteButtons.forEach(function(button) {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevents the default behavior of the click event
+                    event.stopPropagation(); // Prevents the event from bubbling up the DOM tree
+
+                    const notificationId = button.closest('.notification-item').dataset.id;
+                    deleteNotification(notificationId, button);
+                });
+            });
+        });
+
+        function deleteNotification(notificationId, button) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "delete_notification.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onload = function() {
+                if (this.status == 200) {
+                    // Notification deleted successfully
+                    console.log("Notification deleted successfully.");
+                    // Remove the deleted notification from the UI
+                    const notificationItem = button.closest('.notification-item');
+                    if (notificationItem) {
+                        notificationItem.remove();
+                    }
+                } else {
+                    // Error deleting notification
+                    console.error("Error deleting notification.");
+                }
+            };
+            xhr.send("id=" + notificationId);
+        }
+
+        function showDeleteButton(element) {
+            element.querySelector('.delete-button').style.display = 'inline-block';
+        }
+
+        function hideDeleteButton(element) {
+            element.querySelector('.delete-button').style.display = 'none';
+        }
     </script>
 </body>
 

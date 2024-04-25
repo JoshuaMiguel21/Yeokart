@@ -78,6 +78,15 @@
                         ?>
                     </select>
                 </div>
+                <div class="form-outline mb-3 w-50 mr-auto ml-auto">
+                    <label for="item_size" class="form-label">Size:</label>
+                    <select name="item_size" id="item_size" class="form-select">
+                        <option value="">Select Size</option>
+                        <option value="Small" <?php echo ($row['item_size'] == 'Small') ? 'selected' : ''; ?>>Small</option>
+                        <option value="Medium" <?php echo ($row['item_size'] == 'Medium') ? 'selected' : ''; ?>>Medium</option>
+                        <option value="Large" <?php echo ($row['item_size'] == 'Large') ? 'selected' : ''; ?>>Large</option>
+                    </select>
+                </div>
                 <div class="form-outline mb-4 w-50 m-auto">
                     <label for="item_image1" class="form-label">Item Image 1:</label>
                     <input type="file" name="item_image1" id="item_image1" accept="image/*" class="image-input">
@@ -155,6 +164,8 @@ if (isset($_POST['update_item'])) {
     $item_quantity = mysqli_real_escape_string($con, $_POST['item_quantity']);
     $product_artist = mysqli_real_escape_string($con, $_POST['product_artist']);
     $product_category = mysqli_real_escape_string($con, $_POST['product_category']);
+    $item_size = mysqli_real_escape_string($con, $_POST['item_size']);
+
 
     $item_image1 = $_POST['current_image1'];
     $item_image2 = $_POST['current_image2'];
@@ -189,7 +200,7 @@ if (isset($_POST['update_item'])) {
                 });
               </script>";
     } else {
-        $update_query = "UPDATE products SET item_name='$item_name', item_price='$item_price', item_description='$item_description', item_quantity='$item_quantity', artist_name='$product_artist', category_name='$product_category', item_image1='$item_image1', item_image2='$item_image2', item_image3='$item_image3' WHERE item_id='$item_id'";
+        $update_query = "UPDATE products SET item_name='$item_name', item_price='$item_price', item_description='$item_description', item_quantity='$item_quantity', artist_name='$product_artist', category_name='$product_category', item_image1='$item_image1', item_image2='$item_image2', item_image3='$item_image3', item_size='$item_size' WHERE item_id='$item_id'";
         $result_query_item = mysqli_query($con, $update_query);
         if ($result_query_item) {
             echo "<script>
