@@ -193,7 +193,7 @@ if (isset($_POST['total_income'])) {
 }
 
 // print colored table
-$pdf->ColoredTable('Best Seller Items', $header, $data, $orderCount, $totalItemsSold, $totalRevenue, $totalIncome);
+$pdf->ColoredTable('Most Sold Items', $header, $data, $orderCount, $totalItemsSold, $totalRevenue, $totalIncome);
 // ---------------------------------------------------------
 
 // close and output PDF document

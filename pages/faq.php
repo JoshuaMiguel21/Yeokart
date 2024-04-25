@@ -100,6 +100,7 @@ if ($notifications_result->num_rows > 0) {
     while ($notification = $notifications_result->fetch_assoc()) {
         $notification['days_difference'] = getDaysDifference($notification['created_at']);
         $notification['is_read'] = $notification['read_status'] == 1 ? true : false;
+        $notification['is_read'] = $notification['read_status'] == 1 ? true : false;
         $notifications[] = $notification;
     }
 }
@@ -152,6 +153,10 @@ if ($notifications_result->num_rows > 0) {
             <button id="allButton" class="notif-button active">All</button>
             <button id="unreadButton" class="notif-button">Unread</button>
         </div>
+        <div style="padding-bottom: 10px;">
+            <button id="allButton" class="notif-button active">All</button>
+            <button id="unreadButton" class="notif-button">Unread</button>
+        </div>
         <hr class="notif">
         <?php foreach ($notifications as $notification) :
             $orderStatus = isset($notification['order_status']) ? $notification['order_status'] : 'Order Deleted/Not Available';
@@ -197,9 +202,9 @@ if ($notifications_result->num_rows > 0) {
                     <li><a href="customer_shop.php">Shop</a></li>
                     <li><a href="faq.php" class="active">FAQ</a></li>
                     <li><a href="contact_page.php">Contact Us</a></li>
-                    <li><a href="customer_cart.php"><i class="fas fa-shopping-cart"><span id="cart-num"><?php echo $cartCount; ?></span></i></a></li>
+                    <li><a href="customer_cart.php"><i class="fas fa-shopping-cart"></i><span id="cart-num"><?php echo $cartCount; ?></span></a></li>
                     <li><a href="customer_profile.php" id="user-btn"><i class="fas fa-user"></i></a></li>
-                    <li><a href="#" id="notificationIcon"><i class="fas fa-bell"></i></a></li>
+                    <li><a href="#" id="notificationIcon"><i class="fas fa-bell"></i><span id="notif-num" class="notification-number"><?= $unreadCount ?></span></a></li>
                 </ul>
             </div>
         </div>
@@ -208,7 +213,6 @@ if ($notifications_result->num_rows > 0) {
         <div class="container">
             <h1 class="heading"><span>Frequently Asked Questions</span></h1>
             <br></br>
-
 
         </div>
     </section>
@@ -236,6 +240,63 @@ if ($notifications_result->num_rows > 0) {
             }
         });
 
+        function markAsRead(notificationId) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "update_notification.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onload = function() {
+                if (this.status == 200) {
+                    // Optionally reload the notifications to reflect the changes
+                    console.log("Notification marked as read.");
+                }
+            };
+            xhr.send("id=" + notificationId);
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const allButton = document.getElementById('allButton');
+            const unreadButton = document.getElementById('unreadButton');
+            const notifications = document.querySelectorAll('.notification-item');
+
+            allButton.addEventListener('click', function() {
+                notifications.forEach(notification => {
+                    notification.style.display = '';
+                });
+                allButton.classList.add('active');
+                unreadButton.classList.remove('active');
+            });
+
+            unreadButton.addEventListener('click', function() {
+                notifications.forEach(notification => {
+                    if (notification.classList.contains('unread')) {
+                        notification.style.display = '';
+                    } else {
+                        notification.style.display = 'none';
+                    }
+                });
+                unreadButton.classList.add('active');
+                allButton.classList.remove('active');
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const notificationItems = document.querySelectorAll('.notification-item');
+            
+            notificationItems.forEach(function(item) {
+                item.addEventListener('click', function() {
+                    const orderId = this.dataset.orderId;
+                    const orderStatus = this.dataset.orderStatus;
+
+                    if (orderStatus === 'Pending' || orderStatus === 'Invalid') {
+                        window.location.href = 'customer_profile.php';
+                    } else {
+                        window.location.href = `customer_orderstatus.php?order_id=${orderId}`;
+                    }
+                });
+            });
+        });
+        
         function validateSearch() {
             var searchBox = document.getElementById('search-box');
             if (searchBox.value.trim() === '') {
