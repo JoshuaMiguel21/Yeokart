@@ -202,10 +202,12 @@ a .btn-custom:hover{
 	}
 }
 
+
 .terms-container-body {
 	padding: 24px 32px 51px;
 	overflow-y: auto;
     text-align: justify;
+    font-size: 0.8rem;
 }
 
 .rtf {
