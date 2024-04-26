@@ -72,6 +72,8 @@
         <div class="container">
             <h1 class="heading"><span>Frequently Asked Questions</span></h1>
             <br></br>
+            <h3 class="faq-h3">Welcome to YeoKart! Below are answers to some common questions you may have about our store and our products.</h3>
+            <br></br>
             <div class="faq-content">
                 <?php foreach ($faqs as $faq): ?>
                     <div class="faq-question">
