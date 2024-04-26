@@ -16,15 +16,17 @@
 <?php
     require('../database/db_yeokart.php');
 
-    $faq_query = "SELECT * FROM faqs ORDER BY created_at DESC";
-    $faq_result = $con->query($faq_query);
-    
-    $faqs = [];
-    if ($faq_result->num_rows > 0) {
-        while($faq = $faq_result->fetch_assoc()) {
-            $faqs[] = $faq;
-        }
+// Fetch FAQ data from database
+$faq_query = "SELECT * FROM faqs ORDER BY created_at ASC";
+$faq_result = $con->query($faq_query);
+
+$faqs = [];
+if ($faq_result->num_rows > 0) {
+    while($faq = $faq_result->fetch_assoc()) {
+        $faqs[] = $faq;
     }
+}
+
 ?>
 <body>
 
@@ -71,6 +73,8 @@
     <section class="faq" id="faq">
         <div class="container">
             <h1 class="heading"><span>Frequently Asked Questions</span></h1>
+            <br></br>
+            <h3 class="faq-h3">Welcome to YeoKart! Below are answers to some common questions you may have about our store and our products.</h3>
             <br></br>
             <div class="faq-content">
                 <?php foreach ($faqs as $faq): ?>
