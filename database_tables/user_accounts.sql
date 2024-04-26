@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 24, 2024 at 04:57 AM
+-- Generation Time: Apr 26, 2024 at 11:41 AM
 -- Server version: 10.4.25-MariaDB
--- PHP Version: 8.0.23
+-- PHP Version: 8.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -34,15 +34,12 @@ CREATE TABLE `user_accounts` (
   `username` varchar(128) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
+  `is_accepted` tinyint(1) NOT NULL,
   `verification_code` varchar(255) NOT NULL,
   `is_verified` int(10) NOT NULL DEFAULT 0,
   `reset_token` varchar(255) DEFAULT NULL,
   `reset_token_expire` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Indexes for dumped tables
---
 
 --
 -- Indexes for table `user_accounts`
@@ -58,7 +55,7 @@ ALTER TABLE `user_accounts`
 -- AUTO_INCREMENT for table `user_accounts`
 --
 ALTER TABLE `user_accounts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
