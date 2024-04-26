@@ -13,7 +13,6 @@
     <link rel="stylesheet" href="../css/contacts.css">
 </head>
 
-
 <body>
 
     <input type="checkbox" id="click">
@@ -75,19 +74,18 @@
                         $contacts_description = $row['contacts_description'];
 
                         if ($icon_link !== "<i class='fa-solid fa-peso-sign'></i>") {
+                            $contacts_link = $contacts_description;
                             if (filter_var($contacts_description, FILTER_VALIDATE_URL)) {
                                 $contacts_link = "<a href='$contacts_description' target='_blank'>$contacts_description</a>";
-                            } else {
-                                $contacts_link = $contacts_description;
                             }
 
-                            echo "<div class='box'>
-                            <div class='iconbox'>
-                                $icon_link
-                            </div>
-                            <h3>$contacts_name</h3>
-                            <p>$contacts_link</p>
-                        </div>";
+                            echo "<div class='box' onclick='redirectToURL(\"$contacts_description\")'>
+                                    <div class='iconbox'>
+                                        $icon_link
+                                    </div>
+                                    <h3>$contacts_name</h3>
+                                    <p>$contacts_link</p>
+                                </div>";
                         }
                     }
                 } else {
@@ -127,6 +125,22 @@
                 return false;
             }
             return true;
+        }
+
+        function redirectToURL(url) {
+            if (isValidURL(url)) {
+                window.open(url, '_blank');
+            }
+        }
+
+        function isValidURL(url) {
+            var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+                '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+                '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+                '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+                '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+            return !!pattern.test(url);
         }
     </script>
 

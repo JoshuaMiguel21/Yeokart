@@ -177,11 +177,7 @@ if ($notifications_result->num_rows > 0) {
         <?php foreach ($notifications as $notification) :
             $orderStatus = isset($notification['order_status']) ? $notification['order_status'] : 'Order Deleted/Not Available';
         ?>
-            <div class="notification-item <?= !$notification['is_read'] ? 'unread' : '' ?>"
-                style="padding: 10px; border-bottom: 1px solid #eee; <?= !$notification['is_read'] ? 'background-color: #f9f9f9;' : '' ?>"
-                data-order-id="<?= $notification['order_id']; ?>"
-                data-order-status="<?= $notification['order_status']; ?>"
-                onclick="markAsRead(<?= $notification['id']; ?>)">
+            <div class="notification-item <?= !$notification['is_read'] ? 'unread' : '' ?>" style="padding: 10px; border-bottom: 1px solid #eee; <?= !$notification['is_read'] ? 'background-color: #f9f9f9;' : '' ?>" data-order-id="<?= $notification['order_id']; ?>" data-order-status="<?= $notification['order_status']; ?>" onclick="markAsRead(<?= $notification['id']; ?>)">
                 <p style="font-size: 1.2rem">
                     <strong><?= htmlspecialchars($notification['title']); ?></strong>
                     <?= !$notification['is_read'] ? '<span class="unread-dot"></span>' : '' ?>
@@ -245,19 +241,18 @@ if ($notifications_result->num_rows > 0) {
                         $contacts_description = $row['contacts_description'];
 
                         if ($icon_link !== "<i class='fa-solid fa-peso-sign'></i>") {
+                            $contacts_link = $contacts_description;
                             if (filter_var($contacts_description, FILTER_VALIDATE_URL)) {
                                 $contacts_link = "<a href='$contacts_description' target='_blank'>$contacts_description</a>";
-                            } else {
-                                $contacts_link = $contacts_description;
                             }
 
-                            echo "<div class='box'>
-                            <div class='iconbox'>
-                                $icon_link
-                            </div>
-                            <h3>$contacts_name</h3>
-                            <p>$contacts_link</p>
-                        </div>";
+                            echo "<div class='box' onclick='redirectToURL(\"$contacts_description\")'>
+                                    <div class='iconbox'>
+                                        $icon_link
+                                    </div>
+                                    <h3>$contacts_name</h3>
+                                    <p>$contacts_link</p>
+                                </div>";
                         }
                     }
                 } else {
@@ -354,6 +349,22 @@ if ($notifications_result->num_rows > 0) {
                 return false;
             }
             return true;
+        }
+
+        function redirectToURL(url) {
+            if (isValidURL(url)) {
+                window.open(url, '_blank');
+            }
+        }
+
+        function isValidURL(url) {
+            var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+                '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+                '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+                '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+                '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+            return !!pattern.test(url);
         }
 
         document.addEventListener('DOMContentLoaded', function() {
