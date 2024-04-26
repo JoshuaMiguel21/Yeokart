@@ -234,7 +234,7 @@ if (isset($_SESSION['email'])) {
                         $totalFaqsRow = mysqli_fetch_assoc($totalFaqsResult);
                         $totalFaqs = $totalFaqsRow['total_faqs'];
 
-                        $select_query = "SELECT * FROM faqs ORDER BY created_at DESC LIMIT $faqsPerPage OFFSET $offset";
+                        $select_query = "SELECT * FROM faqs LIMIT $faqsPerPage OFFSET $offset";
                         $result_query = mysqli_query($con, $select_query);
                         if (mysqli_num_rows($result_query) == 0) {
                             echo "<tr><td colspan='3'><center><b>No FAQs found</b></center></td></tr>";
