@@ -69,12 +69,14 @@ if (isset($_GET['faq_id'])) {
     $select_query = "SELECT * FROM faqs WHERE faq_id='$faq_id'";
     $result_select = mysqli_query($con, $select_query);
     $row = mysqli_fetch_assoc($result_select);
-    $answer = $row['answer'];
+    $question = $row['question']; // Retrieve the existing question from the database
 
     if (isset($_POST['update_faq'])) {
-        $new_answer = $_POST['answer'];
+        $new_question = $_POST['question']; // Retrieve the updated question from the form
+        $new_answer = $_POST['answer']; // Retrieve the updated answer from the form
 
-        $update_query = "UPDATE faqs SET answer='$new_answer' WHERE faq_id='$faq_id'";
+        // Update both the question and the answer in the database
+        $update_query = "UPDATE faqs SET question='$new_question', answer='$new_answer' WHERE faq_id='$faq_id'";
         $result_update = mysqli_query($con, $update_query);
 
         if ($result_update) {
@@ -103,3 +105,4 @@ if (isset($_GET['faq_id'])) {
     }
 }
 ?>
+

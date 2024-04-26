@@ -107,7 +107,7 @@ if ($notifications_result->num_rows > 0) {
 }
 
 // Fetch FAQ data from database
-$faq_query = "SELECT * FROM faqs ORDER BY created_at ASC";
+$faq_query = "SELECT * FROM faqs ORDER BY faq_id ASC";
 $faq_result = $con->query($faq_query);
 
 $faqs = [];
