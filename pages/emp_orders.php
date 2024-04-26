@@ -31,6 +31,43 @@
         document.getElementById('searchForm').submit();
     }
 </script>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    th,
+    td {
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+        max-width: 200px;
+        /* Set a fixed width for the columns */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        /* Use ellipsis to indicate truncated text */
+        white-space: nowrap;
+        /* Prevent wrapping */
+    }
+
+    td.expandable {
+        cursor: pointer;
+        max-width: 200px;
+        /* Set the maximum width to prevent the cell from expanding too much */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        /* Display ellipsis (...) for overflow text */
+    }
+
+    td.expandable.expanded {
+        white-space: normal;
+        max-width: none;
+        overflow: auto;
+    }
+</style>
 
 <body>
     <?php
@@ -132,6 +169,7 @@
                             <th>Total</th>
                             <th>Date of Purchase</th>
                             <th>Status</th>
+                            <th>Tracking Number</th>
                             <th>Proof of Payment</th>
                             <th>Activity Log</th>
                         </tr>
@@ -175,13 +213,13 @@
                                 echo '<tr id="order-row-' . $row['order_id'] . '">';
                                 echo "<td>" . $row['order_id'] . "</td>";
                                 echo "<td>" . $row['customer_id'] . "</td>";
-                                echo "<td>" . $row['firstname'] . "</td>";
-                                echo "<td>" . $row['lastname'] . "</td>";
-                                echo "<td>" . $row['email'] . "</td>";
-                                echo "<td>" . $row['address'] . "</td>";
-                                echo "<td>" . $row['items_ordered'] . "</td>";
-                                echo "<td>" . $row['item_quantity'] . "</td>";
-                                echo "<td>₱" . number_format($row['total'], 2) . "</td>";
+                                echo "<td class='expandable'>" . $row['firstname'] . "</td>";
+                                echo "<td class='expandable'>" . $row['lastname'] . "</td>";
+                                echo "<td class='expandable'>" . $row['email'] . "</td>";
+                                echo "<td class='expandable'>" . $row['address'] . "</td>";
+                                echo "<td class='expandable'>" . $row['items_ordered'] . "</td>";
+                                echo "<td class='expandable'>" . $row['item_quantity'] . "</td>";
+                                echo "<td class='expandable'>₱" . number_format($row['total'], 2) . "</td>";
                                 echo "<td>" . $row['date_of_purchase'] . "</td>";
                                 echo "<td>";
                                 echo '<div class="button-class">';
@@ -213,6 +251,7 @@
                                 echo '</select>';
                                 echo '</div>';
                                 echo "</td>";
+                                echo "<td class='expandable'>" . (!empty($row['tracking_number']) ? $row['tracking_number'] : 'Not yet Shipped') . "</td>";
                                 if (!empty($proof_of_payment)) {
                                     echo '<td><center><img src="./item_images/' . $proof_of_payment . '" alt="Proof of Payment" width="auto" height="50" onclick="openImagePopup(\'./item_images/' . $proof_of_payment . '\')"></center></td>';
                                 } else {
@@ -315,7 +354,16 @@
             <span style="margin-left: 10px;">Updating...</span>
         </div>
     </div>
+
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var expandableCells = document.querySelectorAll('.expandable');
+            expandableCells.forEach(function(cell) {
+                cell.addEventListener('click', function() {
+                    this.classList.toggle('expanded');
+                });
+            });
+        });
         // Function to toggle the sidebar and update session variable
         function toggleSidebar() {
             var isChecked = document.getElementById('nav-toggle').checked;
@@ -486,6 +534,32 @@
 
         function closeActivityLogsPopup() {
             document.getElementById('activityLogsPopup').style.display = 'none';
+        }
+
+        function openAddTrackingPopup(orderId, trackingNumber) {
+            var orderRow = document.getElementById('order-row-' + orderId);
+            var orderStatus = orderRow.querySelector('.orderStatusSelect').value;
+
+            // Enable the input field and update button if the order status is 'Shipped'
+            var trackingNumberInput = document.getElementById('tracking_number');
+            var updateButton = document.querySelector('.add-tracking-form button[type="submit"]');
+            if (orderStatus === 'Shipped') {
+                trackingNumberInput.disabled = false;
+                updateButton.disabled = false;
+            } else {
+                trackingNumberInput.disabled = true;
+                updateButton.disabled = true;
+            }
+
+            document.getElementById('orderId').value = orderId;
+            if (trackingNumberInput) {
+                trackingNumberInput.value = trackingNumber || ''; // Use an empty string if trackingNumber is undefined
+            }
+            document.getElementById('addTrackingPopup').style.display = 'flex';
+        }
+
+        function closeAddTrackingPopup() {
+            document.getElementById('addTrackingPopup').style.display = 'none';
         }
     </script>
 </body>

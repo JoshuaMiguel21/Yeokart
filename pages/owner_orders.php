@@ -5,10 +5,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <title>Manage Orders - Yeokart</title>
     <link rel="icon" type="image/png" href="../res/icon.png">
 </head>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    th,
+    td {
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+        max-width: 200px;
+        /* Set a fixed width for the columns */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        /* Use ellipsis to indicate truncated text */
+        white-space: nowrap;
+        /* Prevent wrapping */
+    }
+
+    td.expandable {
+        cursor: pointer;
+        max-width: 200px;
+        /* Set the maximum width to prevent the cell from expanding too much */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        /* Display ellipsis (...) for overflow text */
+    }
+
+    td.expandable.expanded {
+        white-space: normal;
+        max-width: none;
+        overflow: auto;
+    }
+</style>
 <script>
     function confirmDelete() {
         return confirm("Are you sure you want to delete this item?");
@@ -30,6 +68,14 @@
         document.getElementById('searchInput').value = '';
         document.getElementById('searchForm').submit();
     }
+    document.addEventListener('DOMContentLoaded', function() {
+        var expandableCells = document.querySelectorAll('.expandable');
+        expandableCells.forEach(function(cell) {
+            cell.addEventListener('click', function() {
+                this.classList.toggle('expanded');
+            });
+        });
+    });
 </script>
 
 <body>
@@ -153,6 +199,7 @@
                             <th>Total</th>
                             <th>Date of Purchase</th>
                             <th>Status</th>
+                            <th>Tracking Number</th>
                             <th>Proof of Payment</th>
                             <th>Activity Log</th>
                         </tr>
@@ -195,14 +242,14 @@
                                 $proof_of_payment = $row['proof_of_payment'];
                                 echo '<tr id="order-row-' . $row['order_id'] . '">';
                                 echo "<td>" . $row['order_id'] . "</td>";
-                                echo "<td>" . $row['customer_id'] . "</td>";
-                                echo "<td>" . $row['firstname'] . "</td>";
-                                echo "<td>" . $row['lastname'] . "</td>";
-                                echo "<td>" . $row['email'] . "</td>";
-                                echo "<td>" . $row['address'] . "</td>";
-                                echo "<td>" . $row['items_ordered'] . "</td>";
-                                echo "<td>" . $row['item_quantity'] . "</td>";
-                                echo "<td>₱" . number_format($row['total'], 2) . "</td>";
+                                echo "<td class='expandable'>" . $row['customer_id'] . "</td>";
+                                echo "<td class='expandable'>" . $row['firstname'] . "</td>";
+                                echo "<td class='expandable'>" . $row['lastname'] . "</td>";
+                                echo "<td class='expandable'>" . $row['email'] . "</td>";
+                                echo "<td class='expandable'>" . $row['address'] . "</td>";
+                                echo "<td class='expandable'>" . $row['items_ordered'] . "</td>";
+                                echo "<td class='expandable'>" . $row['item_quantity'] . "</td>";
+                                echo "<td class='expandable'>₱" . number_format($row['total'], 2) . "</td>";
                                 echo "<td>" . $row['date_of_purchase'] . "</td>";
                                 echo "<td>";
                                 echo '<div class="button-class">';
@@ -234,6 +281,16 @@
                                 }
                                 echo '</select>';
                                 echo '</div>';
+                                echo "</td>";
+                                echo "<td class='expandable'>";
+                                echo "<div class='button-class'>";
+                                echo '<center>';
+                                if (!empty($row['tracking_number'])) {
+                                    echo '<button onclick="openAddTrackingPopup(\'' . $row['order_id'] . '\', \'' . $row['tracking_number'] . '\')" class="edit-button featured"><i class="las la-edit"></i></button>';
+                                } else {
+                                    echo '<button onclick="openAddTrackingPopup(\'' . $row['order_id'] . '\')" class="edit-button"><i class="las la-map-marker"></i></button>';
+                                }
+                                echo '</center>';
                                 echo "</td>";
                                 if (!empty($proof_of_payment)) {
                                     echo '<td><center><img src="./item_images/' . $proof_of_payment . '" alt="Proof of Payment" width="auto" height="50" onclick="openImagePopup(\'./item_images/' . $proof_of_payment . '\')"></center></td>';
@@ -324,6 +381,19 @@
         </div>
     </div>
 
+    <div id="addTrackingPopup" class="popup-container" style="display: none;">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closeAddTrackingPopup()">&times;</span>
+            <h2>Update Tracking Number</h2>
+            <form class="add-tracking-form" method="post" enctype="multipart/form-data">
+                <input type="hidden" id="orderId" name="orderId">
+                <label for="tracking_number">Tracking Number:</label>
+                <input type="text" id="tracking_number" name="tracking_number" class="form-control" placeholder="Enter Tracking Number" value="<?php echo $tracking_number; ?>" required>
+                <button type="submit" name="insert_tracking">Update Tracking Number</button>
+            </form>
+        </div>
+    </div>
+
     <div id="activityLogsPopup" class="popup-container" style="display: none;">
         <div class="popup-activity-log">
             <span class="close-btn" onclick="closeActivityLogsPopup()">&times;</span>
@@ -341,7 +411,47 @@
         </div>
     </div>
 
+    <?php
+    include('../database/db_yeokart.php');
+    $tracking_number = '';
 
+    if (isset($_POST['insert_tracking'])) {
+        $orderId = $_POST['orderId'];
+        $tracking_number = $_POST['tracking_number'];
+
+        // Update the tracking number in the database
+        $updateQuery = "UPDATE orders SET tracking_number='$tracking_number' WHERE order_id='$orderId'";
+        $result = mysqli_query($con, $updateQuery);
+
+        if ($result) {
+            // Show success message using SweetAlert
+            echo "<script>
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Tracking Number successfully updated',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = 'owner_orders.php';
+                        }
+                    });
+                </script>";
+            // Redirect or refresh the page to see the updated tracking number
+        } else {
+            // Show error message using SweetAlert
+            echo "<script>
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Error updating Tracking Number',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                </script>";
+            echo mysqli_error($con); // Check for MySQL errors
+        }
+    }
+    ?>
 
     <script>
         // Function to toggle the sidebar and update session variable
@@ -486,6 +596,32 @@
 
         function closeActivityLogsPopup() {
             document.getElementById('activityLogsPopup').style.display = 'none';
+        }
+
+        function openAddTrackingPopup(orderId, trackingNumber) {
+            var orderRow = document.getElementById('order-row-' + orderId);
+            var orderStatus = orderRow.querySelector('.orderStatusSelect').value;
+
+            // Enable the input field and update button if the order status is 'Shipped'
+            var trackingNumberInput = document.getElementById('tracking_number');
+            var updateButton = document.querySelector('.add-tracking-form button[type="submit"]');
+            if (orderStatus === 'Shipped') {
+                trackingNumberInput.disabled = false;
+                updateButton.disabled = false;
+            } else {
+                trackingNumberInput.disabled = true;
+                updateButton.disabled = true;
+            }
+
+            document.getElementById('orderId').value = orderId;
+            if (trackingNumberInput) {
+                trackingNumberInput.value = trackingNumber || ''; // Use an empty string if trackingNumber is undefined
+            }
+            document.getElementById('addTrackingPopup').style.display = 'flex';
+        }
+
+        function closeAddTrackingPopup() {
+            document.getElementById('addTrackingPopup').style.display = 'none';
         }
     </script>
 </body>

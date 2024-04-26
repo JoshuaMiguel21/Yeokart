@@ -10,6 +10,43 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="../css/dashboard.css">
 </head>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    th,
+    td {
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+        max-width: 200px;
+        /* Set a fixed width for the columns */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        /* Use ellipsis to indicate truncated text */
+        white-space: nowrap;
+        /* Prevent wrapping */
+    }
+
+    td.expandable {
+        cursor: pointer;
+        max-width: 200px;
+        /* Set the maximum width to prevent the cell from expanding too much */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        /* Display ellipsis (...) for overflow text */
+    }
+
+    td.expandable.expanded {
+        white-space: normal;
+        max-width: none;
+        overflow: auto;
+    }
+</style>
 <script>
     function openLogoutPopup() {
         document.getElementById('logoutConfirmationPopup').style.display = 'flex';
@@ -22,6 +59,14 @@
     function confirmLogout() {
         window.location.href = 'logout.php';
     }
+    document.addEventListener('DOMContentLoaded', function() {
+        var expandableCells = document.querySelectorAll('.expandable');
+        expandableCells.forEach(function(cell) {
+            cell.addEventListener('click', function() {
+                this.classList.toggle('expanded');
+            });
+        });
+    });
 </script>
 
 <?php
@@ -268,12 +313,12 @@ if (isset($_SESSION['email'])) {
                                 $item_image3 = $row['item_image3'];
                                 $is_featured = $row['is_featured'];
                                 echo "<tr>";
-                                echo "<td>" . $row['item_name'] . "</td>";
-                                echo "<td> ₱" . number_format($row['item_price'], 2) . "</td>";
-                                echo "<td style='max-width: 2000px;'>" . $row['item_description'] . "</td>";
+                                echo "<td class='expandable'>" . $row['item_name'] . "</td>";
+                                echo "<td class='expandable'> ₱" . number_format($row['item_price'], 2) . "</td>";
+                                echo "<td class='expandable'>" . $row['item_description'] . "</td>";
                                 echo "<td>" . $row['item_quantity'] . "</td>";
-                                echo "<td>" . $row['artist_name'] . "</td>";
-                                echo "<td>" . $row['category_name'] . "</td>";
+                                echo "<td class='expandable'>" . $row['artist_name'] . "</td>";
+                                echo "<td class='expandable'>" . $row['category_name'] . "</td>";
                                 echo "<td>";
                                 echo "<img src='./item_images/$item_image1' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image1 . "\")'>&nbsp;";
                                 if (!empty($item_image2)) {
@@ -304,106 +349,106 @@ if (isset($_SESSION['email'])) {
                 </table>
             </div>
 
-             <?php
-                $baseUrl = 'emp_featured.php?';
+            <?php
+            $baseUrl = 'emp_featured.php?';
 
-                $pageQuery = '';
-                if (isset($_GET['search_button'])) {
-                    $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
-                } elseif (isset($_GET['filter_button'])) {
-                    if (isset($_GET['category'])) {
-                        $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
-                    } elseif (isset($_GET['artist'])) {
-                        $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
-                    }
+            $pageQuery = '';
+            if (isset($_GET['search_button'])) {
+                $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
+            } elseif (isset($_GET['filter_button'])) {
+                if (isset($_GET['category'])) {
+                    $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
+                } elseif (isset($_GET['artist'])) {
+                    $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
                 }
+            }
 
-                $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-                $totalPages = ceil($totalFeatures / $featuresPerPage);
+            $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+            $totalPages = ceil($totalFeatures / $featuresPerPage);
 
-                $startPage = max(1, $pageNumber - 1);
-                $endPage = min($totalPages, $pageNumber + 1);
+            $startPage = max(1, $pageNumber - 1);
+            $endPage = min($totalPages, $pageNumber + 1);
 
-                if ($pageNumber == 1) {
-                    $startPage = 1;
-                    $endPage = min(3, $totalPages);
-                } elseif ($pageNumber == $totalPages) {
-                    $startPage = max(1, $totalPages - 2);
-                    $endPage = $totalPages;
-                }
+            if ($pageNumber == 1) {
+                $startPage = 1;
+                $endPage = min(3, $totalPages);
+            } elseif ($pageNumber == $totalPages) {
+                $startPage = max(1, $totalPages - 2);
+                $endPage = $totalPages;
+            }
 
-                echo "<div class='pagination'>";
+            echo "<div class='pagination'>";
 
-                $prevPage = max(1, $pageNumber - 1);
-                echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
+            $prevPage = max(1, $pageNumber - 1);
+            echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
 
-                for ($i = $startPage; $i <= $endPage; $i++) {
-                    $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
-                    echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
-                }
+            for ($i = $startPage; $i <= $endPage; $i++) {
+                $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
+                echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
+            }
 
-                $nextPage = min($totalPages, $pageNumber + 1);
-                echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
+            $nextPage = min($totalPages, $pageNumber + 1);
+            echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
 
-                echo "</div>";
-                ?>
+            echo "</div>";
+            ?>
         </main>
-            <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
-                <div class="popup-content">
-                    <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>
-                    <p>Are you sure you want to logout?
-                    <p>
-                    <div class="logout-btns">
-                        <button onclick="confirmLogout()" class="confirm-logout-btn">Logout</button>
-                        <button onclick="closeLogoutPopup()" class="cancel-logout-btn">Cancel</button>
-                    </div>
+        <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
+            <div class="popup-content">
+                <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>
+                <p>Are you sure you want to logout?
+                <p>
+                <div class="logout-btns">
+                    <button onclick="confirmLogout()" class="confirm-logout-btn">Logout</button>
+                    <button onclick="closeLogoutPopup()" class="cancel-logout-btn">Cancel</button>
                 </div>
             </div>
+        </div>
 
-            <div id="imagePopup" class="popup-image" style="display: none; padding-top: 100px;">
-                <div class="image-content">
-                    <img id="popupImage" src="" alt="Proof of Payment" style="width: auto; height: 550px;">
-                </div>
+        <div id="imagePopup" class="popup-image" style="display: none; padding-top: 100px;">
+            <div class="image-content">
+                <img id="popupImage" src="" alt="Proof of Payment" style="width: auto; height: 550px;">
             </div>
-            <!-- <div class="form-outline mb-4 mt-5">
+        </div>
+        <!-- <div class="form-outline mb-4 mt-5">
         <a href="./owner_dashboard.php" class="btn btn-danger mb-3 px-3 mx-auto">
             Back
         </a>
     </div> -->
 
-            <script>
-                // Function to toggle the sidebar and update session variable
-                function toggleSidebar() {
-                    var isChecked = document.getElementById('nav-toggle').checked;
-                    var newState = isChecked ? 'true' : 'false';
+        <script>
+            // Function to toggle the sidebar and update session variable
+            function toggleSidebar() {
+                var isChecked = document.getElementById('nav-toggle').checked;
+                var newState = isChecked ? 'true' : 'false';
 
-                    // Update session variable using AJAX
-                    var xhttp = new XMLHttpRequest();
-                    xhttp.open("POST", "", true);
-                    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                    xhttp.send("nav_toggle=" + newState);
-                }
+                // Update session variable using AJAX
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("POST", "", true);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send("nav_toggle=" + newState);
+            }
 
-                // Add event listener to checkbox change
-                document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
+            // Add event listener to checkbox change
+            document.getElementById('nav-toggle').addEventListener('change', toggleSidebar);
 
-                function openImagePopup(imageUrl) {
-                    var popup = document.getElementById('imagePopup');
-                    var image = document.getElementById('popupImage');
-                    image.src = imageUrl;
-                    popup.style.display = 'flex';
-                }
+            function openImagePopup(imageUrl) {
+                var popup = document.getElementById('imagePopup');
+                var image = document.getElementById('popupImage');
+                image.src = imageUrl;
+                popup.style.display = 'flex';
+            }
 
-                document.addEventListener('DOMContentLoaded', function() {
-                    var popup = document.getElementById('imagePopup');
+            document.addEventListener('DOMContentLoaded', function() {
+                var popup = document.getElementById('imagePopup');
 
-                    popup.addEventListener('click', function(event) {
-                        if (event.target === popup) {
-                            popup.style.display = 'none';
-                        }
-                    });
+                popup.addEventListener('click', function(event) {
+                    if (event.target === popup) {
+                        popup.style.display = 'none';
+                    }
                 });
-            </script>
+            });
+        </script>
 </body>
 
 </html>

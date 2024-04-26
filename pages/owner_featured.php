@@ -10,6 +10,43 @@
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="icon" type="image/png" href="../res/icon.png">
 </head>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    th,
+    td {
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+        max-width: 200px;
+        /* Set a fixed width for the columns */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        /* Use ellipsis to indicate truncated text */
+        white-space: nowrap;
+        /* Prevent wrapping */
+    }
+
+    td.expandable {
+        cursor: pointer;
+        max-width: 200px;
+        /* Set the maximum width to prevent the cell from expanding too much */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        /* Display ellipsis (...) for overflow text */
+    }
+
+    td.expandable.expanded {
+        white-space: normal;
+        max-width: none;
+        overflow: auto;
+    }
+</style>
 <script>
     function openLogoutPopup() {
         document.getElementById('logoutConfirmationPopup').style.display = 'flex';
@@ -22,6 +59,14 @@
     function confirmLogout() {
         window.location.href = 'logout.php';
     }
+    document.addEventListener('DOMContentLoaded', function() {
+        var expandableCells = document.querySelectorAll('.expandable');
+        expandableCells.forEach(function(cell) {
+            cell.addEventListener('click', function() {
+                this.classList.toggle('expanded');
+            });
+        });
+    });
 </script>
 
 <?php
@@ -288,13 +333,13 @@ if (isset($_SESSION['email'])) {
                                 $item_image3 = $row['item_image3'];
                                 $is_featured = $row['is_featured'];
                                 echo "<tr>";
-                                echo "<td>" . $row['item_name'] . "</td>";
-                                echo "<td> ₱" . number_format($row['item_price'], 2) . "</td>";
-                                echo "<td style='max-width: 2000px;'>" . $row['item_description'] . "</td>";
+                                echo "<td class='expandable'>" . $row['item_name'] . "</td>";
+                                echo "<td class='expandable'> ₱" . number_format($row['item_price'], 2) . "</td>";
+                                echo "<td class='expandable'>" . $row['item_description'] . "</td>";
                                 echo "<td>" . $row['item_quantity'] . "</td>";
-                                echo "<td>" . $row['artist_name'] . "</td>";
-                                echo "<td>" . $row['category_name'] . "</td>";
-                                echo "<td>";
+                                echo "<td class='expandable'>" . $row['artist_name'] . "</td>";
+                                echo "<td class='expandable'>" . $row['category_name'] . "</td>";
+                                echo "<td class='expandable'>";
                                 echo "<img src='./item_images/$item_image1' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image1 . "\")'>&nbsp;";
                                 if (!empty($item_image2)) {
                                     echo "<img src='./item_images/$item_image2' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image2 . "\")'>&nbsp;";
@@ -324,48 +369,48 @@ if (isset($_SESSION['email'])) {
             </div>
 
             <?php
-                $baseUrl = 'owner_featured.php?';
+            $baseUrl = 'owner_featured.php?';
 
-                $pageQuery = '';
-                if (isset($_GET['search_button'])) {
-                    $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
-                } elseif (isset($_GET['filter_button'])) {
-                    if (isset($_GET['category'])) {
-                        $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
-                    } elseif (isset($_GET['artist'])) {
-                        $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
-                    }
+            $pageQuery = '';
+            if (isset($_GET['search_button'])) {
+                $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
+            } elseif (isset($_GET['filter_button'])) {
+                if (isset($_GET['category'])) {
+                    $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
+                } elseif (isset($_GET['artist'])) {
+                    $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
                 }
+            }
 
-                $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-                $totalPages = ceil($totalFeatures / $featuresPerPage);
+            $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+            $totalPages = ceil($totalFeatures / $featuresPerPage);
 
-                $startPage = max(1, $pageNumber - 1);
-                $endPage = min($totalPages, $pageNumber + 1);
+            $startPage = max(1, $pageNumber - 1);
+            $endPage = min($totalPages, $pageNumber + 1);
 
-                if ($pageNumber == 1) {
-                    $startPage = 1;
-                    $endPage = min(3, $totalPages);
-                } elseif ($pageNumber == $totalPages) {
-                    $startPage = max(1, $totalPages - 2);
-                    $endPage = $totalPages;
-                }
+            if ($pageNumber == 1) {
+                $startPage = 1;
+                $endPage = min(3, $totalPages);
+            } elseif ($pageNumber == $totalPages) {
+                $startPage = max(1, $totalPages - 2);
+                $endPage = $totalPages;
+            }
 
-                echo "<div class='pagination'>";
+            echo "<div class='pagination'>";
 
-                $prevPage = max(1, $pageNumber - 1);
-                echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
+            $prevPage = max(1, $pageNumber - 1);
+            echo "<a href='{$baseUrl}page=$prevPage&$pageQuery' class='pagination-link' " . ($pageNumber <= 1 ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">&laquo; Previous</a>";
 
-                for ($i = $startPage; $i <= $endPage; $i++) {
-                    $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
-                    echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
-                }
+            for ($i = $startPage; $i <= $endPage; $i++) {
+                $linkClass = $i == $pageNumber ? 'pagination-link current-page' : 'pagination-link';
+                echo "<a href='{$baseUrl}page=$i&$pageQuery' class='$linkClass'>$i</a>";
+            }
 
-                $nextPage = min($totalPages, $pageNumber + 1);
-                echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
+            $nextPage = min($totalPages, $pageNumber + 1);
+            echo "<a href='{$baseUrl}page=$nextPage&$pageQuery' class='pagination-link' " . ($pageNumber >= $totalPages ? "style='pointer-events: none; opacity: 0.5; cursor: not-allowed;'" : "") . ">Next &raquo;</a>";
 
-                echo "</div>";
-                ?>
+            echo "</div>";
+            ?>
             <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
                 <div class="popup-content">
                     <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>

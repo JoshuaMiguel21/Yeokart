@@ -10,6 +10,43 @@
     <title>Item Catalog - Yeokart</title>
     <link rel="icon" type="image/png" href="../res/icon.png">
 </head>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    th,
+    td {
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+        max-width: 200px;
+        /* Set a fixed width for the columns */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        /* Use ellipsis to indicate truncated text */
+        white-space: nowrap;
+        /* Prevent wrapping */
+    }
+
+    td.expandable {
+        cursor: pointer;
+        max-width: 200px;
+        /* Set the maximum width to prevent the cell from expanding too much */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        /* Display ellipsis (...) for overflow text */
+    }
+
+    td.expandable.expanded {
+        white-space: normal;
+        max-width: none;
+        overflow: auto;
+    }
+</style>
 <script>
     var currentItemId = null; // This should be declared at the top of your script
 
@@ -51,6 +88,14 @@
         document.getElementById('searchInput').value = '';
         document.getElementById('searchForm').submit();
     }
+    document.addEventListener('DOMContentLoaded', function() {
+        var expandableCells = document.querySelectorAll('.expandable');
+        expandableCells.forEach(function(cell) {
+            cell.addEventListener('click', function() {
+                this.classList.toggle('expanded');
+            });
+        });
+    });
 </script>
 
 <body>
@@ -443,14 +488,14 @@
                                 $item_image2 = $row['item_image2'];
                                 $item_image3 = $row['item_image3'];
                                 echo "<tr>";
-                                echo "<td>" . $row['item_name'] . "</td>";
-                                echo "<td> ₱" . number_format($row['item_price'], 2) . "</td>";
-                                echo "<td style='max-width: 350px;'>" . $row['item_description'] . "</td>";
+                                echo "<td class='expandable'>" . $row['item_name'] . "</td>";
+                                echo "<td class='expandable'> ₱" . number_format($row['item_price'], 2) . "</td>";
+                                echo "<td class='expandable'>" . $row['item_description'] . "</td>";
                                 echo "<td>" . number_format($row['item_quantity']) . "</td>";
-                                echo "<td>" . $row['artist_name'] . "</td>";
-                                echo "<td>" . $row['category_name'] . "</td>";
+                                echo "<td class='expandable'>" . $row['artist_name'] . "</td>";
+                                echo "<td class='expandable'>" . $row['category_name'] . "</td>";
                                 echo "<td>" . $row['item_size'] . "</td>";
-                                echo "<td>";
+                                echo "<td class='expandable'>";
                                 echo "<img src='./item_images/$item_image1' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image1 . "\")'>&nbsp;";
                                 if (!empty($item_image2)) {
                                     echo "<img src='./item_images/$item_image2' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image2 . "\")'>&nbsp;";
@@ -461,7 +506,7 @@
                                 }
                                 echo "</td>";
                                 // Inside your while loop
-                                echo "<td>";
+                                echo "<td class='expandable'>";
                                 echo "<div class='button-class'>";
                                 echo "<a href='edit_item.php?item_id=$item_id' class='edit-button'><i class='las la-edit'></i></a>";
                                 echo "<button type='button' onclick='openArchivePopup(\"$item_id\", \"" . htmlspecialchars($item_name, ENT_QUOTES) . "\", \"$item_quantity\")' class='delete-button'><i class='las la-archive'></i></button>";

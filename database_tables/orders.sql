@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 25, 2024 at 03:16 PM
+-- Generation Time: Apr 26, 2024 at 06:44 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -43,6 +43,7 @@ CREATE TABLE `orders` (
   `overall_total` decimal(10,2) DEFAULT NULL,
   `date_of_purchase` timestamp NULL DEFAULT NULL,
   `status` enum('Pending','Processing','Shipped','Delivered','Invalid') NOT NULL DEFAULT 'Pending',
+  `tracking_number` varchar(255) DEFAULT NULL,
   `items_image` varchar(255) NOT NULL,
   `proof_of_payment` varchar(255) NOT NULL,
   `is_archive` int(11) NOT NULL DEFAULT 0

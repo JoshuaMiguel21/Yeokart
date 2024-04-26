@@ -10,6 +10,43 @@
     <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
     <title>Yearly Report - Yeokart</title>
 </head>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    th,
+    td {
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+        max-width: 200px;
+        /* Set a fixed width for the columns */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        /* Use ellipsis to indicate truncated text */
+        white-space: nowrap;
+        /* Prevent wrapping */
+    }
+
+    td.expandable {
+        cursor: pointer;
+        max-width: 200px;
+        /* Set the maximum width to prevent the cell from expanding too much */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        /* Display ellipsis (...) for overflow text */
+    }
+
+    td.expandable.expanded {
+        white-space: normal;
+        max-width: none;
+        overflow: auto;
+    }
+</style>
 <script>
     function openLogoutPopup() {
         document.getElementById('logoutConfirmationPopup').style.display = 'flex';
@@ -22,6 +59,14 @@
     function confirmLogout() {
         window.location.href = 'logout.php';
     }
+    document.addEventListener('DOMContentLoaded', function() {
+        var expandableCells = document.querySelectorAll('.expandable');
+        expandableCells.forEach(function(cell) {
+            cell.addEventListener('click', function() {
+                this.classList.toggle('expanded');
+            });
+        });
+    });
 </script>
 
 <body>
@@ -272,7 +317,7 @@
 
             <div class="head-buttons">
                 <a href="monthly_report.php" class="btn-employee">
-                    <i class="las la-archive"></i>
+                    <i class="las la-chart-line"></i>
                     <span class="text">View Monthly Report</span>
                 </a>
                 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
@@ -415,10 +460,10 @@
                                 $artist_name = $row['items_artist'];
                                 $total_sold = $row['total_sold'];
                                 echo "<tr>";
-                                echo "<td>" . $item_name . "</td>";
-                                echo "<td style='text-align: center;'>" . $category_name . "</td>";
-                                echo "<td style='text-align: center;'>" . $artist_name . "</td>";
-                                echo "<td style='text-align: center;'>" . $total_sold . "</td>";
+                                echo "<td class='expandable'>" . $item_name . "</td>";
+                                echo "<td class='expandable' style='text-align: center;'>" . $category_name . "</td>";
+                                echo "<td class='expandable' style='text-align: center;'>" . $artist_name . "</td>";
+                                echo "<td class='expandable' style='text-align: center;'>" . $total_sold . "</td>";
                                 echo "</tr>";
                             }
                         }

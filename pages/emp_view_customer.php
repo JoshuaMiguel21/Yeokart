@@ -9,6 +9,43 @@
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="icon" type="image/png" href="../res/icon.png">
 </head>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    th,
+    td {
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+        max-width: 200px;
+        /* Set a fixed width for the columns */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        /* Use ellipsis to indicate truncated text */
+        white-space: nowrap;
+        /* Prevent wrapping */
+    }
+
+    td.expandable {
+        cursor: pointer;
+        max-width: 200px;
+        /* Set the maximum width to prevent the cell from expanding too much */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        /* Display ellipsis (...) for overflow text */
+    }
+
+    td.expandable.expanded {
+        white-space: normal;
+        max-width: none;
+        overflow: auto;
+    }
+</style>
 <script>
     function openLogoutPopup() {
         document.getElementById('logoutConfirmationPopup').style.display = 'flex';
@@ -21,6 +58,14 @@
     function confirmLogout() {
         window.location.href = 'logout.php';
     }
+    document.addEventListener('DOMContentLoaded', function() {
+        var expandableCells = document.querySelectorAll('.expandable');
+        expandableCells.forEach(function(cell) {
+            cell.addEventListener('click', function() {
+                this.classList.toggle('expanded');
+            });
+        });
+    });
 </script>
 
 <body>
@@ -46,7 +91,7 @@
     } else {
         header("Location: login_page.php");
         exit();
-    }   
+    }
     ?>
     <input type="checkbox" id="nav-toggle" <?php echo $_SESSION['nav_toggle'] ? 'checked' : ''; ?>>
     <div class="sidebar <?php echo $_SESSION['nav_toggle'] ? 'open' : ''; ?>">
@@ -144,10 +189,10 @@
                 while ($row = $result->fetch_assoc()) {
                     echo "<tr>
                                 <td>" . $counter . "</td>
-                                <td>" . $row["firstname"] . "</td>
-                                <td>" . $row["lastname"] . "</td>
-                                <td>" . $row["username"] . "</td>
-                                <td>" . $row["email"] . "</td>
+                                <td class='expandable'>" . $row["firstname"] . "</td>
+                                <td class='expandable'>" . $row["lastname"] . "</td>
+                                <td class='expandable'>" . $row["username"] . "</td>
+                                <td class='expandable'>" . $row["email"] . "</td>
                             </tr>";
                     $counter++;
                 }

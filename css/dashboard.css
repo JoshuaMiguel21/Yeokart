@@ -563,7 +563,8 @@ th {
     text-align: left;
 }
 
-.add-artist-form input {
+.add-artist-form input,
+.add-tracking-form input {
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
@@ -572,7 +573,8 @@ th {
     margin-top: 5px;
 }
 
-.add-artist-form button {
+.add-artist-form button,
+.add-tracking-form button {
     text-align: center;
     background-color: var(--main-color);
     color: white;
@@ -585,9 +587,16 @@ th {
     transition: background-color 0.3s, transform 0.3s;
 }
 
-.add-artist-form button:hover {
+.add-artist-form button:hover,
+.add-tracking-form button:hover {
     background-color: var(--dark-color); 
     transform: scale(1.05);
+}
+
+.add-tracking-form button[type="submit"]:disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
 }
 
 select {

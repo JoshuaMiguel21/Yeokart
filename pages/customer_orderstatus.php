@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -22,19 +23,25 @@
             border: 1px solid #ccc;
         }
 
-        .notification-container h1{
+        .notification-container h1 {
             text-align: center;
             font-size: 3rem;
         }
 
-        .status-bar{
+        .tracking-number {
+            text-align: center;
+            margin-top: 20px;
+            /* Adjust as needed */
+        }
+
+        .status-bar {
             display: flex;
             justify-content: space-between;
             position: relative;
             margin: 20px 0;
         }
 
-        .notification-status{
+        .notification-status {
             display: flex;
             justify-content: space-between;
             position: relative;
@@ -51,10 +58,11 @@
             justify-content: center;
             align-items: center;
             position: relative;
-            font-size: 16px; 
+            font-size: 16px;
         }
 
-        .status-circle.completed, .status-circle.current {
+        .status-circle.completed,
+        .status-circle.current {
             background-color: #DD2F6E;
         }
 
@@ -62,15 +70,15 @@
             height: 2px;
             background-color: grey;
             position: absolute;
-            width: 100%; 
+            width: 100%;
             top: 15px;
-            left: 0; 
+            left: 0;
             z-index: -1;
         }
 
         .status-line.active {
             background-color: #DD2F6E;
-            width: 50%; 
+            width: 50%;
         }
 
         .status-text {
@@ -91,8 +99,8 @@
             padding: 10px;
             background-color: #f4f4f4;
         }
-        
-        .header{
+
+        .header {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -100,111 +108,112 @@
             margin: 30px 0;
         }
 
-        .header .logo{
+        .header .logo {
             width: 200px;
         }
 
-        .button-container{
+        .button-container {
             margin: 30px 0px;
         }
     </style>
 </head>
 
 <?php
-    require('../database/db_yeokart.php');
-    session_start();
+require('../database/db_yeokart.php');
+session_start();
 
-    if (!isset($_SESSION['id'])) {
-        header("Location: login_page.php");
-        exit();
-    }
+if (!isset($_SESSION['id'])) {
+    header("Location: login_page.php");
+    exit();
+}
 
-    $customer_id = $_SESSION['id'];
-    $firstname = $_SESSION['firstname'] ?? '';
-    $lastname = $_SESSION['lastname'] ?? '';
-    $username = $_SESSION['username'] ?? '';
-    $email = strtolower($_SESSION['email'] ?? '');
+$customer_id = $_SESSION['id'];
+$firstname = $_SESSION['firstname'] ?? '';
+$lastname = $_SESSION['lastname'] ?? '';
+$username = $_SESSION['username'] ?? '';
+$email = strtolower($_SESSION['email'] ?? '');
 
-    // Fetch order details
-    $order_id = $_GET['order_id'] ?? '';
-    if ($order_id == '') {
-        echo '<p>Order ID not specified.</p>';
-        exit();
-    }
+// Fetch order details
+$order_id = $_GET['order_id'] ?? '';
+if ($order_id == '') {
+    echo '<p>Order ID not specified.</p>';
+    exit();
+}
 
-    $sql = "SELECT * FROM orders WHERE order_id = ?";
-    $stmt = $con->prepare($sql);
-    $stmt->bind_param("s", $order_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    if ($result->num_rows == 0) {
-        echo '<header class="header">';
-        echo '<a href="customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>';
-        echo '</header>';
-        echo '<div class="notification-container">';
-        echo '<h1>Order Status</h1>';
-        echo '<div class="status-bar">';
-        echo '<div class="status-circle"><i class="fa fa-check"></i></div>';
-        echo '<div class="status-circle"><i class="fa fa-truck"></i></div>';
-        echo '<div class="status-circle"><i class="fa fa-box"></i></div>';
-        echo '<div class="status-line"></div>';
-        echo '</div>';
-        echo '<div class="notification-status">';
-        echo '<div class="status-text">Payment Done</div>';
-        echo '<div class="status-text">Shipped</div>';
-        echo '<div class="status-text">Delivered</div>';
-        echo '</div>';
-        echo '<div style="text-align: center; margin: 50px 0px; font-size: 2rem; color: red;">';
-        echo '<strong>Sorry, this order has been cancelled and does not exist anymore.</strong>';
-        echo '</div>';
-        echo '</div>';
-        echo '<center>';
-        echo '<div class="button-container">';
-        echo '<a href="customer_homepage.php" class="btn-address">';
-        echo '<span class="text">Back to Homepage</span>';
-        echo '</a>';
-        echo '</div>';
-        echo '</center>';
-        exit();
-    }
-    $row = $result->fetch_assoc();
+$sql = "SELECT * FROM orders WHERE order_id = ?";
+$stmt = $con->prepare($sql);
+$stmt->bind_param("s", $order_id);
+$stmt->execute();
+$result = $stmt->get_result();
+if ($result->num_rows == 0) {
+    echo '<header class="header">';
+    echo '<a href="customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>';
+    echo '</header>';
+    echo '<div class="notification-container">';
+    echo '<h1>Order Status</h1>';
+    echo '<div class="status-bar">';
+    echo '<div class="status-circle"><i class="fa fa-check"></i></div>';
+    echo '<div class="status-circle"><i class="fa fa-truck"></i></div>';
+    echo '<div class="status-circle"><i class="fa fa-box"></i></div>';
+    echo '<div class="status-line"></div>';
+    echo '</div>';
+    echo '<div class="notification-status">';
+    echo '<div class="status-text">Payment Done</div>';
+    echo '<div class="status-text">Shipped</div>';
+    echo '<div class="status-text">Delivered</div>';
+    echo '</div>';
+    echo '<div style="text-align: center; margin: 50px 0px; font-size: 2rem; color: red;">';
+    echo '<strong>Sorry, this order has been cancelled and does not exist anymore.</strong>';
+    echo '</div>';
+    echo '</div>';
+    echo '<center>';
+    echo '<div class="button-container">';
+    echo '<a href="customer_homepage.php" class="btn-address">';
+    echo '<span class="text">Back to Homepage</span>';
+    echo '</a>';
+    echo '</div>';
+    echo '</center>';
+    exit();
+}
+$row = $result->fetch_assoc();
 
-    $items = explode(", ", $row['items_ordered']);
-    $quantities = explode(", ", $row['item_quantity']);
-    $itemPrices = explode(", ", $row['items_price'] ?? []);
-    $itemImages = explode(", ", $row['items_image'] ?? []);
+$items = explode(", ", $row['items_ordered']);
+$quantities = explode(", ", $row['item_quantity']);
+$itemPrices = explode(", ", $row['items_price'] ?? []);
+$itemImages = explode(", ", $row['items_image'] ?? []);
 
-    $status = strtoupper($row['status']);
+$status = strtoupper($row['status']);
 
+$line_width = '0%';
+$completed_class = '';
+$current_class = '';
+$next_class = '';
+$status_message = '';
+
+if ($status == 'PROCESSING') {
+    $status_message = 'Your payment has been successfully confirmed.';
     $line_width = '0%';
-    $completed_class = '';
-    $current_class = '';
-    $next_class = '';
-    $status_message = ''; 
-
-    if ($status == 'PROCESSING') {
-        $status_message = 'Your payment has been successfully confirmed.';
-        $line_width = '0%';
-        $completed_class = 'current';
-    } elseif ($status == 'SHIPPED') {
-        $status_message = 'Your order is on the way!';
-        $line_width = '50%';
-        $completed_class = 'completed';
-        $current_class = 'current';
-    } elseif ($status == 'DELIVERED') {
-        $status_message = 'Your order has arrived!';
-        $line_width = '100%';
-        $completed_class = 'completed';
-        $current_class = 'completed';
-        $next_class = 'completed';
-    }
+    $completed_class = 'current';
+} elseif ($status == 'SHIPPED') {
+    $status_message = 'Your order is on the way!';
+    $line_width = '50%';
+    $completed_class = 'completed';
+    $current_class = 'current';
+} elseif ($status == 'DELIVERED') {
+    $status_message = 'Your order has arrived!';
+    $line_width = '100%';
+    $completed_class = 'completed';
+    $current_class = 'completed';
+    $next_class = 'completed';
+}
 ?>
+
 <body>
     <header class="header">
         <a href="customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>
     </header>
     <div class="notification-container">
-        <h1>Order Status</h1>
+        <h1>Order Status (<?php echo $order_id; ?>)</h1>
         <div class="status-bar">
             <div class="status-circle <?php echo $completed_class; ?>"><i class="fa fa-check"></i></div>
             <div class="status-circle <?php echo $current_class; ?>"><i class="fa fa-truck"></i></div>
@@ -221,43 +230,49 @@
         <div style="text-align: center; margin: 50px 0px; font-size: 2rem; color: #DD2F6E;">
             <strong><?php echo $status_message; ?></strong>
         </div>
-        
+        <?php
+        $tracking_number = $row['tracking_number'] ?? '';
+        if (!empty($tracking_number)) {
+            echo "<h2 class='tracking-number'>Tracking Number: <u>{$tracking_number}</u></h2>";
+        }
+        ?>
         <div class="order-details">
             <h2>Your Orders</h2>
             <?php
-                $total_paid = 0.00; // Initialize total paid variable
-                foreach ($items as $key => $itemName) {
-                    $itemName = trim($itemName);
-                    $itemPrice = floatval($itemPrices[$key] ?? 0);
-                    $itemQuantity = intval($quantities[$key] ?? 0);
-                    $total = $itemPrice * $itemQuantity;
-                    $itemImage = trim($itemImages[$key] ?? '');
-                    $total_paid += $total; // Sum up the total paid
+            $total_paid = 0.00; // Initialize total paid variable
+            foreach ($items as $key => $itemName) {
+                $itemName = trim($itemName);
+                $itemPrice = floatval($itemPrices[$key] ?? 0);
+                $itemQuantity = intval($quantities[$key] ?? 0);
+                $total = $itemPrice * $itemQuantity;
+                $itemImage = trim($itemImages[$key] ?? '');
+                $total_paid += $total; // Sum up the total paid
 
-                    echo "<div class='cart-item' style='background-color: #fff; padding: 10px; margin: 10px; display: flex; align-items: center;'>";
-                    echo "<img src='item_images/{$itemImage}' alt='Item Image' class='cart-item-image' style='width: 80px; height: 80px; margin-right: 10px;'>";
-                    echo "<div class='item-details' style='display: flex; flex-grow: 1; justify-content: space-between;'>";
-                    echo "<p style='margin: 0;'><b>Name:</b> {$itemName}</p>";
-                    echo "<p style='margin: 0;'><b>Price:</b> ₱" . number_format($itemPrice, 2) . "</p>";
-                    echo "<p style='margin: 0;'><b>Quantity:</b> {$itemQuantity}</p>";
-                    echo "<p style='margin: 0;'><b>Total:</b> ₱" . number_format($total, 2) . "</p>";
-                    echo "</div>";
-                    echo "</div>";
-                }
+                echo "<div class='cart-item' style='background-color: #fff; padding: 10px; margin: 10px; display: flex; align-items: center;'>";
+                echo "<img src='item_images/{$itemImage}' alt='Item Image' class='cart-item-image' style='width: 80px; height: 80px; margin-right: 10px;'>";
+                echo "<div class='item-details' style='display: flex; flex-grow: 1; justify-content: space-between;'>";
+                echo "<p style='margin: 0;'><b>Name:</b> {$itemName}</p>";
+                echo "<p style='margin: 0;'><b>Price:</b> ₱" . number_format($itemPrice, 2) . "</p>";
+                echo "<p style='margin: 0;'><b>Quantity:</b> {$itemQuantity}</p>";
+                echo "<p style='margin: 0;'><b>Total:</b> ₱" . number_format($total, 2) . "</p>";
+                echo "</div>";
+                echo "</div>";
+            }
             ?>
-           <div class='total-paid-alert' style="background-color: #fff; border: 2px solid #DD2F6E; color: #333; text-align: center; padding: 10px; margin-top: 20px; font-size: 2rem; font-weight: bold; border-radius: 5px;">
+            <div class='total-paid-alert' style="background-color: #fff; border: 2px solid #DD2F6E; color: #333; text-align: center; padding: 10px; margin-top: 20px; font-size: 2rem; font-weight: bold; border-radius: 5px;">
                 Overall Total Paid: Php. <?php echo number_format($total_paid, 2); ?>
             </div>
         </div>
     </div>
-    
+
     <center>
         <div class="button-container">
             <a href="customer_homepage.php" class="btn-address">
                 <span class="text">Back to Homepage</span>
             </a>
         </div>
-    </center>                            
+    </center>
+
 </html>
 
 </html>

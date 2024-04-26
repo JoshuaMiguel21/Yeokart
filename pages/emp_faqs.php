@@ -12,6 +12,43 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="icon" type="image/png" href="../res/icon.png">
 </head>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    th,
+    td {
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+        max-width: 200px;
+        /* Set a fixed width for the columns */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        /* Use ellipsis to indicate truncated text */
+        white-space: nowrap;
+        /* Prevent wrapping */
+    }
+
+    td.expandable {
+        cursor: pointer;
+        max-width: 200px;
+        /* Set the maximum width to prevent the cell from expanding too much */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        /* Display ellipsis (...) for overflow text */
+    }
+
+    td.expandable.expanded {
+        white-space: normal;
+        max-width: none;
+        overflow: auto;
+    }
+</style>
 <script>
     function openDeletePopup(faqs_id) {
         document.getElementById('deleteConfirmationPopup').style.display = 'flex';
@@ -40,6 +77,14 @@
     function confirmLogout() {
         window.location.href = 'logout.php';
     }
+    document.addEventListener('DOMContentLoaded', function() {
+        var expandableCells = document.querySelectorAll('.expandable');
+        expandableCells.forEach(function(cell) {
+            cell.addEventListener('click', function() {
+                this.classList.toggle('expanded');
+            });
+        });
+    });
 </script>
 
 <?php
@@ -56,21 +101,8 @@ if (isset($_POST['nav_toggle'])) {
     $_SESSION['nav_toggle'] = $_POST['nav_toggle'] === 'true' ? true : false;
 }
 
-// Redirect to login page if session variables are not set
-if (!isset($_SESSION['firstname']) || !isset($_SESSION['lastname'])) {
-    header("Location: login_page.php");
-    exit();
-}
-
 if (isset($_SESSION['firstname'])) {
     $firstname = $_SESSION['firstname'];
-} else {
-    header("Location: login_page.php");
-    exit();
-}
-
-if (isset($_SESSION['lastname'])) {
-    $lastname = $_SESSION['lastname'];
 } else {
     header("Location: login_page.php");
     exit();
@@ -93,7 +125,7 @@ if (isset($_SESSION['email'])) {
         </div>
         <div class="sidebar-menu">
             <ul>
-            <li>
+                <li>
                     <a href="emp_dashboard.php"><span class="las la-igloo"></span>
                         <span>Employee Dashboard</span></a>
                 </li>
@@ -158,7 +190,7 @@ if (isset($_SESSION['email'])) {
                     <i class="las la-edit"></i>
                     <span class="text">Edit FAQ's Section</span>
                 </a>
-                
+
                 <a href="emp_add_faqs.php" class="btn-main">
                     <i class="las la-plus"></i>
                     <span class="text">Add FAQ's</span>
@@ -169,9 +201,15 @@ if (isset($_SESSION['email'])) {
                 <table>
                     <thead>
                         <tr>
-                            <th><center>Question</center></th>
-                            <th><center>Answer</center></th>
-                            <th><center>Action</center></th>
+                            <th>
+                                <center>Question</center>
+                            </th>
+                            <th>
+                                <center>Answer</center>
+                            </th>
+                            <th>
+                                <center>Action</center>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -236,9 +274,9 @@ if (isset($_SESSION['email'])) {
                                 $question = $row['question'];
                                 $answer = $row['answer'];
                                 echo "<tr>";
-                                echo "<td><center>$question</center></td>";
-                                echo "<td><center>$answer</center></td>";
-                                echo "<td><center>";
+                                echo "<td class='expandable'>$question</td>";
+                                echo "<td class='expandable'><center>$answer</center></td>";
+                                echo "<td>";
                                 echo "<div class='button-class'>";
                                 echo "<a href='emp_edit_faqs.php?faq_id=$faq_id' class='edit-button'><i class='las la-edit'></i></a>";
                                 echo "<button type='button' onclick='openDeletePopup($faq_id)' class='delete-button'><i class='las la-trash'></i></button>";
@@ -247,7 +285,7 @@ if (isset($_SESSION['email'])) {
                                 echo "<input type='hidden' name='delete_faqs' value='true'>";
                                 echo "</form>";
                                 echo "</div>";
-                                echo "</center></td>";
+                                echo "</td>";
                                 echo "</tr>";
                             }
                         }
@@ -300,7 +338,7 @@ if (isset($_SESSION['email'])) {
             echo "</div>";
             ?>
 
-                
+
             <div id="logoutConfirmationPopup" class="popup-container" style="display: none;">
                 <div class="popup-content">
                     <span class="close-btn" onclick="closeLogoutPopup()">&times;</span>

@@ -10,8 +10,44 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="../css/dashboard.css">
 </head>
-<script>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
 
+    th,
+    td {
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+        max-width: 200px;
+        /* Set a fixed width for the columns */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        /* Use ellipsis to indicate truncated text */
+        white-space: nowrap;
+        /* Prevent wrapping */
+    }
+
+    td.expandable {
+        cursor: pointer;
+        max-width: 200px;
+        /* Set the maximum width to prevent the cell from expanding too much */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        /* Display ellipsis (...) for overflow text */
+    }
+
+    td.expandable.expanded {
+        white-space: normal;
+        max-width: none;
+        overflow: auto;
+    }
+</style>
+<script>
     function openDeletePopup(employeeId) {
         document.getElementById('employeeIdToDelete').value = employeeId;
         document.getElementById('deleteConfirmationPopup').style.display = 'flex';
@@ -38,6 +74,14 @@
     function confirmLogout() {
         window.location.href = 'logout.php';
     }
+    document.addEventListener('DOMContentLoaded', function() {
+        var expandableCells = document.querySelectorAll('.expandable');
+        expandableCells.forEach(function(cell) {
+            cell.addEventListener('click', function() {
+                this.classList.toggle('expanded');
+            });
+        });
+    });
 </script>
 
 <?php
@@ -201,11 +245,11 @@ if (isset($_SESSION['email'])) {
                 echo "<form method='post' action='#'>
                             <table border='0'>
                                 <tr>
-                                    <th>Employee Number</th>
-                                    <th>Firstname</th>
-                                    <th>Lastname</th>
-                                    <th>Username</th>
-                                    <th>Email</th>
+                                    <th class='expandable'>Employee Number</th>
+                                    <th class='expandable'>Firstname</th>
+                                    <th class='expandable'>Lastname</th>
+                                    <th class='expandable'>Username</th>
+                                    <th class='expandable'>Email</th>
                                     <th><center>Action<center></th>
                                 </tr>";
 
@@ -214,11 +258,11 @@ if (isset($_SESSION['email'])) {
 
                 while ($row = $result->fetch_assoc()) {
                     echo "<tr>
-                            <td>" . $counter . "</td>
-                            <td>" . $row["firstname"] . "</td>
-                            <td>" . $row["lastname"] . "</td>
-                            <td>" . $row["username"] . "</td>
-                            <td>" . $row["email"] . "</td>
+                            <td class='expandable'>" . $counter . "</td>
+                            <td class='expandable'>" . $row["firstname"] . "</td>
+                            <td class='expandable'>" . $row["lastname"] . "</td>
+                            <td class='expandable'>" . $row["username"] . "</td>
+                            <td class='expandable'>" . $row["email"] . "</td>
                             <td>
                                 <div class='button-class'>
                                     <a href='edit_employee.php?id=" . $row["id"] . "' class='edit-button'><i class='las la-edit'></i></a>
@@ -228,18 +272,18 @@ if (isset($_SESSION['email'])) {
                           </tr>";
                     $counter++;
                 }
-                
+
 
                 echo "</table></form>";
             } else {
                 echo "<form method='post' action='#'>
                             <table border='0'>
                                 <tr>
-                                    <th>Employee Number</th>
-                                    <th>Firstname</th>
-                                    <th>Lastname</th>
-                                    <th>Username</th>
-                                    <th>Email</th>
+                                    <th class='expandable'>Employee Number</th>
+                                    <th class='expandable'>Firstname</th>
+                                    <th class='expandable'>Lastname</th>
+                                    <th class='expandable'>Username</th>
+                                    <th class='expandable'>Email</th>
                                     <th><center>Action<center></th>
                                 </tr>
                                 <tr>
