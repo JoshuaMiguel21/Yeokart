@@ -23,6 +23,13 @@ if (isset($_SESSION['id'])) {
     $result = $con->query($sql);
     $row = $result->fetch_assoc();
     $is_accepted = $row['is_accepted'];
+
+    // If the terms have not been accepted, show the popup
+    if ($is_accepted !== '1') {
+        $display_terms_popup = 'block';
+    } else {
+        $display_terms_popup = 'none';
+    }
 } else {
     header("Location: login_page.php");
     exit();
@@ -175,7 +182,7 @@ if ($notifications_result->num_rows > 0) {
 <body>
 
     <?php if ($is_accepted !== 1) : ?>
-        <div id="terms-popup" class="terms-popup terms-popup-content">
+        <div id="terms-popup" class="terms-popup terms-popup-content" style="display: <?php echo $display_terms_popup; ?>">
             <article class="terms-container">
                 <header class="terms-container-header">
                     <h1 class="terms-container-title">
