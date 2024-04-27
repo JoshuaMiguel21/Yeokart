@@ -705,13 +705,22 @@ section{
     padding: 10px 10px 0 48px;
     display: block;
     cursor: pointer;
+    transition: background-color .3s ease;
   }
+
+  .panel-title:hover {
+    background-color: #f0f0f0; 
+    }
   
   .panel-content {
-    font-size: 20px;
+    font-size: 16px;
     padding: 0px 14px;
-    margin: 0 40px;
+    margin: 10px 40px;
     height: 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    text-align: justify;
+    background-color: #f9f9f9;
+    border-radius: 5px;
     overflow: hidden;
     z-index: 1;
     position: relative;
@@ -787,6 +796,13 @@ section{
         color: var(--black);
         top: 50%;
         right: 0px;
+    }
+
+    #notif-num {
+        background-color: #fff;
+        color: var(--black);
+        top: 50%;
+        right: -3px;
     }
 
     .header .header-1 .menu-btn {

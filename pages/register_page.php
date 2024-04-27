@@ -342,7 +342,6 @@
                     <a href="#" id="terms">Terms and Conditions</a>
                 </div>
 
-
                 <div class="button-container">
                     <button type="submit" id="register" class="btn btn-custom btn-lg" name="submit">Sign Up</button>
                     <center><a onclick="history.back()"><button type="button" class="btn btn-custom btn-lg">Back</button></a></center>

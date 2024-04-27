@@ -29,7 +29,7 @@
             $row = mysqli_fetch_assoc($result_query);
         ?>
             <form action="" method="post">
-                <<input type="hidden" name="previous_page" value="<?php echo $_SERVER['HTTP_REFERER']; ?>">
+                <input type="hidden" name="previous_page" value="<?php echo $_SERVER['HTTP_REFERER']; ?>">
                 <div class="form-outline mb-3 w-50 mr-auto ml-auto">
                     <label for="question" class="form-label">Question:</label>
                     <input type="text" name="question" id="question" class="form-control" placeholder="Enter the question" value="<?php echo isset($row['question']) ? $row['question'] : ''; ?>" required>

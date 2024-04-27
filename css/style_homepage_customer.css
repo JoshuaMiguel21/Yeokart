@@ -2618,6 +2618,13 @@ label {
         right: 0px;
     }
 
+    #notif-num {
+        background-color: #fff;
+        color: var(--black);
+        top: 50%;
+        right: -3px;
+    }
+
     .header .header-1 .menu-btn {
         display: block;
         position: absolute;

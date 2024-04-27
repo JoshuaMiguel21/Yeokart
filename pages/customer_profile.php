@@ -349,6 +349,31 @@ function notificationExists($con, $customerId, $title, $orderId)
     .notification-item:hover .delete-button {
         display: inline-block;
     }
+
+    .view-order-link {
+        text-decoration: none;
+        color: blue;
+        position: relative;
+        font-size: 12px;
+        transition: color 0.3s;
+    }
+
+    .view-order-link::after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 1.5px;
+        background-color: blue;
+        bottom: 0;
+        left: 50%;
+        transition: width 0.3s, left 0.3s;
+    }
+
+    .view-order-link:hover::after {
+        width: 100%;
+        left: 0;
+        }
+
 </style>
 
 <body>
