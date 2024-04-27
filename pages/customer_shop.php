@@ -400,7 +400,7 @@
                     $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1;
                     $offset = ($pageNumber - 1) * $itemsPerPage;
 
-                    $totalItemsQuery = "SELECT COUNT(*) AS totalItems FROM products";
+                    $totalItemsQuery = "SELECT COUNT(*) AS totalItems FROM products WHERE is_archive = 0";
                     $totalItemsResult = mysqli_query($con, $totalItemsQuery);
                     $totalItemsRow = mysqli_fetch_assoc($totalItemsResult);
                     $totalItems = $totalItemsRow['totalItems'];
