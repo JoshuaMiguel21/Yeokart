@@ -328,13 +328,16 @@
                                     <center>Images</center>
                                 </th>
                                 <th>
+                                    <center>Days Left</center>
+                                </th>
+                                <th>
                                     <center>Action</center>
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td colspan='8'>
+                                <td colspan='9'>
                                     <center><b>No item/s found</b></center>
                                 </td>
                             </tr>

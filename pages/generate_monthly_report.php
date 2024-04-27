@@ -85,9 +85,75 @@ class MYPDF extends TCPDF
         // Add bottom border to "Total Income" row
         $this->Cell(array_sum($w), 0, 'Total Items Sold = ' . $totalItemsSold, 'LR', 0, 'R', 1);
         $this->Ln();
-        $this->Cell(array_sum($w), 0, 'Total Income = PHP ' . $totalRevenue, 'LR', 0, 'R', 1);
+        $this->Cell(array_sum($w), 0, 'Gross Sales = PHP ' . $totalRevenue, 'LR', 0, 'R', 1);
         $this->Ln();
-        $this->Cell(array_sum($w), 0, 'Sales Revenue = PHP ' . $totalIncome, 'LRB', 1, 'R', 1);
+        $this->Cell(array_sum($w), 0, 'Gross Sales + Shipping Fee = PHP ' . $totalIncome, 'LRB', 1, 'R', 1);
+    }
+    public function LoadArtistData($selectedMonth, $selectedYear)
+    {
+        include('../database/db_yeokart.php');
+        $startDate = $selectedYear . '-' . $selectedMonth . '-01';
+        $endDate = date('Y-m-t', strtotime($startDate)); // Get the last day of the month
+        $select_query = "
+        SELECT
+            TRIM(artist) AS artist_name,
+            SUM(item_quantity) AS total_sold
+        FROM (
+            SELECT
+                TRIM(LEADING ', ' FROM SUBSTRING_INDEX(SUBSTRING_INDEX(items_artist, ', ', n.digit+1), ', ', -1)) AS artist,
+                TRIM(LEADING ', ' FROM SUBSTRING_INDEX(SUBSTRING_INDEX(item_quantity, ', ', n.digit+1), ', ', -1)) AS item_quantity
+            FROM orders
+            JOIN (
+                SELECT 0 AS digit UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL
+                SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9
+            ) AS n
+            WHERE n.digit < LENGTH(items_artist) - LENGTH(REPLACE(items_artist, ',', '')) + 1
+                AND date_of_purchase BETWEEN '$startDate' AND '$endDate'
+                AND (status = 'delivered')
+                AND proof_of_payment <> ''
+        ) AS o
+        GROUP BY artist
+        ORDER BY total_sold DESC
+        LIMIT 10";
+
+        $result_query = mysqli_query($con, $select_query);
+        if (!$result_query) {
+            die('Invalid query: ' . mysqli_error($con));
+        }
+
+        return $result_query;
+    }
+    public function ColoredArtistTable($title, $header, $data, $w)
+    {
+        // Colors, line width and bold font
+        $this->SetFillColor(221, 47, 110);
+        $this->SetTextColor(255);
+        $this->SetDrawColor(128, 0, 0);
+        $this->SetLineWidth(0.3);
+        $this->SetFont('', 'B');
+        // Table Title
+        $this->Cell(0, 10, $title, 0, 1, 'C', true);
+        $this->Cell(0, 5, '', 0, 1);
+        // Header
+        $num_headers = count($header);
+        for ($i = 0; $i < $num_headers; ++$i) {
+            $this->Cell($w[$i], 7, $header[$i], 'LR', 0, 'C', 1);
+        }
+        $this->Ln();
+        // Color and font restoration
+        $this->SetFillColor(224, 235, 255);
+        $this->SetTextColor(0);
+        $this->SetFont('');
+        // Data
+        $fill = 0;
+        foreach ($data as $row) {
+            $this->Cell($w[0], 6, $row['artist_name'], 'LR', 0, 'L', $fill);
+            $this->Cell($w[1], 6, number_format($row['total_sold']), 'LR', 0, 'C', $fill);
+            $this->Ln();
+            $fill = !$fill;
+        }
+        $this->Cell(array_sum($w), 0, '', 'T');
+        $this->Ln(10);
     }
 }
 
@@ -163,7 +229,20 @@ $totalIncome = 0; // Set a default value
 if (isset($_POST['total_income'])) {
     $totalIncome = $_POST['total_income'];
 }
+$header_artist = array('Artist Name', 'Total Sold');
 
+$data_artist = $pdf->LoadArtistData($selectedMonth, $selectedYear);
+
+$w_items = array(60, 50, 50, 20); // Widths for the most sold items table
+
+// Calculate the total width of the most sold items table
+$total_width_items = array_sum($w_items);
+
+// Define the column widths for the artist table based on the total width of the most sold items table
+$w_artist = array($total_width_items * 0.6, $total_width_items * 0.4);
+
+// Print the colored artist table
+$pdf->ColoredArtistTable('Most Sold Artists', $header_artist, $data_artist, $w_artist);
 // print colored table
 $pdf->ColoredTable('Most Sold Items', $header, $data, $orderCount, $totalItemsSold, $totalRevenue, $totalIncome);
 // ---------------------------------------------------------

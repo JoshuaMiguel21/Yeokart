@@ -307,13 +307,16 @@
                                     <center>Images</center>
                                 </th>
                                 <th>
+                                    <center>Days Left</center>
+                                </th>
+                                <th>
                                     <center>Action</center>
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td colspan='8'>
+                                <td colspan='9'>
                                     <center><b>No item/s found</b></center>
                                 </td>
                             </tr>
@@ -343,6 +346,9 @@
                                 </th>
                                 <th>
                                     <center>Images</center>
+                                </th>
+                                <th>
+                                    <center>Days Left</center>
                                 </th>
                                 <th>
                                     <center>Action</center>
@@ -442,6 +448,12 @@
                                 $item_image1 = $row['item_image1'];
                                 $item_image2 = $row['item_image2'];
                                 $item_image3 = $row['item_image3'];
+                                $archive_timestamp = $row['archive_timestamp'];
+                                $archive_date = new DateTime($archive_timestamp);
+                                $expiration_date = $archive_date->modify('+90 days');
+                                $today = new DateTime();
+                                $interval = $today->diff($expiration_date);
+                                $days_left = $interval->days;
                                 echo "<tr>";
                                 echo "<td class='expandable'>" . $row['item_name'] . "</td>";
                                 echo "<td class='expandable'> ₱" . number_format($row['item_price'], 2) . "</td>";
@@ -459,6 +471,7 @@
                                     echo "<img src='./item_images/$item_image3' alt='' style='cursor: pointer;' width='auto' height='50' onclick='openImagePopup(\"./item_images/" . $item_image3 . "\")'>&nbsp;";
                                 }
                                 echo "</td>";
+                                echo "<td><center>{$days_left} day/s</center></td>";
                                 // Inside your while loop
                                 echo "<td>";
                                 echo "<div class='button-class'>";

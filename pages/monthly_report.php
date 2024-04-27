@@ -375,7 +375,7 @@
                 <div class="card-single">
                     <div>
                         <h1><?php echo '₱ ' . $totalRevenue; ?></h1>
-                        <span>Total Income</span>
+                        <span>Gross Sales</span>
                     </div>
                     <div>
                         <span class="las la-hand-holding-usd"></span>
@@ -385,7 +385,7 @@
                 <div class="card-single">
                     <div>
                         <h1><?php echo '₱ ' . $totalIncome; ?></h1>
-                        <span>Sales Revenue</span>
+                        <span>Gross Sales + Shipping Fee</span>
                     </div>
                     <div>
                         <span class="las la-donate"></span>
@@ -395,6 +395,70 @@
             <br></br>
             <div id="lineChartContainer" style="height: 370px; width: 100%;"></div>
             <br></br>
+            <div class="head-title">
+                <div class="left">
+                    <h3>Most Sold Artists</h3>
+                </div>
+            </div>
+            <div class="table">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                <center>Artist Name</center>
+                            </th>
+                            <th>
+                                <center>Sold this Month</center>
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        include('../database/db_yeokart.php');
+
+                        // Query to get the top 10 best-selling artists in the selected month and year
+                        $select_query = "
+                            SELECT
+                                TRIM(artist) AS artist_name,
+                                SUM(item_quantity) AS total_sold
+                            FROM (
+                                SELECT
+                                    TRIM(LEADING ', ' FROM SUBSTRING_INDEX(SUBSTRING_INDEX(items_artist, ', ', n.digit+1), ', ', -1)) AS artist,
+                                    TRIM(LEADING ', ' FROM SUBSTRING_INDEX(SUBSTRING_INDEX(item_quantity, ', ', n.digit+1), ', ', -1)) AS item_quantity
+                                FROM orders
+                                JOIN (
+                                    SELECT 0 AS digit UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL
+                                    SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9
+                                ) AS n
+                                WHERE n.digit < LENGTH(items_artist) - LENGTH(REPLACE(items_artist, ',', '')) + 1
+                                    AND date_of_purchase BETWEEN '$startDate' AND '$endDate'
+                                    AND (status = 'delivered')
+                                    AND proof_of_payment <> ''
+                            ) AS o
+                            GROUP BY artist
+                            ORDER BY total_sold DESC
+                            LIMIT 10";
+
+                        $result_query = mysqli_query($con, $select_query);
+
+                        if (mysqli_num_rows($result_query) == 0) {
+                            echo "<tr><td colspan='11'><center><b>No data available</b></center></td></tr>";
+                        } else {
+                            while ($row = mysqli_fetch_assoc($result_query)) {
+                                $artist_name = $row['artist_name'];
+                                $total_sold = $row['total_sold'];
+                                echo "<tr>";
+                                echo "<td><center>" . $artist_name . "</center></td>";
+                                echo "<td><center>" . $total_sold . "</center></td>";
+                                echo "</tr>";
+                            }
+                        }
+                        ?>
+
+                    </tbody>
+                </table>
+            </div>
             <div class="head-title">
                 <div class="left">
                     <h3>Most Sold Items</h3>
