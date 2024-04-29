@@ -102,17 +102,13 @@
             $notifications[] = $notification;
         }
     }
-    ?>
-
-    <?php
-    include('../database/db_yeokart.php');
 
     // Fetching categories from the products table
-    $select_categories = "SELECT DISTINCT category_name FROM products";
+    $select_categories = "SELECT DISTINCT category_name FROM products WHERE is_archive = 0";
     $result_categories = mysqli_query($con, $select_categories);
 
     // Fetching artists from the products table
-    $select_artists = "SELECT DISTINCT artist_name FROM products";
+    $select_artists = "SELECT DISTINCT artist_name FROM products WHERE is_archive = 0";
     $result_artists = mysqli_query($con, $select_artists);
 
     ?>
@@ -188,11 +184,7 @@
             <?php foreach ($notifications as $notification) :
                 $orderStatus = isset($notification['order_status']) ? $notification['order_status'] : 'Order Deleted/Not Available';
             ?>
-                <div class="notification-item <?= !$notification['is_read'] ? 'unread' : '' ?>"
-                    style="padding: 10px; border-bottom: 1px solid #eee; <?= !$notification['is_read'] ? 'background-color: #f9f9f9;' : '' ?>"
-                    data-order-id="<?= $notification['order_id']; ?>"
-                    data-order-status="<?= $notification['order_status']; ?>"
-                    onclick="markAsRead(<?= $notification['id']; ?>)">
+                <div class="notification-item <?= !$notification['is_read'] ? 'unread' : '' ?>" style="padding: 10px; border-bottom: 1px solid #eee; <?= !$notification['is_read'] ? 'background-color: #f9f9f9;' : '' ?>" data-order-id="<?= $notification['order_id']; ?>" data-order-status="<?= $notification['order_status']; ?>" onclick="markAsRead(<?= $notification['id']; ?>)">
                     <p style="font-size: 1.2rem">
                         <strong><?= htmlspecialchars($notification['title']); ?></strong>
                         <?= !$notification['is_read'] ? '<span class="unread-dot"></span>' : '' ?>
@@ -400,12 +392,6 @@
                     $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1;
                     $offset = ($pageNumber - 1) * $itemsPerPage;
 
-                    $totalItemsQuery = "SELECT COUNT(*) AS totalItems FROM products WHERE is_archive = 0";
-                    $totalItemsResult = mysqli_query($con, $totalItemsQuery);
-                    $totalItemsRow = mysqli_fetch_assoc($totalItemsResult);
-                    $totalItems = $totalItemsRow['totalItems'];
-                    $totalPages = ceil($totalItems / $itemsPerPage);
-
                     // Base query
                     $select_query = "SELECT * FROM products WHERE is_archive = 0";
 
@@ -436,6 +422,13 @@
                             $select_query .= " ORDER BY item_price DESC";
                         }
                     }
+
+                    // Get total number of items for pagination
+                    $totalItemsQuery = "SELECT COUNT(*) AS totalItems FROM ($select_query) AS subquery";
+                    $totalItemsResult = mysqli_query($con, $totalItemsQuery);
+                    $totalItemsRow = mysqli_fetch_assoc($totalItemsResult);
+                    $totalItems = $totalItemsRow['totalItems'];
+                    $totalPages = ceil($totalItems / $itemsPerPage);
 
                     // Add limit and offset
                     $select_query .= " LIMIT $itemsPerPage OFFSET $offset";
@@ -500,19 +493,7 @@
                 <?php
                 $baseUrl = 'customer_shop.php?';
 
-                $pageQuery = '';
-                if (isset($_GET['search_button'])) {
-                    $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
-                } elseif (isset($_GET['filter_button'])) {
-                    if (isset($_GET['category'])) {
-                        $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
-                    } elseif (isset($_GET['artist'])) {
-                        $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
-                    }
-                }
-
-                $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-                $totalPages = ceil($totalItems / $itemsPerPage);
+                $pageQuery = http_build_query(array_diff_key($_GET, array_flip(['page'])));
 
                 $startPage = max(1, $pageNumber - 1);
                 $endPage = min($totalPages, $pageNumber + 1);

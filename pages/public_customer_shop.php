@@ -47,12 +47,12 @@ $result_artists = mysqli_query($con, $select_artists);
             <div class="icons">
                 <ul>
                     <li class="search-ul">
-                        <form action="customer_shop.php" method="GET" class="search-form1">
+                        <form action="public_customer_shop.php" method="GET" class="search-form1">
                             <input type="search" name="search" placeholder="Search here..." id="search-box">
                             <button type="submit"><i class="fas fa-search"></i></button>
                         </form>
                     </li>
-                    <li class="home-class"><a href="customer_homepage.php" id="home-nav">Home</a></li>
+                    <li class="home-class"><a href="public_customer_homepage.php" id="home-nav">Home</a></li>
                     <li><a href="public_customer_shop.php" class="active">Shop</a></li>
                     <li><a href="public_faq.php">FAQ</a></li>
                     <li><a href="public_contact_page.php">Contact Us</a></li>
@@ -230,12 +230,6 @@ $result_artists = mysqli_query($con, $select_artists);
                 $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1;
                 $offset = ($pageNumber - 1) * $itemsPerPage;
 
-                $totalItemsQuery = "SELECT COUNT(*) AS totalItems FROM products";
-                $totalItemsResult = mysqli_query($con, $totalItemsQuery);
-                $totalItemsRow = mysqli_fetch_assoc($totalItemsResult);
-                $totalItems = $totalItemsRow['totalItems'];
-                $totalPages = ceil($totalItems / $itemsPerPage);
-
                 // Base query
                 $select_query = "SELECT * FROM products WHERE is_archive = 0";
 
@@ -266,6 +260,13 @@ $result_artists = mysqli_query($con, $select_artists);
                         $select_query .= " ORDER BY item_price DESC";
                     }
                 }
+
+                // Get total number of items for pagination
+                $totalItemsQuery = "SELECT COUNT(*) AS totalItems FROM ($select_query) AS subquery";
+                $totalItemsResult = mysqli_query($con, $totalItemsQuery);
+                $totalItemsRow = mysqli_fetch_assoc($totalItemsResult);
+                $totalItems = $totalItemsRow['totalItems'];
+                $totalPages = ceil($totalItems / $itemsPerPage);
 
                 // Add limit and offset
                 $select_query .= " LIMIT $itemsPerPage OFFSET $offset";
@@ -328,21 +329,9 @@ $result_artists = mysqli_query($con, $select_artists);
             </div>
             </div>
             <?php
-            $baseUrl = 'customer_shop.php?';
+            $baseUrl = 'public_customer_shop.php?';
 
-            $pageQuery = '';
-            if (isset($_GET['search_button'])) {
-                $pageQuery = 'search_button&search=' . urlencode($_GET['search']);
-            } elseif (isset($_GET['filter_button'])) {
-                if (isset($_GET['category'])) {
-                    $pageQuery = 'filter_button&category=' . urlencode($_GET['category']);
-                } elseif (isset($_GET['artist'])) {
-                    $pageQuery = 'filter_button&artist=' . urlencode($_GET['artist']);
-                }
-            }
-
-            $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-            $totalPages = ceil($totalItems / $itemsPerPage);
+            $pageQuery = http_build_query(array_diff_key($_GET, array_flip(['page'])));
 
             $startPage = max(1, $pageNumber - 1);
             $endPage = min($totalPages, $pageNumber + 1);

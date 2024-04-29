@@ -14,7 +14,7 @@
 </head>
 
 <?php
-    require('../database/db_yeokart.php');
+require('../database/db_yeokart.php');
 
 // Fetch FAQ data from database
 $faq_query = "SELECT * FROM faqs ORDER BY faq_id ASC";
@@ -22,12 +22,13 @@ $faq_result = $con->query($faq_query);
 
 $faqs = [];
 if ($faq_result->num_rows > 0) {
-    while($faq = $faq_result->fetch_assoc()) {
+    while ($faq = $faq_result->fetch_assoc()) {
         $faqs[] = $faq;
     }
 }
 
 ?>
+
 <body>
 
     <input type="checkbox" id="click">
@@ -46,12 +47,12 @@ if ($faq_result->num_rows > 0) {
             <div class="icons">
                 <ul>
                     <li class="search-ul">
-                        <form action="customer_shop.php" method="GET" class="search-form1">
+                        <form action="public_customer_shop.php" method="GET" class="search-form1">
                             <input type="search" name="search" placeholder="Search here..." id="search-box">
                             <button type="submit"><i class="fas fa-search"></i></button>
                         </form>
                     </li>
-                    <li class="home-class"><a href="customer_homepage.php" id="home-nav">Home</a></li>
+                    <li class="home-class"><a href="public_customer_homepage.php" id="home-nav">Home</a></li>
                     <li><a href="public_customer_shop.php">Shop</a></li>
                     <li><a href="public_faq.php" class="active">FAQ</a></li>
                     <li><a href="public_contact_page.php">Contact Us</a></li>
@@ -77,7 +78,7 @@ if ($faq_result->num_rows > 0) {
             <h3 class="faq-h3">Welcome to YeoKart! Below are answers to some common questions you may have about our store and our products.</h3>
             <br></br>
             <div class="faq-content">
-                <?php foreach ($faqs as $faq): ?>
+                <?php foreach ($faqs as $faq) : ?>
                     <div class="faq-question">
                         <input id="q<?= $faq['faq_id']; ?>" type="checkbox" class="panel">
                         <div class="plus">+</div>
@@ -200,7 +201,7 @@ if ($faq_result->num_rows > 0) {
         }
     </script>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
             // Function to show the popup

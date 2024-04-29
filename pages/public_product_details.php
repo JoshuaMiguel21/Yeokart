@@ -54,13 +54,13 @@ if (isset($_GET['item_id'])) {
             <div class="icons">
                 <ul>
                     <li class="search-ul">
-                        <form action="customer_shop.php" method="GET" class="search-form">
+                        <form action="public_customer_shop.php" method="GET" class="search-form">
                             <input type="search" name="search" placeholder="Search here..." id="search-box">
                             <button type="submit"><i class="fas fa-search"></i></button>
                         </form>
                     </li>
                     <li class="home-class"><a href="public_customer_homepage.php" id="home-nav">Home</a></li>
-                    <li><a href="customer_shop.php" class="active">Shop</a></li>
+                    <li><a href="public_customer_shop.php" class="active">Shop</a></li>
                     <li><a href="public_faq.php">FAQ</a></li>
                     <li><a href="public_contact_page.php">Contact Us</a></li>
                     <button class="sign-in-button" onclick="window.location.href='login_page.php';">

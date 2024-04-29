@@ -105,7 +105,7 @@
             <div class="icons">
                 <ul>
                     <li class="search-ul">
-                        <form action="customer_shop.php" method="GET" class="search-form1">
+                        <form action="public_customer_shop.php" method="GET" class="search-form1">
                             <input type="search" name="search" placeholder="Search here..." id="search-box">
                             <button type="submit"><i class="fas fa-search"></i></button>
                         </form>
@@ -375,7 +375,7 @@
             return true;
         }
     </script>
-  <script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Check if the popup has already been shown
             if (!localStorage.getItem('popupShown')) {

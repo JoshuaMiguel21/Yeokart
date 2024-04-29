@@ -31,12 +31,12 @@
             <div class="icons">
                 <ul>
                     <li class="search-ul">
-                        <form action="customer_shop.php" method="GET" class="search-form1">
+                        <form action="public_customer_shop.php" method="GET" class="search-form1">
                             <input type="search" name="search" placeholder="Search here..." id="search-box">
                             <button type="submit"><i class="fas fa-search"></i></button>
                         </form>
                     </li>
-                    <li class="home-class"><a href="customer_homepage.php" id="home-nav">Home</a></li>
+                    <li class="home-class"><a href="public_customer_homepage.php" id="home-nav">Home</a></li>
                     <li><a href="public_customer_shop.php">Shop</a></li>
                     <li><a href="public_faq.php">FAQ</a></li>
                     <li><a href="public_contact_page.php" class="active">Contact Us</a></li>
