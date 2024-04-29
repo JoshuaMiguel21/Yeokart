@@ -152,7 +152,18 @@
     $check_data = mysqli_fetch_assoc($check_result);
     $no_results = $check_data['total'] == 0;
 
+    function deleteExpiredArchivedItems($con)
+    {
+        $delete_query = "DELETE FROM products WHERE is_archive = 1 AND archive_timestamp <= DATE_SUB(NOW(), INTERVAL 90 DAY)";
+        if (mysqli_query($con, $delete_query)) {
+            // Deleted expired archived items successfully
+        } else {
+            // Failed to delete expired archived items
+        }
+    }
 
+    // Call this function before displaying the archived items
+    deleteExpiredArchivedItems($con);
     ?>
     <input type="checkbox" id="nav-toggle" <?php echo $_SESSION['nav_toggle'] ? 'checked' : ''; ?>>
     <div class="sidebar <?php echo $_SESSION['nav_toggle'] ? 'open' : ''; ?>">
@@ -358,7 +369,7 @@
                             include('../database/db_yeokart.php');
                             if (isset($_POST['archive_item'])) {
                                 $item_id = $_POST['item_id'];
-                                $stmt = $con->prepare("UPDATE products SET is_archive = 1 WHERE item_id = ?");
+                                $stmt = $con->prepare("UPDATE products SET is_archive = 1, archive_timestamp = NOW() WHERE item_id = ?");
                                 $stmt->bind_param("i", $item_id);
 
                                 if ($stmt->execute()) {

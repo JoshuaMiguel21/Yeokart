@@ -360,7 +360,7 @@
                             include('../database/db_yeokart.php');
                             if (isset($_POST['archive_item'])) {
                                 $item_id = $_POST['item_id'];
-                                $stmt = $con->prepare("UPDATE products SET is_archive = 0 WHERE item_id = ?");
+                                $stmt = $con->prepare("UPDATE products SET is_archive = 0, archive_timestamp = NULL WHERE item_id = ?");
                                 $stmt->bind_param("i", $item_id);
 
                                 if ($stmt->execute()) {
@@ -407,25 +407,25 @@
 
                             if (!isset($_GET['search_button']) && !isset($_GET['filter_button'])) {
                                 // Default query without any filters
-                                $select_query = "SELECT * FROM products WHERE is_archive=1";
+                                $select_query = "SELECT * FROM products WHERE is_archive=1 ORDER BY archive_timestamp ASC";
                             } else {
                                 // Check for search or filter
                                 if (isset($_GET['search_button'])) {
                                     $search = $_GET['search'];
-                                    $select_query = "SELECT * FROM products WHERE is_archive=1 AND item_name LIKE '%$search%'";
+                                    $select_query = "SELECT * FROM products WHERE is_archive=1 AND item_name LIKE '%$search%' ORDER BY archive_timestamp ASC";
                                 } elseif (isset($_GET['filter_button'])) {
                                     $category_name = isset($_GET['category']) ? $_GET['category'] : '';
                                     $artist_name = isset($_GET['artist']) ? $_GET['artist'] : '';
 
                                     if (!empty($category_name)) {
                                         // Filter by category
-                                        $select_query = "SELECT * FROM products WHERE is_archive=1 AND category_name = '$category_name'";
+                                        $select_query = "SELECT * FROM products WHERE is_archive=1 AND category_name = '$category_name' ORDER BY archive_timestamp ASC";
                                     } elseif (!empty($artist_name)) {
                                         // Filter by artist
-                                        $select_query = "SELECT * FROM products WHERE is_archive=1 AND artist_name = '$artist_name'";
+                                        $select_query = "SELECT * FROM products WHERE is_archive=1 AND artist_name = '$artist_name' ORDER BY archive_timestamp ASC";
                                     } else {
                                         // No filter applied
-                                        $select_query = "SELECT * FROM products WHERE is_archive=1";
+                                        $select_query = "SELECT * FROM products WHERE is_archive=1 ORDER BY archive_timestamp ASC";
                                     }
                                 }
                             }
