@@ -72,9 +72,10 @@ if (isset($_GET['faq_id'])) {
     $answer = $row['answer'];
 
     if (isset($_POST['update_faq'])) {
+        $new_question = $_POST['question'];
         $new_answer = $_POST['answer'];
 
-        $update_query = "UPDATE faqs SET answer='$new_answer' WHERE faq_id='$faq_id'";
+        $update_query = "UPDATE faqs SET question='$new_question', answer='$new_answer' WHERE faq_id='$faq_id'";
         $result_update = mysqli_query($con, $update_query);
 
         if ($result_update) {

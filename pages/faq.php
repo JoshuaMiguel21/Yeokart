@@ -565,10 +565,9 @@ if ($faq_result->num_rows > 0) {
                 $('#terms-popup').hide();
             }
 
-            // Add event listener to the "Terms and Conditions" link
-            $('a[href="#"]').click(function(e) {
-                e.preventDefault(); // Prevent the default action of the link
-                showPopup(); // Show the popup
+            $('#terms').click(function(e) {
+                e.preventDefault(); 
+                showPopup();
             });
 
             // Add event listener to the accept button
