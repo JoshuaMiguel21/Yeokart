@@ -13,15 +13,16 @@
     <link rel="icon" type="image/png" href="../res/icon.png">
 </head>
 <script>
-function myFunction() {
-  var x = document.getElementById("password");
-  if (x.type === "password") {
-    x.type = "text";
-  } else {
-    x.type = "password";
-  }
-}
+    function myFunction() {
+        var x = document.getElementById("password");
+        if (x.type === "password") {
+            x.type = "text";
+        } else {
+            x.type = "password";
+        }
+    }
 </script>
+
 <body style="background-color: #E6A4B4;">
     <div class="container">
         <div class="col-sm-12 col-md-6 col-lg-6" id="div2">
@@ -117,11 +118,11 @@ function myFunction() {
                     <label for="showPasswordCheckbox" class="checkbox-label">Show Password</label>
                 </div>
 
-                
+
                 <a href="forgot_email.php" class="forgot-pass"><strong>Forgot Password?</strong></a>
 
                 <div class="button-container">
-                    <a href="public_customer_homepage.php"><button type="button" class="custom-button">Back</button></a>
+                    <a href="index.php"><button type="button" class="custom-button">Back</button></a>
                     <button type="submit" class="custom-button" value="login" name="login" id="login">Login</button>
                 </div>
             </form>

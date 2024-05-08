@@ -34,7 +34,7 @@ $result_artists = mysqli_query($con, $select_artists);
     <input type="checkbox" id="click">
     <header class="header" style="box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
         <div class="header-1">
-            <a href="public_customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>
+            <a href="index.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>
             <div class="icons">
                 <form action="public_customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
                     <input type="search" name="search" placeholder="Search here..." id="search-box">
@@ -52,7 +52,7 @@ $result_artists = mysqli_query($con, $select_artists);
                             <button type="submit"><i class="fas fa-search"></i></button>
                         </form>
                     </li>
-                    <li class="home-class"><a href="public_customer_homepage.php" id="home-nav">Home</a></li>
+                    <li class="home-class"><a href="index.php" id="home-nav">Home</a></li>
                     <li><a href="public_customer_shop.php" class="active">Shop</a></li>
                     <li><a href="public_faq.php">FAQ</a></li>
                     <li><a href="public_contact_page.php">Contact Us</a></li>
