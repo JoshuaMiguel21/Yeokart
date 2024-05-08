@@ -110,7 +110,7 @@
                             <button type="submit"><i class="fas fa-search"></i></button>
                         </form>
                     </li>
-                    <li class="home-class"><a href="index_homepage.php" id="home-nav" class="active">Home</a></li>
+                    <li class="home-class"><a href="index.php" id="home-nav" class="active">Home</a></li>
                     <li><a href="public_customer_shop.php">Shop</a></li>
                     <li><a href="public_faq.php">FAQ</a></li>
                     <li><a href="public_contact_page.php">Contact Us</a></li>
