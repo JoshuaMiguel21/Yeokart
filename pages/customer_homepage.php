@@ -448,7 +448,7 @@ if ($notifications_result->num_rows > 0) {
             }
         });
 
-        var swiper = new Swiper(".featured-slider", {
+        var featuredSwiper = new Swiper(".featured-slider", {
             spaceBetween: 10,
             loop: true,
             centeredSlides: true,
@@ -464,17 +464,21 @@ if ($notifications_result->num_rows > 0) {
                 0: {
                     slidesPerView: 1,
                 },
-                320: {
-                    slidesPerView: 2,
+                220: {
+                    slidesPerView: 1,
+                    centeredSlides: false,
                 },
-                347: {
+                300: {
                     slidesPerView: 2,
+                    centeredSlides: false,
                 },
-                450: {
+                430: {
                     slidesPerView: 2,
+                    centeredSlides: false,
                 },
-                768: {
-                    slidesPerView: 3,
+                940: {
+                    slidesPerView: 2,
+                    centeredSlides: false,
                 },
                 1024: {
                     slidesPerView: 4,
@@ -489,8 +493,9 @@ if ($notifications_result->num_rows > 0) {
                     centeredSlides: false,
                 },
             },
+
         });
-        var swiper = new Swiper(".best-slider", {
+        var bestSwiper = new Swiper(".best-slider", {
             spaceBetween: 10,
             loop: true,
             centeredSlides: true,
@@ -506,17 +511,21 @@ if ($notifications_result->num_rows > 0) {
                 0: {
                     slidesPerView: 1,
                 },
-                320: {
-                    slidesPerView: 2,
+                220: {
+                    slidesPerView: 1,
+                    centeredSlides: false,
                 },
-                347: {
+                300: {
                     slidesPerView: 2,
+                    centeredSlides: false,
                 },
-                450: {
+                430: {
                     slidesPerView: 2,
+                    centeredSlides: false,
                 },
-                768: {
-                    slidesPerView: 3,
+                940: {
+                    slidesPerView: 2,
+                    centeredSlides: false,
                 },
                 1024: {
                     slidesPerView: 4,
@@ -531,6 +540,7 @@ if ($notifications_result->num_rows > 0) {
                     centeredSlides: false,
                 },
             },
+
         });
         document.addEventListener('DOMContentLoaded', function() {
             const itemNames = document.querySelectorAll('.marquee');

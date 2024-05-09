@@ -118,8 +118,6 @@
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"></path>
                         </svg>
-
-
                         <div class="sign-in-btn-text">
                             Sign In
                         </div>
@@ -263,8 +261,54 @@
                 document.querySelector('.header .header-2').classList.add('active');
             }
         });
+        var featuredSwiper = new Swiper(".featured-slider", {
+            spaceBetween: 10,
+            loop: true,
+            centeredSlides: true,
+            autoplay: {
+                delay: 9500,
+                disabledOnInteraction: false,
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev"
+            },
+            breakpoints: {
+                0: {
+                    slidesPerView: 1,
+                },
+                220: {
+                    slidesPerView: 1,
+                    centeredSlides: false,
+                },
+                300: {
+                    slidesPerView: 2,
+                    centeredSlides: false,
+                },
+                430: {
+                    slidesPerView: 2,
+                    centeredSlides: false,
+                },
+                940: {
+                    slidesPerView: 2,
+                    centeredSlides: false,
+                },
+                1024: {
+                    slidesPerView: 4,
+                    centeredSlides: false,
+                },
+                1440: {
+                    slidesPerView: 5,
+                    centeredSlides: false,
+                },
+                2560: {
+                    slidesPerView: 5,
+                    centeredSlides: false,
+                },
+            },
 
-        var swiper = new Swiper(".featured-slider", {
+        });
+        var bestSwiper = new Swiper(".best-slider", {
             spaceBetween: 10,
             loop: true,
             centeredSlides: true,
@@ -280,59 +324,21 @@
                 0: {
                     slidesPerView: 1,
                 },
-                320: {
-                    slidesPerView: 2,
-                },
-                347: {
-                    slidesPerView: 2,
-                },
-                450: {
-                    slidesPerView: 2,
-                },
-                768: {
-                    slidesPerView: 3,
-                },
-                1024: {
-                    slidesPerView: 4,
-                    centeredSlides: false,
-                },
-                1440: {
-                    slidesPerView: 5,
-                    centeredSlides: false,
-                },
-                2560: {
-                    slidesPerView: 5,
-                    centeredSlides: false,
-                },
-            },
-        });
-        var swiper = new Swiper(".best-slider", {
-            spaceBetween: 10,
-            loop: true,
-            centeredSlides: true,
-            autoplay: {
-                delay: 9500,
-                disabledOnInteraction: false,
-            },
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev"
-            },
-            breakpoints: {
-                0: {
+                220: {
                     slidesPerView: 1,
+                    centeredSlides: false,
                 },
-                320: {
+                300: {
                     slidesPerView: 2,
+                    centeredSlides: false,
                 },
-                347: {
+                430: {
                     slidesPerView: 2,
+                    centeredSlides: false,
                 },
-                450: {
+                940: {
                     slidesPerView: 2,
-                },
-                768: {
-                    slidesPerView: 3,
+                    centeredSlides: false,
                 },
                 1024: {
                     slidesPerView: 4,
@@ -347,7 +353,9 @@
                     centeredSlides: false,
                 },
             },
+
         });
+
         document.addEventListener('DOMContentLoaded', function() {
             const itemNames = document.querySelectorAll('.marquee');
 
@@ -374,8 +382,7 @@
             }
             return true;
         }
-    </script>
-    <script>
+
         document.addEventListener('DOMContentLoaded', function() {
             // Check if the popup has already been shown
             if (!localStorage.getItem('popupShown')) {
@@ -410,8 +417,6 @@
             localStorage.setItem('popupShown', 'true');
         }
     </script>
-
-
 
 </body>
 

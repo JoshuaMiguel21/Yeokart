@@ -224,11 +224,7 @@ if ($notifications_result->num_rows > 0) {
         <?php foreach ($notifications as $notification) :
             $orderStatus = isset($notification['order_status']) ? $notification['order_status'] : 'Order Deleted/Not Available';
         ?>
-            <div class="notification-item <?= !$notification['is_read'] ? 'unread' : '' ?>"
-                style="padding: 10px; border-bottom: 1px solid #eee; <?= !$notification['is_read'] ? 'background-color: #f9f9f9;' : '' ?>"
-                data-order-id="<?= $notification['order_id']; ?>"
-                data-order-status="<?= $notification['order_status']; ?>"
-                onclick="markAsRead(<?= $notification['id']; ?>)">
+            <div class="notification-item <?= !$notification['is_read'] ? 'unread' : '' ?>" style="padding: 10px; border-bottom: 1px solid #eee; <?= !$notification['is_read'] ? 'background-color: #f9f9f9;' : '' ?>" data-order-id="<?= $notification['order_id']; ?>" data-order-status="<?= $notification['order_status']; ?>" onclick="markAsRead(<?= $notification['id']; ?>)">
                 <p style="font-size: 1.2rem">
                     <strong><?= htmlspecialchars($notification['title']); ?></strong>
                     <?= !$notification['is_read'] ? '<span class="unread-dot"></span>' : '' ?>
@@ -246,7 +242,7 @@ if ($notifications_result->num_rows > 0) {
         <div class="header-1">
             <a href="customer_homepage.php" class="button-image"><img src="../res/logo.png" alt="Yeokart Logo" class="logo"></a>
             <div class="icons">
-                <form action="customer_shop.php" method="GET" class="search-form">
+                <form action="customer_shop.php" method="GET" class="search-form" onsubmit="return validateSearch()">
                     <input type="search" name="search" placeholder="Search here..." id="search-box">
                     <button type="submit"><i class="fas fa-search"></i></button>
                 </form>

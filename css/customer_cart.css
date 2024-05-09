@@ -135,7 +135,7 @@ section{
 
 .header .header-1 .search-form, 
 .header .header-1 .search-form1{
-    width: 50rem;
+    width: 35rem;
     height: 5rem;
     border: var(--border);
     overflow: hidden;
@@ -195,14 +195,21 @@ section{
     width: 100%;
 }
 
+/* Adjustments for alignment */
 .icons ul {
     display: flex;
+    align-items: center; /* Added to vertically align items */
     list-style-type: none;
-}
-
-.icons li {
+  }
+  
+  .icons li {
     margin: 0 10px;
-}
+  }
+  
+  /* Added to align with the shop and contact us links */
+  .icons li:last-child {
+    margin-right: 0;
+  }
 
 .header .header-1 .icons .search-ul {
     display: none;
@@ -1816,7 +1823,6 @@ label {
         top: 50%;
         right: -3px;
     }
-    
     .header .header-1 .menu-btn {
         display: block;
         position: absolute;
@@ -1839,6 +1845,22 @@ label {
         display: block;
         text-align: center;
         transition: all 0.3s ease;
+        z-index: 1000;
+    }
+
+    .sign-in-button {
+        background-color:var(--pink) ; /* White background */
+        color: #fff; /* Pink text color */
+        border-color: #fff; /* White border color */
+    }
+    
+    .sign-in-button:hover {
+        background-color: #fff; /* Pink background on hover */
+        color: var(--pink); /* White text color on hover */
+    }
+    
+    .sign-in-button svg {
+        fill: #fff; /* White SVG color */
     }
 
     #click:checked ~ .header .header-1 .icons ul {
@@ -1902,19 +1924,34 @@ label {
     .notification-actions{
         margin: 10px 150px;
     }
+
+    .product-details {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btn-return2 {
+        margin-left: 0;
+    }
 }
 
-@media (max-width:1440px){
+  @media (max-width:1440px){
     html{
         font-size: 60%;
-    }
-    .header .header-1{
-        padding: 2rem;
     }
     .wrapper {
         grid-template-columns: repeat(4, 1fr);
     }
 
+    .left{
+        flex-direction: column;
+    }
+    .btn-return2{
+        margin-left: 60px;
+    }
+    .header .header-1{
+        padding: 2rem;
+    }
     .header .header-1 .logo{
         margin-left: 8rem;
     }
@@ -1924,23 +1961,7 @@ label {
     }
 }
 
-@media (max-width:1250px){
-    
-    .project{
-        width: 90%;
-    }
-
-    .left-column{
-        width: 90%;
-    }   
-
-}
-
-@media (max-width:1024px){
-    .container{
-        flex-direction: column;
-    }
-
+@media (max-width:1245px){
     html{
         font-size: 55%;
     }
@@ -1950,20 +1971,28 @@ label {
     .wrapper {
         grid-template-columns: repeat(4, 1fr);
     }
-
-    .cart .right-column{
-        margin-top: 0px;
+    .header .header-1 .logo{
+        margin-left: 2rem;
     }
 
-    .cart .right-column .account{
-        margin: 0;
-        padding: 20px;
-        width: 50%;
-        height: 250px;
-        margin-left: auto;
-        margin-right: auto;
+    .icons ul {
+        margin-right: 2rem;
     }
-    
+    .container{
+        flex-direction: column;
+    }
+}
+
+@media (max-width:1155px){
+    html{
+        font-size: 50%;
+    }
+    .header .header-1{
+        padding: 2rem;
+    }
+    .wrapper {
+        grid-template-columns: repeat(4, 1fr);
+    }
     .header .header-1 .logo{
         margin-left: 2rem;
     }
@@ -1972,9 +2001,9 @@ label {
         margin-right: 2rem;
     }
 }
-@media (max-width:991px){
+@media (max-width:1050px){
     html{
-        font-size: 55%;
+        font-size: 50%;
     }
     .header .header-1{
         padding: 2rem;
@@ -1982,48 +2011,18 @@ label {
     .wrapper {
         grid-template-columns: repeat(3, 1fr);
     }
-}
 
-@media (max-width:812px){
-    header{
-        width: 100%;
-    }
-
-    .container .left-column .project{
-        margin-left: auto;
-        margin-right: auto;
-    }
-    
-    .cart .left-column div.box{
-        flex-direction: column;
-        max-width: 350px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .shop .box img{
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    p.btn-area{
-        margin-top: 20px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .cart .right-column .account{
-        padding: 20px;
-        width: 75%;
-        height: 250px;
-    }
-    
 }
 
 @media (max-width:768px){
     html{
         scroll-padding-top: 0;
     }
+
+    .container{
+        flex-direction: column;
+    }
+    
     body{
         padding-bottom: 6rem;
     }
@@ -2104,16 +2103,35 @@ label {
         font-size: 10px;
     }
 
-    .left-column{
+    .left-column {
+        margin-right: 0;
+    }
+
+    .right, .left{
         width: 100%;
+    }
+
+    .right{
+        padding-left: 0;
+        margin-left: 0;
+    }
+
+    .right .order-summary{
+        position: relative;
+        margin-top: 20px;
+        width: 100%;
+    }
+
+    .btn-return2 {
+        margin-top: 30px;
+        margin-left: 30px;
     }
 }
 
-@media (max-width:512px){
+@media (max-width:520px){
     html{
-        font-size: 50%;
+        font-size: 40%;
     }
-
     .wrapper {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -2156,27 +2174,40 @@ label {
         font-size: 12px;
     }
 
-    .cart .left-column .box{
+    .my-cart .cart-item {
         flex-direction: column;
-        width: 95%;
-        min-height: 450px;
+        min-height: 100px;
+    }
+    
+    .my-cart .cart-item p {
+        margin-top: 7px;
     }
 
-    div.project div.shop div.box img{
-        width: 250px;
-        height: 167px;
-    }
-
-    p.btn-area{
+    .btn-return2 {
         margin-top: 20px;
-        margin-left: auto;
-        margin-right: auto;
+        margin-left: 15px;
+    }
+
+    .logout-btn{
+        padding: 7px 10px;;
+    }
+
+    .upload-proof-cell {
+        padding: 5px 10px;
+      }
+    
+      .payment-done{
+        padding: 5px 10px;
+      }
+
+      .notif-container{
+        padding: 20px 0;
     }
 }
 
-@media (max-width:376px){
+@media (max-width:415px){
     html{
-        font-size: 40%;
+        font-size: 35%;
     }
     .logout-link {
         padding: 8px 15px; /* Adjust padding for smaller screens */
@@ -2194,5 +2225,35 @@ label {
         padding: 10px 20px;
         transition: all 0.3s ease;
     }
-}
 
+    .logo1{
+        height: 60px;
+        width: 150px;
+    }
+}
+@media (max-width:365px){
+    html{
+        font-size: 30%;
+    }
+    .logout-link {
+        padding: 8px 15px; /* Adjust padding for smaller screens */
+        font-size: 1.3rem; /* Adjust font size for smaller screens */
+        margin-left: 15px; /* Adjust margin for smaller screens */
+    }
+    .wrapper {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .header .header-1 .icons #home-nav {
+        width: 23%;
+        display: block;
+        border-radius: 5px;
+        padding: 10px 20px;
+        transition: all 0.3s ease;
+    }
+
+    .logo1{
+        height: 60px;
+        width: 150px;
+    }
+}
