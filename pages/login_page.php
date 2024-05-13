@@ -62,10 +62,10 @@
                     // Check if user exists in any of the tables
                     if ($user || $employee || $admin) {
                         // Check if the user is an admin
-                        if ($admin && $password == $admin["password"]) {
+                        if ($admin && password_verify($password, $admin["password"])) {
                             sleep(1); // Add 2-second delay
                             header("Location: owner_dashboard.php");
-                            $_SESSION['logged_in'] = true;
+                            $_SESSION['logged_in'] = true;  
                             $_SESSION['firstname'] = $admin['firstname'];
                             $_SESSION['email'] = $admin['email'];
                             $_SESSION['lastname'] = $admin['lastname'];

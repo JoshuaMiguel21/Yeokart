@@ -99,9 +99,13 @@ if (isset($_GET['email']) && isset($_GET['reset_token'])) {
     $employeeQuery = "SELECT * FROM `employee_accounts` WHERE `email`='$email' AND `reset_token`='$reset_token' AND `reset_token_expire`='$date'";
     $employeeResult = mysqli_query($con, $employeeQuery);
 
-    if ($userResult || $employeeResult) {
-        if (mysqli_num_rows($userResult) == 1 || mysqli_num_rows($employeeResult) == 1) {
-            $tableName = mysqli_num_rows($userResult) == 1 ? 'user_accounts' : 'employee_accounts';
+    // Attempt to find the record in admin_accounts
+    $adminQuery = "SELECT * FROM `admin_account` WHERE `email`='$email' AND `reset_token`='$reset_token' AND `reset_token_expire`='$date'";
+    $adminResult = mysqli_query($con, $adminQuery);
+
+    if ($userResult || $employeeResult || $adminResult) {
+        if (mysqli_num_rows($userResult) == 1 || mysqli_num_rows($employeeResult) == 1 || mysqli_num_rows($adminResult) == 1) {
+            $tableName = mysqli_num_rows($userResult) == 1 ? 'user_accounts' : (mysqli_num_rows($employeeResult) == 1 ? 'employee_accounts' : 'admin_account');
             echo "
                 <div class='container'>
                     <div class='row'>
@@ -155,10 +159,10 @@ if (isset($_GET['email']) && isset($_GET['reset_token'])) {
 }
 
 if (isset($_POST['submit'])) {
-    $email = mysqli_real_escape_string($con, $_POST['email']); // Sanitize input
+    $email = mysqli_real_escape_string($con, $_POST['email']); 
     $password = mysqli_real_escape_string($con, $_POST['password']);
     $confirmPassword = mysqli_real_escape_string($con, $_POST['confirmPass']);
-    $tableName = mysqli_real_escape_string($con, $_POST['table']); // Sanitize input
+    $tableName = mysqli_real_escape_string($con, $_POST['table']);
 
     if ($password == $confirmPassword) {
         $pass = password_hash($password, PASSWORD_BCRYPT);

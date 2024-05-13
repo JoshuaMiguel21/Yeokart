@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 05, 2024 at 05:10 PM
+-- Generation Time: May 13, 2024 at 02:24 PM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -32,15 +32,17 @@ CREATE TABLE `admin_account` (
   `firstname` varchar(255) NOT NULL,
   `lastname` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL
+  `password` varchar(255) NOT NULL,
+  `reset_token` varchar(255) DEFAULT NULL,
+  `reset_token_expire` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `admin_account`
 --
 
-INSERT INTO `admin_account` (`id`, `firstname`, `lastname`, `email`, `password`) VALUES
-(1, 'Rachel', 'Falcis', 'admin@gmail.com', 'Pa$$w0rd');
+INSERT INTO `admin_account` (`id`, `firstname`, `lastname`, `email`, `password`, `reset_token`, `reset_token_expire`) VALUES
+(1, 'Rachel', 'Falcis', 'yeokartstore@gmail.com', '$2y$10$dgtBAPYgL2eGgupyP/r41OwClSNuvh4DByhxPMGyqdTHTzvtlnhde', NULL, NULL);
 
 --
 -- Indexes for dumped tables

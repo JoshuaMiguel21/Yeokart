@@ -65,61 +65,51 @@
             return false;
         }
     }
-        if (isset($_POST['submit'])) {
-            // Query both user_accounts and employee_accounts
-            $userQuery = "SELECT * FROM `user_accounts` WHERE `email`='$_POST[email]'";
-            $employeeQuery = "SELECT * FROM `employee_accounts` WHERE `email`='$_POST[email]'";
-
-            $userResult = mysqli_query($con, $userQuery);
-            $employeeResult = mysqli_query($con, $employeeQuery);
-
-            if ($userResult || $employeeResult) {
-                if (mysqli_num_rows($userResult) == 1 || mysqli_num_rows($employeeResult) == 1) {
-                    $reset_token = bin2hex(random_bytes(16));
-                    date_default_timezone_set('Asia/Manila');
-                    $date = date("Y-m-d");
-
-                    if (mysqli_num_rows($userResult) == 1) {
-                        $updateQuery = "UPDATE `user_accounts` SET `reset_token`='$reset_token',`reset_token_expire`='$date' WHERE `email`='$_POST[email]'";
-                    } else {
-                        $updateQuery = "UPDATE `employee_accounts` SET `reset_token`='$reset_token',`reset_token_expire`='$date' WHERE `email`='$_POST[email]'";
-                    }
-
-                    if (mysqli_query($con, $updateQuery) && sendMail($_POST['email'], $reset_token)) {
-                        echo "<script>
-                            Swal.fire({
-                                icon: 'info',
-                                title: 'Great news!',
-                                text: 'The password reset link was sent to your email',
-                                confirmButtonText: 'OK'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    window.location.href='login_page.php';
-                                }
-                            });
-                        </script>";
-                    } else {
-                        echo "<script>
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: 'Server Down! Try again later'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    window.location.href='login_page.php';
-                                }
-                            });
-                        </script>";
-                    }
+    if (isset($_POST['submit'])) {
+        $userQuery = "SELECT * FROM `user_accounts` WHERE `email`='$_POST[email]'";
+        $employeeQuery = "SELECT * FROM `employee_accounts` WHERE `email`='$_POST[email]'";
+        $adminQuery = "SELECT * FROM `admin_account` WHERE `email`='$_POST[email]'";
+    
+        $userResult = mysqli_query($con, $userQuery);
+        $employeeResult = mysqli_query($con, $employeeQuery);
+        $adminResult = mysqli_query($con, $adminQuery);
+    
+        if ($userResult || $employeeResult || $adminResult) {
+            if (mysqli_num_rows($userResult) == 1 || mysqli_num_rows($employeeResult) == 1 || mysqli_num_rows($adminResult) == 1) {
+                $reset_token = bin2hex(random_bytes(16));
+                date_default_timezone_set('Asia/Manila');
+                $date = date("Y-m-d");
+    
+                if (mysqli_num_rows($userResult) == 1) {
+                    $updateQuery = "UPDATE `user_accounts` SET `reset_token`='$reset_token',`reset_token_expire`='$date' WHERE `email`='$_POST[email]'";
+                } elseif (mysqli_num_rows($employeeResult) == 1) {
+                    $updateQuery = "UPDATE `employee_accounts` SET `reset_token`='$reset_token',`reset_token_expire`='$date' WHERE `email`='$_POST[email]'";
+                } else {
+                    $updateQuery = "UPDATE `admin_account` SET `reset_token`='$reset_token',`reset_token_expire`='$date' WHERE `email`='$_POST[email]'";
+                }
+    
+                if (mysqli_query($con, $updateQuery) && sendMail($_POST['email'], $reset_token)) {
+                    echo "<script>
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Great news!',
+                            text: 'The password reset link was sent to your email',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href='login_page.php';
+                            }
+                        });
+                    </script>";
                 } else {
                     echo "<script>
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
-                            text: 'Email not found'
+                            text: 'Server Down! Try again later'
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                window.location.href='forgot_email.php';
+                                window.location.href='login_page.php';
                             }
                         });
                     </script>";
@@ -129,15 +119,28 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
-                        text: 'Cannot Run Query'
+                        text: 'Email not found'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href='login_page.php';
+                            window.location.href='forgot_email.php';
                         }
                     });
                 </script>";
             }
+        } else {
+            echo "<script>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Cannot Run Query'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href='login_page.php';
+                    }
+                });
+            </script>";
         }
+    }
     ?>
     <div class="container">
         <div class="row">
