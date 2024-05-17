@@ -684,29 +684,32 @@ option:hover {
 
 
 @media only screen and (max-width: 1200px){
-    #nav-toggle:checked + .sidebar {
-        left: 0 !important;
-        z-index: 100;
-        width: 345px;
+    #nav-toggle:checked + .sidebar{
+        width: 70px;
     }
     
     #nav-toggle:checked + .sidebar .sidebar-brand,
     #nav-toggle:checked + .sidebar li{
-        padding-left: 2rem;
-        text-align: left;
+        padding-left: 1rem;
+        text-align: center;
     }
     
     #nav-toggle:checked + .sidebar li a{
-        padding-left: 1rem;
+        padding-left: 0rem;
     }
     
     #nav-toggle:checked + .sidebar .sidebar-brand h2 span:last-child,
-    #nav-toggle:checked + .sidebar  li a span:last-child {
-        display: inline;
+    #nav-toggle:checked + .sidebar li a span:last-child {
+        display: none;
     }
-
-    #nav-toggle:checked ~ .main-content {
-        margin-left: 0rem !important;
+    
+    #nav-toggle:checked ~ .main-content{
+        margin-left: 70px;
+    }
+    
+    #nav-toggle:checked ~ .main-content header{
+        width: calc(100% - 70px);
+        left: 70px;
     }
 
     .popup-container{
