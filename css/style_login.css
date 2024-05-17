@@ -223,9 +223,9 @@ input[type="text"], input[type="email"], input[type="password"] {
     }
 }
 
-@media (min-width: 576px) and (max-width: 960px) {
+@media (max-width: 960px) {
     #div1{
-        max-height: 512px;
+        max-height: 600px;
         padding: 20px;
     }
 
@@ -257,4 +257,9 @@ input[type="text"], input[type="email"], input[type="password"] {
     .forgot-pass {
         font-size: 0.8rem;
     }
+
+    #alert-message{
+        font-size: 0.8rem;
+    }
 }
+

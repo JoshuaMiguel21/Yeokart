@@ -95,12 +95,12 @@
                         } else {
                             // Password or email does not match
                             sleep(1);
-                            echo "<div class='alert alert-danger'>Password or Email does not match</div>";
+                            echo "<div id='alert-message' class='alert alert-danger'>Password or Email does not match</div>";
                         }
                     } else {
                         // User does not exist
                         sleep(1);
-                        echo "<div class='alert alert-danger'>Email not found</div>";
+                        echo "<div id='alert-message' class='alert alert-danger'>Email not found</div>";
                     }
                 }
 

@@ -350,30 +350,6 @@ function notificationExists($con, $customerId, $title, $orderId)
         display: inline-block;
     }
 
-    .view-order-link {
-        text-decoration: none;
-        color: blue;
-        position: relative;
-        font-size: 12px;
-        transition: color 0.3s;
-    }
-
-    .view-order-link::after {
-        content: "";
-        position: absolute;
-        width: 0;
-        height: 1.5px;
-        background-color: blue;
-        bottom: 0;
-        left: 50%;
-        transition: width 0.3s, left 0.3s;
-    }
-
-    .view-order-link:hover::after {
-        width: 100%;
-        left: 0;
-        }
-
 </style>
 
 <body>
@@ -548,7 +524,7 @@ function notificationExists($con, $customerId, $title, $orderId)
                         $order_id = $row['order_id'];
                         $status = strtoupper($row['status']);
                         $proof_of_payment = $row['proof_of_payment'];
-                        $button_class = "upload-proof-cell"; // Default class
+                        $button_class = "upload-proof-cell"; 
                         $button_text = "";
                         $button_disabled = false;
 
@@ -577,13 +553,13 @@ function notificationExists($con, $customerId, $title, $orderId)
                         echo '<td>' . strtoupper($row['status']) . '</td>';
                         echo '<td><center>';
                         if ($status != "INVALID") {
-                            echo '<a href="#" class="' . $button_class . '" data-order-id="' . $order_id . '" data-proof="' . $proof_of_payment . '" style="';
+                            echo '<a href="#" class="' . $button_class . ' status-button" data-order-id="' . $order_id . '" data-proof="' . $proof_of_payment . '" style="';
                             if ($button_disabled) {
                                 echo 'cursor: not-allowed; pointer-events: none; ';
                             }
-                            echo '"><i class="' . $button_icon . '" style="margin-right: 5px;"></i>' . $button_text . '</a>';
+                            echo '"><i class="' . $button_icon . '"></i><span class="button-text">' . $button_text . '</span></a>';
                         } else {
-                            echo '<a href="#" class="' . $button_class . '" data-order-id="' . $order_id . '" data-proof="' . $proof_of_payment . '"><i class="' . $button_icon . '" style="margin-right: 5px;"></i>' . $button_text . '</a>';
+                            echo '<a href="#" class="' . $button_class . ' status-button" data-order-id="' . $order_id . '" data-proof="' . $proof_of_payment . '"><i class="' . $button_icon . '"></i><span class="button-text">' . $button_text . '</span></a>';
                         }
                         echo '</center></td>';
                         echo '<td class="toggle-row">';
@@ -637,7 +613,7 @@ function notificationExists($con, $customerId, $title, $orderId)
                         } else {
                             echo 'Your order status is ' . $status . '. For more information, please contact customer support.';
                         }
-                        echo '</div>'; // Close alert div
+                        echo '</div>'; 
 
                         $items = explode(", ", $row['items_ordered']);
                         $quantities = explode(", ", $row['item_quantity']);
@@ -656,8 +632,8 @@ function notificationExists($con, $customerId, $title, $orderId)
                             echo "<div class='item-details'>";
                             echo "<p><b>Name: </b>{$itemName}</p>";
                             echo "<p>Price: ₱" . number_format($itemPrice, 2) . "</p>";
-                            echo "</div>";
                             echo "<p>Quantity: {$itemQuantity}</p>";
+                            echo "</div>";
                             echo "<p>Total: ₱" . number_format($total, 2) . "</p>";
                             echo "</div>";
                         }

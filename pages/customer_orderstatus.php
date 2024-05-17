@@ -16,90 +16,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="../css/style_homepage_customer.css">
     <style>
-        .notification-container {
-            margin: 0px 100px;
-            margin-bottom: 20px;
-            padding: 20px;
-            border: 1px solid #ccc;
-        }
-
-        .notification-container h1 {
-            text-align: center;
-            font-size: 3rem;
-        }
-
-        .tracking-number {
-            text-align: center;
-            margin-top: 20px;
-            /* Adjust as needed */
-        }
-
-        .status-bar {
-            display: flex;
-            justify-content: space-between;
-            position: relative;
-            margin: 20px 0;
-        }
-
-        .notification-status {
-            display: flex;
-            justify-content: space-between;
-            position: relative;
-            margin: 20px 0;
-        }
-
-        .status-circle {
-            width: 30px;
-            height: 30px;
-            background-color: grey;
-            border-radius: 50%;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            font-size: 16px;
-        }
-
-        .status-circle.completed,
-        .status-circle.current {
-            background-color: #DD2F6E;
-        }
-
-        .status-line {
-            height: 2px;
-            background-color: grey;
-            position: absolute;
-            width: 100%;
-            top: 15px;
-            left: 0;
-            z-index: -1;
-        }
-
-        .status-line.active {
-            background-color: #DD2F6E;
-            width: 50%;
-        }
-
-        .status-text {
-            margin-top: 8px;
-            text-align: center;
-            font-size: 12px;
-        }
-
-        .order-details .order-item .order-line {
-            border-top: 1px solid grey;
-        }
-
-        .order-details .order-item .order-status {
-            color: darkblue;
-        }
-
-        .order-details .order-item .order-content {
-            padding: 10px;
-            background-color: #f4f4f4;
-        }
-
         .header {
             display: flex;
             justify-content: center;
@@ -114,6 +30,18 @@
 
         .button-container {
             margin: 30px 0px;
+        }
+
+        @media (max-width: 768px) {
+            .header .logo {
+                width: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header .logo {
+                width: 150px;
+            }
         }
     </style>
 </head>
@@ -248,18 +176,18 @@ if ($status == 'PROCESSING') {
                 $itemImage = trim($itemImages[$key] ?? '');
                 $total_paid += $total; // Sum up the total paid
 
-                echo "<div class='cart-item' style='background-color: #fff; padding: 10px; margin: 10px; display: flex; align-items: center;'>";
-                echo "<img src='item_images/{$itemImage}' alt='Item Image' class='cart-item-image' style='width: 80px; height: 80px; margin-right: 10px;'>";
-                echo "<div class='item-details' style='display: flex; flex-grow: 1; justify-content: space-between;'>";
-                echo "<p style='margin: 0;'><b>Name:</b> {$itemName}</p>";
-                echo "<p style='margin: 0;'><b>Price:</b> ₱" . number_format($itemPrice, 2) . "</p>";
-                echo "<p style='margin: 0;'><b>Quantity:</b> {$itemQuantity}</p>";
-                echo "<p style='margin: 0;'><b>Total:</b> ₱" . number_format($total, 2) . "</p>";
+                echo "<div class='cart-item'>";
+                echo "<img src='item_images/{$itemImage}' alt='Item Image' class='cart-item-image'>";
+                echo "<div class='order-details'>";
+                echo "<p><b>Name:</b> {$itemName}</p>";
+                echo "<p><b>Price:</b> ₱" . number_format($itemPrice, 2) . "</p>";
+                echo "<p><b>Quantity:</b> {$itemQuantity}</p>";
                 echo "</div>";
+                echo "<p class='order-total'><b>Total:</b> ₱" . number_format($total, 2) . "</p>";
                 echo "</div>";
             }
             ?>
-            <div class='total-paid-alert' style="background-color: #fff; border: 2px solid #DD2F6E; color: #333; text-align: center; padding: 10px; margin-top: 20px; font-size: 2rem; font-weight: bold; border-radius: 5px;">
+            <div class='total-paid-alert'>
                 Overall Total Paid: Php. <?php echo number_format($total_paid, 2); ?>
             </div>
         </div>

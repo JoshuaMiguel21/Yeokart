@@ -23,10 +23,8 @@
         padding: 8px;
         border-bottom: 1px solid #ddd;
         max-width: 200px;
-        /* Set a fixed width for the columns */
         overflow: hidden;
         text-overflow: ellipsis;
-        /* Use ellipsis to indicate truncated text */
         white-space: nowrap;
         /* Prevent wrapping */
     }
