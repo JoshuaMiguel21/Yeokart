@@ -536,7 +536,8 @@ section{
 
 .featured .btn,
 .best .btn,
-.cart .btn{
+.cart .btn,
+.container .btn{
     margin-top: 1rem;
     display: inline-block;
     padding: .9rem 3rem;
@@ -552,13 +553,15 @@ section{
 
 .featured .btn i,
 .best .btn i,
-.cart .btn i {
+.cart .btn i, 
+.container i{
     color: #fff !important;
 }
 
 .featured .btn:hover
 .best .btn:hover,
-.cart .btn:hover{
+.cart .btn:hover,
+.container .btn:hover{
     background: var(--dark-color);
 }
 .swiper-button-next,
@@ -840,7 +843,6 @@ section{
 
 .btn-area{
     margin-top: 10px;
-    margin-left: auto;
     max-width: 130px;
     display: flex; 
     align-items: center;
@@ -852,7 +854,7 @@ section{
 }
 
 .btn-area i{
-    margin-right: 5px;
+    margin-right: 15px;
 }
 
 .btn-area:hover{
@@ -862,7 +864,16 @@ section{
 
 .cart .right-column .account{
     flex: 25%;
+    padding: 20px;
     margin-left: 20px;
+    height: 400px;
+    background: #eee;
+    box-shadow: var(--box-shadow);
+}
+.container .right-column .account{
+    flex: 25%;
+    margin-left: 20px;
+    margin-right: 20px;
     padding: 20px;
     height: 400px;
     background: #eee;
@@ -951,37 +962,38 @@ section{
   
 .container {
     display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-    padding: 20px 0px;
-}
-
-.left-column,
-.right-column {
-    color: var(--black);
-    border-radius: 10px;
-    min-width: 200px;
-}
-
-.left-column p,
-.right-column p {
-    font-size: 1.5rem;
 }
 
 .left-column {
-    background: #fff;
-    flex: 4; 
-    padding: 20px 0px;
-    padding-right: 0px;
-    margin-right: 40px;
+    flex: 70%;
+    padding: 20px;
+}
+
+.left-column .cart-item img{
+    margin-right: 10px;
+}
+
+.container .left-column .cart-item .content{
+    padding: 10px;
+    position: relative;
+    width: 100%;
+}
+
+.container .left-column .cart-item .content h3, .cart .left-column .cart-item .content h4{
+    margin-bottom: 10px;
+}
+
+.container .left-column .cart-item .content h3{
+    font-size: 20px;
+}
+
+.container .left-column .cart-item .content h4{
+    font-size: 15px;
 }
 
 .right-column {
-    background: #fff;
-    flex: 2; 
-    padding: 20px 0px;
-    margin-top: 88px;
+    flex: 30%;
+    padding: 20px;
 }
 
 #info
@@ -1933,6 +1945,61 @@ label {
     .btn-return2 {
         margin-left: 0;
     }
+
+    .container .left-column .cart-item img{
+        height: 140px;
+    }
+
+    .container .left-column .cart-item .content h3, .cart .left-column .cart-item .content h4{
+        margin-bottom: 10px;
+    }
+    
+    .container .left-column .cart-item .content h3{
+        font-size: 20px;
+    }
+    
+    .container .left-column .cart-item .content h4{
+        font-size: 10px;
+    }
+    .container .left-column .cart-item .content h4{
+        font-size: 15px;
+    }
+    .select-quantity {
+        display: flex;
+        align-items: center;
+        margin-bottom: 2px;
+    }
+    .select-quantity span{
+       font-size: 15px;
+    }
+    .select-quantity input[type="number"] {
+        flex: 1; 
+        max-width: 100px; 
+        margin: 0 5px;
+        border: var(--border);
+        border-width: 1px;
+        padding: 5px;
+        font-size: 10px;
+    }
+    
+    .select-quantity  button {
+        padding: 5px 10px;
+        cursor: pointer;
+        border: none;
+        background-color: #ddd;
+    }
+
+    .btn-area{
+        width: 100px;
+    }
+
+    .btn-area span{
+        font-size: 10px;
+    }
+
+    .btn-area i{
+        margin-right: 5px;
+    }
 }
 
   @media (max-width:1440px){
@@ -2126,6 +2193,128 @@ label {
         margin-top: 30px;
         margin-left: 30px;
     }
+
+    .container .left-column .cart-item img{
+        height: 130px;
+    }
+
+    .container .left-column .cart-item .content h3, .cart .left-column .cart-item .content h4{
+        margin-bottom: 10px;
+    }
+    
+    .container .left-column .cart-item .content h3{
+        font-size: 15px;
+    }
+    
+    .container .left-column .cart-item .content h4{
+        font-size: 12px;
+    }
+    .container .left-column .cart-item .content h4{
+        font-size: 12px;
+    }
+    .select-quantity {
+        display: flex;
+        align-items: center;
+        margin-bottom: 2px;
+    }
+    .select-quantity span{
+       font-size: 12px;
+    }
+    .select-quantity input[type="number"] {
+        flex: 1; 
+        max-width: 100px; 
+        margin: 0 5px;
+        border: var(--border);
+        border-width: 1px;
+        padding: 5px;
+        font-size: 10px;
+    }
+    
+    .select-quantity  button {
+        padding: 5px 10px;
+        cursor: pointer;
+        border: none;
+        background-color: #ddd;
+    }
+
+    .btn-area{
+        width: 100px;
+    }
+
+    .btn-area span{
+        font-size: 10px;
+    }
+
+    .btn-area i{
+        margin-right: 5px;
+    }
+}
+
+@media (max-width:650px){
+    html{
+        font-size: 40%;
+    }
+
+    .container .left-column .cart-item img{
+        height: 120px;
+    }
+
+    .container .left-column .cart-item .content h3, .cart .left-column .cart-item .content h4{
+        margin-bottom: 10px;
+    }
+    
+    .container .left-column .cart-item .content h3{
+        font-size: 13px;
+    }
+    
+    .container .left-column .cart-item .content h4{
+        font-size: 12px;
+    }
+    .container .left-column .cart-item .content h4{
+        font-size: 12px;
+    }
+    .select-quantity {
+        display: flex;
+        align-items: center;
+        margin-bottom: 2px;
+    }
+    .select-quantity span{
+       font-size: 12px;
+    }
+    .select-quantity input[type="number"] {
+        flex: 1; 
+        max-width: 100px; 
+        margin: 0 5px;
+        border: var(--border);
+        border-width: 1px;
+        padding: 5px;
+        font-size: 10px;
+    }
+    
+    .select-quantity  button {
+        padding: 5px 10px;
+        cursor: pointer;
+        border: none;
+        background-color: #ddd;
+    }
+
+    .btn-area{
+        width: 60px;
+        height: 30px;
+    }
+
+    .btn-area span{
+        font-size: 8px;
+        display: none;
+    }
+
+    .btn-area i{
+        margin-right: 5px;
+    }
+
+    .container .right-column .account{    
+        height: 200px;
+    }
 }
 
 @media (max-width:520px){
@@ -2203,9 +2392,67 @@ label {
       .notif-container{
         padding: 20px 0;
     }
+
+    .container .left-column .cart-item img{
+        height: 100px;
+    }
+
+    .container .left-column .cart-item .content h3, .cart .left-column .cart-item .content h4{
+        margin-bottom: 8px;
+    }
+    
+    .container .left-column .cart-item .content h3{
+        font-size: 10px;
+    }
+    
+    .container .left-column .cart-item .content h4{
+        font-size: 8px;
+    }
+    .container .left-column .cart-item .content h4{
+        font-size: 8px;
+    }
+    .select-quantity {
+        display: flex;
+        align-items: center;
+        margin-bottom: 2px;
+    }
+    .select-quantity span{
+       font-size: 8px;
+    }
+    .select-quantity input[type="number"] {
+        flex: 1; 
+        max-width: 100px; 
+        margin: 0 5px;
+        border: var(--border);
+        border-width: 1px;
+        padding: 3px;
+        font-size: 8px;
+    }
+    
+    .select-quantity  button {
+        padding: 1px 4px;
+        cursor: pointer;
+        border: none;
+        background-color: #ddd;
+    }
+
+    .btn-area{
+       height: 30px;
+       margin-left: 20px;
+    }
+
+    .btn-area span{
+        font-size: 8px;
+        display: none;
+    }
+
+    .btn-area i{
+        margin-right: 10px;
+    }
+
 }
 
-@media (max-width:415px){
+@media (max-width:485px){
     html{
         font-size: 35%;
     }
@@ -2230,8 +2477,77 @@ label {
         height: 60px;
         width: 150px;
     }
+
+    .container .left-column .cart-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .container .left-column .cart-item img {
+        max-width: auto;
+        height: 120px;
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+
+    .container .left-column .cart-item .content h3, .cart .left-column .cart-item .content h4{
+        margin-bottom: 10px;
+    }
+    
+    .container .left-column .cart-item .content h3{
+        font-size: 15px;
+    }
+    
+    .container .left-column .cart-item .content h4#price{
+        font-size: 10px;
+        display: none;
+    }
+    .container .left-column .cart-item .content h4{
+        font-size: 10px;
+    }
+    .select-quantity {
+        display: flex;
+        align-items: center;
+        margin-bottom: 2px;
+    }
+    .select-quantity span{
+       font-size: 10px;
+    }
+    .select-quantity input[type="number"] {
+        flex: 1; 
+        max-width: 100px; 
+        margin: 0 5px;
+        border: var(--border);
+        border-width: 1px;
+        padding: 3px;
+        font-size: 10px;
+    }
+    
+    .select-quantity  button {
+        padding: 1px 4px;
+        cursor: pointer;
+        border: none;
+        background-color: #ddd;
+    }
+
+    .btn-area{
+       height: 30px;
+       margin-left: 20px;
+    }
+
+    .btn-area span{
+        font-size: 8px;
+        display: none;
+    }
+
+    .btn-area i{
+        margin-right: 10px;
+    }
+
 }
-@media (max-width:365px){
+@media (max-width:375px){
     html{
         font-size: 30%;
     }
@@ -2256,4 +2572,74 @@ label {
         height: 60px;
         width: 150px;
     }
+
+    .container .left-column .cart-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .container .left-column .cart-item img {
+        max-width: auto;
+        height: 100px;
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+
+    .container .left-column .cart-item .content h3, .cart .left-column .cart-item .content h4{
+        margin-bottom: 8px;
+    }
+    
+    .container .left-column .cart-item .content h3{
+        font-size: 10px;
+    }
+    
+    .container .left-column .cart-item .content h4#price{
+        font-size: 8px;
+        display: none;
+    }
+    .container .left-column .cart-item .content h4{
+        font-size: 8px;
+    }
+    .select-quantity {
+        display: flex;
+        align-items: center;
+        margin-bottom: 2px;
+    }
+    .select-quantity span{
+       font-size: 8px;
+    }
+    .select-quantity input[type="number"] {
+        flex: 1; 
+        max-width: 100px; 
+        margin: 0 5px;
+        border: var(--border);
+        border-width: 1px;
+        padding: 3px;
+        font-size: 8px;
+    }
+    
+    .select-quantity  button {
+        padding: 1px 4px;
+        cursor: pointer;
+        border: none;
+        background-color: #ddd;
+    }
+
+    .btn-area{
+       height: 30px;
+       margin-left: 20px;
+    }
+
+    .btn-area span{
+        font-size: 8px;
+        display: none;
+    }
+
+    .btn-area i{
+        margin-right: 10px;
+    }
+
 }
+

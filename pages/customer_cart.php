@@ -269,90 +269,81 @@ if ($notifications_result->num_rows > 0) {
             </div>
         </div>
     </header>
-    <section class="cart" id="cart">
-        <div class="header-3">
-            <h1>Shopping Cart</h1>
-        </div>
+    <section class="container">
         <hr>
-        <div class="container">
-            <div class="left-column">
-                <p id="info">MY CART</p>
+        <div class="left-column">
+            <p id="info">MY CART</p>
+            <hr class="gradient">
+            <?php
+            // Your PHP code to fetch data from MySQL and populate the card
+            $total = 0;
+            include('../database/db_yeokart.php');
+            $select_query = "SELECT c.cart_id, c.customer_id, c.item_name, c.item_image1, c.quantity, c.price, p.item_quantity, p.artist_name, p.category_name FROM cart c INNER JOIN products p ON c.item_name = p.item_name WHERE c.customer_id = $customer_id";
+            $result_query = mysqli_query($con, $select_query);
+            if (mysqli_num_rows($result_query) > 0) {
+                while ($row = mysqli_fetch_assoc($result_query)) {
+                    $subtotal = $row['quantity'] * $row['price'];
+                    $total += $subtotal;
+                    $item_quantity = $row['item_quantity']; // Available item quantity
+                    $category = $row['category_name'];
+                    $artist = $row['artist_name'];
+            ?>
+                    <div class="cart-item">
+                        <img src='item_images/<?= $row['item_image1'] ?>' alt='Item Image' width="auto" height="150px">
+                        <div class='content'>
+                            <h3><?= $row['item_name'] ?></h3>
+                            <h4 id="price">Price: ₱ <?= number_format((float)$row['price'], 2) ?></h4>
+                            <h4 id='subtotal<?= $row['cart_id'] ?>' class='subtotal' style='font-style: italic;'>Subtotal: ₱ <?= number_format($subtotal, 2) ?></h4>
+                            <div class='select-quantity'>
+                                <form method='POST' action='<?= $_SERVER['PHP_SELF'] ?>'>
+                                    <span>Edit Quantity:</span>
+                                    <br /><button type='button' onclick='decrement(<?= $row['cart_id'] ?>, <?= $row['price'] ?>)'>-</button>
+                                    <input type='number' id='quantity<?= $row['cart_id'] ?>' name='quantity' min='1' max='<?= $row['item_quantity'] ?>' data-max-quantity='<?= $row['item_quantity'] ?>' value='<?= $row['quantity'] ?>' onchange='updateTotal()' oninput='updateQuantity(<?= $row['cart_id'] ?>, this.value, <?= $row['price'] ?>, <?= $item_quantity ?>)'>
+                                    <?php $disableAdd = $row['quantity'] >= $item_quantity ? "disabled" : ""; ?>
+                                    <button type='button' onclick='increment(<?= $row['cart_id'] ?>, <?= $row['price'] ?>, <?= $item_quantity ?>)' <?= $disableAdd ?>>+</button>
+                                    <input type='hidden' name='cart_id' value='<?= $row['cart_id'] ?>'>
+                                    <input type='submit' style='display: none;'>
+                                </form>
+                            </div>
+                            <p class='btn-area' onclick='openDeletePopup(<?= $row['cart_id'] ?>)'>
+                                <i class='fa fa-trash'></i>
+                                <span class='btn2'> Remove</span>
+                            </p>
+                        </div>
+                    </div>
+            <?php
+                }
+            } else {
+                echo "No data found.";
+            }
+            ?>
+        </div>
+        <div class="right-column">
+            <div class="account">
+                <p id="info">ORDER DETAILS</p>
                 <hr class="gradient">
-
-                <div class="project">
-                    <div class="shop">
-                        <?php
-                        $total = 0;
-                        include('../database/db_yeokart.php');
-                        $select_query = "SELECT c.cart_id, c.customer_id, c.item_name, c.item_image1, c.quantity, c.price, p.item_quantity, p.artist_name, p.category_name FROM cart c INNER JOIN products p ON c.item_name = p.item_name WHERE c.customer_id = $customer_id";
-                        $result_query = mysqli_query($con, $select_query);
-                        if (mysqli_num_rows($result_query) > 0) {
-                            while ($row = mysqli_fetch_assoc($result_query)) {
-                                $subtotal = $row['quantity'] * $row['price'];
-                                $total += $subtotal;
-                                $item_quantity = $row['item_quantity']; // Available item quantity
-                                $category = $row['category_name'];
-                                $artist = $row['artist_name'];
-
-                                echo "<div class='box'>";
-                                echo "<img src='item_images/{$row['item_image1']}' alt='Item Image'>";
-                                echo "<div class='content'>";
-                                echo "<h3>{$row['item_name']}</h3>";
-                                echo "<h4>Price: ₱ {$row['price']}</h4>";
-                                echo "<h4 id='subtotal{$row['cart_id']}' class='subtotal' style='font-style: italic;'>Subtotal: ₱ " . number_format($subtotal, 2) . "</h4>";
-                                echo "<div class='select-quantity'>";
-                                echo "<form method='POST' action='{$_SERVER['PHP_SELF']}'>";
-                                echo "<span>Edit Quantity:</span>";
-                                echo "<br/><button type='button' onclick='decrement({$row['cart_id']}, {$row['price']})'>-</button>";
-                                echo "<input type='number' id='quantity{$row['cart_id']}' name='quantity' min='1' max='{$row['item_quantity']}' data-max-quantity='{$row['item_quantity']}' value='{$row['quantity']}' onchange='updateTotal()' oninput='updateQuantity({$row['cart_id']}, this.value, {$row['price']}, $item_quantity)'>";
-                                $disableAdd = $row['quantity'] >= $item_quantity ? "disabled" : "";
-                                echo "<button type='button' onclick='increment({$row['cart_id']}, {$row['price']}, $item_quantity)' $disableAdd>+</button>";
-                                echo "<input type='hidden' name='cart_id' value='{$row['cart_id']}'>";
-                                echo "<input type='submit' style='display: none;'>";
-                                echo "</form>";
-                                echo "</div>";
-                                echo "<p class='btn-area' onclick='openDeletePopup({$row['cart_id']})'>";
-                                echo "<i class='fa fa-trash'></i>";
-                                echo "<span class='btn2'> Remove</span>";
-                                echo "</p>";
-                                echo "</div>";
-                                echo "</div>";
-                            }
-                        } else {
-                            echo "<p>Your cart is empty.</p>";
-                        }
-                        ?>
-                    </div>
+                <div class="account-info">
+                    <h3 class="total">Total: ₱ <?php echo number_format($total, 2); ?></h3>
                 </div>
-            </div>
-
-            <div class="right-column">
-                <div class="account">
-                    <p id="info">ORDER DETAILS
-                    <p>
-                        <hr class="gradient">
-                    <div class="account-info">
-                        <h3 class="total">Total: ₱ <?php echo number_format($total, 2); ?></h3>
-                    </div>
-                    <hr>
-                    <div class="account-info center-btn">
-                        <?php
-                        if ($total > 0) {
-                            echo "<form action='order_summary.php' method='POST' id='checkoutForm'>";
-                            echo "<button type='submit' class='btn' name='checkout'>
+                <hr>
+                <div class="account-info center-btn">
+                    <?php
+                    if ($total > 0) {
+                        echo "<form action='order_summary.php' method='POST' id='checkoutForm'>";
+                        echo "<button type='submit' class='btn' name='checkout'>
                                     <i class='fa fa-cart-arrow-down'></i>
                                     <i class='fas fa-circle-notch fa-spin' style='display: none;''></i>
                                     Checkout
                                 </button>";
-                            echo "</form>";
-                        } else {
-                            echo "<button class='btn' disabled style='background-color: gray; cursor: not-allowed;'><i class='fa fa-cart-arrow-down'></i>Checkout</button>";
-                        }
-                        ?>
-                    </div>
-
+                        echo "</form>";
+                    } else {
+                        echo "<button class='btn' disabled style='background-color: gray; cursor: not-allowed;'><i class='fa fa-cart-arrow-down'></i>Checkout</button>";
+                    }
+                    ?>
                 </div>
+
             </div>
+        </div>
     </section>
     <div id="deletePopup" class="popup-del" style="display: none;">
         <div class="popup-del-content">
